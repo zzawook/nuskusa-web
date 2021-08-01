@@ -12,7 +12,7 @@ type VerificationProps = {
 class VerificationComponent extends React.Component<VerificationProps, {}> {
     constructor(props: VerificationProps) {
         super(props);
-        this.state = { }
+        this.state = {}
     }
 
     onAccept = () => {
