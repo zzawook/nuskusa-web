@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { authService, dbService } from '../utils/firebaseFunctions';
+import { authService } from '../utils/firebaseFunctions';
 import firebase from 'firebase';
 
 type UserProps = {

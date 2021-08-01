@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
-import { authService, dbService } from '../utils/firebaseFunctions';
+import React from 'react';
+import { dbService } from '../utils/firebaseFunctions';
 import Board from './Board';
 
 type BoardObject = {
