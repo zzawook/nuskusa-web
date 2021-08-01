@@ -1,5 +1,5 @@
-import React, { FC, useState } from 'react';
-import { authService, dbService } from '../utils/firebaseFunctions';
+import React from 'react';
+import { dbService } from '../utils/firebaseFunctions';
 import Post from './Post';
 
 type PostObject = {

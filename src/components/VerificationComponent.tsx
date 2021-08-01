@@ -15,7 +15,7 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
         this.state = {}
     }
 
-    onAccept = () => {
+    handleAccept = () => {
         storageService.ref(`verifications/${this.props.verificationId}`)
             .delete()
             .then(() => {
@@ -28,7 +28,7 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
             });
     }
 
-    onReject = () => {
+    handleReject = () => {
         storageService.ref(`verifications/${this.props.verificationId}`)
             .delete()
             .catch(error => {
@@ -39,7 +39,10 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
     render = () => {
         return (
             <div>
-                <img src={this.props.downloadURL} alt=''></img>
+                <img src={this.props.downloadURL} alt=''></img> <br />
+                {this.props.username}
+                <button onClick={this.handleAccept}>Verify</button>
+                <button onClick={this.handleReject}>Reject</button>
             </div>
         )
     }
