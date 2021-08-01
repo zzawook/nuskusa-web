@@ -1,9 +1,11 @@
 import React from 'react'
+import VerificationComponent from '../components/VerificationComponent'
 import { authService, dbService } from '../utils/firebaseFunctions'
 
 type VerificationState = {
     role: string,
-    verificationComponentArray: any[]
+    verificationComponentArray: any[],
+    verificationId: string
 }
 
 class Verification extends React.Component<{}, VerificationState> {
@@ -11,7 +13,8 @@ class Verification extends React.Component<{}, VerificationState> {
         super(props)
         this.state = {
             role: 'User',
-            verificationComponentArray: []
+            verificationComponentArray: [],
+            verificationId: ''
         }
     }
 
@@ -45,15 +48,17 @@ class Verification extends React.Component<{}, VerificationState> {
                     if (!querySnapshot.empty) {
                         const arr = querySnapshot.docs.map((element) => {
                             return (
-                                <div> 
-                                    <img src={element.data().downloadURL} alt='' /> <br />
-                                    Submitted by {element.data().owner} <br />
-                                    <button>Accept</button>  <button>Reject</button>
-                                </div>
+                                <VerificationComponent
+                                    verificationId={element.id}
+                                    downloadURL={element.data().downloadURL as string}
+                                    owner={element.data().owner as string}
+                                    username={element.data().username as string} 
+                                    userUID={element.data().ownerUID as string}
+                                    />
                             )
                         })
                         this.setState({
-                            verificationComponentArray: arr
+                            verificationComponentArray: arr,
                         })
                     }
                 })

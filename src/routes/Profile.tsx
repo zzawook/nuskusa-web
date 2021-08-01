@@ -85,7 +85,9 @@ class Profile extends React.Component<UserProps, UserState> {
                             .then((url) => {
                                 dbService.collection('verifications').add({
                                     downloadURL: url,
-                                    owner: authService.currentUser?.email
+                                    username: authService.currentUser?.uid,
+                                    owner: authService.currentUser?.email,
+                                    ownerUID: authService.currentUser?.uid
                                 });
                             })
                     }
