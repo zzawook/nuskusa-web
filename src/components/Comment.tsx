@@ -1,11 +1,13 @@
-import { FC } from "react";
+import React from "react";
 
-const Comment : FC = () => {
-    return (
-        <div>
-            
-        </div>
-    )
+class Comment extends React.Component {
+    render() {
+        return (
+            <div>
+
+            </div>
+        )
+    }
 }
 
 export default Comment;

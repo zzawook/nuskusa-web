@@ -1,6 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { dbService } from '../utils/firebaseFunctions';
-import Post from './Post';
 
 type PostObject = {
     title: string,
@@ -23,7 +23,11 @@ class Board extends React.Component<BoardProps, BoardState> {
         postComponentArray: []
     }
 
-    fetchPosts() {
+    componentDidMount = () => {
+        this.fetchPosts();
+    }
+
+    fetchPosts = () => {
         dbService
             .collection('boards').doc(this.props.boardId)
             .collection('posts')
@@ -32,7 +36,12 @@ class Board extends React.Component<BoardProps, BoardState> {
                 const componentArray: any[] = [];
                 querySnapshot.docs.forEach((doc) => {
                     const data = doc.data() as PostObject;
-                    const component = <Post postId={doc.id} />
+                    const component = (
+                        <div>
+                            <Link to={`/boards/${this.props.boardId}/${doc.id}`}>{data.title}</Link>
+                            {/* Allow to edit all posts in the list */}
+                        </div>
+                    )
                     arr.push(data);
                     componentArray.push(component);
                 })
@@ -40,6 +49,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                     postArray: arr,
                     postComponentArray: componentArray
                 })
+                console.log('all posts fetching successful');
             })
     }
 

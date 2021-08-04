@@ -37,9 +37,14 @@ class AppRouter extends React.Component<{}, AppRouterState> {
         <Switch>
           {this.state.isLoggedIn ? (
             <>
+              {console.log('logged in')}
               <Route exact path='/' component={Home} />
-              <Route exact path='/boards/:boardTitle' component={Board} />
-              <Route exact path='/boards/:boardTitle/:postId' component={Post} />
+              <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
+                boardId={routerProps.match.params.boardTitle} />} />
+              <Route exact path='/boards/:boardTitle/:postId' render={(routerProps) => <Post
+                boardId={routerProps.match.params.boardTitle}
+                postId={routerProps.match.params.postId}
+              />} />
               <Route exact path='/profile' component={Profile} />
               <Route exact path='/verification' component={Verification} />
             </>
@@ -47,6 +52,7 @@ class AppRouter extends React.Component<{}, AppRouterState> {
             :
             (
               <>
+                {console.log('not logged in')}
                 <Route exact path='/' component={Home} />
                 <Route exact path='/signin' component={SignIn} />
                 <Route exact path='/signup' component={SignUp} />

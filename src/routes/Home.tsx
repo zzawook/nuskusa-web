@@ -1,11 +1,10 @@
 import React from 'react';
-import { dbService } from '../utils/firebaseFunctions';
-import Board from './Board';
+import { Link } from 'react-router-dom';
+import { authService, dbService } from '../utils/firebaseFunctions';
 
 type BoardObject = {
     title: string,
     description: string,
-    permissions: string[],
 }
 
 type HomeProps = {
@@ -14,33 +13,59 @@ type HomeProps = {
 
 type HomeState = {
     boardArray: BoardObject[],
-    boardComponentArray: any[]
+    boardComponentArray: any[],
+    currentUserRole: string,
+    title: string,
+    description: string,
 }
-
-
 
 class Home extends React.Component<HomeProps, HomeState> {
     state: HomeState = {
         boardArray: [],
-        boardComponentArray: []
+        boardComponentArray: [],
+        currentUserRole: '',
+        title: '',
+        description: '',
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
+        this.fetchUserRole();
         this.fetchBoards();
     }
 
-    fetchBoards() {
+    fetchUserRole = () => {
+        dbService
+            .collection('users')
+            .doc(authService.currentUser?.uid)
+            .onSnapshot((querySnapshot) => {
+                if (querySnapshot.exists) {
+                    if (querySnapshot.data()) {
+                        const data = querySnapshot.data();
+                        this.setState({
+                            currentUserRole: data?.role
+                        });
+                    }
+                }
+            })
+    }
+
+    fetchBoards = () => {
         dbService
             .collection('boards')
             .onSnapshot((querySnapshot) => {
                 if (!querySnapshot.empty) {
                     const arr: BoardObject[] = [];
                     const componentArray: any[] = [];
+                    let key = 0;
                     querySnapshot.docs.forEach((doc) => {
                         const data = doc.data() as BoardObject;
                         const component = (
-                            <Board boardId={doc.id} />
+                            <div key={key}>
+                                <Link to={`/boards/${data.title}`}>{data.title}</Link>
+                                {/* put a modal for editing this board */}
+                            </div>
                         )
+                        key++;
                         arr.push(data);
                         componentArray.push(component);
                     })
@@ -48,15 +73,59 @@ class Home extends React.Component<HomeProps, HomeState> {
                         boardArray: arr,
                         boardComponentArray: componentArray
                     })
+                    console.log('all boards fetching successful')
                 }
             })
     }
 
-    render() {
+    handleChange = (event: any) => {
+        event.preventDefault();
+        const { name, value } = event.target;
+        if (name === 'title') {
+            this.setState({
+                title: value
+            })
+        }
+        else if (name === 'description') {
+            this.setState({
+                description: value
+            })
+        }
+    }
+
+    handleSubmit = (event: any) => {
+        event.preventDefault();
+        const { title, description } = this.state
+        const permissionsArray: any[] = [];
+        document.querySelectorAll('input[class=board-permissions]:checked')
+            .forEach((element: any) => {
+                permissionsArray.push(element.value);
+            });
+        dbService.collection('boards').doc(title).set({
+            title: title,
+            description: description,
+            permissions: permissionsArray
+        })
+    }
+
+    render = () => {
         return (
             <div>
                 hi
                 {this.state.boardComponentArray}
+                {this.state.currentUserRole === 'Admin' ?
+                    <form onSubmit={this.handleSubmit}>
+                        <input name='title' type='string' onChange={this.handleChange} />
+                        <input name='description' type='string' onChange={this.handleChange} /> <br />
+                        Who can view this board? <br />
+                        <input name='permissions' className='board-permissions' type='checkbox' value='User' />
+                        <input name='permissions' className='board-permissions' type='checkbox' value='Undergraduate' />
+                        <input name='permissions' className='board-permissions' type='checkbox' value='Graduate' />
+                        <input type='submit' />
+                    </form>
+                    :
+                    <div>What</div>
+                }
             </div>
         )
     }

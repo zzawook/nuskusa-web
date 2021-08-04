@@ -23,6 +23,9 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
                     isVerified: true
                 })
             })
+            .then(() => {
+                dbService.collection('verifications').doc(this.props.verificationId).delete()
+            })
             .catch(error => {
                 console.error(error);
             });
@@ -31,6 +34,9 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
     handleReject = () => {
         storageService.ref(`verifications/${this.props.verificationId}`)
             .delete()
+            .then(() => {
+                dbService.collection('verifications').doc(this.props.verificationId).delete()
+            })
             .catch(error => {
                 console.error(error);
             });
@@ -40,7 +46,8 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
         return (
             <div>
                 <img src={this.props.downloadURL} alt=''></img> <br />
-                {this.props.username}
+                {this.props.username} <br />
+                {this.props.owner} <br />
                 <button onClick={this.handleAccept}>Verify</button>
                 <button onClick={this.handleReject}>Reject</button>
             </div>
