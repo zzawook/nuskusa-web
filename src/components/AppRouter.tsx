@@ -9,11 +9,17 @@ import SignUp from '../routes/SignUp';
 import Profile from '../routes/Profile';
 import Verification from '../routes/Verification';
 
+type AppRouterProps = {
+  username: string,
+  isVerified: boolean,
+  role: string
+}
+
 type AppRouterState = {
   isLoggedIn: boolean,
 }
 
-class AppRouter extends React.Component<{}, AppRouterState> {
+class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
   constructor(props: any) {
     super(props);
     this.state = {
