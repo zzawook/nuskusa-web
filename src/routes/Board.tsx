@@ -9,7 +9,10 @@ type PostObject = {
 }
 
 type BoardProps = {
-    boardId: string
+    boardId: string,
+    username: string,
+    isVerified: boolean,
+    role: string
 }
 
 type BoardState = {

@@ -3,7 +3,10 @@ import { dbService } from "../utils/firebaseFunctions";
 
 type PostProps = {
     boardId: string,
-    postId: string
+    postId: string,
+    username: string,
+    isVerified: boolean,
+    role: string
 }
 
 type PostState = {
@@ -26,7 +29,7 @@ class Post extends React.Component<PostProps, PostState> {
     }
 
     componentDidMount = () => {
-
+        this.fetchPost();
     }
 
     fetchPost = () => {
@@ -37,6 +40,8 @@ class Post extends React.Component<PostProps, PostState> {
                 if (querySnapshot.exists) {
 
                 }
+
+                console.log('post fetching successful')
             })
     }
 

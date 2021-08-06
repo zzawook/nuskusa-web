@@ -22,7 +22,7 @@ class App extends React.Component<{}, UserState> {
     const user = authService.currentUser
     if (user) {
       dbService
-        .collection('users').doc(user.email as string)
+        .collection('users').doc(user.uid)
         .onSnapshot((querySnapshot) => {
           if (querySnapshot.exists) {
             const data = querySnapshot.data();
