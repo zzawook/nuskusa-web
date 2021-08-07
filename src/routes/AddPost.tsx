@@ -2,7 +2,6 @@ import React from "react";
 
 type PostProps = {
     boardId: string,
-    postId: string,
     username: string,
     isVerified: boolean,
     role: string
@@ -14,6 +13,7 @@ type PostState = {
     // isAnnouncement: boolean,
     // isAnonymous: boolean,
     // isPinned: boolean,
+    // isHidden: false,
     // owner: string,
     // upvotes: number,
     // permissions: []

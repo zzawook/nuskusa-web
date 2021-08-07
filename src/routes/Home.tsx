@@ -8,13 +8,12 @@ type BoardObject = {
 }
 
 type HomeProps = {
-
+    role: string
 }
 
 type HomeState = {
     boardArray: BoardObject[],
     boardComponentArray: any[],
-    currentUserRole: string,
     title: string,
     description: string,
 }
@@ -23,30 +22,12 @@ class Home extends React.Component<HomeProps, HomeState> {
     state: HomeState = {
         boardArray: [],
         boardComponentArray: [],
-        currentUserRole: '',
         title: '',
         description: '',
     }
 
     componentDidMount = () => {
-        this.fetchUserRole();
         this.fetchBoards();
-    }
-
-    fetchUserRole = () => {
-        dbService
-            .collection('users')
-            .doc(authService.currentUser?.uid)
-            .onSnapshot((querySnapshot) => {
-                if (querySnapshot.exists) {
-                    if (querySnapshot.data()) {
-                        const data = querySnapshot.data();
-                        this.setState({
-                            currentUserRole: data?.role
-                        });
-                    }
-                }
-            })
     }
 
     fetchBoards = () => {
@@ -111,9 +92,9 @@ class Home extends React.Component<HomeProps, HomeState> {
     render = () => {
         return (
             <div>
-                hi
+                {console.log(this.props.role)}
                 {this.state.boardComponentArray}
-                {this.state.currentUserRole === 'Admin' ?
+                {this.props.role === 'Admin' ?
                     <form onSubmit={this.handleSubmit}>
                         <input name='title' type='string' onChange={this.handleChange} />
                         <input name='description' type='string' onChange={this.handleChange} /> <br />
@@ -124,7 +105,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                         <input type='submit' />
                     </form>
                     :
-                    <div>What</div>
+                    <div>Waiting</div>
                 }
             </div>
         )

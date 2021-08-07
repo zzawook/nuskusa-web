@@ -14,6 +14,7 @@ type PostState = {
     // isAnnouncement: boolean,
     // isAnonymous: boolean,
     // isPinned: boolean,
+    // isHidden: false,
     // owner: string,
     // upvotes: number,
     // permissions: []
