@@ -15,7 +15,7 @@ type PostState = {
     // isAnnouncement: boolean,
     // isAnonymous: boolean,
     // isPinned: boolean,
-    // isHidden: false,
+    // isHidden: boolean,
     // owner: string,
     // upvotes: number,
     // permissions: []
@@ -25,7 +25,15 @@ class Post extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
         super(props);
         this.state = {
-
+            // title: '',
+            // content: '',
+            // isAnnouncement: false,
+            // isAnonymous: false,
+            // isPinned: false,
+            // isHidden: false,
+            // owner: '',
+            // upvotes: 0,
+            // permissions: []
         }
     }
 
@@ -41,7 +49,6 @@ class Post extends React.Component<PostProps, PostState> {
                 if (querySnapshot.exists) {
 
                 }
-
                 console.log('post fetching successful')
             })
     }
