@@ -10,30 +10,30 @@ type PostProps = {
 }
 
 type PostState = {
-    // title: string,
-    // content: string,
-    // isAnnouncement: boolean,
-    // isAnonymous: boolean,
-    // isPinned: boolean,
-    // isHidden: boolean,
-    // owner: string,
-    // upvotes: number,
-    // permissions: []
+    title: string,
+    content: string,
+    isAnnouncement: boolean,
+    isAnonymous: boolean,
+    isPinned: boolean,
+    isHidden: boolean,
+    owner: string,
+    upvotes: number,
+    permissions: string[]
 }
 
 class Post extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
         super(props);
         this.state = {
-            // title: '',
-            // content: '',
-            // isAnnouncement: false,
-            // isAnonymous: false,
-            // isPinned: false,
-            // isHidden: false,
-            // owner: '',
-            // upvotes: 0,
-            // permissions: []
+            title: '',
+            content: '',
+            isAnnouncement: false,
+            isAnonymous: false,
+            isPinned: false,
+            isHidden: false,
+            owner: '',
+            upvotes: 0,
+            permissions: ["Admin"]
         }
     }
 
