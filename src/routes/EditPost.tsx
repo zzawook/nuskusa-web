@@ -36,11 +36,15 @@ class EditPost extends React.Component<PostProps, PostState> {
         }
     }
 
-    handleChange = (event: any) => {
-        
+    handleChange = (event: React.FormEvent<HTMLInputElement>) => {
+        event.preventDefault();
+        this.setState({
+            [event.currentTarget.name]: event.currentTarget.value
+        } as unknown as PostState)
     }
 
-    handleSubmit = (event: any) => {
+    handleSubmit = (event: React.FormEvent<HTMLInputElement>) => {
+        event.preventDefault();
         dbService
             .collection('boards').doc(this.props.boardId)
             .collection('posts').doc(this.props.postId).update(this.state);
