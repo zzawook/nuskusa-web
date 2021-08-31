@@ -1,115 +1,76 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { authService, dbService } from '../utils/firebaseFunctions';
-
-type BoardObject = {
-    title: string,
-    description: string,
-}
+import './Home.css';
+import styled from 'styled-components'
+import ActivityList from '../components/ActivityList'
+import Navbar from '../components/Navbar';
+import { Title } from '../utils/themeComponents';
 
 type HomeProps = {
     role: string
 }
 
 type HomeState = {
-    boardArray: BoardObject[],
-    boardComponentArray: any[],
-    title: string,
-    description: string,
+
 }
 
+/**
+ * Main page that the users will visit
+ */
 class Home extends React.Component<HomeProps, HomeState> {
-    state: HomeState = {
-        boardArray: [],
-        boardComponentArray: [],
-        title: '',
-        description: '',
-    }
+    constructor(props: HomeProps) {
+        super(props);
+        this.state = {
 
-    componentDidMount = () => {
-        this.fetchBoards();
-    }
-
-    fetchBoards = () => {
-        dbService
-            .collection('boards')
-            .onSnapshot((querySnapshot) => {
-                if (!querySnapshot.empty) {
-                    const arr: BoardObject[] = [];
-                    const componentArray: any[] = [];
-                    let key = 0;
-                    querySnapshot.docs.forEach((doc) => {
-                        const data = doc.data() as BoardObject;
-                        const component = (
-                            <div key={key}>
-                                <Link to={`/boards/${data.title}`}>{data.title}</Link>
-                                {/* put a modal for editing this board */}
-                            </div>
-                        )
-                        key++;
-                        arr.push(data);
-                        componentArray.push(component);
-                    })
-                    this.setState({
-                        boardArray: arr,
-                        boardComponentArray: componentArray
-                    })
-                    console.log('all boards fetching successful')
-                }
-            })
-    }
-
-    handleChange = (event: any) => {
-        event.preventDefault();
-        const { name, value } = event.target;
-        if (name === 'title') {
-            this.setState({
-                title: value
-            })
         }
-        else if (name === 'description') {
-            this.setState({
-                description: value
-            })
-        }
-    }
-
-    handleSubmit = (event: any) => {
-        event.preventDefault();
-        const { title, description } = this.state
-        const permissionsArray: any[] = [];
-        document.querySelectorAll('input[class=board-permissions]:checked')
-            .forEach((element: any) => {
-                permissionsArray.push(element.value);
-            });
-        dbService.collection('boards').doc(title).set({
-            title: title,
-            description: description,
-            permissions: permissionsArray
-        })
     }
 
     render = () => {
+        const Wrapper = styled.div`
+            display: block;
+            height: 100%;
+            width: 100%;
+            background: #18202B;
+        `
+        const Activity = styled.div`
+            margin: 0 auto;
+            bottom: 100%;
+            position: relative;
+            height: auto;
+            width: 60%;
+        `
+        const ActivityWrapper = styled.section`
+            position: relative;
+            margin: 0 auto;
+            width: 70%;
+            display: flex;
+            justify-content: center;
+        `
+
+        const HomeBackground = styled.section`
+            display: block;
+            width: 100%;
+            position: absolute;
+            height: 100vh;
+            background: #0B121C;
+        `
+
         return (
-            <div>
-                {console.log(this.props.role)}
-                {this.state.boardComponentArray}
-                {this.props.role === 'Admin' ?
-                    <form onSubmit={this.handleSubmit}>
-                        <input name='title' type='string' onChange={this.handleChange} />
-                        <input name='description' type='string' onChange={this.handleChange} /> <br />
-                        Who can view this board? <br />
-                        <input name='permissions' className='board-permissions' type='checkbox' value='User' />
-                        <input name='permissions' className='board-permissions' type='checkbox' value='Undergraduate' />
-                        <input name='permissions' className='board-permissions' type='checkbox' value='Graduate' />
-                        <input type='submit' />
-                    </form>
-                    :
-                    <div>Waiting</div>
-                }
-            </div>
+            <Wrapper>
+                <Navbar />
+                <HomeBackground>
+
+                </HomeBackground>
+                <Activity>
+                    <Title color='#FFFFFF'>Our Activities</Title>
+                    <ActivityWrapper>
+                        <ActivityList />
+                        <ActivityList />
+                        <ActivityList />
+                    </ActivityWrapper>
+                </Activity>
+            </Wrapper>
         )
     }
 }
 
-export default Home;
+export default Home

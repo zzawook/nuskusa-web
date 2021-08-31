@@ -1,5 +1,6 @@
 import React from "react";
 import { dbService } from "../utils/firebaseFunctions";
+import Comment from '../components/Comment';
 
 type PostProps = {
     boardId: string,
@@ -57,6 +58,7 @@ class Post extends React.Component<PostProps, PostState> {
         return (
             <div>
                 {this.props.postId}
+                <Comment />
             </div>
         )
     }

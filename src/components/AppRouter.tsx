@@ -1,5 +1,5 @@
 import { authService, dbService } from '../utils/firebaseFunctions';
-import { HashRouter as Router, Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import React from 'react';
 import Board from '../routes/Board';
 import Home from '../routes/Home';
@@ -10,7 +10,7 @@ import Profile from '../routes/Profile';
 import Verification from '../routes/Verification';
 import EditPost from '../routes/EditPost';
 import AddPost from '../routes/AddPost';
-
+import BoardHome from '../routes/BoardHome';
 
 
 type AppRouterProps = {
@@ -85,6 +85,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
               {console.log('logged in')}
               <Switch>
                 <Route exact path='/' render={() => <Home role={this.state.role} />} />
+                <Route exact path='/boards' render={() => <BoardHome role={this.state.role} />} />
                 <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
                   boardId={routerProps.match.params.boardTitle}
                   username={this.state.username}
@@ -124,13 +125,24 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
               <>
                 {console.log('not logged in')}
                 <Switch>
-                  <Route exact path='/' component={Home} />
+                  <Route exact path='/' render={() => <Home role='User' />} />
+                  <Route exact path='/boards' render={() => <BoardHome role='User' />} />
+                  <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
+                    boardId={routerProps.match.params.boardTitle}
+                    username={''}
+                    isVerified={false}
+                    role={'User'}
+                  />} />
+                  <Route exact path='/boards/:boardTitle/:postId' render={(routerProps) => <Post
+                    boardId={routerProps.match.params.boardTitle}
+                    postId={routerProps.match.params.postId}
+                    username={''}
+                    isVerified={false}
+                    role={'User'}
+                  />} />
                   <Route exact path='/signin' component={SignIn} />
                   <Route exact path='/signup' component={SignUp} />
                   <Route exact path='/profile' render={() => <Redirect to='/signin' />} />
-                  <Route exact path='/boards' render={() => <Redirect to='/signin' />} />
-                  <Route exact path='/boards/*' render={() => <Redirect to='/signin' />} />
-                  <Route exact path='/boards/*/*' render={() => <Redirect to='/signin' />} />
                   <Route component={this.notFoundComponent} />
                 </Switch>
               </>
