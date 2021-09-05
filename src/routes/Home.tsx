@@ -31,16 +31,32 @@ class Home extends React.Component<HomeProps, HomeState> {
         `
 
         const HomeBackground = styled.div`
+            justify-content: center;
+            display: flex;
+            align-items: center;
             width: 100%;
-            height: 65vh;
-            background: #0B121C;
+            height: 90vh;
+            background: linear-gradient(to bottom, #0B121C 55%, #18202B 35%);
             order: 1;
         `
-        const HomeBackground2 = styled.div`
-            width: 100%;
+
+        const MainBannerContainer = styled.div`
+            display: flex;
+            width: 70vw;
+            height: 65vh;
+            margin: auto;
+            position: absolute;
+            align-items: center;
+        `
+        const MainBanner = styled.div`
+            width: 60%;
             height: 25vh;
-            background: #18202B;
-            order: 1;
+            background: white;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+        `
+        const MainBannerImage = styled.img`
+            height: auto;
+            width: auto;
         `
 
         const Activity = styled.div`
@@ -64,9 +80,14 @@ class Home extends React.Component<HomeProps, HomeState> {
             <Wrapper>
                 <Navbar />
                 <HomeBackground>
+                    <MainBannerContainer>
+                        <MainBanner>
+                            Welcome to
+                            <Title color='#0B121C'>NUS Korea Society</Title>
 
+                        </MainBanner>
+                    </MainBannerContainer>
                 </HomeBackground>
-                <HomeBackground2 />
                 <Activity>
                     <Title color='#FFFFFF' style={{marginLeft: '10px'}}>Our Activities</Title>
                     <ActivityWrapper>
