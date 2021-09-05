@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import { Title, SectionTitle, SectionDescription } from '../utils/themeComponents';
+import { SectionTitle, SectionDescription } from '../utils/ThemeText';
 
 type ActivityProps = {
     link: string
@@ -16,6 +16,7 @@ class ActivityList extends React.Component<{}, ActivityProps> {
         const ActivityList = styled.div`
             min-width: 360px;
             min-height: 500px;
+            max-height: 50vh;
             margin-left: 10px;
             margin-right: 10px;
             font-family: var(--font-family-roboto);

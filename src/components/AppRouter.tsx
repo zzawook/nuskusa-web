@@ -11,6 +11,7 @@ import Verification from '../routes/Verification';
 import EditPost from '../routes/EditPost';
 import AddPost from '../routes/AddPost';
 import BoardHome from '../routes/BoardHome';
+import AboutUs from '../routes/AboutUs';
 
 
 type AppRouterProps = {
@@ -116,6 +117,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                 <Route exact path='/verification' render={() => <Verification role={this.state.role} />} />
                 <Route exact path='/signin' render={() => <Redirect to='/' />} />
                 <Route exact path='/signup' render={() => <Redirect to='/' />} />
+                <Route exact path='/about-us' render={() => <AboutUs /> } />
                 <Route component={this.notFoundComponent} />
               </Switch>
             </>
@@ -143,6 +145,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/signin' component={SignIn} />
                   <Route exact path='/signup' component={SignUp} />
                   <Route exact path='/profile' render={() => <Redirect to='/signin' />} />
+                  <Route exact path='/about-us' render={() => <AboutUs /> } />
                   <Route component={this.notFoundComponent} />
                 </Switch>
               </>

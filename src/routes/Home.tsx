@@ -1,9 +1,8 @@
 import React from 'react';
-import './Home.css';
 import styled from 'styled-components'
 import ActivityList from '../components/ActivityList'
 import Navbar from '../components/Navbar';
-import { Title } from '../utils/themeComponents';
+import { Title } from '../utils/ThemeText';
 
 type HomeProps = {
     role: string
@@ -26,32 +25,39 @@ class Home extends React.Component<HomeProps, HomeState> {
 
     render = () => {
         const Wrapper = styled.div`
-            display: block;
-            height: 100%;
-            width: 100%;
+            display: flex;
+            flex-direction: column;
             background: #18202B;
         `
-        const Activity = styled.div`
-            margin: 0 auto;
-            bottom: 100%;
-            position: relative;
-            height: auto;
-            width: 60%;
+
+        const HomeBackground = styled.div`
+            width: 100%;
+            height: 65vh;
+            background: #0B121C;
+            order: 1;
         `
-        const ActivityWrapper = styled.section`
-            position: relative;
-            margin: 0 auto;
-            width: 70%;
-            display: flex;
-            justify-content: center;
+        const HomeBackground2 = styled.div`
+            width: 100%;
+            height: 25vh;
+            background: #18202B;
+            order: 1;
         `
 
-        const HomeBackground = styled.section`
-            display: block;
-            width: 100%;
-            position: absolute;
+        const Activity = styled.div`
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            bottom: 100%;
             height: 100vh;
-            background: #0B121C;
+            order: 2;
+        `
+        const ActivityWrapper = styled.section`
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            margin: 0 auto;
+            width: 70%;
+            justify-content: center;
         `
 
         return (
@@ -60,8 +66,9 @@ class Home extends React.Component<HomeProps, HomeState> {
                 <HomeBackground>
 
                 </HomeBackground>
+                <HomeBackground2 />
                 <Activity>
-                    <Title color='#FFFFFF'>Our Activities</Title>
+                    <Title color='#FFFFFF' style={{marginLeft: '10px'}}>Our Activities</Title>
                     <ActivityWrapper>
                         <ActivityList />
                         <ActivityList />
