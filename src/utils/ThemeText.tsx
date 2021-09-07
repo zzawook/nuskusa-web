@@ -1,12 +1,10 @@
 import styled from "styled-components";
 
 const Title = styled.p`
-    position: relative;
-    text-align: center;
     font-style: normal;
     font-weight: bold;
     font-size: 42px;
-    line-height: 49px;
+    line-height: 42px;
     text-align: left;
 
     color: ${props => props.color};
@@ -15,7 +13,7 @@ const SectionTitle = styled.p`
     margin-left: 10%;
     margin-right: 10%;
     font-size: 20px;
-    font-weight: 800;
+    font-weight: bold;
     word-wrap: break-word;
     box-sizing: border-box;
     text-align: left;
@@ -30,6 +28,7 @@ const SectionDescription = styled.p`
     word-wrap: break-word;
     box-sizing: border-box;
     text-align: left;
+    color: ${props => props.color}
 `
 
 
