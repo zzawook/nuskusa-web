@@ -1,6 +1,7 @@
 import React from 'react'
 import { authService, dbService, storageService } from '../utils/firebaseFunctions';
 import SignOut from '../components/SignOut'
+import Navbar from '../components/Navbar';
 
 type UserProps = {
 
@@ -99,6 +100,7 @@ class Profile extends React.Component<UserProps, UserState> {
     render() {
         return (
             <div>
+                <Navbar />
                 {this.state.username}
                 <SignOut />
                 {this.state.isVerified ?

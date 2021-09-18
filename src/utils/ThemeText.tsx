@@ -9,6 +9,7 @@ const Title = styled.p`
 
     color: ${props => props.color};
 `
+
 const SectionTitle = styled.p`
     margin-left: 10%;
     margin-right: 10%;

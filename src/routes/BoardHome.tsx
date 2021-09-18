@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 import { authService, dbService } from '../utils/firebaseFunctions';
 
 type BoardObject = {
@@ -92,6 +93,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
     render = () => {
         return (
             <div>
+                <Navbar />
                 {console.log(this.props.role)}
                 {this.state.boardComponentArray}
                 {this.props.role === 'Admin' ?

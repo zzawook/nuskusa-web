@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../logo.png'
+import { authService } from '../utils/firebaseFunctions';
+import SignOut from './SignOut';
 
 type NavbarProps = {
 
@@ -128,16 +130,25 @@ class Navbar extends React.Component<NavbarProps, {}> {
                         <NavbarButton>
                             <NavbarText><Link to='/contacts' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Contact Us</Link></NavbarText>
                         </NavbarButton>
-                        <SignUpButton>
-                            <SignUpText>
-                                Sign Up
-                            </SignUpText>
-                        </SignUpButton>
-                        <SignInButton>
-                            <SignInText>
-                                Sign In
-                            </SignInText>
-                        </SignInButton>
+                        {authService.currentUser ?
+                            <>
+                                <SignOut>Sign Out</SignOut>
+                            </>
+                            :
+                            <>
+                                <SignUpButton>
+                                    <SignUpText>
+                                        Sign Up
+                                    </SignUpText>
+                                </SignUpButton>
+                                <SignInButton>
+                                    <SignInText>
+                                        Sign In
+                                    </SignInText>
+                                </SignInButton>
+                            </>
+                        }
+
                     </NavbarButtonContainer>
                 </NavbarContent>
             </NavbarWrapper>
