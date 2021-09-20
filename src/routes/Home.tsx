@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { authService, dbService } from '../utils/firebaseFunctions';
+import ContactUs from '../components/ContactUs'
 
 type BoardObject = {
     title: string,
@@ -126,6 +127,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                     :
                     <div>What</div>
                 }
+                <ContactUs />
             </div>
         )
     }
