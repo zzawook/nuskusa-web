@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { GoldenButton } from '../components/GoldenButton';
 import Navbar from '../components/Navbar';
 import PostThumbnail from '../components/PostThumbnail';
 import { dbService } from '../utils/firebaseFunctions';
+import { SectionDescription, Title } from '../utils/ThemeText';
 
 type PostObject = {
     title: string,
@@ -42,7 +44,7 @@ class Board extends React.Component<BoardProps, BoardState> {
             width: 70vw;
             display: flex;
             flex-direction: row;
-            justify-content: center;
+            justify-content: left;
         `
         dbService
             .collection('boards').doc(this.props.boardId)
@@ -91,17 +93,37 @@ class Board extends React.Component<BoardProps, BoardState> {
             })
     }
 
-    render() {
+    render = () => {
         const Container = styled.div`
             display: flex;
             flex-direction: column;
             align-items: center;
             background: #0B121C;
             height: 100vh;
+            width: 100vw;
         `
+        const TextContainer = styled.div`
+            display: flex;
+            flex-direction: column;
+            width: 70vw;
+        `
+
         return (
             <Container>
                 <Navbar />
+                <TextContainer>
+                    <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom:'10px' }}>
+                        게시판
+                    </Title>
+                    <SectionDescription color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
+                        NUS 한인회 게시판에 오신 것을 환영합니다. 저희 게시판은 여러 게시글들을 통해 NUS 학생들, 그리고 NUS에 관심있는 유저들과 서로 소통하고 정보 공유를 위해 만들어지는 페이지입니다.
+                    </SectionDescription>
+                    <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px'}}>
+                        <SectionDescription color='white' style={{ textAlign:'center' }}>
+                            + 게시글 올리기
+                        </SectionDescription>
+                    </GoldenButton>
+                </TextContainer>
                 {this.state.postComponentArray}
             </Container>
         )

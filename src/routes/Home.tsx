@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import ActivityList from '../components/ActivityList'
 import Navbar from '../components/Navbar';
 import ContactUs from '../components/ContactUs'
-import { Title } from '../utils/ThemeText';
+import { SectionDescription, Title } from '../utils/ThemeText';
+import { GoldenButton } from '../components/GoldenButton';
 
 type HomeProps = {
     role: string
@@ -46,10 +47,11 @@ class Home extends React.Component<HomeProps, HomeState> {
             width: 70vw;
             height: 65vh;
             margin: auto;
-            position: absolute;
             align-items: center;
         `
         const MainBanner = styled.div`
+            display: flex;
+            flex-direction: column;
             width: 60%;
             height: 25vh;
             background: white;
@@ -60,12 +62,6 @@ class Home extends React.Component<HomeProps, HomeState> {
         const MainBannerImage = styled.img`
             height: auto;
             width: auto;
-        `
-        const MoreDetailsButton = styled.button`
-            background: #BDA06D;
-            filter: drop-shadow(0px 0px 20px rgba(189, 160, 109, 0.6));
-            width: 10vw;
-            border: none;
         `
 
         const Activity = styled.div`
@@ -91,24 +87,26 @@ class Home extends React.Component<HomeProps, HomeState> {
                 <HomeBackground>
                     <MainBannerContainer>
                         <MainBanner>
-                            <p style={{margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold'}}>
+                            <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>
                                 Welcome to
                             </p>
-                            <Title color='#0B121C' style={{marginTop: '5px', marginBottom: '5px'}}>NUS Korea Society</Title>
-                            <p style={{margin: '0', marginBottom: '20px', color: '#0B121C', opacity: '0.5', fontSize: '13px'}}>
+                            <Title color='#0B121C' style={{ marginTop: '5px', marginBottom: '5px' }}>NUS Korea Society</Title>
+                            <p style={{ margin: '0', marginBottom: '20px', color: '#0B121C', opacity: '0.5', fontSize: '13px' }}>
                                 NUS 한인 학생회 사이트에 오신 것을 환영합니다!
                             </p>
-                            <MoreDetailsButton>
-                                <p style={{color: '#FFFFFF', fontSize: '14px', lineHeight: '24px', fontWeight: 'bold'}}> More Details </p>
-                            </MoreDetailsButton>
+                            <GoldenButton to='/boards'>
+                                <SectionDescription color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign:'center' }}>
+                                    + More Details
+                                </SectionDescription>
+                            </GoldenButton>
                         </MainBanner>
                     </MainBannerContainer>
                 </HomeBackground>
                 <Activity>
-                    <Title color='#FFFFFF' style={{marginLeft: '10px'}}>Our Activities</Title>
+                    <Title color='#FFFFFF' style={{ marginLeft: '10px' }}>Our Activities</Title>
                     <ActivityWrapper>
                         <ActivityList title='교류활동' content='신환회, 개강/종강파티' />
-                        <ActivityList title='이벤트' content='여러가지 이벤트!'/>
+                        <ActivityList title='이벤트' content='여러가지 이벤트!' />
                         <ActivityList title='취업활동 정보' content='인턴, 취업 관련한 웨비나' />
                     </ActivityWrapper>
                 </Activity>

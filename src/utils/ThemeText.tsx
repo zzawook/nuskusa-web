@@ -6,7 +6,6 @@ const Title = styled.p`
     font-size: 42px;
     line-height: 42px;
     text-align: left;
-
     color: ${props => props.color};
 `
 

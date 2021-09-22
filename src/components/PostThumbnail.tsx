@@ -40,17 +40,19 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
             flex-direction: column;
             width: 300px;
             height: 260px;
-            background: grey;
+            background: white;
         `
         return (
             <Container>
-                <Thumbnail>
-                    <Link to={this.props.to}>
-                        <SectionTitle>{this.props.postTitle}</SectionTitle>
-                        <SectionDescription>{this.props.postDescription}</SectionDescription>
-                    </Link>
-                    {/* <SectionDescription> </SectionDescription> */}
-                </Thumbnail>
+                <Link to={this.props.to} style={{ textDecoration: 'none' }}>
+                    <Thumbnail>
+
+                        <SectionTitle color='black'>{this.props.postTitle}</SectionTitle>
+                        <SectionDescription color='black'>{this.props.postDescription}</SectionDescription>
+                    </Thumbnail>
+
+                </Link>
+                {/* <SectionDescription> </SectionDescription> */}
             </Container>
         )
     }

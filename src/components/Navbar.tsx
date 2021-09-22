@@ -21,12 +21,14 @@ class Navbar extends React.Component<NavbarProps, {}> {
         const NavbarWrapper = styled.div`
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
-            box-sizing: border-box;
+            /* box-sizing: border-box; */
             background: #0B121C;
             display: flex;
             flex-direction: row;
             height: 10vh;
             justify-content: center;
+            width: 100vw;
+            max-width: 100%;
         `
         const NavbarContent = styled.div`
             display: flex;
