@@ -1,6 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { authService, dbService } from '../utils/firebaseFunctions';
+<<<<<<< Updated upstream
+=======
+import ContactUs from '../components/ContactUs'
+import Post from './Post'
+>>>>>>> Stashed changes
 
 type BoardObject = {
     title: string,
@@ -126,6 +131,11 @@ class Home extends React.Component<HomeProps, HomeState> {
                     :
                     <div>What</div>
                 }
+<<<<<<< Updated upstream
+=======
+                <ContactUs />
+                <Post boardId={'yo'} postId={'1myX5gUqoU4ttMHNLVO8'} />
+>>>>>>> Stashed changes
             </div>
         )
     }
