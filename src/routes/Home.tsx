@@ -1,4 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { authService, dbService } from '../utils/firebaseFunctions';
+import ContactUs from '../components/ContactUs'
 import styled from 'styled-components'
 import ActivityList from '../components/ActivityList'
 import Navbar from '../components/Navbar';
@@ -75,6 +78,20 @@ class Home extends React.Component<HomeProps, HomeState> {
                         <ActivityList />
                     </ActivityWrapper>
                 </Activity>
+                {this.state.currentUserRole === 'Admin' ?
+                    <form onSubmit={this.handleSubmit}>
+                        <input name='title' type='string' onChange={this.handleChange} />
+                        <input name='description' type='string' onChange={this.handleChange} /> <br />
+                        Who can view this board? <br />
+                        <input name='permissions' className='board-permissions' type='checkbox' value='User' />
+                        <input name='permissions' className='board-permissions' type='checkbox' value='Undergraduate' />
+                        <input name='permissions' className='board-permissions' type='checkbox' value='Graduate' />
+                        <input type='submit' />
+                    </form>
+                    :
+                    <div>What</div>
+                }
+                <ContactUs />
             </Wrapper>
         )
     }
