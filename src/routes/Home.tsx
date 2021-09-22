@@ -2,118 +2,82 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { authService, dbService } from '../utils/firebaseFunctions';
 import ContactUs from '../components/ContactUs'
-
-type BoardObject = {
-    title: string,
-    description: string,
-}
+import styled from 'styled-components'
+import ActivityList from '../components/ActivityList'
+import Navbar from '../components/Navbar';
+import { Title } from '../utils/ThemeText';
 
 type HomeProps = {
-
+    role: string
 }
 
 type HomeState = {
-    boardArray: BoardObject[],
-    boardComponentArray: any[],
-    currentUserRole: string,
-    title: string,
-    description: string,
+
 }
 
+/**
+ * Main page that the users will visit
+ */
 class Home extends React.Component<HomeProps, HomeState> {
-    state: HomeState = {
-        boardArray: [],
-        boardComponentArray: [],
-        currentUserRole: '',
-        title: '',
-        description: '',
-    }
+    constructor(props: HomeProps) {
+        super(props);
+        this.state = {
 
-    componentDidMount = () => {
-        this.fetchUserRole();
-        this.fetchBoards();
-    }
-
-    fetchUserRole = () => {
-        dbService
-            .collection('users')
-            .doc(authService.currentUser?.uid)
-            .onSnapshot((querySnapshot) => {
-                if (querySnapshot.exists) {
-                    if (querySnapshot.data()) {
-                        const data = querySnapshot.data();
-                        this.setState({
-                            currentUserRole: data?.role
-                        });
-                    }
-                }
-            })
-    }
-
-    fetchBoards = () => {
-        dbService
-            .collection('boards')
-            .onSnapshot((querySnapshot) => {
-                if (!querySnapshot.empty) {
-                    const arr: BoardObject[] = [];
-                    const componentArray: any[] = [];
-                    let key = 0;
-                    querySnapshot.docs.forEach((doc) => {
-                        const data = doc.data() as BoardObject;
-                        const component = (
-                            <div key={key}>
-                                <Link to={`/boards/${data.title}`}>{data.title}</Link>
-                                {/* put a modal for editing this board */}
-                            </div>
-                        )
-                        key++;
-                        arr.push(data);
-                        componentArray.push(component);
-                    })
-                    this.setState({
-                        boardArray: arr,
-                        boardComponentArray: componentArray
-                    })
-                    console.log('all boards fetching successful')
-                }
-            })
-    }
-
-    handleChange = (event: any) => {
-        event.preventDefault();
-        const { name, value } = event.target;
-        if (name === 'title') {
-            this.setState({
-                title: value
-            })
         }
-        else if (name === 'description') {
-            this.setState({
-                description: value
-            })
-        }
-    }
-
-    handleSubmit = (event: any) => {
-        event.preventDefault();
-        const { title, description } = this.state
-        const permissionsArray: any[] = [];
-        document.querySelectorAll('input[class=board-permissions]:checked')
-            .forEach((element: any) => {
-                permissionsArray.push(element.value);
-            });
-        dbService.collection('boards').doc(title).set({
-            title: title,
-            description: description,
-            permissions: permissionsArray
-        })
     }
 
     render = () => {
+        const Wrapper = styled.div`
+            display: flex;
+            flex-direction: column;
+            background: #18202B;
+        `
+
+        const HomeBackground = styled.div`
+            width: 100%;
+            height: 65vh;
+            background: #0B121C;
+            order: 1;
+        `
+        const HomeBackground2 = styled.div`
+            width: 100%;
+            height: 25vh;
+            background: #18202B;
+            order: 1;
+        `
+
+        const Activity = styled.div`
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            bottom: 100%;
+            height: 100vh;
+            order: 2;
+        `
+        const ActivityWrapper = styled.section`
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            margin: 0 auto;
+            width: 70%;
+            justify-content: center;
+        `
+
         return (
-            <div>
-                hi
-                {this.state.boardComponentArray}
+            <Wrapper>
+                <Navbar />
+                <HomeBackground>
+
+                </HomeBackground>
+                <HomeBackground2 />
+                <Activity>
+                    <Title color='#FFFFFF' style={{marginLeft: '10px'}}>Our Activities</Title>
+                    <ActivityWrapper>
+                        <ActivityList />
+                        <ActivityList />
+                        <ActivityList />
+                    </ActivityWrapper>
+                </Activity>
                 {this.state.currentUserRole === 'Admin' ?
                     <form onSubmit={this.handleSubmit}>
                         <input name='title' type='string' onChange={this.handleChange} />
@@ -128,9 +92,9 @@ class Home extends React.Component<HomeProps, HomeState> {
                     <div>What</div>
                 }
                 <ContactUs />
-            </div>
+            </Wrapper>
         )
     }
 }
 
-export default Home;
+export default Home

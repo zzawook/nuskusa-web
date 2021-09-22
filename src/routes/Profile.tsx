@@ -1,5 +1,6 @@
 import React from 'react'
 import { authService, dbService, storageService } from '../utils/firebaseFunctions';
+import SignOut from '../components/SignOut'
 
 type UserProps = {
 
@@ -95,11 +96,11 @@ class Profile extends React.Component<UserProps, UserState> {
             )
         }
     }
-
     render() {
         return (
             <div>
                 {this.state.username}
+                <SignOut />
                 {this.state.isVerified ?
                     <>
                         You are verified!
