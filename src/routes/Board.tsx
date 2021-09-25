@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import BoardNavbar from '../components/BoardNavbar';
+import ContactUs from '../components/ContactUs';
 import { GoldenButton } from '../components/GoldenButton';
 import Navbar from '../components/Navbar';
 import PostThumbnail from '../components/PostThumbnail';
@@ -20,23 +22,48 @@ type BoardProps = {
     role: string
 }
 
+type FirestoreBoardState = {
+    title: string,
+    description: string,
+    permissions: string[]
+}
+
 type BoardState = {
+    title: string,
+    description: string,
+    permissions: string[],
     postArray: PostObject[],
     postComponentArray: any[]
 }
 
 class Board extends React.Component<BoardProps, BoardState> {
     state: BoardState = {
+        title: "",
+        description: "",
+        permissions: ["Admin"],
         postArray: [],
         postComponentArray: []
     }
 
     componentDidMount = () => {
+        this.fetchBoard();
         this.fetchPosts();
     }
 
     addPostLink = () => {
         return <button><Link to={`/boards/${this.props.boardId}/new`}></Link></button>
+    }
+
+    fetchBoard = () => {
+        dbService.collection('boards').doc(this.props.boardId)
+            .onSnapshot((doc) => {
+                const data = doc.data() as FirestoreBoardState
+                this.setState({
+                    title: data.title,
+                    description: data.description,
+                    permissions: data.permissions
+                })
+        })
     }
 
     fetchPosts = () => {
@@ -99,7 +126,7 @@ class Board extends React.Component<BoardProps, BoardState> {
             flex-direction: column;
             align-items: center;
             background: #0B121C;
-            height: 100vh;
+            height: 100%;
             width: 100vw;
         `
         const TextContainer = styled.div`
@@ -107,16 +134,38 @@ class Board extends React.Component<BoardProps, BoardState> {
             flex-direction: column;
             width: 70vw;
         `
+        const PostContainer = styled.div`
+            width: 70vw;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            margin: auto;
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+            ::-webkit-scrollbar-track {
+                max-width: 1px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 5px;
+            }
+            ::-webkit-scrollbar-thumb {
+                width: 10px;
+                height: 30px;
+                background: white;
+                border-radius: 5px;
+            }
+        `
 
         return (
             <Container>
                 <Navbar />
                 <TextContainer>
                     <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom:'10px' }}>
-                        게시판
+                        {this.props.boardId}
                     </Title>
                     <SectionDescription color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
-                        NUS 한인회 게시판에 오신 것을 환영합니다. 저희 게시판은 여러 게시글들을 통해 NUS 학생들, 그리고 NUS에 관심있는 유저들과 서로 소통하고 정보 공유를 위해 만들어지는 페이지입니다.
+                        {this.state.description}    
                     </SectionDescription>
                     <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px'}}>
                         <SectionDescription color='white' style={{ textAlign:'center' }}>
@@ -124,7 +173,12 @@ class Board extends React.Component<BoardProps, BoardState> {
                         </SectionDescription>
                     </GoldenButton>
                 </TextContainer>
-                {this.state.postComponentArray}
+                <BoardNavbar currentRoute={this.props.boardId} />
+                <PostContainer>
+                    {this.state.postComponentArray}
+                </PostContainer>
+                <div style={{height:'20vh'}} />
+                <ContactUs />
             </Container>
         )
     }
