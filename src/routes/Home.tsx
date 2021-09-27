@@ -12,7 +12,9 @@ import ContactUs from '../components/ContactUs'
 import styled from 'styled-components'
 import ActivityList from '../components/ActivityList'
 import Navbar from '../components/Navbar';
-import { Title } from '../utils/ThemeText';
+import ContactUs from '../components/ContactUs'
+import { SectionDescription, Title } from '../utils/ThemeText';
+import { GoldenButton } from '../components/GoldenButton';
 
 type HomeProps = {
     role: string
@@ -41,16 +43,35 @@ class Home extends React.Component<HomeProps, HomeState> {
         `
 
         const HomeBackground = styled.div`
+            justify-content: center;
+            display: flex;
+            align-items: center;
             width: 100%;
-            height: 65vh;
-            background: #0B121C;
+            height: 90vh;
+            background: linear-gradient(to bottom, #0B121C 55%, #18202B 35%);
             order: 1;
         `
-        const HomeBackground2 = styled.div`
-            width: 100%;
+
+        const MainBannerContainer = styled.div`
+            display: flex;
+            width: 70vw;
+            height: 65vh;
+            margin: auto;
+            align-items: center;
+        `
+        const MainBanner = styled.div`
+            display: flex;
+            flex-direction: column;
+            width: 60%;
             height: 25vh;
-            background: #18202B;
-            order: 1;
+            background: white;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+            padding: 25px 50px;
+        `
+        const MainBannerImage = styled.img`
+            height: auto;
+            width: auto;
         `
 
         const Activity = styled.div`
@@ -74,33 +95,33 @@ class Home extends React.Component<HomeProps, HomeState> {
             <Wrapper>
                 <Navbar />
                 <HomeBackground>
-
+                    <MainBannerContainer>
+                        <MainBanner>
+                            <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>
+                                Welcome to
+                            </p>
+                            <Title color='#0B121C' style={{ marginTop: '5px', marginBottom: '5px' }}>NUS Korea Society</Title>
+                            <p style={{ margin: '0', marginBottom: '20px', color: '#0B121C', opacity: '0.5', fontSize: '13px' }}>
+                                NUS 한인 학생회 사이트에 오신 것을 환영합니다!
+                            </p>
+                            <GoldenButton to='/boards'>
+                                <SectionDescription color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign:'center' }}>
+                                    + More Details
+                                </SectionDescription>
+                            </GoldenButton>
+                        </MainBanner>
+                    </MainBannerContainer>
                 </HomeBackground>
-                <HomeBackground2 />
                 <Activity>
-                    <Title color='#FFFFFF' style={{marginLeft: '10px'}}>Our Activities</Title>
+                    <Title color='#FFFFFF' style={{ marginLeft: '10px' }}>Our Activities</Title>
                     <ActivityWrapper>
-                        <ActivityList />
-                        <ActivityList />
-                        <ActivityList />
+                        <ActivityList title='교류활동' content='신환회, 개강/종강파티' />
+                        <ActivityList title='이벤트' content='여러가지 이벤트!' />
+                        <ActivityList title='취업활동 정보' content='인턴, 취업 관련한 웨비나' />
                     </ActivityWrapper>
                 </Activity>
-                {this.state.currentUserRole === 'Admin' ?
-                    <form onSubmit={this.handleSubmit}>
-                        <input name='title' type='string' onChange={this.handleChange} />
-                        <input name='description' type='string' onChange={this.handleChange} /> <br />
-                        Who can view this board? <br />
-                        <input name='permissions' className='board-permissions' type='checkbox' value='User' />
-                        <input name='permissions' className='board-permissions' type='checkbox' value='Undergraduate' />
-                        <input name='permissions' className='board-permissions' type='checkbox' value='Graduate' />
-                        <input type='submit' />
-                    </form>
-                    :
-                    <div>What</div>
-                }
                 <ContactUs />
-                <Post boardId={'yo'} postId={'1myX5gUqoU4ttMHNLVO8'} />
-            </div>
+            </Wrapper>
         )
     }
 }

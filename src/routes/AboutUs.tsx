@@ -1,4 +1,5 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
 
 class AboutUs extends React.Component {
     constructor(props: any) {
@@ -11,6 +12,7 @@ class AboutUs extends React.Component {
     render = () => {
         return (
             <div>
+                <Navbar />
                 ABOUT US!!!
             </div>
         )

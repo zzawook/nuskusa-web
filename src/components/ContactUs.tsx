@@ -308,8 +308,10 @@ class ContactUs extends React.Component {
                     <button style={this.submitStyle} onClick={this.handleFormSubmit}>Submit</button>
                 </form>
             </div>
+
         )
     }
 }
 
-export default ContactUs
+
+export default ContactUs;

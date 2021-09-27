@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
 import VerificationComponent from '../components/VerificationComponent'
 import { authService, dbService } from '../utils/firebaseFunctions'
 
@@ -54,6 +55,7 @@ class Verification extends React.Component<VerificationProps, VerificationState>
     render = () => {
         return (
             <>
+                <Navbar />
                 {this.state.role === 'Admin' ?
                     <div>
                         Admin!

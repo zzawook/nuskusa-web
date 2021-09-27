@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../logo.png'
-import { SignInText, SignUpText } from '../utils/ThemeText'
+import { authService } from '../utils/firebaseFunctions';
+import SignOut from './SignOut';
 
 type NavbarProps = {
 
@@ -20,12 +21,14 @@ class Navbar extends React.Component<NavbarProps, {}> {
         const NavbarWrapper = styled.div`
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
-            box-sizing: border-box;
+            /* box-sizing: border-box; */
             background: #0B121C;
             display: flex;
             flex-direction: row;
             height: 10vh;
             justify-content: center;
+            width: 100vw;
+            max-width: 100%;
         `
         const NavbarContent = styled.div`
             display: flex;
@@ -49,16 +52,12 @@ class Navbar extends React.Component<NavbarProps, {}> {
         const NavbarButton = styled.button`
             display: inline-block;
 
-            opacity: 0.6;
             border: none;
             background: #0B121C;
             color: white;
             width: fit-content;
             height: auto;
             vertical-align: middle;
-            :hover {
-                opacity: 1;
-            }
             /* ::after {
                 border-bottom: 3px solid #FFFFFF;
                 width: 44px;
@@ -78,13 +77,10 @@ class Navbar extends React.Component<NavbarProps, {}> {
             position: relative;
             margin-bottom: auto;
             box-sizing: border-box;
-        `
-
-        const SelectedLine = styled.div`
-            position: absolute;
-            border: 3px solid #FFFFFF;
-            width: 44px;
-            bottom: 0;
+            opacity: 0.6;
+            :hover {
+                opacity: 1;
+            }
         `
 
         const SignUpButton = styled.button`
@@ -103,34 +99,58 @@ class Navbar extends React.Component<NavbarProps, {}> {
             margin-left: 5px;
             margin-right: 5px;
         `
-
+        const SignInText = styled.p`
+            font-weight: 700;
+            font-size: 14px;
+            color: #FFFFFF;
+            margin: 5px;
+            padding-left: 1vw;
+            padding-right: 1vw;
+        `
+        const SignUpText = styled.p`
+            font-weight: 700;
+            font-size: 14px;    
+            color: #101C2C;
+            margin: 5px;
+            padding-left: 1vw;
+            padding-right: 1vw;
+        `
         return (
             <NavbarWrapper>
                 <NavbarContent>
                     <Logo src={logo} width='64' height='64' />
                     <NavbarButtonContainer>
                         <NavbarButton>
-                            <NavbarText>Home</NavbarText>
+                            <NavbarText><Link to='/home' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Home</Link></NavbarText>
                         </NavbarButton>
                         <NavbarButton>
-                            <NavbarText><Link to='/about-us'>About Us</Link></NavbarText>
+                            <NavbarText><Link to='/about-us' style={{ color: '#FFFFFF', textDecoration: 'none' }}>About Us</Link></NavbarText>
                         </NavbarButton>
                         <NavbarButton>
-                            <NavbarText>Posts</NavbarText>
+                            <NavbarText><Link to='/boards' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></NavbarText>
                         </NavbarButton>
                         <NavbarButton>
-                            <NavbarText>Contact Us</NavbarText>
+                            <NavbarText><Link to='/contacts' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Contact Us</Link></NavbarText>
                         </NavbarButton>
-                        <SignUpButton>
-                            <SignUpText>
-                                Sign Up
-                            </SignUpText>
-                        </SignUpButton>
-                        <SignInButton>
-                            <SignInText>
-                                Sign In
-                            </SignInText>
-                        </SignInButton>
+                        {authService.currentUser ?
+                            <>
+                                <SignOut>Sign Out</SignOut>
+                            </>
+                            :
+                            <>
+                                <SignUpButton>
+                                    <SignUpText>
+                                        Sign Up
+                                    </SignUpText>
+                                </SignUpButton>
+                                <SignInButton>
+                                    <SignInText>
+                                        Sign In
+                                    </SignInText>
+                                </SignInButton>
+                            </>
+                        }
+
                     </NavbarButtonContainer>
                 </NavbarContent>
             </NavbarWrapper>

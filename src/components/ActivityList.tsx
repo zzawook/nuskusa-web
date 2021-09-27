@@ -1,12 +1,14 @@
 import React from 'react';
 import styled from 'styled-components'
-import { SectionTitle, SectionDescription } from '../utils/ThemeText';
+import { SectionTitle, SectionDescription, Title } from '../utils/ThemeText';
 
 type ActivityProps = {
-    link: string
+    image?: string, // link of image to use in img tag
+    title: string,
+    content: string
 }
 
-class ActivityList extends React.Component<{}, ActivityProps> {
+class ActivityList extends React.Component<ActivityProps, {}> {
     constructor(props: ActivityProps) {
         super(props);
     }
@@ -29,11 +31,12 @@ class ActivityList extends React.Component<{}, ActivityProps> {
         
         return (
             <ActivityList>
+                {/* <img src={this.props.image} style={{maxHeight=640px, maxWidth=640px}}> </img> */}
                 <SectionTitle color='#0B121C'>
-                    Yoo
+                    {this.props.title}
                 </SectionTitle>
                 <SectionDescription>
-                    Description
+                    {this.props.content}
                 </SectionDescription>
             </ActivityList>
         )

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { authService } from '../utils/firebaseFunctions';
 import firebase from 'firebase';
+import Navbar from '../components/Navbar';
 
 type UserProps = {
 
@@ -50,6 +51,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
     render() {
         return (
             <>
+                <Navbar />
                 <form onSubmit={this.handleSubmit}>
                     <input
                         name="email"

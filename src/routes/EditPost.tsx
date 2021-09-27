@@ -1,4 +1,5 @@
 import React from "react";
+import Navbar from "../components/Navbar";
 import { dbService } from "../utils/firebaseFunctions";
 
 type PostProps = {
@@ -53,6 +54,7 @@ class EditPost extends React.Component<PostProps, PostState> {
     render = () => {
         return (
             <div>
+                <Navbar />
                 Edit
             </div>
         )

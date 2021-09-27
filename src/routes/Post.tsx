@@ -1,6 +1,7 @@
 import React from "react";
 import { dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Comment';
+import Navbar from "../components/Navbar";
 
 type PostProps = {
     boardId: string,
@@ -49,7 +50,8 @@ class Post extends React.Component<PostProps, PostState> {
     fetchPost = () => {
         dbService // Retrieve post information
             .collection('boards').doc(this.props.boardId)
-            .collection('posts').doc(this.props.postId)
+            .collection('posts')
+            .doc(this.props.postId)
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
                     console.log(querySnapshot.data())
@@ -90,6 +92,7 @@ class Post extends React.Component<PostProps, PostState> {
     render = () => {
         return (
             <div>
+                <Navbar />
                 {this.props.postId}
                 <Comment />
             </div>
