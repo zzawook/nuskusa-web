@@ -9,7 +9,10 @@ type PostObject = {
 }
 
 type BoardProps = {
-    boardId: string
+    boardId: string,
+    username: string,
+    isVerified: boolean,
+    role: string
 }
 
 type BoardState = {
@@ -27,6 +30,10 @@ class Board extends React.Component<BoardProps, BoardState> {
         this.fetchPosts();
     }
 
+    addPostLink = () => {
+        return <button><Link to={`/boards/${this.props.boardId}/new`}></Link></button>
+    }
+
     fetchPosts = () => {
         dbService
             .collection('boards').doc(this.props.boardId)
@@ -36,6 +43,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 const componentArray: any[] = [];
                 querySnapshot.docs.forEach((doc) => {
                     const data = doc.data() as PostObject;
+                    console.log(doc.data())
                     const component = (
                         <div>
                             <Link to={`/boards/${this.props.boardId}/${doc.id}`}>{data.title}</Link>

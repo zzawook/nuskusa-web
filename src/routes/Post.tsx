@@ -1,9 +1,13 @@
 import React from "react";
 import { dbService } from "../utils/firebaseFunctions";
+import Comment from '../components/Comment';
 
 type PostProps = {
     boardId: string,
-    postId: string
+    postId: string,
+    username: string,
+    isVerified: boolean,
+    role: string
 }
 
 type PostState = {
@@ -18,7 +22,6 @@ type PostState = {
     numComments: number,
     permissions: [],
     author: string,
-    
 }
 
 class Post extends React.Component<PostProps, PostState> {
@@ -69,6 +72,7 @@ class Post extends React.Component<PostProps, PostState> {
                         })
                     }
                 }
+                console.log('post fetching successful')
             })
         dbService
         .collection('boards').doc('yo')
@@ -87,6 +91,7 @@ class Post extends React.Component<PostProps, PostState> {
         return (
             <div>
                 {this.props.postId}
+                <Comment />
             </div>
         )
     }
