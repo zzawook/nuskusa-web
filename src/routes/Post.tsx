@@ -18,42 +18,75 @@ type PostState = {
     isAnonymous: boolean,
     isPinned: boolean,
     isHidden: boolean,
-    owner: string,
+    lastModified: number,
     upvotes: number,
-    permissions: string[]
+    numComments: number,
+    permissions: [],
+    author: string,
 }
 
 class Post extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
         super(props);
         this.state = {
-            title: '',
-            content: '',
+            title: "Title",
+            content: "Content",
             isAnnouncement: false,
-            isAnonymous: false,
+            isAnonymous: true,
             isPinned: false,
             isHidden: false,
-            owner: '',
+            lastModified: Date.now(),
             upvotes: 0,
-            permissions: ["Admin"]
+            numComments: 0,
+            permissions: [],
+            author: "TempAuthor",
         }
     }
 
     componentDidMount = () => {
-        this.fetchPost();
+        this.fetchPost()
     }
 
     fetchPost = () => {
-        dbService
+        dbService // Retrieve post information
             .collection('boards').doc(this.props.boardId)
             .collection('posts')
             .doc(this.props.postId)
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
-
+                    console.log(querySnapshot.data())
+                    let data = querySnapshot.data();
+                    console.log(data);
+                    if (data == undefined) {
+                        return;
+                    }
+                    else {
+                        this.setState({
+                            title: data.title,
+                            author: data.author,
+                            isAnnouncement: data.isAnnouncement,
+                            isAnonymous: data.isAnonymous,
+                            isHidden: data.isHidden,
+                            isPinned: data.isPinned,
+                            lastModified: data.lastModified,
+                            upvotes: data.upvotes,
+                            permissions: data.permissions
+                        })
+                    }
                 }
                 console.log('post fetching successful')
             })
+        dbService // retrieve comments within the post
+        .collection('boards').doc(this.props.boardId)
+        .collection('posts').doc(this.props.postId)
+        .collection('comments').onSnapshot((querySnapshot) => {
+            const commentObjs = querySnapshot.docs;
+            const commentArray = [];
+            for (let i = 0; i < commentObjs.length; i++) {
+                commentArray.push(commentObjs[i].data());
+            }
+            console.log(commentArray)
+        })
     }
 
     render = () => {
