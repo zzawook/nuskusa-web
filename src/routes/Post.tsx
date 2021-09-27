@@ -47,9 +47,9 @@ class Post extends React.Component<PostProps, PostState> {
     }
 
     fetchPost = () => {
-        dbService
-            .collection('boards').doc('yo'/*this.props.boardId*/)
-            .collection('posts').doc('1myX5gUqoU4ttMHNLVO8'/*this.props.postId*/)
+        dbService // Retrieve post information
+            .collection('boards').doc(this.props.boardId)
+            .collection('posts').doc(this.props.postId)
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
                     console.log(querySnapshot.data())
@@ -74,9 +74,9 @@ class Post extends React.Component<PostProps, PostState> {
                 }
                 console.log('post fetching successful')
             })
-        dbService
-        .collection('boards').doc('yo')
-        .collection('posts').doc('1myX5gUqoU4ttMHNLVO8')
+        dbService // retrieve comments within the post
+        .collection('boards').doc(this.props.boardId)
+        .collection('posts').doc(this.props.postId)
         .collection('comments').onSnapshot((querySnapshot) => {
             const commentObjs = querySnapshot.docs;
             const commentArray = [];
