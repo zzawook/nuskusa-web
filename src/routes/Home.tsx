@@ -2,6 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { authService, dbService } from '../utils/firebaseFunctions';
 import ContactUs from '../components/ContactUs'
+import Post from './Post'
+
+type BoardObject = {
+    title: string,
+    description: string,
+}
+import ContactUs from '../components/ContactUs'
 import styled from 'styled-components'
 import ActivityList from '../components/ActivityList'
 import Navbar from '../components/Navbar';
@@ -92,7 +99,8 @@ class Home extends React.Component<HomeProps, HomeState> {
                     <div>What</div>
                 }
                 <ContactUs />
-            </Wrapper>
+                <Post boardId={'yo'} postId={'1myX5gUqoU4ttMHNLVO8'} />
+            </div>
         )
     }
 }
