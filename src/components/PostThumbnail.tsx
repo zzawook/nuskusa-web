@@ -33,7 +33,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
             align-items: center;
             justify-content: center;
             background: white;
-            margin: 10px;
+            margin: 10px 20px;
         `
         const Thumbnail = styled.div`
             display: flex;
@@ -46,11 +46,9 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
             <Container>
                 <Link to={this.props.to} style={{ textDecoration: 'none' }}>
                     <Thumbnail>
-
                         <SectionTitle color='black'>{this.props.postTitle}</SectionTitle>
                         <SectionDescription color='black'>{this.props.postDescription}</SectionDescription>
                     </Thumbnail>
-
                 </Link>
                 {/* <SectionDescription> </SectionDescription> */}
             </Container>

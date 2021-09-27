@@ -67,23 +67,13 @@ class Board extends React.Component<BoardProps, BoardState> {
     }
 
     fetchPosts = () => {
-        const PostThumbnailContainer = styled.div`
-            width: 70vw;
-            display: flex;
-            flex-direction: row;
-            justify-content: left;
-        `
         dbService
             .collection('boards').doc(this.props.boardId)
             .collection('posts')
             .onSnapshot((querySnapshot) => {
                 const arr: PostObject[] = [];
                 const componentArray: any[] = [];
-                let count: number = 0; // 
-                let currentElement: number = 0;
-                let tempArray: any[] = []
                 querySnapshot.docs.forEach((doc) => {
-                    const length = querySnapshot.docs.length;
                     const data = doc.data() as PostObject;
                     console.log(doc.data())
                     const component = (
@@ -95,22 +85,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                         </>
                     )
                     arr.push(data);
-                    // Wraps three PostThumbnails into one container
-                    if (count < 3) {
-                        tempArray.push(component);
-                        count++;
-                    } else if (count == 3) {
-                        componentArray.push(<PostThumbnailContainer>{tempArray}</PostThumbnailContainer>)
-                        tempArray = [];
-                        count = 0;
-                    }
-                    // When the docs array reaches the last element, add that element to componentArray,
-                    // wrapped with PostThumbnailContainer
-                    if (currentElement == length - 1) {
-                        componentArray.push(<PostThumbnailContainer>{tempArray}</PostThumbnailContainer>)
-                    }
-
-                    currentElement++;
+                    componentArray.push(component)
                 })
                 this.setState({
                     postArray: arr,
@@ -135,6 +110,8 @@ class Board extends React.Component<BoardProps, BoardState> {
             width: 70vw;
         `
         const PostContainer = styled.div`
+            display: flex;
+            flex-wrap: wrap;
             width: 70vw;
             height: 100vh;
             box-sizing: border-box;
