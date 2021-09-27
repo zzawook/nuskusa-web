@@ -26,7 +26,6 @@ class BoardThumbnail extends React.Component<BoardProps, BoardState> {
             display: flex;
             flex-direction: column;
             background: white;
-            margin: auto;
             width: 40%;
             height: 15vh;
             overflow-x: hidden;
