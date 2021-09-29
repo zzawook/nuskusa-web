@@ -153,10 +153,15 @@ class Board extends React.Component<BoardProps, BoardState> {
                     </GoldenButton>
                 </TextContainer>
                 <BoardNavbar currentRoute={this.props.boardId} />
-                <PostContainer>
-                    {this.state.postComponentArray}
-                </PostContainer>
-                <div style={{ height: '20vh' }} />
+                {this.state.postComponentArray.length == 0 ?
+                    <SectionDescription color='white'>
+                        There is no post here yet!
+                    </SectionDescription>
+                    :
+                    <PostContainer>
+                        {this.state.postComponentArray}
+                    </PostContainer>
+                }
                 <ContactUs />
             </Container>
         )

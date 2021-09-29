@@ -3,18 +3,17 @@ import { Link } from 'react-router-dom';
 import { authService, dbService } from '../utils/firebaseFunctions';
 import ContactUs from '../components/ContactUs'
 import Post from './Post'
+import styled from 'styled-components'
+import ActivityList from '../components/ActivityList'
+import Navbar from '../components/Navbar';
+import { SectionDescription, Title } from '../utils/ThemeText';
+import { GoldenButton } from '../components/GoldenButton';
 
 type BoardObject = {
     title: string,
     description: string,
 }
-import ContactUs from '../components/ContactUs'
-import styled from 'styled-components'
-import ActivityList from '../components/ActivityList'
-import Navbar from '../components/Navbar';
-import ContactUs from '../components/ContactUs'
-import { SectionDescription, Title } from '../utils/ThemeText';
-import { GoldenButton } from '../components/GoldenButton';
+
 
 type HomeProps = {
     role: string
@@ -120,7 +119,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                         <ActivityList title='취업활동 정보' content='인턴, 취업 관련한 웨비나' />
                     </ActivityWrapper>
                 </Activity>
-                <ContactUs />
+                {/* <ContactUs /> */}
             </Wrapper>
         )
     }

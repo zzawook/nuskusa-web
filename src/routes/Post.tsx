@@ -3,6 +3,20 @@ import { dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Comment';
 import Navbar from "../components/Navbar";
 
+type FierstorePostState = {
+    title: string,
+    content: string,
+    isAnnouncement: boolean,
+    isAnonymous: boolean,
+    isPinned: boolean,
+    isHidden: boolean,
+    lastModified: number,
+    upvotes: number,
+    numComments: number,
+    permissions: string[],
+    author: string,
+}
+
 type PostProps = {
     boardId: string,
     postId: string,
@@ -21,8 +35,10 @@ type PostState = {
     lastModified: number,
     upvotes: number,
     numComments: number,
-    permissions: [],
+    permissions: string[],
     author: string,
+    errorMsg: string,
+    commentArray: any[]
 }
 
 class Post extends React.Component<PostProps, PostState> {
@@ -40,6 +56,8 @@ class Post extends React.Component<PostProps, PostState> {
             numComments: 0,
             permissions: [],
             author: "TempAuthor",
+            errorMsg: "",
+            commentArray: []
         }
     }
 
@@ -55,46 +73,65 @@ class Post extends React.Component<PostProps, PostState> {
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
                     console.log(querySnapshot.data())
-                    let data = querySnapshot.data();
+                    let data = querySnapshot.data() as FierstorePostState;
                     console.log(data);
                     if (data == undefined) {
                         return;
                     }
                     else {
-                        this.setState({
-                            title: data.title,
-                            author: data.author,
-                            isAnnouncement: data.isAnnouncement,
-                            isAnonymous: data.isAnonymous,
-                            isHidden: data.isHidden,
-                            isPinned: data.isPinned,
-                            lastModified: data.lastModified,
-                            upvotes: data.upvotes,
-                            permissions: data.permissions
-                        })
+                        if (data.permissions.includes(this.props.role) || data.permissions.includes("User")) {
+                            this.setState({
+                                title: data.title,
+                                author: data.author,
+                                isAnnouncement: data.isAnnouncement,
+                                isAnonymous: data.isAnonymous,
+                                isHidden: data.isHidden,
+                                isPinned: data.isPinned,
+                                lastModified: data.lastModified,
+                                upvotes: data.upvotes,
+                                permissions: data.permissions,
+                                errorMsg: "ok"
+                            })
+                            dbService // retrieve comments within the post
+                                .collection('boards').doc(this.props.boardId)
+                                .collection('posts').doc(this.props.postId)
+                                .collection('comments').onSnapshot((querySnapshot) => {
+                                    const commentObjs = querySnapshot.docs;
+                                    const commentArray = [];
+                                    for (let i = 0; i < commentObjs.length; i++) {
+                                        commentArray.push(commentObjs[i].data());
+                                    }
+                                    console.log(commentArray)
+                                    this.setState({
+                                        commentArray: commentArray
+                                    })
+                                })
+                        } else {
+                            this.setState({
+                                errorMsg: "Access denied-- you do not have permission."
+                            })
+                        }
                     }
                 }
                 console.log('post fetching successful')
             })
-        dbService // retrieve comments within the post
-        .collection('boards').doc(this.props.boardId)
-        .collection('posts').doc(this.props.postId)
-        .collection('comments').onSnapshot((querySnapshot) => {
-            const commentObjs = querySnapshot.docs;
-            const commentArray = [];
-            for (let i = 0; i < commentObjs.length; i++) {
-                commentArray.push(commentObjs[i].data());
-            }
-            console.log(commentArray)
-        })
+
     }
 
     render = () => {
         return (
             <div>
                 <Navbar />
-                {this.props.postId}
-                <Comment />
+                {this.state.errorMsg === "ok" ?
+                    <>
+                        {this.props.postId}
+                        < Comment />
+                    </>
+                    :
+                    <>
+                        You cannot view this page: {this.state.errorMsg}
+                    </>
+                }
             </div>
         )
     }
