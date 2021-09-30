@@ -8,6 +8,18 @@ import SignIn from '../routes/SignIn';
 import SignUp from '../routes/SignUp';
 import Profile from '../routes/Profile';
 import Verification from '../routes/Verification';
+<<<<<<< Updated upstream
+=======
+import EditPost from '../routes/EditPost.js';
+import AddPost from '../routes/AddPost.js';
+import BoardHome from '../routes/BoardHome';
+import AboutUs from '../routes/AboutUs';
+
+
+type AppRouterProps = {
+
+}
+>>>>>>> Stashed changes
 
 type AppRouterState = {
   isLoggedIn: boolean,
