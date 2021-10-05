@@ -15,7 +15,7 @@ class EditPost extends React.Component {
             isAnonymous: false,
             isPinned: false,
             isHidden: false,
-            lastModified: 0,
+            lastModified: new Date(),
             upvotes: 0,
             permissions: ['Admin'],
         }

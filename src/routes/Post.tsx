@@ -11,7 +11,7 @@ type FirestorePostState = {
     isAnonymous: boolean,
     isPinned: boolean,
     isHidden: boolean,
-    lastModified: number,
+    lastModified: Date,
     upvotes: number,
     numComments: number,
     permissions: string[],
@@ -33,9 +33,12 @@ type PostState = {
     isAnonymous: boolean,
     isPinned: boolean,
     isHidden: boolean,
-    owner: string,
+    lastModified: Date
+    author: string,
     upvotes: number,
-    permissions: string[]
+    permissions: string[],
+    errorMsg: string,
+    commentArray: any[]
 }
 
 class Post extends React.Component<PostProps, PostState> {
@@ -48,9 +51,12 @@ class Post extends React.Component<PostProps, PostState> {
             isAnonymous: false,
             isPinned: false,
             isHidden: false,
-            owner: '',
+            lastModified: new Date(),
+            author: '',
             upvotes: 0,
-            permissions: ["Admin"]
+            permissions: ["Admin"],
+            errorMsg: '',
+            commentArray: []
         }
     }
 

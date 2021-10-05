@@ -117,7 +117,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                 <Route exact path='/verification' render={() => <Verification role={this.state.role} />} />
                 <Route exact path='/signin' render={() => <Redirect to='/' />} />
                 <Route exact path='/signup' render={() => <Redirect to='/' />} />
-                <Route exact path='/about-us' render={() => <AboutUs /> } />
+                <Route exact path='/about-us' render={() => <AboutUs />} />
                 <Route component={this.notFoundComponent} />
               </Switch>
             </>
@@ -135,6 +135,12 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     isVerified={false}
                     role={'User'}
                   />} />
+                  <Route exact path='/boards/:boardTitle/new' render={(routerProps) => <AddPost
+                    boardId={routerProps.match.params.boardTitle}
+                    username={''}
+                    isVerified={false}
+                    role={'User'}
+                  />} />
                   <Route exact path='/boards/:boardTitle/:postId' render={(routerProps) => <Post
                     boardId={routerProps.match.params.boardTitle}
                     postId={routerProps.match.params.postId}
@@ -145,7 +151,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/signin' component={SignIn} />
                   <Route exact path='/signup' component={SignUp} />
                   <Route exact path='/profile' render={() => <Redirect to='/signin' />} />
-                  <Route exact path='/about-us' render={() => <AboutUs /> } />
+                  <Route exact path='/about-us' render={() => <AboutUs />} />
                   <Route component={this.notFoundComponent} />
                 </Switch>
               </>

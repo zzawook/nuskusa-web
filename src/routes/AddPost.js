@@ -72,7 +72,7 @@ class AddPost extends React.Component {
             isHidden: false,
             author: '',
             upvotes: 0,
-            lastModified: 0,
+            lastModified: new Date(),
             permissions: ["Admin"],
         }
     }
