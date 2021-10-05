@@ -104,7 +104,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                                 NUS 한인 학생회 사이트에 오신 것을 환영합니다!
                             </p>
                             <GoldenButton to='/boards'>
-                                <SectionDescription color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign:'center' }}>
+                                <SectionDescription color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center' }}>
                                     + More Details
                                 </SectionDescription>
                             </GoldenButton>
@@ -119,7 +119,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                         <ActivityList title='취업활동 정보' content='인턴, 취업 관련한 웨비나' />
                     </ActivityWrapper>
                 </Activity>
-                {/* <ContactUs /> */}
+                <ContactUs />
             </Wrapper>
         )
     }

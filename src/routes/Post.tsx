@@ -1,7 +1,9 @@
 import React from "react";
 import { dbService } from "../utils/firebaseFunctions";
+
 import Comment from '../components/Comment';
 import Navbar from "../components/Navbar";
+
 
 type FierstorePostState = {
     title: string,
@@ -10,7 +12,7 @@ type FierstorePostState = {
     isAnonymous: boolean,
     isPinned: boolean,
     isHidden: boolean,
-    lastModified: number,
+    lastModified: Date,
     upvotes: number,
     numComments: number,
     permissions: string[],
@@ -33,7 +35,7 @@ type PostState = {
     isPinned: boolean,
     isHidden: boolean,
     lastModified: number,
-    upvotes: number,
+    upvotes: Date,
     numComments: number,
     permissions: string[],
     author: string,

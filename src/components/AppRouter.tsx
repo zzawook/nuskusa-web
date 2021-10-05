@@ -8,8 +8,8 @@ import SignIn from '../routes/SignIn';
 import SignUp from '../routes/SignUp';
 import Profile from '../routes/Profile';
 import Verification from '../routes/Verification';
-import EditPost from '../routes/EditPost';
-import AddPost from '../routes/AddPost';
+import EditPost from '../routes/EditPost.js';
+import AddPost from '../routes/AddPost.js';
 import BoardHome from '../routes/BoardHome';
 import AboutUs from '../routes/AboutUs';
 
@@ -136,6 +136,12 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     role={this.state.role}
                   />} />
                   <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
+                    boardId={routerProps.match.params.boardTitle}
+                    username={''}
+                    isVerified={false}
+                    role={'User'}
+                  />} />
+                  <Route exact path='/boards/:boardTitle/new' render={(routerProps) => <AddPost
                     boardId={routerProps.match.params.boardTitle}
                     username={''}
                     isVerified={false}
