@@ -1,116 +1,87 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { authService, dbService } from '../utils/firebaseFunctions';
-
-type BoardObject = {
-    title: string,
-    description: string,
-}
+import styled from 'styled-components'
+import ActivityList from '../components/ActivityList'
+import Navbar from '../components/Navbar';
+import ContactUs from '../components/ContactUs'
+import { SectionDescription, Title } from '../utils/ThemeText';
+import { GoldenButton } from '../components/GoldenButton';
 
 type HomeProps = {
-
+    role: string
 }
 
 type HomeState = {
-    boardArray: BoardObject[],
-    boardComponentArray: any[],
-    currentUserRole: string,
-    title: string,
-    description: string,
+
 }
 
+/**
+ * Main page that the users will visit
+ */
 class Home extends React.Component<HomeProps, HomeState> {
-    state: HomeState = {
-        boardArray: [],
-        boardComponentArray: [],
-        currentUserRole: '',
-        title: '',
-        description: '',
-    }
+    constructor(props: HomeProps) {
+        super(props);
+        this.state = {
 
-    componentDidMount = () => {
-        this.fetchUserRole();
-        this.fetchBoards();
-    }
-
-    fetchUserRole = () => {
-        dbService
-            .collection('users')
-            .doc(authService.currentUser?.uid)
-            .onSnapshot((querySnapshot) => {
-                if (querySnapshot.exists) {
-                    if (querySnapshot.data()) {
-                        const data = querySnapshot.data();
-                        this.setState({
-                            currentUserRole: data?.role
-                        });
-                    }
-                }
-            })
-    }
-
-    fetchBoards = () => {
-        dbService
-            .collection('boards')
-            .onSnapshot((querySnapshot) => {
-                if (!querySnapshot.empty) {
-                    const arr: BoardObject[] = [];
-                    const componentArray: any[] = [];
-                    let key = 0;
-                    querySnapshot.docs.forEach((doc) => {
-                        const data = doc.data() as BoardObject;
-                        const component = (
-                            <div key={key}>
-                                <Link to={`/boards/${data.title}`}>{data.title}</Link>
-                                {/* put a modal for editing this board */}
-                            </div>
-                        )
-                        key++;
-                        arr.push(data);
-                        componentArray.push(component);
-                    })
-                    this.setState({
-                        boardArray: arr,
-                        boardComponentArray: componentArray
-                    })
-                    console.log('all boards fetching successful')
-                }
-            })
-    }
-
-    handleChange = (event: any) => {
-        event.preventDefault();
-        const { name, value } = event.target;
-        if (name === 'title') {
-            this.setState({
-                title: value
-            })
         }
-        else if (name === 'description') {
-            this.setState({
-                description: value
-            })
-        }
-    }
-
-    handleSubmit = (event: any) => {
-        event.preventDefault();
-        const { title, description } = this.state
-        const permissionsArray: any[] = [];
-        document.querySelectorAll('input[class=board-permissions]:checked')
-            .forEach((element: any) => {
-                permissionsArray.push(element.value);
-            });
-        dbService.collection('boards').doc(title).set({
-            title: title,
-            description: description,
-            permissions: permissionsArray
-        })
     }
 
     render = () => {
+        const Wrapper = styled.div`
+            display: flex;
+            flex-direction: column;
+            background: #18202B;
+        `
+
+        const HomeBackground = styled.div`
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 90vh;
+            background: linear-gradient(to bottom, #0B121C 55%, #18202B 35%);
+            order: 1;
+        `
+
+        const MainBannerContainer = styled.div`
+            display: flex;
+            width: 70vw;
+            height: 65vh;
+            margin: auto;
+            align-items: center;
+        `
+        const MainBanner = styled.div`
+            display: flex;
+            flex-direction: column;
+            width: 60%;
+            height: 25vh;
+            background: white;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+            padding: 25px 50px;
+        `
+        const MainBannerImage = styled.img`
+            height: auto;
+            width: auto;
+        `
+
+        const Activity = styled.div`
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            bottom: 100%;
+            height: 100vh;
+            order: 2;
+        `
+        const ActivityWrapper = styled.section`
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            margin: 0 auto;
+            width: 70%;
+            justify-content: center;
+        `
+
         return (
-<<<<<<< Updated upstream
             <div>
                 hi
                 {this.state.boardComponentArray}
@@ -128,7 +99,6 @@ class Home extends React.Component<HomeProps, HomeState> {
                     <div>What</div>
                 }
             </div>
-=======
             <Wrapper>
                 <Navbar />
                 <HomeBackground>
@@ -159,9 +129,8 @@ class Home extends React.Component<HomeProps, HomeState> {
                 </Activity>
                 <ContactUs />
             </Wrapper>
->>>>>>> Stashed changes
         )
     }
 }
 
-export default Home;
+export default Home

@@ -115,7 +115,6 @@ class Navbar extends React.Component<NavbarProps, {}> {
             padding-left: 1vw;
             padding-right: 1vw;
         `
-
         const handleLogoClick = (e: any) => {
             e.preventDefault();
             

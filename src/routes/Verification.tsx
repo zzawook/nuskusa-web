@@ -1,6 +1,11 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
 import VerificationComponent from '../components/VerificationComponent'
 import { authService, dbService } from '../utils/firebaseFunctions'
+
+type VerificationProps = {
+    role: string
+}
 
 type VerificationState = {
     role: string,
@@ -8,7 +13,7 @@ type VerificationState = {
     verificationId: string
 }
 
-class Verification extends React.Component<{}, VerificationState> {
+class Verification extends React.Component<VerificationProps, VerificationState> {
     constructor(props: any) {
         super(props)
         this.state = {
@@ -19,25 +24,7 @@ class Verification extends React.Component<{}, VerificationState> {
     }
 
     componentDidMount = () => {
-        this.fetchUserRole();
         this.fecthVerificationCollection();
-    }
-
-    fetchUserRole = () => {
-        if (authService.currentUser) {
-            dbService
-                .collection('users').doc(authService.currentUser.uid)
-                .onSnapshot((querySnapshot) => {
-                    if (querySnapshot.exists) {
-                        const data = querySnapshot.data();
-                        if (data) {
-                            this.setState({
-                                role: data.role
-                            })
-                        }
-                    }
-                });
-        }
     }
 
     fecthVerificationCollection = () => {
@@ -68,6 +55,7 @@ class Verification extends React.Component<{}, VerificationState> {
     render = () => {
         return (
             <>
+                <Navbar />
                 {this.state.role === 'Admin' ?
                     <div>
                         Admin!
