@@ -82,6 +82,23 @@ class Home extends React.Component<HomeProps, HomeState> {
         `
 
         return (
+            <div>
+                hi
+                {this.state.boardComponentArray}
+                {this.state.currentUserRole === 'Admin' ?
+                    <form onSubmit={this.handleSubmit}>
+                        <input name='title' type='string' onChange={this.handleChange} />
+                        <input name='description' type='string' onChange={this.handleChange} /> <br />
+                        Who can view this board? <br />
+                        <input name='permissions' className='board-permissions' type='checkbox' value='User' />
+                        <input name='permissions' className='board-permissions' type='checkbox' value='Undergraduate' />
+                        <input name='permissions' className='board-permissions' type='checkbox' value='Graduate' />
+                        <input type='submit' />
+                    </form>
+                    :
+                    <div>What</div>
+                }
+            </div>
             <Wrapper>
                 <Navbar />
                 <HomeBackground>
