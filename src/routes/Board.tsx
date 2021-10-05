@@ -63,27 +63,17 @@ class Board extends React.Component<BoardProps, BoardState> {
                     description: data.description,
                     permissions: data.permissions
                 })
-        })
+            })
     }
 
     fetchPosts = () => {
-        const PostThumbnailContainer = styled.div`
-            width: 70vw;
-            display: flex;
-            flex-direction: row;
-            justify-content: left;
-        `
         dbService
             .collection('boards').doc(this.props.boardId)
             .collection('posts')
             .onSnapshot((querySnapshot) => {
                 const arr: PostObject[] = [];
                 const componentArray: any[] = [];
-                let count: number = 0; // 
-                let currentElement: number = 0;
-                let tempArray: any[] = []
                 querySnapshot.docs.forEach((doc) => {
-                    const length = querySnapshot.docs.length;
                     const data = doc.data() as PostObject;
                     console.log(doc.data())
                     const component = (
@@ -95,22 +85,9 @@ class Board extends React.Component<BoardProps, BoardState> {
                         </>
                     )
                     arr.push(data);
-                    // Wraps three PostThumbnails into one container
-                    if (count < 3) {
-                        tempArray.push(component);
-                        count++;
-                    } else if (count == 3) {
-                        componentArray.push(<PostThumbnailContainer>{tempArray}</PostThumbnailContainer>)
-                        tempArray = [];
-                        count = 0;
+                    if (data.permissions.includes(this.props.role) || data.permissions.includes('User')) {
+                        componentArray.push(component)
                     }
-                    // When the docs array reaches the last element, add that element to componentArray,
-                    // wrapped with PostThumbnailContainer
-                    if (currentElement == length - 1) {
-                        componentArray.push(<PostThumbnailContainer>{tempArray}</PostThumbnailContainer>)
-                    }
-
-                    currentElement++;
                 })
                 this.setState({
                     postArray: arr,
@@ -135,6 +112,8 @@ class Board extends React.Component<BoardProps, BoardState> {
             width: 70vw;
         `
         const PostContainer = styled.div`
+            display: flex;
+            flex-wrap: wrap;
             width: 70vw;
             height: 100vh;
             box-sizing: border-box;
@@ -161,23 +140,28 @@ class Board extends React.Component<BoardProps, BoardState> {
             <Container>
                 <Navbar />
                 <TextContainer>
-                    <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom:'10px' }}>
+                    <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         {this.props.boardId}
                     </Title>
                     <SectionDescription color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
-                        {this.state.description}    
+                        {this.state.description}
                     </SectionDescription>
-                    <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px'}}>
-                        <SectionDescription color='white' style={{ textAlign:'center' }}>
+                    <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
+                        <SectionDescription color='white' style={{ textAlign: 'center' }}>
                             + 게시글 올리기
                         </SectionDescription>
                     </GoldenButton>
                 </TextContainer>
                 <BoardNavbar currentRoute={this.props.boardId} />
-                <PostContainer>
-                    {this.state.postComponentArray}
-                </PostContainer>
-                <div style={{height:'20vh'}} />
+                {this.state.postComponentArray.length == 0 ?
+                    <SectionDescription color='white'>
+                        There is no post here yet!
+                    </SectionDescription>
+                    :
+                    <PostContainer>
+                        {this.state.postComponentArray}
+                    </PostContainer>
+                }
                 <ContactUs />
             </Container>
         )

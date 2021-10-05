@@ -4,7 +4,8 @@ import { dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Comment';
 import Navbar from "../components/Navbar";
 
-type FirestorePostState = {
+
+type FierstorePostState = {
     title: string,
     content: string,
     isAnnouncement: boolean,
@@ -33,10 +34,11 @@ type PostState = {
     isAnonymous: boolean,
     isPinned: boolean,
     isHidden: boolean,
-    lastModified: Date
-    author: string,
-    upvotes: number,
+    lastModified: number,
+    upvotes: Date,
+    numComments: number,
     permissions: string[],
+    author: string,
     errorMsg: string,
     commentArray: any[]
 }
@@ -45,34 +47,35 @@ class Post extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
         super(props);
         this.state = {
-            title: '',
-            content: '',
+            title: "Title",
+            content: "Content",
             isAnnouncement: false,
-            isAnonymous: false,
+            isAnonymous: true,
             isPinned: false,
             isHidden: false,
-            lastModified: new Date(),
-            author: '',
+            lastModified: Date.now(),
             upvotes: 0,
-            permissions: ["Admin"],
-            errorMsg: '',
+            numComments: 0,
+            permissions: [],
+            author: "TempAuthor",
+            errorMsg: "",
             commentArray: []
         }
     }
 
     componentDidMount = () => {
-        this.fetchPost();
+        this.fetchPost()
     }
 
     fetchPost = () => {
-        dbService
+        dbService // Retrieve post information
             .collection('boards').doc(this.props.boardId)
             .collection('posts')
             .doc(this.props.postId)
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
                     console.log(querySnapshot.data())
-                    let data = querySnapshot.data() as FirestorePostState;
+                    let data = querySnapshot.data() as FierstorePostState;
                     console.log(data);
                     if (data == undefined) {
                         return;
@@ -114,14 +117,23 @@ class Post extends React.Component<PostProps, PostState> {
                 }
                 console.log('post fetching successful')
             })
+
     }
 
     render = () => {
         return (
             <div>
                 <Navbar />
-                {this.props.postId}
-                <Comment />
+                {this.state.errorMsg === "ok" ?
+                    <>
+                        {this.props.postId}
+                        < Comment />
+                    </>
+                    :
+                    <>
+                        You cannot view this page: {this.state.errorMsg}
+                    </>
+                }
             </div>
         )
     }

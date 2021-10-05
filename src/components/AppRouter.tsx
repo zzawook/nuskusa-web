@@ -86,7 +86,10 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
               {console.log('logged in')}
               <Switch>
                 <Route exact path='/' render={() => <Home role={this.state.role} />} />
-                <Route exact path='/boards' render={() => <BoardHome role={this.state.role} />} />
+                <Route exact path='/boards' render={() => <BoardHome username={this.state.username}
+                  isVerified={this.state.isVerified}
+                  role={this.state.role}
+                />} />
                 <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
                   boardId={routerProps.match.params.boardTitle}
                   username={this.state.username}
@@ -128,7 +131,10 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                 {console.log('not logged in')}
                 <Switch>
                   <Route exact path='/' render={() => <Home role='User' />} />
-                  <Route exact path='/boards' render={() => <BoardHome role='User' />} />
+                  <Route exact path='/boards' render={() => <BoardHome username={this.state.username}
+                    isVerified={this.state.isVerified}
+                    role={this.state.role}
+                  />} />
                   <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
                     boardId={routerProps.match.params.boardTitle}
                     username={''}
