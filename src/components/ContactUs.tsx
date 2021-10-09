@@ -84,68 +84,8 @@ class ContactUs extends React.Component {
             }
         });
         */
-        
-    }
-    //Input Change Handlers
-    handleNameChange = (event: any) => {
-        event.preventDefault();
-        const target = event.target;
-        this.setState({
-            nameInput: target.value,
-        })
-    }
-    handleEmailChange = (event: any) => {
-        event.preventDefault();
-        const target = event.target;
-        this.setState({
-            emailInput: target.value
-        })
-    }
-    handleMessageChange = (event: any) => {
-        event.preventDefault();
-        const target = event.target;
-        this.setState({
-            messageInput: target.value
-        })
-    }
 
-    //Input Focus Handlers
-    handleNameFocus = (event: any) => {
-        event.preventDefault();
-        const target = event.target;
-        if (this.state.nameInput === 'Name') {
-            this.setState({
-                nameInput: ""
-            })
-        }
     }
-    handleEmailFocus = (event: any) => {
-        event.preventDefault();
-        const target = event.target;
-        if (this.state.emailInput === 'Email') {
-            this.setState({
-                emailInput: ''
-            })
-        }
-    }
-
-    //Input Blur Handlers
-    handleNameBlur = (event: any) => {
-        event.preventDefault();
-        const target = event.target;
-        if (this.state.nameInput == "") {
-            this.setState({
-                nameInput: 'Name'
-            })
-        }
-    }
-    handleEmailBlur = (event: any) => {
-        event.preventDefault();
-        const target = event.target;
-        if (this.state.nameInput == "") {
-            this.setState({
-                emailInput: 'Email'
-            })
     //Input Change Handlers
     handleNameChange = (event: any) => {
         event.preventDefault();
@@ -349,168 +289,23 @@ class ContactUs extends React.Component {
         top: '30px'
     }
 
-    //Browser Size Short-cut
-    width = window.innerWidth;
-    height = window.innerHeight;
-
-    //CSS Styles
-    containerStyle: CSS.Properties = {
-        display: 'flex',
-        order: 3,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        position: 'relative',
-        width: (this.width * 0.7).toString() + "px",
-        height: "685px",
-        left: (this.width * 0.15).toString() + "px",
-        backgroundColor: 'transparent',
-        //border: '1px solid white',
-    }
-    titleStyle: CSS.Properties = {
-        position: 'absolute',
-        left: '0px',
-        top: '0px',
-        fontFamily: 'Roboto',
-        fontStyle: "normal",
-        fontWeight: "bold",
-        fontSize: "40px",
-        lineHeight: "48px",
-        color: 'white'
-    }
-    emailBoxStyle: CSS.Properties = {
-        position: "absolute",
-        left: "0px",
-        top: "100px",
-        height: '113px',
-        width: (this.width * 0.25).toString() + 'px',
-        border: '1px solid #FFFFFF',
-        boxSizing: 'border-box'
-    }
-    addressBoxStyle: CSS.Properties = {
-        position: "absolute",
-        left: "0px",
-        top: "200px",
-        height: '136px',
-        width: (this.width * 0.25).toString() + 'px',
-        border: '1px solid #FFFFFF',
-        boxSizing: 'border-box'
-    }
-    contactBoxStyle: CSS.Properties = {
-        position: 'absolute',
-        right: '0px',
-        top: '0px',
-        height: '671px',
-        width: (this.width * 0.4).toString() + 'px',
-        backgroundColor: 'white',
-    }
-    nameInputStyle: CSS.Properties = {
-        position: 'absolute',
-        top: '60px',
-        left: '80px',
-        width: ((this.width * 0.4) - 160).toString() + 'px',
-        height: '50px',
-        fontFamily: 'Roboto',
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '20px',
-        paddingLeft: '0px',
-        borderBottom: '1px solid rgba(11, 18, 28, 0.3)',
-        borderTop: 'none',
-        borderLeft: 'none',
-        borderRight: 'none',
-        color: this.state.nameInput === "Name" ? 'rgba(11, 18, 28, 0.4)' : 'black'
-    }
-    emailInputStyle: CSS.Properties = {
-        position: 'absolute',
-        top: '170px',
-        left: '80px',
-        width: ((this.width * 0.4) - 160).toString() + 'px',
-        height: '50px',
-        fontFamily: 'Roboto',
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '20px',
-        paddingLeft: '0px',
-        borderBottom: '1px solid rgba(11, 18, 28, 0.3)',
-        borderTop: 'none',
-        borderLeft: 'none',
-        borderRight: 'none',
-        color: this.state.emailInput === "Email" ? 'rgba(11, 18, 28, 0.4)' : 'black'
-    }
-    messageTextStyle: CSS.Properties = {
-        position: 'absolute',
-        left: '80px',
-        top: '280px',
-        color: 'rgba(11, 18, 28, 0.4)',
-        fontFamily: 'Roboto',
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '20px',
-    }
-    messageInputStyle: CSS.Properties = {
-        position: 'absolute',
-        left: '80px',
-        top: '320px',
-        width: ((this.width * 0.4) - 160).toString() + 'px',
-        height: '200px',
-        border: '1px solid rgba(11, 18, 28, 0.4)',
-        boxSizing: 'border-box',
-        resize: 'none',
-        padding: '10px',
-        fontFamily: 'Roboto',
-        fontSize: '12px',
-    }
-    submitStyle: CSS.Properties = {
-        position: 'absolute',
-        left: '80px',
-        bottom: '60px',
-        width: ((this.width * 0.4) - 160).toString() + 'px',
-        height: '62.75px',
-        background: '#BDA06D',
-        border: 'none',
-        cursor: 'pointer'
-    }
-    emailSpanStyle: CSS.Properties = {
-        fontFamily: 'Roboto',
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '18px',
-        color: '#FFFFFF',
-        position: 'absolute',
-        lineHeight: '29px',
-        left: '100px',
-        top: '20px'
-    }
-    addressSpanStyle: CSS.Properties = {
-        fontFamily: 'Roboto',
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '18px',
-        color: '#FFFFFF',
-        position: 'absolute',
-        lineHeight: '29px',
-        left: '100px',
-        top: '30px'
-    }
-
     render = () => {
-        return(
+        return (
             <div style={this.containerStyle}>
                 <span style={this.titleStyle}>Contact Us</span>
                 <div style={this.emailBoxStyle}>
                     <img src="/" />
-                    <span style={this.emailSpanStyle}>Email<br/>nuskusa@gmail.com</span>
+                    <span style={this.emailSpanStyle}>Email<br />nuskusa@gmail.com</span>
                 </div>
                 <div style={this.addressBoxStyle}>
                     <img src="/" />
-                    <span style={this.addressSpanStyle}>Address<br/>21 Lower Kent Ridge<br/>Rd Singapore 119077</span>
+                    <span style={this.addressSpanStyle}>Address<br />21 Lower Kent Ridge<br />Rd Singapore 119077</span>
                 </div>
                 <form style={this.contactBoxStyle} onSubmit={this.handleFormSubmit}>
-                    <input style={this.nameInputStyle} value={this.state.nameInput} onChange={this.handleNameChange} onFocus={this.handleNameFocus} onBlur={this.handleNameBlur}/>
-                    <input style={this.emailInputStyle} value={this.state.emailInput} onChange={this.handleEmailChange} onFocus={this.handleEmailFocus} onBlur={this.handleEmailBlur}/>
+                    <input style={this.nameInputStyle} value={this.state.nameInput} onChange={this.handleNameChange} onFocus={this.handleNameFocus} onBlur={this.handleNameBlur} />
+                    <input style={this.emailInputStyle} value={this.state.emailInput} onChange={this.handleEmailChange} onFocus={this.handleEmailFocus} onBlur={this.handleEmailBlur} />
                     <span style={this.messageTextStyle}>Message</span>
-                    <textarea style={this.messageInputStyle} value={this.state.messageInput} onChange={this.handleMessageChange}/>
+                    <textarea style={this.messageInputStyle} value={this.state.messageInput} onChange={this.handleMessageChange} />
                     <button style={this.submitStyle} onClick={this.handleFormSubmit}>Submit</button>
                 </form>
             </div>

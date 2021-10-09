@@ -117,7 +117,7 @@ class Navbar extends React.Component<NavbarProps, {}> {
         `
         const handleLogoClick = (e: any) => {
             e.preventDefault();
-            
+
         }
 
         return (
@@ -145,12 +145,16 @@ class Navbar extends React.Component<NavbarProps, {}> {
                             <>
                                 <SignUpButton>
                                     <SignUpText>
-                                        Sign Up
+                                        <Link to='/signup' style={{ color: '#0B121C', textDecoration: 'none' }}>
+                                            Sign Up
+                                        </Link>
                                     </SignUpText>
                                 </SignUpButton>
                                 <SignInButton>
                                     <SignInText>
-                                        Sign In
+                                        <Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                            Sign In
+                                        </Link>
                                     </SignInText>
                                 </SignInButton>
                             </>
