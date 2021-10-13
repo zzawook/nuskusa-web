@@ -3,6 +3,21 @@ import { dbService } from "../utils/FirebaseFunctions";
 import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
 
+
+type FierstorePostState = {
+    title: string,
+    content: string,
+    isAnnouncement: boolean,
+    isAnonymous: boolean,
+    isPinned: boolean,
+    isHidden: boolean,
+    lastModified: Date,
+    upvotes: number,
+    numComments: number,
+    permissions: string[],
+    author: string,
+}
+
 type PostProps = {
     boardId: string,
     postId: string,
@@ -18,50 +33,106 @@ type PostState = {
     isAnonymous: boolean,
     isPinned: boolean,
     isHidden: boolean,
-    owner: string,
+    lastModified: Date,
     upvotes: number,
-    permissions: string[]
+    numComments: number,
+    permissions: string[],
+    author: string,
+    errorMsg: string,
+    commentArray: any[]
 }
 
 class Post extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
         super(props);
         this.state = {
-            title: '',
-            content: '',
+            title: "Title",
+            content: "Content",
             isAnnouncement: false,
-            isAnonymous: false,
+            isAnonymous: true,
             isPinned: false,
             isHidden: false,
-            owner: '',
+            lastModified: new Date(),
             upvotes: 0,
-            permissions: ["Admin"]
+            numComments: 0,
+            permissions: [],
+            author: "TempAuthor",
+            errorMsg: "",
+            commentArray: []
         }
     }
 
     componentDidMount = () => {
-        this.fetchPost();
+        this.fetchPost()
     }
 
     fetchPost = () => {
-        dbService
+        dbService // Retrieve post information
             .collection('boards').doc(this.props.boardId)
             .collection('posts')
             .doc(this.props.postId)
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
-
+                    console.log(querySnapshot.data())
+                    let data = querySnapshot.data() as FierstorePostState;
+                    console.log(data);
+                    if (data == undefined) {
+                        return;
+                    }
+                    else {
+                        if (data.permissions.includes(this.props.role) || data.permissions.includes("User")) {
+                            this.setState({
+                                title: data.title,
+                                author: data.author,
+                                isAnnouncement: data.isAnnouncement,
+                                isAnonymous: data.isAnonymous,
+                                isHidden: data.isHidden,
+                                isPinned: data.isPinned,
+                                lastModified: data.lastModified,
+                                upvotes: data.upvotes,
+                                permissions: data.permissions,
+                                errorMsg: "ok"
+                            })
+                            dbService // retrieve comments within the post
+                                .collection('boards').doc(this.props.boardId)
+                                .collection('posts').doc(this.props.postId)
+                                .collection('comments').onSnapshot((querySnapshot) => {
+                                    const commentObjs = querySnapshot.docs;
+                                    const commentArray = [];
+                                    for (let i = 0; i < commentObjs.length; i++) {
+                                        commentArray.push(commentObjs[i].data());
+                                    }
+                                    console.log(commentArray)
+                                    this.setState({
+                                        commentArray: commentArray
+                                    })
+                                })
+                        } else {
+                            this.setState({
+                                errorMsg: "Access denied-- you do not have permission."
+                            })
+                        }
+                    }
                 }
                 console.log('post fetching successful')
             })
+
     }
 
     render = () => {
         return (
             <div>
                 <Navbar />
-                {this.props.postId}
-                <Comment />
+                {this.state.errorMsg === "ok" ?
+                    <>
+                        {this.props.postId}
+                        < Comment />
+                    </>
+                    :
+                    <>
+                        You cannot view this page: {this.state.errorMsg}
+                    </>
+                }
             </div>
         )
     }

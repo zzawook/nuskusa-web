@@ -1,10 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { authService, dbService } from '../utils/firebaseFunctions';
+import ContactUs from '../components/ContactUs'
+import Post from './Post'
 import styled from 'styled-components'
 import ActivityList from '../components/ActivityList'
 import Navbar from '../components/Navbar';
-import ContactUs from '../components/ContactUs'
 import { SectionDescription, Title } from '../utils/ThemeText';
 import { GoldenButton } from '../components/GoldenButton';
+
+type BoardObject = {
+    title: string,
+    description: string,
+}
+
 
 type HomeProps = {
     role: string
@@ -95,7 +104,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                                 NUS 한인 학생회 사이트에 오신 것을 환영합니다!
                             </p>
                             <GoldenButton to='/boards'>
-                                <SectionDescription color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign:'center' }}>
+                                <SectionDescription color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center' }}>
                                     + More Details
                                 </SectionDescription>
                             </GoldenButton>

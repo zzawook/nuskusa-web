@@ -57,7 +57,6 @@ class AddPost extends React.Component<PostProps, PostState> {
             <div>
                 <Navbar />
                 Add
-                
             </div>
         )
     }

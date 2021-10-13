@@ -63,7 +63,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                     description: data.description,
                     permissions: data.permissions
                 })
-        })
+            })
     }
 
     fetchPosts = () => {
@@ -85,7 +85,9 @@ class Board extends React.Component<BoardProps, BoardState> {
                         </>
                     )
                     arr.push(data);
-                    componentArray.push(component)
+                    if (data.permissions.includes(this.props.role) || data.permissions.includes('User')) {
+                        componentArray.push(component)
+                    }
                 })
                 this.setState({
                     postArray: arr,
@@ -138,23 +140,28 @@ class Board extends React.Component<BoardProps, BoardState> {
             <Container>
                 <Navbar />
                 <TextContainer>
-                    <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom:'10px' }}>
+                    <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         {this.props.boardId}
                     </Title>
                     <SectionDescription color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
-                        {this.state.description}    
+                        {this.state.description}
                     </SectionDescription>
-                    <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px'}}>
-                        <SectionDescription color='white' style={{ textAlign:'center' }}>
+                    <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
+                        <SectionDescription color='white' style={{ textAlign: 'center' }}>
                             + 게시글 올리기
                         </SectionDescription>
                     </GoldenButton>
                 </TextContainer>
                 <BoardNavbar currentRoute={this.props.boardId} />
-                <PostContainer>
-                    {this.state.postComponentArray}
-                </PostContainer>
-                <div style={{height:'20vh'}} />
+                {this.state.postComponentArray.length == 0 ?
+                    <SectionDescription color='white'>
+                        There is no post here yet!
+                    </SectionDescription>
+                    :
+                    <PostContainer>
+                        {this.state.postComponentArray}
+                    </PostContainer>
+                }
                 <ContactUs />
             </Container>
         )

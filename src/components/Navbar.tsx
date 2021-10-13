@@ -44,6 +44,7 @@ class Navbar extends React.Component<NavbarProps, {}> {
             margin: auto 0;
             margin-right: auto;
             justify-content: flex-start;
+            cursor: pointer;
         `
         const NavbarButtonContainer = styled.div`
             display: flex;
@@ -51,7 +52,6 @@ class Navbar extends React.Component<NavbarProps, {}> {
         `
         const NavbarButton = styled.button`
             display: inline-block;
-
             border: none;
             background: #0B121C;
             color: white;
@@ -115,10 +115,15 @@ class Navbar extends React.Component<NavbarProps, {}> {
             padding-left: 1vw;
             padding-right: 1vw;
         `
+        const handleLogoClick = (e: any) => {
+            e.preventDefault();
+
+        }
+
         return (
             <NavbarWrapper>
                 <NavbarContent>
-                    <Logo src={logo} width='64' height='64' />
+                    <Logo src={logo} width='64' height='64' onClick={handleLogoClick}></Logo>
                     <NavbarButtonContainer>
                         <NavbarButton>
                             <NavbarText><Link to='/home' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Home</Link></NavbarText>
@@ -140,12 +145,16 @@ class Navbar extends React.Component<NavbarProps, {}> {
                             <>
                                 <SignUpButton>
                                     <SignUpText>
-                                        Sign Up
+                                        <Link to='/signup' style={{ color: '#0B121C', textDecoration: 'none' }}>
+                                            Sign Up
+                                        </Link>
                                     </SignUpText>
                                 </SignUpButton>
                                 <SignInButton>
                                     <SignInText>
-                                        Sign In
+                                        <Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                            Sign In
+                                        </Link>
                                     </SignInText>
                                 </SignInButton>
                             </>
