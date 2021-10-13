@@ -1,6 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import BoardNavbar from '../components/BoardNavbar';
+import ContactUs from '../components/ContactUs';
+import { GoldenButton } from '../components/GoldenButton';
+import Navbar from '../components/Navbar';
+import PostThumbnail from '../components/PostThumbnail';
 import { dbService } from '../utils/firebaseFunctions';
+import { SectionDescription, Title } from '../utils/ThemeText';
 
 type PostObject = {
     title: string,
@@ -9,22 +16,54 @@ type PostObject = {
 }
 
 type BoardProps = {
-    boardId: string
+    boardId: string,
+    username: string,
+    isVerified: boolean,
+    role: string
+}
+
+type FirestoreBoardState = {
+    title: string,
+    description: string,
+    permissions: string[]
 }
 
 type BoardState = {
+    title: string,
+    description: string,
+    permissions: string[],
     postArray: PostObject[],
     postComponentArray: any[]
 }
 
 class Board extends React.Component<BoardProps, BoardState> {
     state: BoardState = {
+        title: "",
+        description: "",
+        permissions: ["Admin"],
         postArray: [],
         postComponentArray: []
     }
 
     componentDidMount = () => {
+        this.fetchBoard();
         this.fetchPosts();
+    }
+
+    addPostLink = () => {
+        return <button><Link to={`/boards/${this.props.boardId}/new`}></Link></button>
+    }
+
+    fetchBoard = () => {
+        dbService.collection('boards').doc(this.props.boardId)
+            .onSnapshot((doc) => {
+                const data = doc.data() as FirestoreBoardState
+                this.setState({
+                    title: data.title,
+                    description: data.description,
+                    permissions: data.permissions
+                })
+        })
     }
 
     fetchPosts = () => {
@@ -36,14 +75,17 @@ class Board extends React.Component<BoardProps, BoardState> {
                 const componentArray: any[] = [];
                 querySnapshot.docs.forEach((doc) => {
                     const data = doc.data() as PostObject;
+                    console.log(doc.data())
                     const component = (
-                        <div>
-                            <Link to={`/boards/${this.props.boardId}/${doc.id}`}>{data.title}</Link>
+                        <>
+                            <PostThumbnail postTitle={data.title} postDescription={data.description}
+                                boardId={this.props.boardId} username={this.props.username} isVerified={this.props.isVerified} role={this.props.role}
+                                to={`/boards/${this.props.boardId}/${doc.id}`} />
                             {/* Allow to edit all posts in the list */}
-                        </div>
+                        </>
                     )
                     arr.push(data);
-                    componentArray.push(component);
+                    componentArray.push(component)
                 })
                 this.setState({
                     postArray: arr,
@@ -53,11 +95,68 @@ class Board extends React.Component<BoardProps, BoardState> {
             })
     }
 
-    render() {
+    render = () => {
+        const Container = styled.div`
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #0B121C;
+            height: 100%;
+            width: 100vw;
+        `
+        const TextContainer = styled.div`
+            display: flex;
+            flex-direction: column;
+            width: 70vw;
+        `
+        const PostContainer = styled.div`
+            display: flex;
+            flex-wrap: wrap;
+            width: 70vw;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            margin: auto;
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+            ::-webkit-scrollbar-track {
+                max-width: 1px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 5px;
+            }
+            ::-webkit-scrollbar-thumb {
+                width: 10px;
+                height: 30px;
+                background: white;
+                border-radius: 5px;
+            }
+        `
+
         return (
-            <div>
-                {this.state.postComponentArray}
-            </div>
+            <Container>
+                <Navbar />
+                <TextContainer>
+                    <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom:'10px' }}>
+                        {this.props.boardId}
+                    </Title>
+                    <SectionDescription color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
+                        {this.state.description}    
+                    </SectionDescription>
+                    <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px'}}>
+                        <SectionDescription color='white' style={{ textAlign:'center' }}>
+                            + 게시글 올리기
+                        </SectionDescription>
+                    </GoldenButton>
+                </TextContainer>
+                <BoardNavbar currentRoute={this.props.boardId} />
+                <PostContainer>
+                    {this.state.postComponentArray}
+                </PostContainer>
+                <div style={{height:'20vh'}} />
+                <ContactUs />
+            </Container>
         )
     }
 }
