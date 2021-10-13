@@ -1,5 +1,5 @@
 import React from 'react'
-import { authService, dbService, storageService } from '../utils/firebaseFunctions';
+import { authService, dbService, storageService } from '../utils/FirebaseFunctions';
 import SignOut from '../components/SignOut'
 import Navbar from '../components/Navbar';
 

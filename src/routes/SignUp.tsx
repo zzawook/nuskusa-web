@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { authService, dbService } from '../utils/firebaseFunctions';
+import { authService, dbService } from '../utils/FirebaseFunctions';
 
 type UserProps = {
     

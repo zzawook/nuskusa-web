@@ -1,6 +1,6 @@
 import React from 'react';
 import CSS from 'csstype';
-import { authService, dbService } from '../utils/firebaseFunctions';
+import { authService, dbService } from '../utils/FirebaseFunctions';
 import { EventEmitter } from 'stream';
 import styled from 'styled-components'
 //const nodemailer = require('nodemailer')

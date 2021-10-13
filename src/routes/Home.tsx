@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { authService, dbService } from '../utils/firebaseFunctions';
+import { authService, dbService } from '../utils/FirebaseFunctions';
 import ContactUs from '../components/ContactUs'
 import Post from './Post'
 import styled from 'styled-components'
-import ActivityList from '../components/ActivityList'
+import ActivityList from '../components/Home/ActivityList'
 import Navbar from '../components/Navbar';
 import { SectionDescription, Title } from '../utils/ThemeText';
 import { GoldenButton } from '../components/GoldenButton';
@@ -13,8 +13,6 @@ type BoardObject = {
     title: string,
     description: string,
 }
-
-
 type HomeProps = {
     role: string
 }

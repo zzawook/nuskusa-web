@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { dbService } from '../../utils/FirebaseFunctions'
 import { DisplaySmall, Headline } from '../../utils/ThemeText'
-import BoardTag from '../BoradTag'
+import BoardTag from '../Board/BoradTag'
 
 type PreviewProps = {
 

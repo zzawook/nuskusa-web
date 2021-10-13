@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import { dbService, storageService } from "../utils/firebaseFunctions";
+import { dbService, storageService } from "../utils/FirebaseFunctions";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import firebase from 'firebase';

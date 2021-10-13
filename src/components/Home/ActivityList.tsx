@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import { SectionTitle, SectionDescription, Title } from '../utils/ThemeText';
+import { SectionTitle, SectionDescription, Title } from '../../utils/ThemeText';
 
 type ActivityProps = {
     image?: string, // link of image to use in img tag

@@ -28,8 +28,15 @@ const SectionDescription = styled.p`
     word-wrap: break-word;
     box-sizing: border-box;
     text-align: left;
-    color: ${props => props.color}
+    color: ${props => props.color};
 `
 
+const DisplaySmall = styled.p`
 
-export { Title, SectionTitle, SectionDescription }
+`
+
+const Headline = styled.p`
+    
+`
+
+export { Title, SectionTitle, SectionDescription, DisplaySmall, Headline  }
