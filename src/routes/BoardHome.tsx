@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ContactUs from '../components/ContactUs';
 import Navbar from '../components/Navbar';
 import BoardThumbnail from '../components/BoardThumbnail';
-import { dbService } from '../utils/firebaseFunctions';
+import { dbService } from '../utils/FirebaseFunctions';
 import { SectionDescription, Title } from '../utils/ThemeText';
 type FirestoreBoardState = {
     title: string,

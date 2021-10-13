@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import BoardNavbar from '../components/BoardNavbar';
+import styled from 'styled-components'
+import BoardNavbar from '../components/Board/BoardNavbar';
 import ContactUs from '../components/ContactUs';
 import { GoldenButton } from '../components/GoldenButton';
 import Navbar from '../components/Navbar';
-import PostThumbnail from '../components/PostThumbnail';
-import { dbService } from '../utils/firebaseFunctions';
+import PostThumbnail from '../components/Board/PostThumbnail';
+import { dbService } from '../utils/FirebaseFunctions';
 import { SectionDescription, Title } from '../utils/ThemeText';
 
 type PostObject = {

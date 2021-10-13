@@ -1,5 +1,5 @@
 import React from 'react';
-import { dbService, storageService } from '../utils/firebaseFunctions';
+import { dbService, storageService } from '../utils/FirebaseFunctions';
 
 type VerificationProps = {
     verificationId: string,

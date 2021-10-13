@@ -1,6 +1,6 @@
 import React from "react";
-import { dbService } from "../utils/firebaseFunctions";
-import Comment from '../components/Comment';
+import { dbService } from "../utils/FirebaseFunctions";
+import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
 
 type PostProps = {
