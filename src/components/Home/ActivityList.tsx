@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import { SectionTitle, SectionDescription, Title } from '../../utils/ThemeText';
+import { DisplayMedium, DisplaySmall } from '../../utils/ThemeText';
 
 type ActivityProps = {
     image?: string, // link of image to use in img tag
@@ -32,12 +32,12 @@ class ActivityList extends React.Component<ActivityProps, {}> {
         return (
             <ActivityList>
                 {/* <img src={this.props.image} style={{maxHeight=640px, maxWidth=640px}}> </img> */}
-                <SectionTitle color='#0B121C'>
+                <DisplayMedium color='#0B121C'>
                     {this.props.title}
-                </SectionTitle>
-                <SectionDescription>
+                </DisplayMedium>
+                <DisplaySmall>
                     {this.props.content}
-                </SectionDescription>
+                </DisplaySmall>
             </ActivityList>
         )
     }

@@ -1,18 +1,19 @@
 import styled from "styled-components";
 
-const Title = styled.p`
+const DisplayLarge = styled.p` // Title
     font-style: normal;
     font-weight: bold;
-    font-size: 42px;
-    line-height: 42px;
+    font-size: 40px;
+    line-height: 48px;
     text-align: left;
     color: ${props => props.color};
 `
 
-const SectionTitle = styled.p`
+const DisplayMedium = styled.p` // Section Title
     margin-left: 10%;
     margin-right: 10%;
-    font-size: 20px;
+    font-size: 22px;
+    line-height: 30px;
     font-weight: bold;
     word-wrap: break-word;
     box-sizing: border-box;
@@ -20,10 +21,20 @@ const SectionTitle = styled.p`
     color: ${props => props.color};
 `
 
-const SectionDescription = styled.p`
+const DisplaySmall = styled.p` // Section Description
     margin-left: 10%;
     margin-right: 10%;
-    font-size: 14px;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 700;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    text-align: left;
+    color: ${props => props.color};
+`
+const Headline = styled.p` // Text
+    font-size: 14;
+    line-height: 22px;
     font-weight: 700;
     word-wrap: break-word;
     box-sizing: border-box;
@@ -31,12 +42,4 @@ const SectionDescription = styled.p`
     color: ${props => props.color};
 `
 
-const DisplaySmall = styled.p`
-
-`
-
-const Headline = styled.p`
-    
-`
-
-export { Title, SectionTitle, SectionDescription, DisplaySmall, Headline  }
+export { DisplayLarge, DisplayMedium, DisplaySmall, Headline  }

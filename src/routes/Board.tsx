@@ -7,7 +7,7 @@ import { GoldenButton } from '../components/GoldenButton';
 import Navbar from '../components/Navbar';
 import PostThumbnail from '../components/Board/PostThumbnail';
 import { dbService } from '../utils/FirebaseFunctions';
-import { SectionDescription, Title } from '../utils/ThemeText';
+import { DisplayMedium, DisplayLarge } from '../utils/ThemeText';
 
 type FirebasePostObject = {
     title: string,
@@ -142,23 +142,23 @@ class Board extends React.Component<BoardProps, BoardState> {
             <Container>
                 <Navbar />
                 <TextContainer>
-                    <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
+                    <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         {this.props.boardId}
-                    </Title>
-                    <SectionDescription color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
+                    </DisplayLarge>
+                    <DisplayMedium color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
                         {this.state.description}
-                    </SectionDescription>
+                    </DisplayMedium>
                     <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
-                        <SectionDescription color='white' style={{ textAlign: 'center' }}>
+                        <DisplayMedium color='white' style={{ textAlign: 'center' }}>
                             + 게시글 올리기
-                        </SectionDescription>
+                        </DisplayMedium>
                     </GoldenButton>
                 </TextContainer>
                 <BoardNavbar currentRoute={this.props.boardId} />
                 {this.state.postComponentArray.length == 0 ?
-                    <SectionDescription color='white'>
+                    <DisplayMedium color='white'>
                         There is no post here yet!
-                    </SectionDescription>
+                    </DisplayMedium>
                     :
                     <PostContainer>
                         {this.state.postComponentArray}

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { Headline, SectionDescription, SectionTitle } from '../../utils/ThemeText'
+import { Headline, DisplaySmall, DisplayMedium } from '../../utils/ThemeText'
 
 type PostThumbnailProps = {
     postTitle: string,
@@ -47,8 +47,8 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
             <Container>
                 <Link to={this.props.to} style={{ textDecoration: 'none' }}>
                     <Thumbnail>
-                        <SectionTitle color='black'>{this.props.postTitle}</SectionTitle>
-                        <SectionDescription color='black'>{this.props.postDescription}</SectionDescription>
+                        <DisplayMedium color='black'>{this.props.postTitle}</DisplayMedium>
+                        <DisplaySmall color='black'>{this.props.postDescription}</DisplaySmall>
                         { this.props.boardId === 'grove' ?
                             <Headline>익명/Anonymous</Headline>
                             :
@@ -56,7 +56,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
                         }
                     </Thumbnail>
                 </Link>
-                {/* <SectionDescription> </SectionDescription> */}
+                {/* <DisplaySmall> </DisplaySmall> */}
             </Container>
         )
     }
