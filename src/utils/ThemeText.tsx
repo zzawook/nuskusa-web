@@ -33,7 +33,9 @@ const DisplaySmall = styled.p` // Section Description
     color: ${props => props.color};
 `
 const Headline = styled.p` // Text
-    font-size: 14;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 14px;
     line-height: 22px;
     font-weight: 700;
     word-wrap: break-word;

@@ -7,7 +7,7 @@ import { GoldenButton } from '../components/GoldenButton';
 import Navbar from '../components/Navbar';
 import PostThumbnail from '../components/Board/PostThumbnail';
 import { dbService } from '../utils/FirebaseFunctions';
-import { DisplayMedium, DisplayLarge } from '../utils/ThemeText';
+import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
 
 type FirebasePostObject = {
     title: string,
@@ -145,13 +145,13 @@ class Board extends React.Component<BoardProps, BoardState> {
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         {this.props.boardId}
                     </DisplayLarge>
-                    <DisplayMedium color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
+                    <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
                         {this.state.description}
-                    </DisplayMedium>
+                    </Headline>
                     <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
-                        <DisplayMedium color='white' style={{ textAlign: 'center' }}>
+                        <Headline color='white' style={{ textAlign: 'center' }}>
                             + 게시글 올리기
-                        </DisplayMedium>
+                        </Headline>
                     </GoldenButton>
                 </TextContainer>
                 <BoardNavbar currentRoute={this.props.boardId} />

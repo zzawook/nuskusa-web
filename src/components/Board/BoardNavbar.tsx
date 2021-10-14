@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { dbService } from '../../utils/FirebaseFunctions'
-import { DisplaySmall } from '../../utils/ThemeText'
+import { DisplaySmall, Headline } from '../../utils/ThemeText'
 
 type BoardProps = {
     title: string,
@@ -52,9 +52,9 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
                     componentArray.push(
                         <LinkContainer>
                             <Link to={`/boards/${data.title}`} style={{ textDecoration: 'none' }}>
-                                <DisplaySmall color='white' >
+                                <Headline color='white' >
                                     {data.title}
-                                </DisplaySmall>
+                                </Headline>
                             </Link>
                         </LinkContainer>
                     )
@@ -62,9 +62,9 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
                     componentArray.push(
                         <CurrentContainer>
                             <Link to={`/boards/${data.title}`} style={{ textDecoration: 'none' }}>
-                                <DisplaySmall color='white' >
+                                <Headline color='white' >
                                     {data.title}
-                                </DisplaySmall>
+                                </Headline>
                             </Link>
                         </CurrentContainer>
                     )

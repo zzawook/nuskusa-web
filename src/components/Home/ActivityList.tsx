@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import { DisplayMedium, DisplaySmall } from '../../utils/ThemeText';
+import { DisplayMedium, DisplaySmall, Headline } from '../../utils/ThemeText';
 
 type ActivityProps = {
     image?: string, // link of image to use in img tag
@@ -35,9 +35,9 @@ class ActivityList extends React.Component<ActivityProps, {}> {
                 <DisplayMedium color='#0B121C'>
                     {this.props.title}
                 </DisplayMedium>
-                <DisplaySmall>
+                <Headline>
                     {this.props.content}
-                </DisplaySmall>
+                </Headline>
             </ActivityList>
         )
     }
