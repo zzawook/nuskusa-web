@@ -9,7 +9,8 @@ import { SectionDescription, Title } from '../utils/ThemeText';
 type FirestoreBoardState = {
     title: string,
     description: string,
-    permissions: string[]
+    permissions: string[],
+    englishTitle: string
 }
 
 type BoardHomeProps = {
@@ -42,7 +43,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
     fetchBoards = () => {
         dbService
             .collection('boards')
-            .onSnapshot((querySnapshot) => {
+            .get().then((querySnapshot) => {
                 if (!querySnapshot.empty) {
                     const arr: FirestoreBoardState[] = [];
                     const componentArray: any[] = [];
@@ -50,15 +51,21 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                     querySnapshot.docs.forEach((doc) => {
                         const data = doc.data() as FirestoreBoardState;
                         const component = (
-                            <BoardThumbnail boardId={data.title} description={data.description} permissions={data.permissions}>
-                                <Link to={`/boards/${data.title}`}>{data.title}</Link>
+                            <BoardThumbnail key={key} boardId={data.title} description={data.description} permissions={data.permissions}>
+                                {data.englishTitle ? 
+                                    <Link to={`/boards/${data.title}`}>{data.title}</Link>
+                                    :
+                                    <Link to={`/boards/${data.englishTitle}`}>{data.title}</Link>
+                                }
                                 {/* put a modal for editing this board */}
                             </BoardThumbnail>
                         )
                         key++;
                         arr.push(data);
+                        console.log(this.props.role)
                         if (data.permissions.includes(this.props.role) || data.permissions.includes('User')) {
                             componentArray.push(component);
+                            console.log(componentArray)
                         }
                     })
                     this.setState({
@@ -129,7 +136,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                         <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                             게시판
                         </Title>
-                        
+
                         <SectionDescription color='white' style={{ opacity: '0.5', marginLeft: '10px', marginRight: '10px', overflow: 'clip', width: '40vw' }}>
                             NUS 한인회 게시판에 오신 것을 환영합니다. 저희 게시판은 여러 게시글들을 통해 NUS 학생들, 그리고 NUS에 관심있는 사람들과 서로 소통하고 정보 공유를 위해 만들어진 페이지입니다.
                         </SectionDescription>
