@@ -9,10 +9,11 @@ import PostThumbnail from '../components/Board/PostThumbnail';
 import { dbService } from '../utils/FirebaseFunctions';
 import { SectionDescription, Title } from '../utils/ThemeText';
 
-type PostObject = {
+type FirebasePostObject = {
     title: string,
     description: string,
     permissions: string[],
+    author: string
 }
 
 type BoardProps = {
@@ -25,14 +26,15 @@ type BoardProps = {
 type FirestoreBoardState = {
     title: string,
     description: string,
-    permissions: string[]
+    permissions: string[],
+    englishTitle: string
 }
 
 type BoardState = {
     title: string,
     description: string,
     permissions: string[],
-    postArray: PostObject[],
+    postArray: FirebasePostObject[],
     postComponentArray: any[]
 }
 
@@ -71,16 +73,16 @@ class Board extends React.Component<BoardProps, BoardState> {
             .collection('boards').doc(this.props.boardId)
             .collection('posts')
             .onSnapshot((querySnapshot) => {
-                const arr: PostObject[] = [];
+                const arr: FirebasePostObject[] = [];
                 const componentArray: any[] = [];
                 querySnapshot.docs.forEach((doc) => {
-                    const data = doc.data() as PostObject;
+                    const data = doc.data() as FirebasePostObject;
                     console.log(doc.data())
                     const component = (
                         <>
                             <PostThumbnail postTitle={data.title} postDescription={data.description}
                                 boardId={this.props.boardId} username={this.props.username} isVerified={this.props.isVerified} role={this.props.role}
-                                to={`/boards/${this.props.boardId}/${doc.id}`} />
+                                to={`/boards/${this.props.boardId}/${doc.id}`} author={data.author} />
                             {/* Allow to edit all posts in the list */}
                         </>
                     )

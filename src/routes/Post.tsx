@@ -76,7 +76,7 @@ class Post extends React.Component<PostProps, PostState> {
                     console.log(querySnapshot.data())
                     let data = querySnapshot.data() as FierstorePostState;
                     console.log(data);
-                    if (data == undefined) {
+                    if (data === undefined) {
                         return;
                     }
                     else {
