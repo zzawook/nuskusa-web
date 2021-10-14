@@ -49,7 +49,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
                     <Thumbnail>
                         <SectionTitle color='black'>{this.props.postTitle}</SectionTitle>
                         <SectionDescription color='black'>{this.props.postDescription}</SectionDescription>
-                        { this.props.boardId === '대나무숲' ?
+                        { this.props.boardId === 'grove' ?
                             <Headline>익명/Anonymous</Headline>
                             :
                             <Headline>{this.props.author}</Headline>

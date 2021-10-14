@@ -43,7 +43,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
     fetchBoards = () => {
         dbService
             .collection('boards')
-            .get().then((querySnapshot) => {
+            .onSnapshot((querySnapshot) => {
                 if (!querySnapshot.empty) {
                     const arr: FirestoreBoardState[] = [];
                     const componentArray: any[] = [];
@@ -51,18 +51,10 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                     querySnapshot.docs.forEach((doc) => {
                         const data = doc.data() as FirestoreBoardState;
                         const component = (
-                            <BoardThumbnail key={key} boardId={data.title} description={data.description} permissions={data.permissions}>
-                                {data.englishTitle ? 
-                                    <Link to={`/boards/${data.title}`}>{data.title}</Link>
-                                    :
-                                    <Link to={`/boards/${data.englishTitle}`}>{data.title}</Link>
-                                }
-                                {/* put a modal for editing this board */}
-                            </BoardThumbnail>
+                            <BoardThumbnail key={key} boardId={data.title} englishTitle={data.englishTitle} description={data.description} permissions={data.permissions} />
                         )
                         key++;
                         arr.push(data);
-                        console.log(this.props.role)
                         if (data.permissions.includes(this.props.role) || data.permissions.includes('User')) {
                             componentArray.push(component);
                             console.log(componentArray)

@@ -26,7 +26,8 @@ type BoardProps = {
 type FirestoreBoardState = {
     title: string,
     description: string,
-    permissions: string[]
+    permissions: string[],
+    englishTitle: string
 }
 
 type BoardState = {

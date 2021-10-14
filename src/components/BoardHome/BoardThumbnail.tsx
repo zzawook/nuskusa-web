@@ -7,6 +7,7 @@ type BoardProps = {
     boardId: string,
     description: string,
     permissions: string[],
+    englishTitle: string
 }
 
 type BoardState = {
@@ -32,7 +33,7 @@ class BoardThumbnail extends React.Component<BoardProps, BoardState> {
         `
         return (
             <ThumbnailContainer>
-                <Link to={`/boards/${this.props.boardId}`} style={{ textDecoration: 'none' }}>
+                <Link to={`/boards/${this.props.englishTitle}`} style={{ textDecoration: 'none' }}>
                     <SectionTitle color='black'>
                         {this.props.boardId}
                     </SectionTitle>
