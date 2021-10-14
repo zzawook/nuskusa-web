@@ -50,6 +50,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                     let key = 0;
                     querySnapshot.docs.forEach((doc) => {
                         const data = doc.data() as FirestoreBoardState;
+                        console.log(data)
                         const component = (
                             <BoardThumbnail key={key} boardId={data.title} englishTitle={data.englishTitle} description={data.description} permissions={data.permissions} />
                         )

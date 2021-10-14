@@ -30,6 +30,8 @@ class BoardThumbnail extends React.Component<BoardProps, BoardState> {
             width: 40%;
             height: 15vh;
             overflow-x: hidden;
+            margin-right: auto;
+            margin-bottom: 10px;
         `
         return (
             <ThumbnailContainer>
