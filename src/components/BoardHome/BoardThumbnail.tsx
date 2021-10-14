@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { SectionDescription, SectionTitle } from '../../utils/ThemeText'
+import { DisplaySmall, DisplayMedium, Headline } from '../../utils/ThemeText'
 
 type BoardProps = {
     boardId: string,
@@ -30,16 +30,18 @@ class BoardThumbnail extends React.Component<BoardProps, BoardState> {
             width: 40%;
             height: 15vh;
             overflow-x: hidden;
+            margin-right: auto;
+            margin-bottom: 10px;
         `
         return (
             <ThumbnailContainer>
                 <Link to={`/boards/${this.props.englishTitle}`} style={{ textDecoration: 'none' }}>
-                    <SectionTitle color='black'>
+                    <DisplaySmall color='black'>
                         {this.props.boardId}
-                    </SectionTitle>
-                    <SectionDescription color='black' style={{ opacity: '0.5', textOverflow:'ellipsis'}}>
+                    </DisplaySmall>
+                    <Headline color='black' style={{ opacity: '0.5', textOverflow:'ellipsis', marginLeft:'10%', marginRight:'10%'}}>
                         {this.props.description}
-                    </SectionDescription>
+                    </Headline>
                 </Link>
             </ThumbnailContainer>
         )
