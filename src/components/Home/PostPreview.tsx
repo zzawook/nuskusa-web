@@ -16,7 +16,8 @@ type PreviewState = {
 type FirestoreState = {
     title: string,
     parentBoard: string,
-    boardColor: string
+    boardColor: string,
+    boardTextColor: string
 }
 
 class PostPreview extends React.Component<PreviewProps, PreviewState> {
@@ -48,7 +49,7 @@ class PostPreview extends React.Component<PreviewProps, PreviewState> {
                         const data = element.data() as FirestoreState
                         arr.push(
                             <Bulletin>
-                                <BoardTag title={data.parentBoard} color={data.boardColor} />
+                                <BoardTag title={data.parentBoard} boxcolor={data.boardColor} textcolor={data.boardTextColor} />
                                 <Headline color='#0B121C' style={{ opacity: '0.6' }}></Headline>
                             </Bulletin>
                         )

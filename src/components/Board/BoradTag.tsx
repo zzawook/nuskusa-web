@@ -2,7 +2,8 @@ import React from 'react'
 
 type BoardTagProps = {
     boxcolor: string,
-    textcolor: string
+    textcolor: string,
+    title: string
 }
 
 type BoardTagState = {

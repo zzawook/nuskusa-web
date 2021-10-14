@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ContactUs from '../components/ContactUs';
 import Navbar from '../components/Navbar';
-import BoardThumbnail from '../components/BoardThumbnail';
+import BoardThumbnail from '../components/BoardHome/BoardThumbnail';
 import { dbService } from '../utils/FirebaseFunctions';
 import { SectionDescription, Title } from '../utils/ThemeText';
 type FirestoreBoardState = {
@@ -114,6 +114,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
             flex-direction: column;
             width: 70vw;
         `
+
         const ThumbnailContainer = styled.div`
             display: flex;
             flex-direction: row;
@@ -128,7 +129,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                         <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                             게시판
                         </Title>
-
+                        
                         <SectionDescription color='white' style={{ opacity: '0.5', marginLeft: '10px', marginRight: '10px', overflow: 'clip', width: '40vw' }}>
                             NUS 한인회 게시판에 오신 것을 환영합니다. 저희 게시판은 여러 게시글들을 통해 NUS 학생들, 그리고 NUS에 관심있는 사람들과 서로 소통하고 정보 공유를 위해 만들어진 페이지입니다.
                         </SectionDescription>
@@ -146,7 +147,9 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                                 <input type='submit' />
                             </form>
                             :
-                            <div>Waiting</div>
+                            <div>
+
+                            </div>
                         }
                     </TextContainer>
                     <div style={{ height: '20vh' }} />
