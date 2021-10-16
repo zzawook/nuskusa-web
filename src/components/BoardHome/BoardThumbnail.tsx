@@ -1,45 +1,57 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { DisplaySmall, DisplayMedium, Headline } from '../../utils/ThemeText'
+import { FirestoreBoard } from '../../types/FirestoreBoard'
+import { DisplaySmall, Headline } from '../../utils/ThemeText'
 
-type BoardProps = {
-    boardId: string,
-    description: string,
-    permissions: string[],
-    englishTitle: string
-}
+type BoardProps = FirestoreBoard
 
 type BoardState = {
-
+    color: string
 }
 
 class BoardThumbnail extends React.Component<BoardProps, BoardState> {
     constructor(props: BoardProps) {
         super(props)
         this.state = {
-
+            color: "#FFFFFF",
         }
+    }
+
+    onThumbnailEnter = () => {
+        this.setState({
+            color: "#000000"
+        })
+    }
+
+    onThumbnailLeave = () => {
+        this.setState({
+            color: "#FFFFFF"
+        })
     }
 
     render = () => {
         const ThumbnailContainer = styled.div`
             display: flex;
             flex-direction: column;
-            background: white;
+            background: rgba(0, 0, 0, 0); 
+            border: 2px solid ${this.props.boardColor};
             width: 40%;
             height: 15vh;
             overflow-x: hidden;
             margin-right: auto;
             margin-bottom: 10px;
+            :hover {
+                background: ${this.props.boardColor};
+            }
         `
         return (
-            <ThumbnailContainer>
-                <Link to={`/boards/${this.props.englishTitle}`} style={{ textDecoration: 'none' }}>
-                    <DisplaySmall color='black'>
-                        {this.props.boardId}
+            <ThumbnailContainer onMouseEnter={this.onThumbnailEnter} onMouseLeave={this.onThumbnailLeave} >
+                <Link to={`/boards/${this.props.englishTitle}`} style={{ opacity: '0.8', textDecoration: 'none' }}>
+                    <DisplaySmall color={this.state.color} >
+                        {this.props.title}
                     </DisplaySmall>
-                    <Headline color='black' style={{ opacity: '0.5', textOverflow:'ellipsis', marginLeft:'10%', marginRight:'10%'}}>
+                    <Headline color={this.state.color} style={{ opacity: '0.5', textOverflow:'ellipsis', marginLeft:'10%', marginRight:'10%'}}>
                         {this.props.description}
                     </Headline>
                 </Link>

@@ -10,19 +10,13 @@ import { dbService } from '../utils/FirebaseFunctions';
 import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
 import { FirestorePost } from '../types/FirestorePost';
 import { FirestoreBoard } from '../types/FirestoreBoard' 
+
 type BoardProps = {
     boardId: string,
     username: string,
     isVerified: boolean,
     role: string
 }
-
-// type FirestoreBoardState = {
-//     title: string,
-//     description: string,
-//     permissions: string[],
-//     englishTitle: string
-// }
 
 type BoardState = {
     title: string,
@@ -81,10 +75,13 @@ class Board extends React.Component<BoardProps, BoardState> {
                                 postTitle={data.title}
                                 postContent={data.content}
                                 boardId={this.props.boardId}
+                                boardTitle={this.state.title}
                                 username={this.props.username}
                                 isVerified={this.props.isVerified}
                                 role={this.props.role}
                                 author={data.author}
+                                boxcolor={data.parentColor}
+                                textcolor={data.parentTextColor}
                                 to={`/boards/${this.props.boardId}/${doc.id}`}
                             />
                             {/* Allow to edit all posts in the list */}

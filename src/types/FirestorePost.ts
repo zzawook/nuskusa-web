@@ -10,4 +10,9 @@ export interface FirestorePost {
     numComments: number,
     permissions: string[],
     author: string,
+
+    parentBoardId: string,
+    parentBoardTitle: string,
+    parentColor: string,
+    parentTextColor: string
 }
