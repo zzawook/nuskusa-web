@@ -2,7 +2,7 @@ import React from "react";
 import { dbService } from "../utils/FirebaseFunctions";
 import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
-
+import { FirestorePost } from '../types/FirestorePost'
 
 type FierstorePostState = {
     title: string,
@@ -74,7 +74,7 @@ class Post extends React.Component<PostProps, PostState> {
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
                     console.log(querySnapshot.data())
-                    let data = querySnapshot.data() as FierstorePostState;
+                    let data = querySnapshot.data() as FirestorePost;
                     console.log(data);
                     if (data === undefined) {
                         return;
