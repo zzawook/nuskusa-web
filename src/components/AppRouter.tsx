@@ -45,11 +45,11 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
           isLoggedIn: true
         })
         await this.fetchUserData()
-        .then(() => {
-          this.setState({
-            loading: false
-          })
-        });
+          .then(() => {
+            this.setState({
+              loading: false
+            })
+          });
       }
     })
   }
@@ -89,9 +89,11 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
       <Router>
         <Switch>
           {this.state.loading ?
-            <>
-              Loading
-            </>
+            <Route exact path='/'>
+              <>
+                Loading
+              </>
+            </Route>
             :
             <>
               {this.state.isLoggedIn ? (
