@@ -2,6 +2,7 @@ import React from 'react'
 import { authService, dbService, storageService } from '../utils/FirebaseFunctions';
 import SignOut from '../components/SignOut'
 import Navbar from '../components/Navbar';
+import { FirebaseUser } from '../types/FirebaseUser';
 
 type UserProps = {
 
@@ -42,7 +43,7 @@ class Profile extends React.Component<UserProps, UserState> {
                 .collection('users').doc(user.email as string)
                 .onSnapshot((querySnapshot) => {
                     if (querySnapshot.exists) {
-                        const data = querySnapshot.data();
+                        const data = querySnapshot.data() as FirebaseUser;
                         if (data) {
                             this.setState({
                                 username: data.username,
