@@ -6,12 +6,7 @@ import Navbar from '../components/Navbar';
 import BoardThumbnail from '../components/BoardHome/BoardThumbnail';
 import { dbService } from '../utils/FirebaseFunctions';
 import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
-type FirestoreBoardState = {
-    title: string,
-    description: string,
-    permissions: string[],
-    englishTitle: string
-}
+import { FirestoreBoard } from '../types/FirestoreBoard';
 
 type BoardHomeProps = {
     username: string,
@@ -20,7 +15,7 @@ type BoardHomeProps = {
 }
 
 type BoardHomeState = {
-    boardArray: FirestoreBoardState[],
+    boardArray: FirestoreBoard[],
     boardComponentArray: any[],
     title: string,
     description: string,
@@ -45,14 +40,22 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
             .collection('boards')
             .onSnapshot((querySnapshot) => {
                 if (!querySnapshot.empty) {
-                    const arr: FirestoreBoardState[] = [];
+                    const arr: FirestoreBoard[] = [];
                     const componentArray: any[] = [];
                     let key = 0;
                     querySnapshot.docs.forEach((doc) => {
-                        const data = doc.data() as FirestoreBoardState;
+                        const data = doc.data() as FirestoreBoard;
                         console.log(data)
                         const component = (
-                            <BoardThumbnail key={key} boardId={data.title} englishTitle={data.englishTitle} description={data.description} permissions={data.permissions} />
+                            <BoardThumbnail
+                                key={key}
+                                title={data.title}
+                                englishTitle={data.englishTitle}
+                                description={data.description}
+                                permissions={data.permissions}
+                                boardColor={data.boardColor}
+                                boardTextColor={data.boardTextColor}
+                            />
                         )
                         key++;
                         arr.push(data);

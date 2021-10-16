@@ -4,20 +4,6 @@ import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
 import { FirestorePost } from '../types/FirestorePost'
 
-type FierstorePostState = {
-    title: string,
-    content: string,
-    isAnnouncement: boolean,
-    isAnonymous: boolean,
-    isPinned: boolean,
-    isHidden: boolean,
-    lastModified: Date,
-    upvotes: number,
-    numComments: number,
-    permissions: string[],
-    author: string,
-}
-
 type PostProps = {
     boardId: string,
     postId: string,

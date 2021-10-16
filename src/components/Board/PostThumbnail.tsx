@@ -11,11 +11,15 @@ type PostThumbnailProps = {
     // NumberOfUpvotes: number,
     // NumberOfComments: number,
     boardId: string,
+    boardTitle: string,
     username: string,
     isVerified: boolean,
     role: string,
     to: string,
-    author: string
+    author: string,
+
+    textcolor: string,
+    boxcolor: string
 }
 
 class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
@@ -49,16 +53,15 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
                 <Link to={this.props.to} style={{ textDecoration: 'none' }}>
                     <Thumbnail>
                         <DisplayMedium color='black'>{this.props.postTitle}</DisplayMedium>
-                        {/* <BoardTag title={this.props.} /> */}
+                        <BoardTag title={this.props.boardTitle} boxcolor={this.props.boxcolor} textcolor={this.props.textcolor} />
                         <DisplaySmall color='black'>{this.props.postContent}</DisplaySmall>
                         { this.props.boardId === 'grove' ?
-                            <Headline>익명/Anonymous</Headline>
+                            <Headline color='black'>익명/Anonymous</Headline>
                             :
-                            <Headline>{this.props.author}</Headline>
+                            <Headline color='black'>{this.props.author}</Headline>
                         }
                     </Thumbnail>
                 </Link>
-                {/* <DisplaySmall> </DisplaySmall> */}
             </Container>
         )
     }
