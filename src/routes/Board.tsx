@@ -8,14 +8,8 @@ import Navbar from '../components/Navbar';
 import PostThumbnail from '../components/Board/PostThumbnail';
 import { dbService } from '../utils/FirebaseFunctions';
 import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
-
-type FirebasePostObject = {
-    title: string,
-    description: string,
-    permissions: string[],
-    author: string
-}
-
+import { FirestorePost } from '../types/FirestorePost';
+import { FirestoreBoard } from '../types/FirestoreBoard' 
 type BoardProps = {
     boardId: string,
     username: string,
@@ -23,24 +17,26 @@ type BoardProps = {
     role: string
 }
 
-type FirestoreBoardState = {
-    title: string,
-    description: string,
-    permissions: string[],
-    englishTitle: string
-}
+// type FirestoreBoardState = {
+//     title: string,
+//     description: string,
+//     permissions: string[],
+//     englishTitle: string
+// }
 
 type BoardState = {
     title: string,
+    englishTitle: string,
     description: string,
     permissions: string[],
-    postArray: FirebasePostObject[],
+    postArray: FirestorePost[],
     postComponentArray: any[]
 }
 
 class Board extends React.Component<BoardProps, BoardState> {
     state: BoardState = {
         title: "",
+        englishTitle: "",
         description: "",
         permissions: ["Admin"],
         postArray: [],
@@ -59,11 +55,12 @@ class Board extends React.Component<BoardProps, BoardState> {
     fetchBoard = () => {
         dbService.collection('boards').doc(this.props.boardId)
             .onSnapshot((doc) => {
-                const data = doc.data() as FirestoreBoardState
+                const data = doc.data() as FirestoreBoard
                 this.setState({
                     title: data.title,
+                    englishTitle: data.englishTitle,
                     description: data.description,
-                    permissions: data.permissions
+                    permissions: data.permissions,
                 })
             })
     }
@@ -73,16 +70,23 @@ class Board extends React.Component<BoardProps, BoardState> {
             .collection('boards').doc(this.props.boardId)
             .collection('posts')
             .onSnapshot((querySnapshot) => {
-                const arr: FirebasePostObject[] = [];
+                const arr: FirestorePost[] = [];
                 const componentArray: any[] = [];
                 querySnapshot.docs.forEach((doc) => {
-                    const data = doc.data() as FirebasePostObject;
+                    const data = doc.data() as FirestorePost;
                     console.log(doc.data())
                     const component = (
                         <>
-                            <PostThumbnail postTitle={data.title} postDescription={data.description}
-                                boardId={this.props.boardId} username={this.props.username} isVerified={this.props.isVerified} role={this.props.role}
-                                to={`/boards/${this.props.boardId}/${doc.id}`} author={data.author} />
+                            <PostThumbnail
+                                postTitle={data.title}
+                                postContent={data.content}
+                                boardId={this.props.boardId}
+                                username={this.props.username}
+                                isVerified={this.props.isVerified}
+                                role={this.props.role}
+                                author={data.author}
+                                to={`/boards/${this.props.boardId}/${doc.id}`}
+                            />
                             {/* Allow to edit all posts in the list */}
                         </>
                     )

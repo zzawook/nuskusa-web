@@ -2,10 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Headline, DisplaySmall, DisplayMedium } from '../../utils/ThemeText'
+import BoardTag from './BoardTag'
 
 type PostThumbnailProps = {
     postTitle: string,
-    postDescription: string,
+    postContent: string,
     // LastModified: Date,
     // NumberOfUpvotes: number,
     // NumberOfComments: number,
@@ -48,7 +49,8 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
                 <Link to={this.props.to} style={{ textDecoration: 'none' }}>
                     <Thumbnail>
                         <DisplayMedium color='black'>{this.props.postTitle}</DisplayMedium>
-                        <DisplaySmall color='black'>{this.props.postDescription}</DisplaySmall>
+                        {/* <BoardTag title={this.props.} /> */}
+                        <DisplaySmall color='black'>{this.props.postContent}</DisplaySmall>
                         { this.props.boardId === 'grove' ?
                             <Headline>익명/Anonymous</Headline>
                             :
