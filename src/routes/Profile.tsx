@@ -5,60 +5,61 @@ import Navbar from '../components/Navbar';
 import { FirebaseUser } from '../types/FirebaseUser';
 
 type UserProps = {
-
+    firebaseUserData: FirebaseUser
+    // username: string,
+    // verificationFile?: File | undefined,
+    // isVerified: boolean,
+    // role: string, // User, Undergraduate, Graduate, Admin
+    // enrolledYear?: string | undefined,
+    // major?: string | undefined,
+    // faculty?: string | undefined
 }
 
 type UserState = {
-    username: string,
-    verificationFile?: File | undefined,
-    isVerified: boolean,
-    role: string, // User, Undergraduate, Graduate, Admin
-    enrolledYear?: string | undefined,
-    major?: string | undefined,
-    faculty?: string | undefined
+
 }
 
 class Profile extends React.Component<UserProps, UserState> {
     constructor(props: UserProps) {
         super(props);
         this.state = {
-            username: '',
-            verificationFile: undefined,
-            isVerified: false,
-            role: '', // User, Undergraduate, Graduate, Admin
-            enrolledYear: '',
-            major: '',
-            faculty: ''
+            // username: '',
+            // verificationFile: undefined,
+            // isVerified: false,
+            // role: '', // User, Undergraduate, Graduate, Admin
+            // enrolledYear: '',
+            // major: '',
+            // faculty: ''
         }
     }
 
     componentDidMount = () => {
-        this.fetchUserData();
+        // this.fetchUserData();
     }
 
-    fetchUserData = () => {
-        const user = authService.currentUser
-        if (user) {
-            dbService
-                .collection('users').doc(user.email as string)
-                .onSnapshot((querySnapshot) => {
-                    if (querySnapshot.exists) {
-                        const data = querySnapshot.data() as FirebaseUser;
-                        if (data) {
-                            this.setState({
-                                username: data.username,
-                                verificationFile: data.verificationFile,
-                                isVerified: data.isVerified,
-                                role: data.role, // User, Undergraduate, Graduate, Admin
-                                enrolledYear: data.enrolledYear,
-                                major: data.major,
-                                faculty: data.faculty
-                            })
-                        }
-                    }
-                })
-        }
-    }
+    // fetchUserData = () => {
+    //     const user = authService.currentUser
+    //     if (user) {
+    //         dbService
+    //             .collection('users').doc(user.email as string)
+    //             .onSnapshot((querySnapshot) => {
+    //                 if (querySnapshot.exists) {
+    //                     const data = querySnapshot.data() as FirebaseUser;
+    //                     if (data) {
+    //                         this.setState({
+    //                             username: data.username,
+    //                             verificationFile: data.verificationFile,
+    //                             isVerified: data.isVerified,
+    //                             role: data.role, // User, Undergraduate, Graduate, Admin
+    //                             enrolledYear: data.enrolledYear,
+    //                             major: data.major,
+    //                             faculty: data.faculty
+    //                         })
+    //                     }
+    //                 }
+    //             })
+    //     }
+    // }
 
     handleChange = (event: any) => {
         event.preventDefault();
@@ -71,19 +72,19 @@ class Profile extends React.Component<UserProps, UserState> {
 
     handleSubmit = (event: any) => {
         event.preventDefault();
-        if (this.state.verificationFile) {
+        if (this.props.firebaseUserData.verificationFile) {
             const uploadTask = storageService
-                .ref(`verifications/${this.state.verificationFile.name}`)
-                .put(this.state.verificationFile);
+                .ref(`verifications/${this.props.firebaseUserData.verificationFile.name}`)
+                .put(this.props.firebaseUserData.verificationFile);
             uploadTask.on('state_changed',
                 (snapshot) => { },
                 (error) => {
                     console.error(error);
                 },
                 () => {
-                    if (this.state.verificationFile) {
+                    if (this.props.firebaseUserData.verificationFile) {
                         storageService.ref('verifications')
-                            .child(this.state.verificationFile.name)
+                            .child(this.props.firebaseUserData.verificationFile.name)
                             .getDownloadURL()
                             .then((url) => {
                                 dbService.collection('verifications').add({
@@ -102,9 +103,9 @@ class Profile extends React.Component<UserProps, UserState> {
         return (
             <div>
                 <Navbar />
-                {this.state.username}
+                {this.props.firebaseUserData.username}
                 <SignOut />
-                {this.state.isVerified ?
+                {this.props.firebaseUserData.isVerified ?
                     <>
                         You are verified!
                     </>

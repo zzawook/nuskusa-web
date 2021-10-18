@@ -12,6 +12,7 @@ import EditPost from '../routes/EditPost.js';
 import AddPost from '../routes/AddPost.js';
 import BoardHome from '../routes/BoardHome';
 import AboutUs from '../routes/AboutUs';
+import { FirebaseUser } from '../types/FirebaseUser';
 
 
 type AppRouterProps = {
@@ -20,10 +21,8 @@ type AppRouterProps = {
 
 type AppRouterState = {
   isLoggedIn: boolean,
-  username: string,
-  isVerified: boolean,
-  role: string,
-  loading: Boolean
+  loading: Boolean,
+  firebaseUserData: FirebaseUser,
 }
 
 class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
@@ -31,10 +30,17 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     super(props);
     this.state = {
       isLoggedIn: false,
-      username: '',
-      isVerified: false,
-      role: 'User',
-      loading: true
+      loading: true,
+
+      firebaseUserData: {
+        username: "",
+        verificationFile: undefined,
+        isVerified: false,
+        role: "User", // User, Undergraduate, Graduate, Admin
+        enrolledYear: "",
+        major: "",
+        faculty: ""
+      },
     }
   }
 
@@ -54,15 +60,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     })
   }
 
-  notFoundComponent = () => {
-    return (
-      <div>
-        404 not found!
-        <Redirect to='/' />
-      </div>
-    )
-  }
-
   fetchUserData = async () => {
     const user = authService.currentUser
     if (user) {
@@ -71,17 +68,32 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
         .collection('users').doc(user.uid)
         .onSnapshot((querySnapshot) => {
           if (querySnapshot.exists) {
-            const data = querySnapshot.data();
+            const data = querySnapshot.data() as FirebaseUser;
             if (data) {
               this.setState({
-                username: data.username,
-                isVerified: data.isVerified,
-                role: data.role, // User, Undergraduate, Graduate, Admin
+                firebaseUserData: {
+                  username: data.username,
+                  verificationFile: data.verificationFile,
+                  isVerified: data.isVerified,
+                  role: data.role,
+                  enrolledYear: data.enrolledYear,
+                  major: data.major,
+                  faculty: data.faculty
+                }
               })
             }
           }
         })
     }
+  }
+
+  notFoundComponent = () => {
+    return (
+      <div>
+        404 not found!
+        <Redirect to='/' />
+      </div>
+    )
   }
 
   render = () => {
@@ -100,39 +112,42 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                 <>
                   {console.log('logged in')}
                   <Switch>
-                    <Route exact path='/' render={() => <Home role={this.state.role} />} />
-                    <Route exact path='/boards' render={() => <BoardHome username={this.state.username}
-                      isVerified={this.state.isVerified}
-                      role={this.state.role}
+                    <Route exact path='/' render={() => <Home role={this.state.firebaseUserData.role} />} />
+                    <Route exact path='/boards' render={() => <BoardHome
+                      username={this.state.firebaseUserData.username}
+                      isVerified={this.state.firebaseUserData.isVerified}
+                      role={this.state.firebaseUserData.role}
                     />} />
                     <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
                       boardId={routerProps.match.params.boardTitle}
-                      username={this.state.username}
-                      isVerified={this.state.isVerified}
-                      role={this.state.role}
+                      username={this.state.firebaseUserData.username}
+                      isVerified={this.state.firebaseUserData.isVerified}
+                      role={this.state.firebaseUserData.role}
                     />} />
                     <Route exact path='/boards/:boardTitle/:postId' render={(routerProps) => <Post
                       boardId={routerProps.match.params.boardTitle}
                       postId={routerProps.match.params.postId}
-                      username={this.state.username}
-                      isVerified={this.state.isVerified}
-                      role={this.state.role}
+                      username={this.state.firebaseUserData.username}
+                      isVerified={this.state.firebaseUserData.isVerified}
+                      role={this.state.firebaseUserData.role}
                     />} />
                     <Route exact path='/boards/:boardTitle/:postId/edit' render={(routerProps) => <EditPost
                       boardId={routerProps.match.params.boardTitle}
                       postId={routerProps.match.params.postId}
-                      username={this.state.username}
-                      isVerified={this.state.isVerified}
-                      role={this.state.role}
+                      username={this.state.firebaseUserData.username}
+                      isVerified={this.state.firebaseUserData.isVerified}
+                      role={this.state.firebaseUserData.role}
                     />} />
                     <Route exact path='/boards/:boardTitle/new' render={(routerProps) => <AddPost
                       boardId={routerProps.match.params.boardTitle}
-                      username={this.state.username}
-                      isVerified={this.state.isVerified}
-                      role={this.state.role}
+                      username={this.state.firebaseUserData.username}
+                      isVerified={this.state.firebaseUserData.isVerified}
+                      role={this.state.firebaseUserData.role}
                     />} />
-                    <Route exact path='/profile' render={() => <Profile />} />
-                    <Route exact path='/verification' render={() => <Verification role={this.state.role} />} />
+                    <Route exact path='/profile' render={() => <Profile
+                      firebaseUserData={this.state.firebaseUserData}
+                    />} />
+                    <Route exact path='/verification' render={() => <Verification role={this.state.firebaseUserData.role} />} />
                     <Route exact path='/signin' render={() => <Redirect to='/' />} />
                     <Route exact path='/signup' render={() => <Redirect to='/' />} />
                     <Route exact path='/about-us' render={() => <AboutUs />} />
@@ -146,9 +161,10 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     {console.log('not logged in')}
                     <Switch>
                       <Route exact path='/' render={() => <Home role='User' />} />
-                      <Route exact path='/boards' render={() => <BoardHome username={this.state.username}
-                        isVerified={this.state.isVerified}
-                        role={this.state.role}
+                      <Route exact path='/boards' render={() => <BoardHome 
+                        username={''}
+                        isVerified={false}
+                        role={'User'}
                       />} />
                       <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
                         boardId={routerProps.match.params.boardTitle}
