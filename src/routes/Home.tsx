@@ -6,7 +6,7 @@ import Post from './Post'
 import styled from 'styled-components'
 import ActivityList from '../components/Home/ActivityList'
 import Navbar from '../components/Navbar';
-import { SectionDescription, Title } from '../utils/ThemeText';
+import { DisplayMedium, DisplayLarge } from '../utils/ThemeText';
 import { GoldenButton } from '../components/GoldenButton';
 
 type BoardObject = {
@@ -96,20 +96,20 @@ class Home extends React.Component<HomeProps, HomeState> {
                             <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>
                                 Welcome to
                             </p>
-                            <Title color='#0B121C' style={{ marginTop: '5px', marginBottom: '5px' }}>NUS Korea Society</Title>
+                            <DisplayLarge color='#0B121C' style={{ marginTop: '5px', marginBottom: '5px' }}>NUS Korea Society</DisplayLarge>
                             <p style={{ margin: '0', marginBottom: '20px', color: '#0B121C', opacity: '0.5', fontSize: '13px' }}>
                                 NUS 한인 학생회 사이트에 오신 것을 환영합니다!
                             </p>
                             <GoldenButton to='/boards'>
-                                <SectionDescription color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center' }}>
+                                <DisplayMedium color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center' }}>
                                     + More Details
-                                </SectionDescription>
+                                </DisplayMedium>
                             </GoldenButton>
                         </MainBanner>
                     </MainBannerContainer>
                 </HomeBackground>
                 <Activity>
-                    <Title color='#FFFFFF' style={{ marginLeft: '10px' }}>Our Activities</Title>
+                    <DisplayLarge color='#FFFFFF' style={{ marginLeft: '10px' }}>Our Activities</DisplayLarge>
                     <ActivityWrapper>
                         <ActivityList title='교류활동' content='신환회, 개강/종강파티' />
                         <ActivityList title='이벤트' content='여러가지 이벤트!' />

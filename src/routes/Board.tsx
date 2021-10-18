@@ -7,13 +7,9 @@ import { GoldenButton } from '../components/GoldenButton';
 import Navbar from '../components/Navbar';
 import PostThumbnail from '../components/Board/PostThumbnail';
 import { dbService } from '../utils/firebaseFunctions';
-import { SectionDescription, Title } from '../utils/ThemeText';
-
-type PostObject = {
-    title: string,
-    description: string,
-    permissions: string[],
-}
+import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
+import { FirestorePost } from '../types/FirestorePost';
+import { FirestoreBoard } from '../types/FirestoreBoard' 
 
 type BoardProps = {
     boardId: string,
@@ -22,23 +18,19 @@ type BoardProps = {
     role: string
 }
 
-type FirestoreBoardState = {
-    title: string,
-    description: string,
-    permissions: string[]
-}
-
 type BoardState = {
     title: string,
+    englishTitle: string,
     description: string,
     permissions: string[],
-    postArray: PostObject[],
+    postArray: FirestorePost[],
     postComponentArray: any[]
 }
 
 class Board extends React.Component<BoardProps, BoardState> {
     state: BoardState = {
         title: "",
+        englishTitle: "",
         description: "",
         permissions: ["Admin"],
         postArray: [],
@@ -57,11 +49,12 @@ class Board extends React.Component<BoardProps, BoardState> {
     fetchBoard = () => {
         dbService.collection('boards').doc(this.props.boardId)
             .onSnapshot((doc) => {
-                const data = doc.data() as FirestoreBoardState
+                const data = doc.data() as FirestoreBoard
                 this.setState({
                     title: data.title,
+                    englishTitle: data.englishTitle,
                     description: data.description,
-                    permissions: data.permissions
+                    permissions: data.permissions,
                 })
             })
     }
@@ -71,16 +64,26 @@ class Board extends React.Component<BoardProps, BoardState> {
             .collection('boards').doc(this.props.boardId)
             .collection('posts')
             .onSnapshot((querySnapshot) => {
-                const arr: PostObject[] = [];
+                const arr: FirestorePost[] = [];
                 const componentArray: any[] = [];
                 querySnapshot.docs.forEach((doc) => {
-                    const data = doc.data() as PostObject;
+                    const data = doc.data() as FirestorePost;
                     console.log(doc.data())
                     const component = (
                         <>
-                            <PostThumbnail postTitle={data.title} postDescription={data.description}
-                                boardId={this.props.boardId} username={this.props.username} isVerified={this.props.isVerified} role={this.props.role}
-                                to={`/boards/${this.props.boardId}/${doc.id}`} />
+                            <PostThumbnail
+                                postTitle={data.title}
+                                postContent={data.content}
+                                boardId={this.props.boardId}
+                                boardTitle={this.state.title}
+                                username={this.props.username}
+                                isVerified={this.props.isVerified}
+                                role={this.props.role}
+                                author={data.author}
+                                boxcolor={data.parentColor}
+                                textcolor={data.parentTextColor}
+                                to={`/boards/${this.props.boardId}/${doc.id}`}
+                            />
                             {/* Allow to edit all posts in the list */}
                         </>
                     )
@@ -140,23 +143,23 @@ class Board extends React.Component<BoardProps, BoardState> {
             <Container>
                 <Navbar />
                 <TextContainer>
-                    <Title color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
+                    <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         {this.props.boardId}
-                    </Title>
-                    <SectionDescription color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
+                    </DisplayLarge>
+                    <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
                         {this.state.description}
-                    </SectionDescription>
+                    </Headline>
                     <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
-                        <SectionDescription color='white' style={{ textAlign: 'center' }}>
+                        <Headline color='white' style={{ textAlign: 'center' }}>
                             + 게시글 올리기
-                        </SectionDescription>
+                        </Headline>
                     </GoldenButton>
                 </TextContainer>
                 <BoardNavbar currentRoute={this.props.boardId} />
                 {this.state.postComponentArray.length == 0 ?
-                    <SectionDescription color='white'>
+                    <DisplayMedium color='white'>
                         There is no post here yet!
-                    </SectionDescription>
+                    </DisplayMedium>
                     :
                     <PostContainer>
                         {this.state.postComponentArray}

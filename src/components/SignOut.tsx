@@ -15,7 +15,7 @@ class SignOut extends React.Component<{}, {}> {
 
     render = () => {
         return (
-            <button onClick={this.onSignOutClick}></button>
+            <button onClick={this.onSignOutClick}>Sign Out</button>
         )
     }
 }

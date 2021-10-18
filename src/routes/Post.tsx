@@ -2,21 +2,7 @@ import React from "react";
 import { dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
-
-
-type FierstorePostState = {
-    title: string,
-    content: string,
-    isAnnouncement: boolean,
-    isAnonymous: boolean,
-    isPinned: boolean,
-    isHidden: boolean,
-    lastModified: Date,
-    upvotes: number,
-    numComments: number,
-    permissions: string[],
-    author: string,
-}
+import { FirestorePost } from '../types/FirestorePost'
 
 type PostProps = {
     boardId: string,
@@ -74,9 +60,9 @@ class Post extends React.Component<PostProps, PostState> {
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
                     console.log(querySnapshot.data())
-                    let data = querySnapshot.data() as FierstorePostState;
+                    let data = querySnapshot.data() as FirestorePost;
                     console.log(data);
-                    if (data == undefined) {
+                    if (data === undefined) {
                         return;
                     }
                     else {
