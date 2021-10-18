@@ -6,60 +6,31 @@ import { FirebaseUser } from '../types/FirebaseUser';
 
 type UserProps = {
     firebaseUserData: FirebaseUser
-    // username: string,
-    // verificationFile?: File | undefined,
-    // isVerified: boolean,
-    // role: string, // User, Undergraduate, Graduate, Admin
-    // enrolledYear?: string | undefined,
-    // major?: string | undefined,
-    // faculty?: string | undefined
 }
 
 type UserState = {
-
+    username: '',
+    verificationFile: undefined,
+    isVerified: false,
+    role: '', // User, Undergraduate, Graduate, Admin
+    enrolledYear: '',
+    major: '',
+    faculty: ''
 }
 
 class Profile extends React.Component<UserProps, UserState> {
     constructor(props: UserProps) {
         super(props);
         this.state = {
-            // username: '',
-            // verificationFile: undefined,
-            // isVerified: false,
-            // role: '', // User, Undergraduate, Graduate, Admin
-            // enrolledYear: '',
-            // major: '',
-            // faculty: ''
+            username: '',
+            verificationFile: undefined,
+            isVerified: false,
+            role: '', // User, Undergraduate, Graduate, Admin
+            enrolledYear: '',
+            major: '',
+            faculty: ''
         }
     }
-
-    componentDidMount = () => {
-        // this.fetchUserData();
-    }
-
-    // fetchUserData = () => {
-    //     const user = authService.currentUser
-    //     if (user) {
-    //         dbService
-    //             .collection('users').doc(user.email as string)
-    //             .onSnapshot((querySnapshot) => {
-    //                 if (querySnapshot.exists) {
-    //                     const data = querySnapshot.data() as FirebaseUser;
-    //                     if (data) {
-    //                         this.setState({
-    //                             username: data.username,
-    //                             verificationFile: data.verificationFile,
-    //                             isVerified: data.isVerified,
-    //                             role: data.role, // User, Undergraduate, Graduate, Admin
-    //                             enrolledYear: data.enrolledYear,
-    //                             major: data.major,
-    //                             faculty: data.faculty
-    //                         })
-    //                     }
-    //                 }
-    //             })
-    //     }
-    // }
 
     handleChange = (event: any) => {
         event.preventDefault();
@@ -89,9 +60,12 @@ class Profile extends React.Component<UserProps, UserState> {
                             .then((url) => {
                                 dbService.collection('verifications').add({
                                     downloadURL: url,
-                                    username: authService.currentUser?.uid,
                                     owner: authService.currentUser?.email,
-                                    ownerUID: authService.currentUser?.uid
+                                    ownerUID: authService.currentUser?.uid,
+                                    fullname: this.props.firebaseUserData.username,
+                                    enrolledYear: this.state.enrolledYear,
+                                    major: this.state.major,
+                                    faculty: this.state.faculty
                                 });
                             })
                     }

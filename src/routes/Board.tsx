@@ -10,6 +10,7 @@ import { dbService } from '../utils/firebaseFunctions';
 import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
 import { FirestorePost } from '../types/FirestorePost';
 import { FirestoreBoard } from '../types/FirestoreBoard' 
+import VerificationRequest from '../components/Verification/VerificationRequest';
 
 type BoardProps = {
     boardId: string,
@@ -142,6 +143,7 @@ class Board extends React.Component<BoardProps, BoardState> {
         return (
             <Container>
                 <Navbar />
+                <VerificationRequest isModal={true} />
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         {this.props.boardId}
