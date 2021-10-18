@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { dbService } from '../../utils/FirebaseFunctions'
+import { dbService } from '../../utils/firebaseFunctions'
 import { DisplaySmall, Headline } from '../../utils/ThemeText'
 import BoardTag from '../Board/BoardTag'
 
