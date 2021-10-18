@@ -1,5 +1,5 @@
 import React from 'react';
-import { authService } from '../utils/FirebaseFunctions';
+import { authService } from '../utils/firebaseFunctions';
 
 class SignOut extends React.Component<{}, {}> {
     constructor(props: any) {

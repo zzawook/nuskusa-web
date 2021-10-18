@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { authService } from '../utils/FirebaseFunctions';
+import { authService } from '../utils/firebaseFunctions';
 import firebase from 'firebase';
 import Navbar from '../components/Navbar';
 

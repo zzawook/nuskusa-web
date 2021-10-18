@@ -70,7 +70,6 @@ class Home extends React.Component<HomeProps, HomeState> {
             height: auto;
             width: auto;
         `
-
         const Activity = styled.div`
             display: flex;
             flex-direction: column;

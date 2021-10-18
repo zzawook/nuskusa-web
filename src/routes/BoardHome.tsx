@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import ContactUs from '../components/ContactUs';
 import Navbar from '../components/Navbar';
 import BoardThumbnail from '../components/BoardHome/BoardThumbnail';
-import { dbService } from '../utils/FirebaseFunctions';
-import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
+import { dbService } from '../utils/firebaseFunctions';
+import { DisplayLarge, Headline } from '../utils/ThemeText';
 import { FirestoreBoard } from '../types/FirestoreBoard';
 
 type BoardHomeProps = {

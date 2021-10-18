@@ -1,4 +1,4 @@
-import { authService, dbService } from '../utils/FirebaseFunctions';
+import { authService, dbService } from '../utils/firebaseFunctions';
 import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import React from 'react';
 import Board from '../routes/Board';
