@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ContactUs from '../components/ContactUs';
 import Navbar from '../components/Navbar';
-import BoardThumbnail from '../components/BoardThumbnail';
-import { dbService } from '../utils/FirebaseFunctions';
+import BoardThumbnail from '../components/BoardHome/BoardThumbnail';
+import { dbService } from '../utils/firebaseFunctions';
 import { SectionDescription, Title } from '../utils/ThemeText';
 type FirestoreBoardState = {
     title: string,

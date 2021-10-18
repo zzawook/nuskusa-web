@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { authService, dbService } from '../utils/FirebaseFunctions';
+import { authService, dbService } from '../utils/firebaseFunctions';
 import ContactUs from '../components/ContactUs'
 import Post from './Post'
 import styled from 'styled-components'
@@ -70,7 +70,6 @@ class Home extends React.Component<HomeProps, HomeState> {
             height: auto;
             width: auto;
         `
-
         const Activity = styled.div`
             display: flex;
             flex-direction: column;

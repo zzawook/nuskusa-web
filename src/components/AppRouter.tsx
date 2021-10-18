@@ -1,4 +1,4 @@
-import { authService, dbService } from '../utils/FirebaseFunctions';
+import { authService, dbService } from '../utils/firebaseFunctions';
 import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import React from 'react';
 import Board from '../routes/Board';
@@ -146,6 +146,13 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     username={''}
                     isVerified={false}
                     role={'User'}
+                  />} />
+                  <Route exact path='/boards/:boardTitle/:postId/edit' render={(routerProps) => <EditPost
+                    boardId={routerProps.match.params.boardTitle}
+                    postId={routerProps.match.params.postId}
+                    username={this.state.username}
+                    isVerified={this.state.isVerified}
+                    role={this.state.role}
                   />} />
                   <Route exact path='/boards/:boardTitle/:postId' render={(routerProps) => <Post
                     boardId={routerProps.match.params.boardTitle}

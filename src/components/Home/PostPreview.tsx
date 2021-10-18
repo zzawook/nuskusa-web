@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { dbService } from '../../utils/FirebaseFunctions'
+import { dbService } from '../../utils/firebaseFunctions'
 import { DisplaySmall, Headline } from '../../utils/ThemeText'
-import BoardTag from '../Board/BoradTag'
+import BoardTag from '../Board/BoardTag'
 
 type PreviewProps = {
 
@@ -48,7 +48,7 @@ class PostPreview extends React.Component<PreviewProps, PreviewState> {
                         const data = element.data() as FirestoreState
                         arr.push(
                             <Bulletin>
-                                <BoardTag title={data.parentBoard} color={data.boardColor} />
+                                <BoardTag boxcolor={data.parentBoard} textcolor={data.boardColor} />
                                 <Headline color='#0B121C' style={{ opacity: '0.6' }}></Headline>
                             </Bulletin>
                         )

@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import { dbService } from "../utils/FirebaseFunctions";
+import { dbService } from "../utils/firebaseFunctions";
 
 type PostProps = {
     boardId: string,

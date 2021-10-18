@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import VerificationComponent from '../components/Verification/VerificationComponent'
-import { authService, dbService } from '../utils/FirebaseFunctions'
+import { authService, dbService } from '../utils/firebaseFunctions'
 
 type VerificationProps = {
     role: string
