@@ -160,7 +160,7 @@ class AddPost extends React.Component {
 
     selectedBoard = {};
     content = '<p></p>';
-    options = this.props.role === 'admin' ? [
+    options = this.props.role === 'Admin' ? [
         { value: 'announcement', label: '공지사항' },
         { value: 'event', label: '이벤트' },
         { value: 'general', label: '자유게시판' },
@@ -175,12 +175,16 @@ class AddPost extends React.Component {
     submitted = false;
 
     componentDidMount() {
-        /*if (! this.props.isVerified) {
+        if (! this.props.isVerified) {
             window.alert("You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다.");
             window.history.go(-1);
             return;
-        }*/
+        }
         if (this.props.boardId == 'announcement') {
+            if (this.props.role != 'admin') {
+                window.alert("You do not have access to edit this post. \n \n 이 포스트를 수정할 권한이 없습니다.")
+                window.history.go(-1);
+            }
             this.selectedBoard = { value: 'announcement', label: '공지사항' };
         }
         else if (this.props.boardId = 'event') {
@@ -217,7 +221,7 @@ class AddPost extends React.Component {
                         return;
                     }
                     else {
-                        if (data.permissions.includes(this.props.role) || data.permissions.includes("User")) {
+                        if (data.permissions.includes(this.props.role)/* || data.permissions.includes("User")*/) {
                             console.log("I entered");
                             this.content = data.content;
                             this.setState({
@@ -465,10 +469,10 @@ class AddPost extends React.Component {
                     />
                 </Editor>
                 <CheckBoxContainer>
-                    {this.props.role == 'User' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={this.state.isAnonymous}/> : this.selectedBoard.value == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
-                    {this.props.role == 'User' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.isPinned}/> : <div/>}
-                    {this.props.role == 'User' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.isHidden}/> : <div/>}
-                    {this.props.role == 'User' ? <Checkbox label='Announcement' setter={setAnnouncement} init={this.state.isAnnouncement}/> : <div/>}
+                    {this.props.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={this.state.isAnonymous}/> : this.selectedBoard.value == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
+                    {this.props.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.isPinned}/> : <div/>}
+                    {this.props.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.isHidden}/> : <div/>}
+                    {this.props.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={this.state.isAnnouncement}/> : <div/>}
                 </CheckBoxContainer>
                 <Submit onClick={this.handleSubmit} submitted={this.submitted}>Post</Submit>
             </Container>

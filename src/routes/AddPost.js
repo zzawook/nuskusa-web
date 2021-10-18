@@ -269,7 +269,7 @@ class AddPost extends React.Component {
             height: '15px',
         }
 
-        const options = this.props.role === 'admin' ? [
+        const options = this.props.role === 'Admin' ? [
             { value: 'announcement', label: '공지사항' },
             { value: 'event', label: '이벤트' },
             { value: 'general', label: '자유게시판' },
@@ -397,10 +397,10 @@ class AddPost extends React.Component {
                     />
                 </Editor>
                 <CheckBoxContainer>
-                    {this.props.role == 'User' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false}/> : this.selectedBoard == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
-                    {this.props.role == 'User' ? <Checkbox label='Pinned' setter={setPinned} init={false}/> : <div/>}
-                    {this.props.role == 'User' ? <Checkbox label='Hidden' setter={setHidden} init={false}/> : <div/>}
-                    {this.props.role == 'User' ? <Checkbox label='Announcement' setter={setAnnouncement}/> : <div/>}
+                    {this.props.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false}/> : this.selectedBoard == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
+                    {this.props.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={false}/> : <div/>}
+                    {this.props.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={false}/> : <div/>}
+                    {this.props.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement}/> : <div/>}
                 </CheckBoxContainer>
                 <Submit onClick={this.handleSubmit}>Post</Submit>
             </Container>
