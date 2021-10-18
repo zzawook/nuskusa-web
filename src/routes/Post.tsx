@@ -1,5 +1,5 @@
 import React from "react";
-import { dbService } from "../utils/FirebaseFunctions";
+import { dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
 import { FirestorePost } from '../types/FirestorePost'
