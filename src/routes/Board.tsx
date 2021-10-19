@@ -143,7 +143,7 @@ class Board extends React.Component<BoardProps, BoardState> {
         return (
             <Container>
                 <Navbar />
-                <VerificationRequest isModal={true} />
+                { this.props.isVerified != true ? <VerificationRequest isModal={true} /> : <></> }
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         {this.props.boardId}

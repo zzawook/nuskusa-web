@@ -48,14 +48,14 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     authService.onAuthStateChanged(async (user) => {
       if (user) {
         this.setState({
-          isLoggedIn: true
+          isLoggedIn: true,
+          loading: false
         })
         await this.fetchUserData()
-          .then(() => {
-            this.setState({
-              loading: false
-            })
-          });
+      } else {
+        this.setState({
+          loading: false
+        })
       }
     })
   }

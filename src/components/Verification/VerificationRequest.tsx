@@ -1,9 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
+import { authService } from '../../utils/firebaseFunctions'
 import { DisplayLarge, DisplaySmall } from '../../utils/ThemeText'
+import VerificationForm from './VerificationForm'
 
 type VerificationProps = {
-    isModal: Boolean
+    isModal: Boolean,
 }
 
 type VerificationState = {
@@ -26,10 +28,10 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
 
     render = () => {
         const ModalWrapper = styled.div`
-            position: absolute;
+            position: fixed;
             width: 100vw;
             height: 100vh;
-            overflow-y: hidden;
+            overflow-y: clip;
             background: rgba(0, 0, 0, 0.5);
             :before {
                 background: rgba(0, 0, 0, 0.5);
@@ -59,19 +61,19 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
             }
         `
 
-
         const ContentWrapper = styled.div`
 
         `
 
         return (
             <>
-                {this.props.isModal === true && this.state.showModal ?
+                {this.props.isModal === true && this.state.showModal && authService.currentUser ?
                     <ModalWrapper onClick={(e)=>{e.stopPropagation()}}>
                         <ModalContent>
                             <CloseButton onClick={this.onCloseClick}>X</CloseButton>
                             <DisplayLarge style={{ marginLeft: '10%', opacity: '0.7' }}>학생 인증</DisplayLarge>
                             <DisplaySmall style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
+                            <VerificationForm />
                         </ModalContent>
                     </ModalWrapper>
                     :

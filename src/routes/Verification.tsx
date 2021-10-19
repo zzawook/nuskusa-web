@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import VerificationComponent from '../components/Verification/VerificationComponent'
+import { FirestoreUserVerification } from '../types/FirestoreUserVerification'
 import { authService, dbService } from '../utils/firebaseFunctions'
 
 type VerificationProps = {
@@ -34,13 +35,11 @@ class Verification extends React.Component<VerificationProps, VerificationState>
                 .onSnapshot((querySnapshot) => {
                     if (!querySnapshot.empty) {
                         const arr = querySnapshot.docs.map((element) => {
+                            const data = element.data() as FirestoreUserVerification
                             return (
                                 <VerificationComponent
                                     verificationId={element.id}
-                                    downloadURL={element.data().downloadURL as string}
-                                    owner={element.data().owner as string}
-                                    username={element.data().username as string} 
-                                    userUID={element.data().ownerUID as string}
+                                    firestoreVerificationData={data}
                                     />
                             )
                         })

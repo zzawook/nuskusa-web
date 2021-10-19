@@ -117,7 +117,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                         <ActivityList title='취업활동 정보' content='인턴, 취업 관련한 웨비나' />
                     </ActivityWrapper>
                 </Activity>
-                <ContactUs />
+                {/* <ContactUs /> */}
             </Wrapper>
         )
     }
