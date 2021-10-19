@@ -11,6 +11,19 @@ type ContactStates = {
     messageInput: string,
 }
 
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+const Container =  styled.div`
+    position: relative;
+    width: ${(width * 0.7).toString()}px;
+    height: 685px;
+    left: ${(width * 0.15).toString()}px;
+    top: 4715px;
+    background-color: transparent;
+    font-family: var(--font-family-roboto);
+`
+
 class ContactUs extends React.Component {
     state: ContactStates = {
         nameInput: 'Name',
@@ -154,20 +167,11 @@ class ContactUs extends React.Component {
     height = window.innerHeight;
 
     //CSS Styles
-    containerStyle: CSS.Properties = {
-        position: "relative",
-        width: (this.width * 0.7).toString() + "px",
-        height: "685px",
-        left: (this.width * 0.15).toString() + "px",
-        top: "4715px",
-        backgroundColor: 'transparent',
-        //border: '1px solid white'
-    }
+    
     titleStyle: CSS.Properties = {
         position: "absolute",
         left: "0px",
         top: "10px",
-        fontFamily: "Roboto",
         fontStyle: "normal",
         fontWeight: "bold",
         fontSize: "40px",
@@ -206,7 +210,6 @@ class ContactUs extends React.Component {
         left: '80px',
         width: ((this.width * 0.4) - 160).toString() + 'px',
         height: '50px',
-        fontFamily: 'Roboto',
         fontStyle: 'normal',
         fontWeight: 'bold',
         fontSize: '20px',
@@ -223,7 +226,6 @@ class ContactUs extends React.Component {
         left: '80px',
         width: ((this.width * 0.4) - 160).toString() + 'px',
         height: '50px',
-        fontFamily: 'Roboto',
         fontStyle: 'normal',
         fontWeight: 'bold',
         fontSize: '20px',
@@ -239,7 +241,6 @@ class ContactUs extends React.Component {
         left: '80px',
         top: '280px',
         color: 'rgba(11, 18, 28, 0.4)',
-        fontFamily: 'Roboto',
         fontStyle: 'normal',
         fontWeight: 'bold',
         fontSize: '20px',
@@ -254,7 +255,6 @@ class ContactUs extends React.Component {
         boxSizing: 'border-box',
         resize: 'none',
         padding: '10px',
-        fontFamily: 'Roboto',
         fontSize: '12px',
     }
     submitStyle: CSS.Properties = {
@@ -267,7 +267,6 @@ class ContactUs extends React.Component {
         border: 'none'
     }
     emailSpanStyle: CSS.Properties = {
-        fontFamily: 'Roboto',
         fontStyle: 'normal',
         fontWeight: 'bold',
         fontSize: '18px',
@@ -278,7 +277,6 @@ class ContactUs extends React.Component {
         top: '20px'
     }
     addressSpanStyle: CSS.Properties = {
-        fontFamily: 'Roboto',
         fontStyle: 'normal',
         fontWeight: 'bold',
         fontSize: '18px',
@@ -291,7 +289,7 @@ class ContactUs extends React.Component {
 
     render = () => {
         return (
-            <div style={this.containerStyle}>
+            <Container>
                 <span style={this.titleStyle}>Contact Us</span>
                 <div style={this.emailBoxStyle}>
                     <img src="/" />
@@ -308,7 +306,7 @@ class ContactUs extends React.Component {
                     <textarea style={this.messageInputStyle} value={this.state.messageInput} onChange={this.handleMessageChange} />
                     <button style={this.submitStyle} onClick={this.handleFormSubmit}>Submit</button>
                 </form>
-            </div>
+            </Container>
 
         )
     }
