@@ -9,10 +9,6 @@ import Navbar from '../components/Navbar';
 import { DisplayMedium, DisplayLarge } from '../utils/ThemeText';
 import { GoldenButton } from '../components/GoldenButton';
 
-type BoardObject = {
-    title: string,
-    description: string,
-}
 type HomeProps = {
     role: string
 }

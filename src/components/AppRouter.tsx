@@ -88,7 +88,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     return (
       <Router>
         <Switch>
-          {this.state.loading ?
+          {!this.state.loading ?
             <Route exact path='/'>
               <>
                 Loading
@@ -98,8 +98,8 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
             <>
               {this.state.isLoggedIn ? (
                 <>
-                  {console.log('logged in')}
                   <Switch>
+                    {console.log('logged in')}
                     <Route exact path='/' render={() => <Home role={this.state.role} />} />
                     <Route exact path='/boards' render={() => <BoardHome username={this.state.username}
                       isVerified={this.state.isVerified}
@@ -143,8 +143,8 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                 :
                 (
                   <>
-                    {console.log('not logged in')}
                     <Switch>
+                      {console.log('not logged in')}
                       <Route exact path='/' render={() => <Home role='User' />} />
                       <Route exact path='/boards' render={() => <BoardHome username={this.state.username}
                         isVerified={this.state.isVerified}
