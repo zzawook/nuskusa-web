@@ -119,21 +119,21 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/boards' render={() => <BoardHome
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
-                  <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
+                  <Route exact path='/boards/:boardTitle' sensitive render={(routerProps) => <Board
                     boardId={routerProps.match.params.boardTitle}
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
-                  <Route exact path='/boards/:boardTitle/:postId' render={(routerProps) => <Post
-                    boardId={routerProps.match.params.boardTitle}
-                    postId={routerProps.match.params.postId}
-                    firebaseUserData={this.state.firebaseUserData}
-                  />} />
-                  <Route exact path='/boards/:boardTitle/:postId/edit' render={(routerProps) => <EditPost
+                  <Route exact path='/boards/:boardTitle/:postId' sensitive render={(routerProps) => <Post
                     boardId={routerProps.match.params.boardTitle}
                     postId={routerProps.match.params.postId}
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
-                  <Route exact path='/boards/:boardTitle/new' render={(routerProps) => <AddPost
+                  <Route exact path='/boards/:boardTitle/:postId/edit' sensitive render={(routerProps) => <EditPost
+                    boardId={routerProps.match.params.boardTitle}
+                    postId={routerProps.match.params.postId}
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
+                  <Route exact path='/boards/:boardTitle/new' sensitive render={(routerProps) => <AddPost
                     boardId={routerProps.match.params.boardTitle}
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
@@ -156,15 +156,15 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     <Route exact path='/boards' render={() => <BoardHome
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
-                    <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
+                    <Route exact path='/boards/:boardTitle' sensitive render={(routerProps) => <Board
                       boardId={routerProps.match.params.boardTitle}
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
-                    <Route exact path='/boards/:boardTitle/new' render={(routerProps) => <AddPost
+                    <Route exact path='/boards/:boardTitle/new' sensitive render={(routerProps) => <AddPost
                       boardId={routerProps.match.params.boardTitle}
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
-                    <Route exact path='/boards/:boardTitle/:postId' render={(routerProps) => <Post
+                    <Route exact path='/boards/:boardTitle/:postId' sensitive render={(routerProps) => <Post
                       boardId={routerProps.match.params.boardTitle}
                       postId={routerProps.match.params.postId}
                       firebaseUserData={this.state.firebaseUserData}

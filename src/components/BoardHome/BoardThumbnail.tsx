@@ -47,7 +47,7 @@ class BoardThumbnail extends React.Component<BoardProps, BoardState> {
         `
         return (
             <ThumbnailContainer onMouseEnter={this.onThumbnailEnter} onMouseLeave={this.onThumbnailLeave} >
-                <Link to={`/boards/${this.props.englishTitle}`} style={{ opacity: '0.8', textDecoration: 'none' }}>
+                <Link to={`/boards/${this.props.boardId}`} style={{ opacity: '0.8', textDecoration: 'none' }}>
                     <DisplaySmall color={this.state.color} >
                         {this.props.title}
                     </DisplaySmall>

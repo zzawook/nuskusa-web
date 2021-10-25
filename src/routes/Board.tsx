@@ -23,26 +23,38 @@ type BoardProps = {
 
 type BoardState = {
     title: string,
-    englishTitle: string,
+    boardId: string,
     description: string,
     permissions: string[],
     postArray: FirestorePost[],
-    postComponentArray: any[]
+    postComponentArray: any[],
+    refresh: Boolean
 }
+
+let prevBoardURL = ""
 
 class Board extends React.Component<BoardProps, BoardState> {
     state: BoardState = {
         title: "",
-        englishTitle: "",
+        boardId: "",
         description: "",
         permissions: ["Admin"],
         postArray: [],
-        postComponentArray: []
+        postComponentArray: [],
+        refresh: false
     }
 
     componentDidMount = () => {
         this.fetchBoard();
         this.fetchPosts();
+    }
+
+    componentDidUpdate = () => {
+        if (prevBoardURL !== this.props.boardId) {
+            prevBoardURL = this.props.boardId
+            this.fetchBoard();
+            this.fetchPosts();
+        }
     }
 
     addPostLink = () => {
@@ -55,7 +67,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 const data = doc.data() as FirestoreBoard
                 this.setState({
                     title: data.title,
-                    englishTitle: data.englishTitle,
+                    boardId: data.boardId,
                     description: data.description,
                     permissions: data.permissions,
                 })
@@ -69,11 +81,13 @@ class Board extends React.Component<BoardProps, BoardState> {
             .onSnapshot((querySnapshot) => {
                 const arr: FirestorePost[] = [];
                 const componentArray: any[] = [];
+                let key = 0
                 querySnapshot.docs.forEach((doc) => {
+                    key++
                     const data = doc.data() as FirestorePost;
                     console.log(doc.data())
                     const component = (
-                        <>
+                        <div key={key}>
                             <PostThumbnail
                                 postTitle={data.title}
                                 postContent={data.content}
@@ -88,7 +102,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                                 to={`/boards/${this.props.boardId}/${doc.id}`}
                             />
                             {/* Allow to edit all posts in the list */}
-                        </>
+                        </div>
                     )
                     arr.push(data);
                     if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User')) {
@@ -154,7 +168,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                     : <></>}
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
-                        {this.props.boardId}
+                        {this.state.title}
                     </DisplayLarge>
                     <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
                         {this.state.description}

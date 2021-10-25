@@ -1,21 +1,17 @@
+import { randomUUID } from 'crypto'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { FirestoreBoard } from '../../types/FirestoreBoard'
 import { dbService } from '../../utils/firebaseFunctions'
 import { DisplaySmall, Headline } from '../../utils/ThemeText'
-
-type BoardProps = {
-    title: string,
-    description: string,
-    permission: string[]
-}
 
 type BoardNavbarProps = {
     currentRoute: string
 }
 
 type BoardNavbarState = {
-    componentArray: any[]
+    componentArray: any[],
 }
 
 // Navigation bar for choosing individual boards
@@ -23,7 +19,7 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
     constructor(props: BoardNavbarProps) {
         super(props)
         this.state = {
-            componentArray: []
+            componentArray: [],
         }
     }
 
@@ -46,23 +42,29 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
 
         const componentArray: any = []
         dbService.collection('boards').get().then((querySnapshot) => {
+            let key = 0;
             querySnapshot.docs.forEach((doc) => {
-                const data = doc.data() as BoardProps
-                if (data.title !== this.props.currentRoute) {
+                key++
+                const data = doc.data() as FirestoreBoard
+                if (data.boardId !== this.props.currentRoute) {
                     componentArray.push(
-                        <LinkContainer>
-                            <Link to={`/boards/${data.title}`} style={{ textDecoration: 'none' }}>
+                        <LinkContainer key={key}>
+                            <Link to={{ pathname: `/boards/${data.boardId}` }}
+                                style={{ textDecoration: 'none' }}
+                            >
                                 <Headline color='white' >
                                     {data.title}
                                 </Headline>
                             </Link>
-                        </LinkContainer>
+                        </LinkContainer >
                     )
                 } else {
                     componentArray.push(
-                        <CurrentContainer>
-                            <Link to={`/boards/${data.title}`} style={{ textDecoration: 'none' }}>
-                                <Headline color='white' >
+                        <CurrentContainer key={key}>
+                            <Link to={{ pathname: `/boards/${data.boardId}` }}
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <Headline color='white'>
                                     {data.title}
                                 </Headline>
                             </Link>
