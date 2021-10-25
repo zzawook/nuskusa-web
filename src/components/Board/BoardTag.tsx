@@ -21,7 +21,6 @@ class BoardTag extends React.Component<BoardTagProps, BoardTagState> {
     }
 
     render = () => {
-        console.log(this.props)
         const TagWrapper = styled.div`
             background: ${this.props.boxcolor};
             box-sizing: border-box;

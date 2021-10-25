@@ -2,11 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../logo.png'
+import { FirebaseUser } from '../types/FirebaseUser';
 import { authService } from '../utils/firebaseFunctions';
+import ProfileBadge from './Profile/ProfileBadge';
 import SignOut from './SignOut';
 
 type NavbarProps = {
-
+    firebaseUserData: FirebaseUser
 }
 
 class Navbar extends React.Component<NavbarProps, {}> {
@@ -117,7 +119,6 @@ class Navbar extends React.Component<NavbarProps, {}> {
         `
         const handleLogoClick = (e: any) => {
             e.preventDefault();
-
         }
 
         return (
@@ -139,7 +140,8 @@ class Navbar extends React.Component<NavbarProps, {}> {
                         </NavbarButton>
                         {authService.currentUser ?
                             <>
-                                <SignOut>Sign Out</SignOut>
+                                <ProfileBadge firebaseUserData={this.props.firebaseUserData} />
+                                {/* <SignOut>Sign Out</SignOut> */}
                             </>
                             :
                             <>

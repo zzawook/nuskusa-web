@@ -12,7 +12,7 @@ class AboutUs extends React.Component {
     render = () => {
         return (
             <div>
-                <Navbar />
+                {/* <Navbar /> */}
                 ABOUT US!!!
             </div>
         )

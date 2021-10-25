@@ -3,13 +3,12 @@ import { dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
 import { FirestorePost } from '../types/FirestorePost'
+import { FirebaseUser } from "../types/FirebaseUser";
 
 type PostProps = {
     boardId: string,
     postId: string,
-    username: string,
-    isVerified: boolean,
-    role: string
+    firebaseUserData: FirebaseUser
 }
 
 type PostState = {
@@ -66,7 +65,7 @@ class Post extends React.Component<PostProps, PostState> {
                         return;
                     }
                     else {
-                        if (data.permissions.includes(this.props.role) || data.permissions.includes("User")) {
+                        if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes("User")) {
                             this.setState({
                                 title: data.title,
                                 author: data.author,
@@ -108,7 +107,7 @@ class Post extends React.Component<PostProps, PostState> {
     render = () => {
         return (
             <div>
-                <Navbar />
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
                 {this.state.errorMsg === "ok" ?
                     <>
                         {this.props.postId}

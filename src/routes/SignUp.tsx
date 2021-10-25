@@ -4,6 +4,7 @@ import CSS from 'csstype';
 import Navbar from '../components/Navbar';
 import { authService, dbService } from '../utils/firebaseFunctions';
 import styled from 'styled-components'
+import { SampleUser } from '../utils/SampleUser';
 
 type UserProps = {
     

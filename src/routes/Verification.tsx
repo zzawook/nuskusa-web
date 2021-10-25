@@ -1,14 +1,15 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import VerificationComponent from '../components/Verification/VerificationComponent'
+import { FirebaseUser } from '../types/FirebaseUser'
+import { FirestoreUserVerification } from '../types/FirestoreUserVerification'
 import { authService, dbService } from '../utils/firebaseFunctions'
 
 type VerificationProps = {
-    role: string
+    firebaseUserData: FirebaseUser
 }
 
 type VerificationState = {
-    role: string,
     verificationComponentArray: any[],
     verificationId: string
 }
@@ -17,7 +18,6 @@ class Verification extends React.Component<VerificationProps, VerificationState>
     constructor(props: any) {
         super(props)
         this.state = {
-            role: 'User',
             verificationComponentArray: [],
             verificationId: ''
         }
@@ -34,14 +34,12 @@ class Verification extends React.Component<VerificationProps, VerificationState>
                 .onSnapshot((querySnapshot) => {
                     if (!querySnapshot.empty) {
                         const arr = querySnapshot.docs.map((element) => {
+                            const data = element.data() as FirestoreUserVerification
                             return (
                                 <VerificationComponent
                                     verificationId={element.id}
-                                    downloadURL={element.data().downloadURL as string}
-                                    owner={element.data().owner as string}
-                                    username={element.data().username as string} 
-                                    userUID={element.data().ownerUID as string}
-                                    />
+                                    firestoreVerificationData={data}
+                                />
                             )
                         })
                         this.setState({
@@ -55,8 +53,8 @@ class Verification extends React.Component<VerificationProps, VerificationState>
     render = () => {
         return (
             <>
-                <Navbar />
-                {this.state.role === 'Admin' ?
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                {this.props.firebaseUserData.role === 'Admin' ?
                     <div>
                         Admin!
                         {this.state.verificationComponentArray}

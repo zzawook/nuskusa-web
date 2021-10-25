@@ -11,7 +11,7 @@ import Checkbox from '../../src/components/Post/Checkbox'
 import { runInThisContext } from "vm";
 
 class Uploader {
-    constructor( loader ) {
+    constructor(loader) {
         this.loader = loader;
     }
 
@@ -23,7 +23,7 @@ class Uploader {
                     let uploadTask = storageRef.child(`images/${file.name}`).put(file);
                     uploadTask.on(
                         firebase.storage.TaskEvent.STATE_CHANGED,
-                        function(snapshot) {
+                        function (snapshot) {
                             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                             console.log("Upload is " + progress + "% done");
                             switch (snapshot.state) {
@@ -31,7 +31,7 @@ class Uploader {
                                     console.log("Upload is paused");
                             }
                         },
-                        function(error) {
+                        function (error) {
                             switch (error.code) {
                                 case "storage/unauthorized":
                                     reject(" User doesn't have permission to access the object");
@@ -42,23 +42,23 @@ class Uploader {
                                 case "storage/unknown":
                                     reject("Unknown error occurred, inspect error.serverResponse");
                                     break;
-                          }
+                            }
                         },
-                        function() {
+                        function () {
                             console.log("Upload successful")
                             // Upload completed successfully, now we can get the download URL
                             uploadTask.snapshot.ref
                                 .getDownloadURL()
-                                .then(function(downloadURL) {
-                                console.log("File available at", downloadURL);
-                                resolve({
-                                    urls: {
-                                        'default': downloadURL
-                                    }
+                                .then(function (downloadURL) {
+                                    console.log("File available at", downloadURL);
+                                    resolve({
+                                        urls: {
+                                            'default': downloadURL
+                                        }
+                                    });
                                 });
-                            });
                         }
-                      );
+                    );
                 })
             }
         )
@@ -162,7 +162,7 @@ class AddPost extends React.Component {
     content = '<p></p>'
 
     componentDidMount() {
-        if (! this.props.isVerified) {
+        if (!this.props.isVerified) {
             window.alert("You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다.");
             window.history.go(-1);
             return;
@@ -194,7 +194,7 @@ class AddPost extends React.Component {
                 .collection('posts')
                 .add(this.state);
         })
-        
+
     }
 
     handleTitleChange = (e) => {
@@ -231,33 +231,33 @@ class AddPost extends React.Component {
 
     render = () => {
         const custom_config = {
-            extraPlugins: [ MyCustomUploadAdapterPlugin ],
+            extraPlugins: [MyCustomUploadAdapterPlugin],
             toolbar: {
-              items: [
-                'heading',
-                '|',
-                'bold',
-                'italic',
-                'link',
-                'bulletedList',
-                'numberedList',
-                '|',
-                'blockQuote',
-                'insertTable',
-                '|',
-                'imageUpload',
-                'mediaEmbed',
-                'undo',
-                'redo'
-              ]
+                items: [
+                    'heading',
+                    '|',
+                    'bold',
+                    'italic',
+                    'link',
+                    'bulletedList',
+                    'numberedList',
+                    '|',
+                    'blockQuote',
+                    'insertTable',
+                    '|',
+                    'imageUpload',
+                    'mediaEmbed',
+                    'undo',
+                    'redo'
+                ]
             },
             table: {
-              contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+                contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
             },
         }
 
         function MyCustomUploadAdapterPlugin(editor) {
-            editor.plugins.get( 'FileRepository' ).createUploadAdapter = (loader) => {
+            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
                 return new Uploader(loader)
             }
         }
@@ -285,11 +285,11 @@ class AddPost extends React.Component {
         const customStyle = {
             valueContainer: (provided, state) => ({
                 ...provided,
-                backgroundColor: this.selectedBoard == 'announcement' ? '#FFD3D3' : 
-                    this.selectedBoard === 'event' ? '#D6F2C4' : 
-                    this.selectedBoard === 'general' ? '#C4F2EF' : 
-                    this.selectedBoard === 'grove' ? '#99CEA5' : 
-                    this.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
+                backgroundColor: this.selectedBoard == 'announcement' ? '#FFD3D3' :
+                    this.selectedBoard === 'event' ? '#D6F2C4' :
+                        this.selectedBoard === 'general' ? '#C4F2EF' :
+                            this.selectedBoard === 'grove' ? '#99CEA5' :
+                                this.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
             }),
             option: (provided, state) => ({
                 ...provided,
@@ -297,39 +297,39 @@ class AddPost extends React.Component {
                 color: 'white',
             }),
             control: (provided, state) => ({
-                ...provided,                
+                ...provided,
                 width: 'inherit',
                 fontSize: '10px',
-                backgroundColor: this.selectedBoard == 'announcement' ? '#FFD3D3' : 
-                    this.selectedBoard === 'event' ? '#D6F2C4' : 
-                    this.selectedBoard === 'general' ? '#C4F2EF' : 
-                    this.selectedBoard === 'grove' ? '#99CEA5' : 
-                    this.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
+                backgroundColor: this.selectedBoard == 'announcement' ? '#FFD3D3' :
+                    this.selectedBoard === 'event' ? '#D6F2C4' :
+                        this.selectedBoard === 'general' ? '#C4F2EF' :
+                            this.selectedBoard === 'grove' ? '#99CEA5' :
+                                this.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
                 color: 'white',
                 borderRadius: '0px',
                 border: '1px solid white'
             }),
             singleValue: (provided, state) => {
-                return { 
+                return {
                     ...provided,
                     fontSize: '10px',
-                    backgroundColor: this.selectedBoard == 'announcement' ? '#FFD3D3' : 
-                    this.selectedBoard === 'event' ? '#D6F2C4' : 
-                    this.selectedBoard === 'general' ? '#C4F2EF' : 
-                    this.selectedBoard === 'grove' ? '#99CEA5' : 
-                    this.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
+                    backgroundColor: this.selectedBoard == 'announcement' ? '#FFD3D3' :
+                        this.selectedBoard === 'event' ? '#D6F2C4' :
+                            this.selectedBoard === 'general' ? '#C4F2EF' :
+                                this.selectedBoard === 'grove' ? '#99CEA5' :
+                                    this.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
                     color: 'black'
                 };
             },
             menu: (provided, state) => {
-                return { 
+                return {
                     ...provided,
                     backgroundColor: '#18202B',
                     color: 'white'
                 };
             },
             menuList: (provided, state) => {
-                return { 
+                return {
                     ...provided,
                     backgroundCcolor: '#18202B',
                     color: 'white'
@@ -347,44 +347,44 @@ class AddPost extends React.Component {
         const setAnnonymous = () => {
             console.log("Annonymouse set")
             this.setState({
-                isAnonymous: ! this.state.isAnonymous,
+                isAnonymous: !this.state.isAnonymous,
             })
         }
 
         const setPinned = () => {
             console.log("Pinned set")
             this.setState({
-                
-                isPinned: ! this.state.isPinned,
+
+                isPinned: !this.state.isPinned,
             })
         }
         const setHidden = () => {
             console.log("Hidden set")
             this.setState({
-                isHidden: ! this.state.isHidden,
+                isHidden: !this.state.isHidden,
             })
         }
         const setAnnouncement = () => {
             console.log("Announcement set")
             this.setState({
-                isAnnouncement: ! this.state.isAnnouncement,
+                isAnnouncement: !this.state.isAnnouncement,
             })
         }
 
         return (
             <Container>
-                <Navbar />
-                <Back><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle}/>Back</Back>
-                <SelectContainer><Select options={options} styles={customStyle} onChange={this.handleSelectChange}/></SelectContainer>
-                <Form><Title type='text' key="titleInput" value={this.state.title} onChange={this.handleTitleChange} onBlur={this.handleTitleBlur} onFocus={this.handleTitleFocus}/></Form>
+                <Navbar firebaseUserData={this.props.FirebaseUser} />
+                <Back><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
+                <SelectContainer><Select options={options} styles={customStyle} onChange={this.handleSelectChange} /></SelectContainer>
+                <Form><Title type='text' key="titleInput" value={this.state.title} onChange={this.handleTitleChange} onBlur={this.handleTitleBlur} onFocus={this.handleTitleFocus} /></Form>
                 <Editor>
                     <CKEditor
-                        editor={ ClassicEditor }
-                        data = {this.content}
+                        editor={ClassicEditor}
+                        data={this.content}
                         config={custom_config}
-                        onChange={ ( event, editor ) => {
+                        onChange={(event, editor) => {
                             this.content = editor.getData();
-                        } }
+                        }}
                         onReady={(editor) => {
                             editor.editing.view.change((writer) => {
                                 writer.setStyle(
@@ -397,10 +397,10 @@ class AddPost extends React.Component {
                     />
                 </Editor>
                 <CheckBoxContainer>
-                    {this.props.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false}/> : this.selectedBoard == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
-                    {this.props.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={false}/> : <div/>}
-                    {this.props.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={false}/> : <div/>}
-                    {this.props.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement}/> : <div/>}
+                    {this.props.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.selectedBoard == 'grove' ? <Checkbox label='Anonymous' /> : <div />}
+                    {this.props.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={false} /> : <div />}
+                    {this.props.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={false} /> : <div />}
+                    {this.props.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} /> : <div />}
                 </CheckBoxContainer>
                 <Submit onClick={this.handleSubmit}>Post</Submit>
             </Container>

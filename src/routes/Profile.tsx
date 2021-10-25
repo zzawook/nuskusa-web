@@ -3,19 +3,23 @@ import { authService, dbService, storageService } from '../utils/firebaseFunctio
 import SignOut from '../components/SignOut'
 import Navbar from '../components/Navbar';
 import { FirebaseUser } from '../types/FirebaseUser';
+import VerificationRequest from '../components/Verification/VerificationRequest';
+import styled from 'styled-components';
+import { darkTheme, Theme } from '../utils/ThemeColor';
 
 type UserProps = {
-
+    firebaseUserData: FirebaseUser
 }
 
 type UserState = {
-    username: string,
-    verificationFile?: File | undefined,
-    isVerified: boolean,
-    role: string, // User, Undergraduate, Graduate, Admin
-    enrolledYear?: string | undefined,
-    major?: string | undefined,
-    faculty?: string | undefined
+    username: '',
+    verificationFile: undefined,
+    isVerified: false,
+    role: '', // User, Undergraduate, Graduate, Admin
+    enrolledYear: '',
+    major: '',
+    faculty: '',
+    theme: Theme
 }
 
 class Profile extends React.Component<UserProps, UserState> {
@@ -28,35 +32,8 @@ class Profile extends React.Component<UserProps, UserState> {
             role: '', // User, Undergraduate, Graduate, Admin
             enrolledYear: '',
             major: '',
-            faculty: ''
-        }
-    }
-
-    componentDidMount = () => {
-        this.fetchUserData();
-    }
-
-    fetchUserData = () => {
-        const user = authService.currentUser
-        if (user) {
-            dbService
-                .collection('users').doc(user.email as string)
-                .onSnapshot((querySnapshot) => {
-                    if (querySnapshot.exists) {
-                        const data = querySnapshot.data() as FirebaseUser;
-                        if (data) {
-                            this.setState({
-                                username: data.username,
-                                verificationFile: data.verificationFile,
-                                isVerified: data.isVerified,
-                                role: data.role, // User, Undergraduate, Graduate, Admin
-                                enrolledYear: data.enrolledYear,
-                                major: data.major,
-                                faculty: data.faculty
-                            })
-                        }
-                    }
-                })
+            faculty: '',
+            theme: darkTheme
         }
     }
 
@@ -71,26 +48,29 @@ class Profile extends React.Component<UserProps, UserState> {
 
     handleSubmit = (event: any) => {
         event.preventDefault();
-        if (this.state.verificationFile) {
+        if (this.props.firebaseUserData.verificationFile) {
             const uploadTask = storageService
-                .ref(`verifications/${this.state.verificationFile.name}`)
-                .put(this.state.verificationFile);
+                .ref(`verifications/${this.props.firebaseUserData.verificationFile.name}`)
+                .put(this.props.firebaseUserData.verificationFile);
             uploadTask.on('state_changed',
                 (snapshot) => { },
                 (error) => {
                     console.error(error);
                 },
                 () => {
-                    if (this.state.verificationFile) {
+                    if (this.props.firebaseUserData.verificationFile) {
                         storageService.ref('verifications')
-                            .child(this.state.verificationFile.name)
+                            .child(this.props.firebaseUserData.verificationFile.name)
                             .getDownloadURL()
                             .then((url) => {
                                 dbService.collection('verifications').add({
                                     downloadURL: url,
-                                    username: authService.currentUser?.uid,
                                     owner: authService.currentUser?.email,
-                                    ownerUID: authService.currentUser?.uid
+                                    ownerUID: authService.currentUser?.uid,
+                                    fullname: this.props.firebaseUserData.username,
+                                    enrolledYear: this.state.enrolledYear,
+                                    major: this.state.major,
+                                    faculty: this.state.faculty
                                 });
                             })
                     }
@@ -98,23 +78,24 @@ class Profile extends React.Component<UserProps, UserState> {
             )
         }
     }
-    render() {
+    render = () => {
+        const Wrapper = styled.div`
+            background: ${this.state.theme.background};
+            height: 100vh;
+        `
         return (
-            <div>
-                <Navbar />
-                {this.state.username}
-                <SignOut />
-                {this.state.isVerified ?
+            <Wrapper>
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                {this.props.firebaseUserData.username}
+                {this.props.firebaseUserData.isVerified ?
                     <>
                         You are verified!
                     </>
                     :
-                    <form onSubmit={this.handleSubmit}>
-                        <input type='file' onChange={this.handleChange}></input>
-                        <input type='submit'></input>
-                    </form>
+                    <VerificationRequest isModal={false} />
                 }
-            </div>
+                <SignOut />
+            </Wrapper>
         )
     }
 }

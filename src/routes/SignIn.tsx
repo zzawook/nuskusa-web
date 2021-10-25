@@ -5,6 +5,8 @@ import firebase from 'firebase';
 import Navbar from '../components/Navbar';
 import styled from 'styled-components';
 import CSS from 'csstype';
+import { FirebaseUser } from '../types/FirebaseUser';
+import { SampleUser } from '../utils/SampleUser';
 
 type UserProps = {
 
@@ -157,10 +159,14 @@ class SignIn extends React.Component<UserProps, UserObject> {
     handleSubmit = async (event: any) => {
         event.preventDefault();
         authService.setPersistence(firebase.auth.Auth.Persistence.SESSION)
-        .then(async () => {
-            return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
-            .then(() => {
-                console.log('success!')
+            .then(async () => {
+                return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
+                    .then(() => {
+                        console.log('success!')
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
             })
             .catch((error) => {
                 console.error(error);

@@ -1,12 +1,10 @@
 import React from 'react';
+import { FirestoreUserVerification } from '../../types/FirestoreUserVerification';
 import { dbService, storageService } from '../../utils/firebaseFunctions';
 
 type VerificationProps = {
     verificationId: string,
-    downloadURL: string,
-    owner: string,
-    username: string,
-    userUID: string
+    firestoreVerificationData: FirestoreUserVerification
 }
 
 class VerificationComponent extends React.Component<VerificationProps, {}> {
@@ -19,7 +17,7 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
         storageService.ref(`verifications/${this.props.verificationId}`)
             .delete()
             .then(() => {
-                dbService.collection('users').doc(this.props.userUID).update({
+                dbService.collection('users').doc(this.props.firestoreVerificationData.ownerUID).update({
                     isVerified: true
                 })
             })
@@ -35,7 +33,18 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
         storageService.ref(`verifications/${this.props.verificationId}`)
             .delete()
             .then(() => {
-                dbService.collection('verifications').doc(this.props.verificationId).delete()
+                try {
+                    const batch = dbService.batch()
+                    const verificationsRef = dbService.collection('verifications').doc(this.props.verificationId)
+                    const userRef = dbService.collection('users').doc(this.props.verificationId)
+                    batch.delete(verificationsRef)
+                    batch.update(userRef, {
+                        isVerified: false
+                    })
+                    batch.commit()
+                } catch (e) {
+                    console.error(e)
+                }
             })
             .catch(error => {
                 console.error(error);
@@ -45,9 +54,9 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
     render = () => {
         return (
             <div>
-                <img src={this.props.downloadURL} alt=''></img> <br />
-                {this.props.username} <br />
-                {this.props.owner} <br />
+                <img src={this.props.firestoreVerificationData.downloadURL} alt=''></img> <br />
+                {this.props.firestoreVerificationData.fullname} <br />
+                {this.props.firestoreVerificationData.owner} <br />
                 <button onClick={this.handleAccept}>Verify</button>
                 <button onClick={this.handleReject}>Reject</button>
             </div>
