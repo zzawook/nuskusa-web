@@ -28,6 +28,7 @@ type BoardState = {
     permissions: string[],
     postArray: FirestorePost[],
     postComponentArray: any[],
+    postOrder: string
 }
 
 let prevBoardURL = ""
@@ -40,6 +41,7 @@ class Board extends React.Component<BoardProps, BoardState> {
         permissions: ["Admin"],
         postArray: [],
         postComponentArray: [],
+        postOrder: "lastModified"
     }
 
     componentDidMount = () => {
@@ -75,7 +77,7 @@ class Board extends React.Component<BoardProps, BoardState> {
     fetchPosts = () => {
         dbService
             .collection('boards').doc(this.props.boardId)
-            .collection('posts')
+            .collection('posts').orderBy(this.state.postOrder)
             .onSnapshot((querySnapshot) => {
                 const arr: FirestorePost[] = [];
                 const componentArray: any[] = [];
