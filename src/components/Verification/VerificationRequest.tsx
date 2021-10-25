@@ -66,19 +66,19 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
         `
         return (
             <>
-                {this.props.isModal === true && this.state.showModal && authService.currentUser ?
+                {this.props.isModal === false && this.state.showModal ?
                     <ModalWrapper onClick={(e) => { e.stopPropagation() }}>
                         <ModalContent>
                             <CloseButton onClick={this.onCloseClick}>X</CloseButton>
-                            <DisplayLarge style={{ marginLeft: '10%', opacity: '0.7' }}>학생 인증</DisplayLarge>
-                            <DisplaySmall style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
+                            <DisplayLarge color={"#000000"} style={{ marginLeft: '10%', opacity: '0.7' }}>학생 인증</DisplayLarge>
+                            <DisplaySmall color={"#000000"} style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
                             <VerificationForm />
                         </ModalContent>
                     </ModalWrapper>
                     :
                     <ContentWrapper>
-                        <DisplayLarge style={{ marginLeft: '10%', opacity: '0.7', paddingTop: '5%' }}>학생 인증</DisplayLarge>
-                        <DisplaySmall style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
+                        <DisplayLarge color={"#000000"} style={{ marginLeft: '10%', opacity: '0.7', paddingTop: '5%' }}>학생 인증</DisplayLarge>
+                        <DisplaySmall color={"#000000"} style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
                         <VerificationForm />
                     </ContentWrapper>
                 }

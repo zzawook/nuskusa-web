@@ -53,7 +53,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                             <BoardThumbnail
                                 key={key}
                                 title={data.title}
-                                englishTitle={data.englishTitle}
+                                boardId={data.boardId}
                                 description={data.description}
                                 permissions={data.permissions}
                                 boardColor={data.boardColor}

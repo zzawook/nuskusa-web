@@ -2,7 +2,7 @@ export interface FirestoreBoard {
     title: string,
     description: string,
     permissions: string[],
-    englishTitle: string,
+    boardId: string,
     boardColor: string,
     boardTextColor: string
 }
