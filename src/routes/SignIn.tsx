@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { authService } from '../utils/firebaseFunctions';
 import firebase from 'firebase';
 import Navbar from '../components/Navbar';
+import { FirebaseUser } from '../types/FirebaseUser';
+import { SampleUser } from '../utils/SampleUser';
 
 type UserProps = {
 
@@ -37,21 +39,21 @@ class SignIn extends React.Component<UserProps, UserObject> {
     handleSubmit = async (event: any) => {
         event.preventDefault();
         authService.setPersistence(firebase.auth.Auth.Persistence.SESSION)
-        .then(async () => {
-            return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
-            .then(() => {
-                console.log('success!')
+            .then(async () => {
+                return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
+                    .then(() => {
+                        console.log('success!')
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
             })
-            .catch((error) => {
-                console.error(error);
-            });
-        })
 
     }
     render() {
         return (
             <>
-                <Navbar />
+                <Navbar firebaseUserData={SampleUser} />
                 <form onSubmit={this.handleSubmit}>
                     <input
                         name="email"

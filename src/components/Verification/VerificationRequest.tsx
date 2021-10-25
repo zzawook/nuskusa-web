@@ -24,6 +24,7 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
         this.setState({
             showModal: false
         })
+        localStorage.setItem("seeVerify", "no")
     }
 
     render = () => {
@@ -33,10 +34,7 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
             height: 100vh;
             overflow-y: clip;
             background: rgba(0, 0, 0, 0.5);
-            :before {
-                background: rgba(0, 0, 0, 0.5);
-            }
-            z-index: 5;
+            z-index: 20;
         `
         const ModalContent = styled.div`
             display: flex;
@@ -62,13 +60,14 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
         `
 
         const ContentWrapper = styled.div`
-
+            background: #FFFFFF;
+            width: 70vw;
+            margin: auto;
         `
-
         return (
             <>
                 {this.props.isModal === true && this.state.showModal && authService.currentUser ?
-                    <ModalWrapper onClick={(e)=>{e.stopPropagation()}}>
+                    <ModalWrapper onClick={(e) => { e.stopPropagation() }}>
                         <ModalContent>
                             <CloseButton onClick={this.onCloseClick}>X</CloseButton>
                             <DisplayLarge style={{ marginLeft: '10%', opacity: '0.7' }}>학생 인증</DisplayLarge>
@@ -78,7 +77,9 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
                     </ModalWrapper>
                     :
                     <ContentWrapper>
-
+                        <DisplayLarge style={{ marginLeft: '10%', opacity: '0.7', paddingTop: '5%' }}>학생 인증</DisplayLarge>
+                        <DisplaySmall style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
+                        <VerificationForm />
                     </ContentWrapper>
                 }
             </>

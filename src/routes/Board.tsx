@@ -9,14 +9,16 @@ import PostThumbnail from '../components/Board/PostThumbnail';
 import { dbService } from '../utils/firebaseFunctions';
 import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
 import { FirestorePost } from '../types/FirestorePost';
-import { FirestoreBoard } from '../types/FirestoreBoard' 
+import { FirestoreBoard } from '../types/FirestoreBoard'
 import VerificationRequest from '../components/Verification/VerificationRequest';
+import { FirebaseUser } from '../types/FirebaseUser';
 
 type BoardProps = {
+    firebaseUserData: FirebaseUser
     boardId: string,
-    username: string,
-    isVerified: boolean,
-    role: string
+    // username: string,
+    // isVerified: boolean,
+    // role: string
 }
 
 type BoardState = {
@@ -77,9 +79,9 @@ class Board extends React.Component<BoardProps, BoardState> {
                                 postContent={data.content}
                                 boardId={this.props.boardId}
                                 boardTitle={this.state.title}
-                                username={this.props.username}
-                                isVerified={this.props.isVerified}
-                                role={this.props.role}
+                                username={this.props.firebaseUserData.username}
+                                isVerified={this.props.firebaseUserData.isVerified}
+                                role={this.props.firebaseUserData.role}
                                 author={data.author}
                                 boxcolor={data.parentColor}
                                 textcolor={data.parentTextColor}
@@ -89,7 +91,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                         </>
                     )
                     arr.push(data);
-                    if (data.permissions.includes(this.props.role) || data.permissions.includes('User')) {
+                    if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User')) {
                         componentArray.push(component)
                     }
                 })
@@ -139,11 +141,17 @@ class Board extends React.Component<BoardProps, BoardState> {
                 border-radius: 5px;
             }
         `
-
+        const displayVerification = localStorage.getItem("seeVerify")
         return (
             <Container>
-                <Navbar />
-                { this.props.isVerified != true ? <VerificationRequest isModal={true} /> : <></> }
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                {this.props.firebaseUserData.isVerified != true
+                    ? displayVerification === "yes"
+                        ?
+                        <VerificationRequest isModal={true} />
+                        :
+                        <></>
+                    : <></>}
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         {this.props.boardId}

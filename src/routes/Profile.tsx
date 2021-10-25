@@ -3,6 +3,9 @@ import { authService, dbService, storageService } from '../utils/firebaseFunctio
 import SignOut from '../components/SignOut'
 import Navbar from '../components/Navbar';
 import { FirebaseUser } from '../types/FirebaseUser';
+import VerificationRequest from '../components/Verification/VerificationRequest';
+import styled from 'styled-components';
+import { darkTheme, Theme } from '../utils/ThemeColor';
 
 type UserProps = {
     firebaseUserData: FirebaseUser
@@ -15,7 +18,8 @@ type UserState = {
     role: '', // User, Undergraduate, Graduate, Admin
     enrolledYear: '',
     major: '',
-    faculty: ''
+    faculty: '',
+    theme: Theme
 }
 
 class Profile extends React.Component<UserProps, UserState> {
@@ -28,7 +32,8 @@ class Profile extends React.Component<UserProps, UserState> {
             role: '', // User, Undergraduate, Graduate, Admin
             enrolledYear: '',
             major: '',
-            faculty: ''
+            faculty: '',
+            theme: darkTheme
         }
     }
 
@@ -73,23 +78,24 @@ class Profile extends React.Component<UserProps, UserState> {
             )
         }
     }
-    render() {
+    render = () => {
+        const Wrapper = styled.div`
+            background: ${this.state.theme.background};
+            height: 100vh;
+        `
         return (
-            <div>
-                <Navbar />
+            <Wrapper>
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
                 {this.props.firebaseUserData.username}
-                <SignOut />
                 {this.props.firebaseUserData.isVerified ?
                     <>
                         You are verified!
                     </>
                     :
-                    <form onSubmit={this.handleSubmit}>
-                        <input type='file' onChange={this.handleChange}></input>
-                        <input type='submit'></input>
-                    </form>
+                    <VerificationRequest isModal={false} />
                 }
-            </div>
+                <SignOut />
+            </Wrapper>
         )
     }
 }

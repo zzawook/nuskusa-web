@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { authService, dbService, storageService } from '../../utils/firebaseFunctions'
+import { darkTheme, Theme } from '../../utils/ThemeColor'
 import { DisplayMedium } from '../../utils/ThemeText'
 
 type FormProps = {
@@ -14,7 +15,8 @@ type FormState = {
     faculty: string,
     enrolledYear: string,
     verificationFile: File | undefined,
-    isVisible: boolean
+    isVisible: boolean,
+    theme: Theme
 }
 
 const Wrapper = styled.form`
@@ -24,6 +26,7 @@ const Wrapper = styled.form`
 `
 const FormContentWrapper = styled.div`
     display: flex;
+    flex-direction: row;
 `
 const FormInputWrapper = styled.div`
     display: flex;
@@ -64,7 +67,8 @@ class VerificationForm extends React.Component<FormProps, FormState> {
             faculty: "",
             enrolledYear: "",
             verificationFile: undefined,
-            isVisible: true
+            isVisible: true,
+            theme: darkTheme
         }
     }
 
@@ -208,8 +212,8 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                             onChange={this.handleFileChange}
                             style={{ border: "none", justifySelf: "right", marginLeft: "20px" }}>
                         </FormInput>
-                        <GoldenButton onClick={this.handleSubmit}>
-                            <DisplayMedium color={"#FFFFFF"}>
+                        <GoldenButton onClick={this.handleSubmit} style={{ marginBottom: '5%' }}>
+                            <DisplayMedium color={this.state.theme.primary}>
                                 Submit
                             </DisplayMedium>
                         </GoldenButton>

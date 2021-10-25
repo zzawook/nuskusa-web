@@ -8,13 +8,14 @@ import ActivityList from '../components/Home/ActivityList'
 import Navbar from '../components/Navbar';
 import { DisplayMedium, DisplayLarge } from '../utils/ThemeText';
 import { GoldenButton } from '../components/GoldenButton';
+import { FirebaseUser } from '../types/FirebaseUser';
 
 type BoardObject = {
     title: string,
     description: string,
 }
 type HomeProps = {
-    role: string
+    firebaseUserData: FirebaseUser
 }
 
 type HomeState = {
@@ -90,7 +91,7 @@ class Home extends React.Component<HomeProps, HomeState> {
 
         return (
             <Wrapper>
-                <Navbar />
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
                 <HomeBackground>
                     <MainBannerContainer>
                         <MainBanner>

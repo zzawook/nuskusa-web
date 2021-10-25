@@ -1,15 +1,15 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import VerificationComponent from '../components/Verification/VerificationComponent'
+import { FirebaseUser } from '../types/FirebaseUser'
 import { FirestoreUserVerification } from '../types/FirestoreUserVerification'
 import { authService, dbService } from '../utils/firebaseFunctions'
 
 type VerificationProps = {
-    role: string
+    firebaseUserData: FirebaseUser
 }
 
 type VerificationState = {
-    role: string,
     verificationComponentArray: any[],
     verificationId: string
 }
@@ -18,7 +18,6 @@ class Verification extends React.Component<VerificationProps, VerificationState>
     constructor(props: any) {
         super(props)
         this.state = {
-            role: 'User',
             verificationComponentArray: [],
             verificationId: ''
         }
@@ -40,7 +39,7 @@ class Verification extends React.Component<VerificationProps, VerificationState>
                                 <VerificationComponent
                                     verificationId={element.id}
                                     firestoreVerificationData={data}
-                                    />
+                                />
                             )
                         })
                         this.setState({
@@ -54,8 +53,8 @@ class Verification extends React.Component<VerificationProps, VerificationState>
     render = () => {
         return (
             <>
-                <Navbar />
-                {this.state.role === 'Admin' ?
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                {this.props.firebaseUserData.role === 'Admin' ?
                     <div>
                         Admin!
                         {this.state.verificationComponentArray}

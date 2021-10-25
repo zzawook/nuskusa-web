@@ -124,7 +124,7 @@ class AddPost extends React.Component {
 
         return (
             <div>
-                <Navbar />
+                <Navbar firebaseUserData={this.props.FirebaseUser} />
                 <CKEditor
                     editor={ ClassicEditor }
                     data = '<p>Start making your post here!</p>'
