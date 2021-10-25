@@ -28,7 +28,6 @@ type BoardState = {
     permissions: string[],
     postArray: FirestorePost[],
     postComponentArray: any[],
-    refresh: Boolean
 }
 
 let prevBoardURL = ""
@@ -41,7 +40,6 @@ class Board extends React.Component<BoardProps, BoardState> {
         permissions: ["Admin"],
         postArray: [],
         postComponentArray: [],
-        refresh: false
     }
 
     componentDidMount = () => {
