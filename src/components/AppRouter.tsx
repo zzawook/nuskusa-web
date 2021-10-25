@@ -31,7 +31,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     this.state = {
       isLoggedIn: false,
       loading: true,
-
       firebaseUserData: {
         username: "",
         verificationFile: undefined,
@@ -45,6 +44,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
   }
 
   componentDidMount = () => {
+    console.log("what")
     if (localStorage.getItem("seeVerify") === null) {
       localStorage.setItem("seeVerify", "yes")
     }
@@ -102,7 +102,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     return (
       <Router>
         <Switch>
-          {!this.state.loading ?
+          {this.state.loading ?
             <Route exact path='/'>
               <>
                 Loading
@@ -111,9 +111,45 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
             :
             <>
               {this.state.isLoggedIn ? (
-                <>
+                <Switch>
+                  {console.log('logged in')}
+                  <Route exact path='/' render={() => <Home
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
+                  <Route exact path='/boards' render={() => <BoardHome
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
+                  <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
+                    boardId={routerProps.match.params.boardTitle}
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
+                  <Route exact path='/boards/:boardTitle/:postId' render={(routerProps) => <Post
+                    boardId={routerProps.match.params.boardTitle}
+                    postId={routerProps.match.params.postId}
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
+                  <Route exact path='/boards/:boardTitle/:postId/edit' render={(routerProps) => <EditPost
+                    boardId={routerProps.match.params.boardTitle}
+                    postId={routerProps.match.params.postId}
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
+                  <Route exact path='/boards/:boardTitle/new' render={(routerProps) => <AddPost
+                    boardId={routerProps.match.params.boardTitle}
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
+                  <Route exact path='/profile' render={() => <Profile
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
+                  <Route exact path='/verification' render={() => <Verification firebaseUserData={this.state.firebaseUserData} />} />
+                  <Route exact path='/signin' render={() => <Redirect to='/' />} />
+                  <Route exact path='/signup' render={() => <Redirect to='/' />} />
+                  <Route exact path='/about-us' render={() => <AboutUs />} />
+                  <Route component={this.notFoundComponent} />
+                </Switch>
+              )
+                :
+                (
                   <Switch>
-                    {console.log('logged in')}
                     <Route exact path='/' render={() => <Home
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
@@ -124,61 +160,21 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       boardId={routerProps.match.params.boardTitle}
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
+                    <Route exact path='/boards/:boardTitle/new' render={(routerProps) => <AddPost
+                      boardId={routerProps.match.params.boardTitle}
+                      firebaseUserData={this.state.firebaseUserData}
+                    />} />
                     <Route exact path='/boards/:boardTitle/:postId' render={(routerProps) => <Post
                       boardId={routerProps.match.params.boardTitle}
                       postId={routerProps.match.params.postId}
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
-                    <Route exact path='/boards/:boardTitle/:postId/edit' render={(routerProps) => <EditPost
-                      boardId={routerProps.match.params.boardTitle}
-                      postId={routerProps.match.params.postId}
-                      firebaseUserData={this.state.firebaseUserData}
-                    />} />
-                    <Route exact path='/boards/:boardTitle/new' render={(routerProps) => <AddPost
-                      boardId={routerProps.match.params.boardTitle}
-                      firebaseUserData={this.state.firebaseUserData}
-                    />} />
-                    <Route exact path='/profile' render={() => <Profile
-                      firebaseUserData={this.state.firebaseUserData}
-                    />} />
-                    <Route exact path='/verification' render={() => <Verification firebaseUserData={this.state.firebaseUserData} />} />
-                    <Route exact path='/signin' render={() => <Redirect to='/' />} />
-                    <Route exact path='/signup' render={() => <Redirect to='/' />} />
+                    <Route exact path='/signin' component={SignIn} />
+                    <Route exact path='/signup' component={SignUp} />
+                    <Route exact path='/profile' render={() => <Redirect to='/signin' />} />
                     <Route exact path='/about-us' render={() => <AboutUs />} />
                     <Route component={this.notFoundComponent} />
                   </Switch>
-                </>
-              )
-                :
-                (
-                  <>
-                    <Switch>
-                      <Route exact path='/' render={() => <Home
-                        firebaseUserData={this.state.firebaseUserData}
-                      />} />
-                      <Route exact path='/boards' render={() => <BoardHome
-                        firebaseUserData={this.state.firebaseUserData}
-                      />} />
-                      <Route exact path='/boards/:boardTitle' render={(routerProps) => <Board
-                        boardId={routerProps.match.params.boardTitle}
-                        firebaseUserData={this.state.firebaseUserData}
-                      />} />
-                      <Route exact path='/boards/:boardTitle/new' render={(routerProps) => <AddPost
-                        boardId={routerProps.match.params.boardTitle}
-                        firebaseUserData={this.state.firebaseUserData}
-                      />} />
-                      <Route exact path='/boards/:boardTitle/:postId' render={(routerProps) => <Post
-                        boardId={routerProps.match.params.boardTitle}
-                        postId={routerProps.match.params.postId}
-                        firebaseUserData={this.state.firebaseUserData}
-                      />} />
-                      <Route exact path='/signin' component={SignIn} />
-                      <Route exact path='/signup' component={SignUp} />
-                      <Route exact path='/profile' render={() => <Redirect to='/signin' />} />
-                      <Route exact path='/about-us' render={() => <AboutUs />} />
-                      <Route component={this.notFoundComponent} />
-                    </Switch>
-                  </>
                 )
               }
             </>
