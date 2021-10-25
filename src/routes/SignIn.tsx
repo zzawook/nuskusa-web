@@ -171,7 +171,6 @@ class SignIn extends React.Component<UserProps, UserObject> {
             .catch((error) => {
                 console.error(error);
             });
-        })
     }
 
     handleSignUpClick = (e: any) => {
@@ -208,34 +207,34 @@ class SignIn extends React.Component<UserProps, UserObject> {
         return (
             <>
                 <Container>
-                <Back onClick={this.handleBackClick}><img style={this.arrowStyle} src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'/>Back</Back>
+                    <Back onClick={this.handleBackClick}><img style={this.arrowStyle} src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f' />Back</Back>
                     <Title>Log In</Title>
                     <Explanation>환영합니다! 기존 이메일로 로그인 할 수 있습니다.</Explanation>
-                    
-                    <img src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2F8.png?alt=media&token=21e952d4-00f1-4a92-b0d2-28868e45e64f' style={this.imgStyle}/>
+
+                    <img src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2F8.png?alt=media&token=21e952d4-00f1-4a92-b0d2-28868e45e64f' style={this.imgStyle} />
                 </Container>
                 <Form onSubmit={this.handleSubmit}>
-                        <EmailInput
-                            name="email"
-                            type="email"
-                            placeholder="이메일 / Email"
-                            required
-                            value={this.state.email}
-                            onChange={this.handleChange}
-                        ></EmailInput>
-                        <PasswordInput
-                            name="password"
-                            type="password"
-                            placeholder="비밀번호 / Password"
-                            required
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                        />
-                        {/* Will be adding name, nickname, etc. */}
-                        <ToPassWord onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Forgot Password?</ToPassWord>
-                        <ToSignUp href="/signup" onClick={this.handleSignUpClick} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>
-                        <SubmitButton type="submit" value="Submit"/>
-                    </Form>
+                    <EmailInput
+                        name="email"
+                        type="email"
+                        placeholder="이메일 / Email"
+                        required
+                        value={this.state.email}
+                        onChange={this.handleChange}
+                    ></EmailInput>
+                    <PasswordInput
+                        name="password"
+                        type="password"
+                        placeholder="비밀번호 / Password"
+                        required
+                        value={this.state.password}
+                        onChange={this.handleChange}
+                    />
+                    {/* Will be adding name, nickname, etc. */}
+                    <ToPassWord onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Forgot Password?</ToPassWord>
+                    <ToSignUp href="/signup" onClick={this.handleSignUpClick} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>
+                    <SubmitButton type="submit" value="Submit" />
+                </Form>
             </>
         )
     }
