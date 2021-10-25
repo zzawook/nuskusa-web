@@ -8,9 +8,10 @@ import ActivityList from '../components/Home/ActivityList'
 import Navbar from '../components/Navbar';
 import { DisplayMedium, DisplayLarge } from '../utils/ThemeText';
 import { GoldenButton } from '../components/GoldenButton';
+import { FirebaseUser } from '../types/FirebaseUser';
 
 type HomeProps = {
-    role: string
+    firebaseUserData: FirebaseUser
 }
 
 type HomeState = {
@@ -85,7 +86,7 @@ class Home extends React.Component<HomeProps, HomeState> {
 
         return (
             <Wrapper>
-                <Navbar />
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
                 <HomeBackground>
                     <MainBannerContainer>
                         <MainBanner>
@@ -112,7 +113,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                         <ActivityList title='취업활동 정보' content='인턴, 취업 관련한 웨비나' />
                     </ActivityWrapper>
                 </Activity>
-                <ContactUs />
+                {/* <ContactUs /> */}
             </Wrapper>
         )
     }

@@ -7,11 +7,11 @@ import BoardThumbnail from '../components/BoardHome/BoardThumbnail';
 import { dbService } from '../utils/firebaseFunctions';
 import { DisplayLarge, Headline } from '../utils/ThemeText';
 import { FirestoreBoard } from '../types/FirestoreBoard';
+import VerificationRequest from '../components/Verification/VerificationRequest';
+import { FirebaseUser } from '../types/FirebaseUser';
 
 type BoardHomeProps = {
-    username: string,
-    isVerified: boolean,
-    role: string
+    firebaseUserData: FirebaseUser
 }
 
 type BoardHomeState = {
@@ -32,6 +32,9 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
     }
 
     componentDidMount = () => {
+        if (localStorage.getItem("seeVerify") === null) {
+            localStorage.setItem("seeVerify", "yes");
+        }
         this.fetchBoards();
     }
 
@@ -59,7 +62,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                         )
                         key++;
                         arr.push(data);
-                        if (data.permissions.includes(this.props.role) || data.permissions.includes('User')) {
+                        if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User')) {
                             componentArray.push(component);
                             console.log(componentArray)
                         }
@@ -124,10 +127,16 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
             flex-wrap: wrap;
             justify-content: left;
         `
+        const displayVerification = localStorage.getItem("seeVerify")
         return (
             <div>
                 <Container>
-                    <Navbar />
+                    <Navbar firebaseUserData={this.props.firebaseUserData} />
+                    {this.props.firebaseUserData.isVerified != true
+                        ? displayVerification === "yes"
+                            ? <VerificationRequest isModal={true} />
+                            : <></>
+                        : <></>}
                     <TextContainer>
                         <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                             게시판
@@ -139,7 +148,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                         <ThumbnailContainer>
                             {this.state.boardComponentArray}
                         </ThumbnailContainer>
-                        {this.props.role === 'Admin' ?
+                        {this.props.firebaseUserData.role === 'Admin' ?
                             <form onSubmit={this.handleSubmit}>
                                 <input name='title' type='string' onChange={this.handleChange} />
                                 <input name='description' type='string' onChange={this.handleChange} /> <br />
@@ -158,8 +167,6 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                     <div style={{ height: '20vh' }} />
                     <ContactUs />
                 </Container>
-                {console.log(this.props.role)}
-
             </div>
         )
     }

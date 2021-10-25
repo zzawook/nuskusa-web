@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { authService, dbService } from '../utils/firebaseFunctions';
+import { SampleUser } from '../utils/SampleUser';
 
 type UserProps = {
     
@@ -61,7 +62,7 @@ class SignUp extends React.Component<UserProps, UserState> {
     render() {
         return (
             <>
-                <Navbar />
+                <Navbar firebaseUserData={SampleUser} />
                 <form onSubmit={this.handleSubmit}>
                     <input
                         name="email"
