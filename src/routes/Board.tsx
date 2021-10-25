@@ -12,6 +12,13 @@ import { FirestorePost } from '../types/FirestorePost';
 import { FirestoreBoard } from '../types/FirestoreBoard'
 import VerificationRequest from '../components/Verification/VerificationRequest';
 import { FirebaseUser } from '../types/FirebaseUser';
+import Select from 'react-select';
+import { ActionMeta } from 'react-select';
+
+type SelectOption = {
+    value: string,
+    label: string
+}
 
 type BoardProps = {
     firebaseUserData: FirebaseUser
@@ -28,7 +35,7 @@ type BoardState = {
     permissions: string[],
     postArray: FirestorePost[],
     postComponentArray: any[],
-    postOrder: string
+    postOrder: SelectOption
 }
 
 let prevBoardURL = ""
@@ -41,7 +48,7 @@ class Board extends React.Component<BoardProps, BoardState> {
         permissions: ["Admin"],
         postArray: [],
         postComponentArray: [],
-        postOrder: "lastModified"
+        postOrder: {value: 'lastModified', label: 'Latest'}
     }
 
     componentDidMount = () => {
@@ -77,7 +84,7 @@ class Board extends React.Component<BoardProps, BoardState> {
     fetchPosts = () => {
         dbService
             .collection('boards').doc(this.props.boardId)
-            .collection('posts').orderBy(this.state.postOrder)
+            .collection('posts').orderBy(this.state.postOrder.value)
             .onSnapshot((querySnapshot) => {
                 const arr: FirestorePost[] = [];
                 const componentArray: any[] = [];
@@ -115,6 +122,12 @@ class Board extends React.Component<BoardProps, BoardState> {
                 })
                 console.log('all posts fetching successful');
             })
+    }
+
+    handleSelectChange = (option: SelectOption | null, actionMeta: ActionMeta<SelectOption>) => {
+        this.setState({
+            postOrder: option as SelectOption
+        })
     }
 
     render = () => {
@@ -155,6 +168,62 @@ class Board extends React.Component<BoardProps, BoardState> {
                 border-radius: 5px;
             }
         `
+        const BoardNavbarContainer = styled.div`
+            display: flex;
+            flex-direction: row;
+            width: 70vw;
+        `
+        const customStyle = {
+            valueContainer: (provided: any, state: any) => ({
+                ...provided,
+                backgroundColor: '#0B121C',
+            }),
+            option: (provided: any, state: any) => ({
+                ...provided,
+                backgroundColor: '#18202B',
+                color: 'white',
+            }),
+            control: (provided: any, state: any) => ({
+                ...provided,
+                width: 'inherit',
+                fontSize: '10px',
+                backgroundColor: '#0B121C',
+                color: 'white',
+                borderRadius: '0px',
+                border: '1px solid white'
+            }),
+            singleValue: (provided: any, state: any) => {
+                return {
+                    ...provided,
+                    fontSize: '10px',
+                    backgroundColor: '#0B121C',
+                    color: 'white'
+                };
+            },
+            menu: (provided: any, state: any) => {
+                return {
+                    ...provided,
+                    backgroundColor: '#18202B',
+                    color: 'white',
+                    width: 'inherit'
+                };
+            },
+            menuList: (provided: any, state: any) => {
+                return {
+                    ...provided,
+                    backgroundCcolor: '#18202B',
+                    color: 'white'
+                };
+            },
+            indicatorSeparator: (provided: any, state: any) => {
+                return {
+                    ...provided,
+                    backgroundColor: '#0B121C',
+                    border: 'none'
+                }
+            }
+        }
+
         const displayVerification = localStorage.getItem("seeVerify")
         return (
             <Container>
@@ -179,7 +248,20 @@ class Board extends React.Component<BoardProps, BoardState> {
                         </Headline>
                     </GoldenButton>
                 </TextContainer>
-                <BoardNavbar currentRoute={this.props.boardId} />
+                <BoardNavbarContainer>
+                    <BoardNavbar currentRoute={this.props.boardId} />
+                    <div style={{ margin: 'auto', width: '150px' }}>
+                        <Select
+                            options={[
+                                { value: 'latest', label: 'Latest' },
+                                { value: 'upvotes', label: 'Most Popular' }
+                            ]}
+                            onChange={this.handleSelectChange}
+                            styles={customStyle}
+                            value={this.state.postOrder}
+                        />
+                    </div>
+                </BoardNavbarContainer>
                 {this.state.postComponentArray.length == 0 ?
                     <DisplayMedium color='white'>
                         There is no post here yet!

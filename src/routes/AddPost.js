@@ -138,7 +138,7 @@ const CheckBoxContainer = styled.div`
     width: ${450}px;
     position: absolute;
     bottom: 110px;
-    left: ${width * 0.15}px
+    left: ${width * 0.15}px;
 `
 
 class AddPost extends React.Component {
