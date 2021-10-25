@@ -10,10 +10,6 @@ import { DisplayMedium, DisplayLarge } from '../utils/ThemeText';
 import { GoldenButton } from '../components/GoldenButton';
 import { FirebaseUser } from '../types/FirebaseUser';
 
-type BoardObject = {
-    title: string,
-    description: string,
-}
 type HomeProps = {
     firebaseUserData: FirebaseUser
 }
@@ -71,7 +67,6 @@ class Home extends React.Component<HomeProps, HomeState> {
             height: auto;
             width: auto;
         `
-
         const Activity = styled.div`
             display: flex;
             flex-direction: column;

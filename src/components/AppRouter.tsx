@@ -102,7 +102,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     return (
       <Router>
         <Switch>
-          {this.state.loading ?
+          {!this.state.loading ?
             <Route exact path='/'>
               <>
                 Loading
@@ -112,8 +112,8 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
             <>
               {this.state.isLoggedIn ? (
                 <>
-                  {console.log('logged in')}
                   <Switch>
+                    {console.log('logged in')}
                     <Route exact path='/' render={() => <Home
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
@@ -152,7 +152,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                 :
                 (
                   <>
-                    {console.log('not logged in')}
                     <Switch>
                       <Route exact path='/' render={() => <Home
                         firebaseUserData={this.state.firebaseUserData}
