@@ -44,7 +44,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
   }
 
   componentDidMount = () => {
-    console.log("what")
     if (localStorage.getItem("seeVerify") === null) {
       localStorage.setItem("seeVerify", "yes")
     }
@@ -123,11 +122,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     boardId={routerProps.match.params.boardTitle}
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
-                  <Route exact path='/boards/:boardTitle/:postId' sensitive render={(routerProps) => <Post
-                    boardId={routerProps.match.params.boardTitle}
-                    postId={routerProps.match.params.postId}
-                    firebaseUserData={this.state.firebaseUserData}
-                  />} />
                   <Route exact path='/boards/:boardTitle/:postId/edit' sensitive render={(routerProps) => <EditPost
                     boardId={routerProps.match.params.boardTitle}
                     postId={routerProps.match.params.postId}
@@ -137,6 +131,12 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     boardId={routerProps.match.params.boardTitle}
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
+                  <Route exact path='/boards/:boardTitle/:postId' sensitive render={(routerProps) => <Post
+                    boardId={routerProps.match.params.boardTitle}
+                    postId={routerProps.match.params.postId}
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
+
                   <Route exact path='/profile' render={() => <Profile
                     firebaseUserData={this.state.firebaseUserData}
                   />} />

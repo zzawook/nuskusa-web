@@ -29,10 +29,11 @@ type BoardProps = {
 }
 
 type BoardState = {
-    title: string,
-    boardId: string,
-    description: string,
-    permissions: string[],
+    firestoreBoard: FirestoreBoard
+    // title: string,
+    // boardId: string,
+    // description: string,
+    // permissions: string[],
     postArray: FirestorePost[],
     postComponentArray: any[],
     postOrder: SelectOption
@@ -42,10 +43,14 @@ let prevBoardURL = ""
 
 class Board extends React.Component<BoardProps, BoardState> {
     state: BoardState = {
-        title: "",
-        boardId: "",
-        description: "",
-        permissions: ["Admin"],
+        firestoreBoard: {
+            title: "",
+            boardId: "",
+            description: "",
+            permissions: ["Admin"],
+            boardColor: "",
+            boardTextColor: ""
+        },
         postArray: [],
         postComponentArray: [],
         postOrder: {value: 'lastModified', label: 'Latest'}
@@ -73,10 +78,14 @@ class Board extends React.Component<BoardProps, BoardState> {
             .onSnapshot((doc) => {
                 const data = doc.data() as FirestoreBoard
                 this.setState({
-                    title: data.title,
-                    boardId: data.boardId,
-                    description: data.description,
-                    permissions: data.permissions,
+                    firestoreBoard: {
+                        title: data.title,
+                        boardId: data.boardId,
+                        description: data.description,
+                        permissions: data.permissions,
+                        boardColor: data.boardColor,
+                        boardTextColor: data.boardTextColor
+                    }
                 })
             })
     }
@@ -99,7 +108,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                                 postTitle={data.title}
                                 postContent={data.content}
                                 boardId={this.props.boardId}
-                                boardTitle={this.state.title}
+                                boardTitle={this.state.firestoreBoard.title}
                                 username={this.props.firebaseUserData.username}
                                 isVerified={this.props.firebaseUserData.isVerified}
                                 role={this.props.firebaseUserData.role}
@@ -237,10 +246,10 @@ class Board extends React.Component<BoardProps, BoardState> {
                     : <></>}
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
-                        {this.state.title}
+                        {this.state.firestoreBoard.title}
                     </DisplayLarge>
                     <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
-                        {this.state.description}
+                        {this.state.firestoreBoard.description}
                     </Headline>
                     <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
                         <Headline color='white' style={{ textAlign: 'center' }}>

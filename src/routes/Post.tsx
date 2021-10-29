@@ -12,17 +12,18 @@ type PostProps = {
 }
 
 type PostState = {
-    title: string,
-    content: string,
-    isAnnouncement: boolean,
-    isAnonymous: boolean,
-    isPinned: boolean,
-    isHidden: boolean,
-    lastModified: Date,
-    upvotes: number,
-    numComments: number,
-    permissions: string[],
-    author: string,
+    firestorePost: FirestorePost,
+    // title: string,
+    // content: string,
+    // isAnnouncement: boolean,
+    // isAnonymous: boolean,
+    // isPinned: boolean,
+    // isHidden: boolean,
+    // lastModified: Date,
+    // upvotes: number,
+    // numComments: number,
+    // permissions: string[],
+    // author: string,
     errorMsg: string,
     commentArray: any[]
 }
@@ -31,17 +32,23 @@ class Post extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
         super(props);
         this.state = {
-            title: "Title",
-            content: "Content",
-            isAnnouncement: false,
-            isAnonymous: true,
-            isPinned: false,
-            isHidden: false,
-            lastModified: new Date(),
-            upvotes: 0,
-            numComments: 0,
-            permissions: [],
-            author: "TempAuthor",
+            firestorePost: {
+                title: "Title",
+                content: "Content",
+                isAnnouncement: false,
+                isAnonymous: true,
+                isPinned: false,
+                isHidden: false,
+                lastModified: new Date(),
+                upvotes: 0,
+                numComments: 0,
+                permissions: [],
+                author: "TempAuthor",
+                parentBoardId: "",
+                parentBoardTitle: "",
+                parentColor: "",
+                parentTextColor: ""
+            },
             errorMsg: "",
             commentArray: []
         }
@@ -59,7 +66,7 @@ class Post extends React.Component<PostProps, PostState> {
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
                     console.log(querySnapshot.data())
-                    let data = querySnapshot.data() as FirestorePost;
+                    const data = querySnapshot.data() as FirestorePost;
                     console.log(data);
                     if (data === undefined) {
                         return;
@@ -67,15 +74,24 @@ class Post extends React.Component<PostProps, PostState> {
                     else {
                         if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes("User")) {
                             this.setState({
-                                title: data.title,
-                                author: data.author,
-                                isAnnouncement: data.isAnnouncement,
-                                isAnonymous: data.isAnonymous,
-                                isHidden: data.isHidden,
-                                isPinned: data.isPinned,
-                                lastModified: data.lastModified,
-                                upvotes: data.upvotes,
-                                permissions: data.permissions,
+                                firestorePost: {
+                                    title: data.title,
+                                    author: data.author,
+                                    content: data.content,
+                                    isAnnouncement: data.isAnnouncement,
+                                    isAnonymous: data.isAnonymous,
+                                    isHidden: data.isHidden,
+                                    isPinned: data.isPinned,
+                                    lastModified: data.lastModified,
+                                    upvotes: data.upvotes,
+                                    permissions: data.permissions,
+                                    numComments: data.numComments,
+                                    
+                                    parentBoardId: data.parentBoardId,
+                                    parentBoardTitle: data.parentBoardTitle,
+                                    parentColor: data.parentColor,
+                                    parentTextColor: data.parentTextColor
+                                },
                                 errorMsg: "ok"
                             })
                             dbService // retrieve comments within the post
