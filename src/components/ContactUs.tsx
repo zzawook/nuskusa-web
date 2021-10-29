@@ -15,11 +15,12 @@ const width = window.innerWidth;
 const height = window.innerHeight;
 
 const Container =  styled.div`
+    display: flex;
+    order: 3;
     position: relative;
     width: ${(width * 0.7).toString()}px;
     height: 685px;
     left: ${(width * 0.15).toString()}px;
-    top: 4715px;
     background-color: transparent;
     font-family: var(--font-family-roboto);
 `
@@ -190,7 +191,7 @@ class ContactUs extends React.Component {
     addressBoxStyle: CSS.Properties = {
         position: "absolute",
         left: "0px",
-        top: "200px",
+        top: "240px",
         height: '136px',
         width: (this.width * 0.25).toString() + 'px',
         border: '1px solid #FFFFFF',
@@ -264,7 +265,10 @@ class ContactUs extends React.Component {
         width: ((this.width * 0.4) - 160).toString() + 'px',
         height: '62.75px',
         background: '#BDA06D',
-        border: 'none'
+        border: 'none',
+        color: 'white',
+        fontSize: '22px',
+        fontWeight: 600
     }
     emailSpanStyle: CSS.Properties = {
         fontStyle: 'normal',
@@ -286,17 +290,27 @@ class ContactUs extends React.Component {
         left: '100px',
         top: '30px'
     }
+    img1Style: CSS.Properties = {
+        position: 'absolute',
+        left: '30px',
+        top: '40px'
+    }
+    img2Style: CSS.Properties = {
+        position: 'absolute',
+        left: '30px',
+        top: '50px'
+    }
 
     render = () => {
         return (
             <Container>
                 <span style={this.titleStyle}>Contact Us</span>
                 <div style={this.emailBoxStyle}>
-                    <img src="/" />
+                    <img style={this.img1Style} src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus1.png?alt=media&token=ff7ace54-f07b-4435-bf59-0ee845f147cf" />
                     <span style={this.emailSpanStyle}>Email<br />nuskusa@gmail.com</span>
                 </div>
                 <div style={this.addressBoxStyle}>
-                    <img src="/" />
+                    <img style={this.img2Style} src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus2.png?alt=media&token=093e63b1-8970-42e5-91e9-2e1d24b6e17b" />
                     <span style={this.addressSpanStyle}>Address<br />21 Lower Kent Ridge<br />Rd Singapore 119077</span>
                 </div>
                 <form style={this.contactBoxStyle} onSubmit={this.handleFormSubmit}>

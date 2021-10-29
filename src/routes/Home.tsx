@@ -9,6 +9,10 @@ import Navbar from '../components/Navbar';
 import { DisplayMedium, DisplayLarge } from '../utils/ThemeText';
 import { GoldenButton } from '../components/GoldenButton';
 import { FirebaseUser } from '../types/FirebaseUser';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
+import CSS from 'csstype'
+
 
 type HomeProps = {
     firebaseUserData: FirebaseUser
@@ -17,6 +21,11 @@ type HomeProps = {
 type HomeState = {
 
 }
+
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+
 
 /**
  * Main page that the users will visit
@@ -27,6 +36,14 @@ class Home extends React.Component<HomeProps, HomeState> {
         this.state = {
 
         }
+    }
+
+    carouselStyle: CSS.Properties = {
+        position: 'absolute',
+        top: `${(height * 0.1) + 50}px`,
+        width: '60%',
+        left: '20%',
+        height: '90vh',
     }
 
     render = () => {
@@ -52,6 +69,7 @@ class Home extends React.Component<HomeProps, HomeState> {
             height: 65vh;
             margin: auto;
             align-items: center;
+            z-index: 0;
         `
         const MainBanner = styled.div`
             display: flex;
@@ -83,10 +101,35 @@ class Home extends React.Component<HomeProps, HomeState> {
             width: 70%;
             justify-content: center;
         `
+        const carouselDivStyle: CSS.Properties = {
+            height: '70vh',
+            zIndex: -1,
+        }
 
         return (
             <Wrapper>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                <Navbar firebaseUserData={this.props.firebaseUserData} />   
+                <div style={this.carouselStyle}>
+                    <Carousel 
+                        dynamicHeight={false} 
+                        autoPlay={true} 
+                        infiniteLoop={true} 
+                        showArrows={false} 
+                        showIndicators={true} 
+                        showStatus={false} 
+                        showThumbs={false}
+                    >
+                        <div style={carouselDivStyle}>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus2.png?alt=media&token=093e63b1-8970-42e5-91e9-2e1d24b6e17b" />
+                        </div>
+                        <div style={carouselDivStyle}>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome1.png?alt=media&token=61ac81ed-3dff-4f66-a523-2600c4b35203" />
+                        </div>
+                        <div style={carouselDivStyle}>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome3.png?alt=media&token=3a7f0efb-dd6d-452d-91e0-3c08adca9c4e" />
+                        </div>
+                    </Carousel>  
+                </div>    
                 <HomeBackground>
                     <MainBannerContainer>
                         <MainBanner>
@@ -108,12 +151,12 @@ class Home extends React.Component<HomeProps, HomeState> {
                 <Activity>
                     <DisplayLarge color='#FFFFFF' style={{ marginLeft: '10px' }}>Our Activities</DisplayLarge>
                     <ActivityWrapper>
-                        <ActivityList title='교류활동' content='신환회, 개강/종강파티' />
-                        <ActivityList title='이벤트' content='여러가지 이벤트!' />
-                        <ActivityList title='취업활동 정보' content='인턴, 취업 관련한 웨비나' />
+                        <ActivityList title='교류활동' content='신입생 환영회, 문화교류, 캠퍼스 투어' image={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome1.png?alt=media&token=61ac81ed-3dff-4f66-a523-2600c4b35203'} />
+                        <ActivityList title='이벤트' content='여러가지 이벤트!' image={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome2.png?alt=media&token=58c16a07-4595-4a92-af32-ba519fdf4380'}/>
+                        <ActivityList title='취업활동 정보' content='인턴, 취업 관련 웨비나, 멘토 초청 강연' image={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome3.png?alt=media&token=3a7f0efb-dd6d-452d-91e0-3c08adca9c4e'}/>
                     </ActivityWrapper>
                 </Activity>
-                {/* <ContactUs /> */}
+                <ContactUs />
             </Wrapper>
         )
     }

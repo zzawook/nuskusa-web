@@ -159,7 +159,7 @@ class Board extends React.Component<BoardProps, BoardState> {
         return (
             <Container>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {this.props.firebaseUserData.isVerified != true
+                {this.props.firebaseUserData.isVerified != false//true
                     ? displayVerification === "yes"
                         ?
                         <VerificationRequest isModal={true} />
