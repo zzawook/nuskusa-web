@@ -171,7 +171,7 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                                 required
                                 name="fullname"
                                 type="text"
-                                placeholder="이름/Name"
+                                placeholder="이름 / Name"
                                 value={this.state.fullname}
                                 onChange={this.handleChange}>
                             </FormInput>
@@ -179,28 +179,28 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                                 required
                                 name="schoolEmail"
                                 type="email"
-                                placeholder="학교 이메일/School Email"
+                                placeholder="학교 이메일 / School Email"
                                 value={this.state.schoolEmail}
                                 onChange={this.handleChange}>
                             </FormInput>
                             <FormInput
                                 required
                                 name="major"
-                                placeholder="전공/Major"
+                                placeholder="전공 / Major"
                                 value={this.state.major}
                                 onChange={this.handleChange}>
                             </FormInput>
                             <FormInput
                                 required
                                 name="faculty"
-                                placeholder="학과/Faculty"
+                                placeholder="학과 / Faculty"
                                 value={this.state.faculty}
                                 onChange={this.handleChange}>
                             </FormInput>
                             <FormInput
                                 required
                                 name="enrollmentYear"
-                                placeholder="입학 연도/Enrollment Year"
+                                placeholder="입학 연도 / Enrollment Year"
                                 value={this.state.enrolledYear}
                                 onChange={this.handleChange}>
                             </FormInput>
