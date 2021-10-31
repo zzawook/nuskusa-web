@@ -12,6 +12,13 @@ import { FirestorePost } from '../types/FirestorePost';
 import { FirestoreBoard } from '../types/FirestoreBoard'
 import VerificationRequest from '../components/Verification/VerificationRequest';
 import { FirebaseUser } from '../types/FirebaseUser';
+import Select from 'react-select';
+import { ActionMeta } from 'react-select';
+
+type SelectOption = {
+    value: string,
+    label: string
+}
 
 type BoardProps = {
     firebaseUserData: FirebaseUser
@@ -22,26 +29,31 @@ type BoardProps = {
 }
 
 type BoardState = {
-    title: string,
-    boardId: string,
-    description: string,
-    permissions: string[],
+    firestoreBoard: FirestoreBoard
+    // title: string,
+    // boardId: string,
+    // description: string,
+    // permissions: string[],
     postArray: FirestorePost[],
     postComponentArray: any[],
-    postOrder: string
+    postOrder: SelectOption
 }
 
 let prevBoardURL = ""
 
 class Board extends React.Component<BoardProps, BoardState> {
     state: BoardState = {
-        title: "",
-        boardId: "",
-        description: "",
-        permissions: ["Admin"],
+        firestoreBoard: {
+            title: "",
+            boardId: "",
+            description: "",
+            permissions: ["Admin"],
+            boardColor: "",
+            boardTextColor: ""
+        },
         postArray: [],
         postComponentArray: [],
-        postOrder: "lastModified"
+        postOrder: {value: 'lastModified', label: 'Latest'}
     }
 
     componentDidMount = () => {
@@ -66,10 +78,14 @@ class Board extends React.Component<BoardProps, BoardState> {
             .onSnapshot((doc) => {
                 const data = doc.data() as FirestoreBoard
                 this.setState({
-                    title: data.title,
-                    boardId: data.boardId,
-                    description: data.description,
-                    permissions: data.permissions,
+                    firestoreBoard: {
+                        title: data.title,
+                        boardId: data.boardId,
+                        description: data.description,
+                        permissions: data.permissions,
+                        boardColor: data.boardColor,
+                        boardTextColor: data.boardTextColor
+                    }
                 })
             })
     }
@@ -77,7 +93,7 @@ class Board extends React.Component<BoardProps, BoardState> {
     fetchPosts = () => {
         dbService
             .collection('boards').doc(this.props.boardId)
-            .collection('posts').orderBy(this.state.postOrder)
+            .collection('posts').orderBy(this.state.postOrder.value)
             .onSnapshot((querySnapshot) => {
                 const arr: FirestorePost[] = [];
                 const componentArray: any[] = [];
@@ -92,7 +108,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                                 postTitle={data.title}
                                 postContent={data.content}
                                 boardId={this.props.boardId}
-                                boardTitle={this.state.title}
+                                boardTitle={this.state.firestoreBoard.title}
                                 username={this.props.firebaseUserData.username}
                                 isVerified={this.props.firebaseUserData.isVerified}
                                 role={this.props.firebaseUserData.role}
@@ -115,6 +131,12 @@ class Board extends React.Component<BoardProps, BoardState> {
                 })
                 console.log('all posts fetching successful');
             })
+    }
+
+    handleSelectChange = (option: SelectOption | null, actionMeta: ActionMeta<SelectOption>) => {
+        this.setState({
+            postOrder: option as SelectOption
+        })
     }
 
     render = () => {
@@ -155,6 +177,62 @@ class Board extends React.Component<BoardProps, BoardState> {
                 border-radius: 5px;
             }
         `
+        const BoardNavbarContainer = styled.div`
+            display: flex;
+            flex-direction: row;
+            width: 70vw;
+        `
+        const customStyle = {
+            valueContainer: (provided: any, state: any) => ({
+                ...provided,
+                backgroundColor: '#0B121C',
+            }),
+            option: (provided: any, state: any) => ({
+                ...provided,
+                backgroundColor: '#18202B',
+                color: 'white',
+            }),
+            control: (provided: any, state: any) => ({
+                ...provided,
+                width: 'inherit',
+                fontSize: '10px',
+                backgroundColor: '#0B121C',
+                color: 'white',
+                borderRadius: '0px',
+                border: '1px solid white'
+            }),
+            singleValue: (provided: any, state: any) => {
+                return {
+                    ...provided,
+                    fontSize: '10px',
+                    backgroundColor: '#0B121C',
+                    color: 'white'
+                };
+            },
+            menu: (provided: any, state: any) => {
+                return {
+                    ...provided,
+                    backgroundColor: '#18202B',
+                    color: 'white',
+                    width: 'inherit'
+                };
+            },
+            menuList: (provided: any, state: any) => {
+                return {
+                    ...provided,
+                    backgroundCcolor: '#18202B',
+                    color: 'white'
+                };
+            },
+            indicatorSeparator: (provided: any, state: any) => {
+                return {
+                    ...provided,
+                    backgroundColor: '#0B121C',
+                    border: 'none'
+                }
+            }
+        }
+
         const displayVerification = localStorage.getItem("seeVerify")
         return (
             <Container>
@@ -168,10 +246,10 @@ class Board extends React.Component<BoardProps, BoardState> {
                     : <></>}
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
-                        {this.state.title}
+                        {this.state.firestoreBoard.title}
                     </DisplayLarge>
                     <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
-                        {this.state.description}
+                        {this.state.firestoreBoard.description}
                     </Headline>
                     <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
                         <Headline color='white' style={{ textAlign: 'center' }}>
@@ -179,7 +257,20 @@ class Board extends React.Component<BoardProps, BoardState> {
                         </Headline>
                     </GoldenButton>
                 </TextContainer>
-                <BoardNavbar currentRoute={this.props.boardId} />
+                <BoardNavbarContainer>
+                    <BoardNavbar currentRoute={this.props.boardId} />
+                    <div style={{ margin: 'auto', width: '150px' }}>
+                        <Select
+                            options={[
+                                { value: 'latest', label: 'Latest' },
+                                { value: 'upvotes', label: 'Most Popular' }
+                            ]}
+                            onChange={this.handleSelectChange}
+                            styles={customStyle}
+                            value={this.state.postOrder}
+                        />
+                    </div>
+                </BoardNavbarContainer>
                 {this.state.postComponentArray.length == 0 ?
                     <DisplayMedium color='white'>
                         There is no post here yet!

@@ -113,7 +113,7 @@ const SubmitButton = styled.input`
     font-weight: 700;
     font-size: 18px;
     font-family: var(--font-family-roboto);
-    cursor: pointer
+    cursor: pointer;
 `
 const ToSignUp = styled.a`
     position: absolute;

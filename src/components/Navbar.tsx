@@ -140,6 +140,7 @@ class Navbar extends React.Component<NavbarProps, {}> {
                         </NavbarButton>
                         {authService.currentUser ?
                             <>
+                                {console.log(this.props.firebaseUserData)}
                                 <ProfileBadge firebaseUserData={this.props.firebaseUserData} />
                                 {/* <SignOut>Sign Out</SignOut> */}
                             </>

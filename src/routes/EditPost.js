@@ -138,7 +138,7 @@ const CheckBoxContainer = styled.div`
     width: ${450}px;
     position: absolute;
     bottom: 110px;
-    left: ${width * 0.15}px
+    left: ${width * 0.15}px;
 `
 
 class AddPost extends React.Component {
@@ -175,13 +175,13 @@ class AddPost extends React.Component {
     submitted = false;
 
     componentDidMount() {
-        if (! this.props.isVerified) {
+        if (! this.props.firebaseUserData.isVerified) {
             window.alert("You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다.");
             window.history.go(-1);
             return;
         }
         if (this.props.boardId == 'announcement') {
-            if (this.props.role != 'admin') {
+            if (this.props.firebaseUserData.role != 'admin') {
                 window.alert("You do not have access to edit this post. \n \n 이 포스트를 수정할 권한이 없습니다.")
                 window.history.go(-1);
             }
@@ -201,7 +201,7 @@ class AddPost extends React.Component {
         }
         this.fetchPost();
         this.setState({
-            author: this.props.username,
+            author: this.props.firebaseUserData.username,
         },
         () => {
             console.log(this.state)
@@ -221,7 +221,7 @@ class AddPost extends React.Component {
                         return;
                     }
                     else {
-                        if (data.permissions.includes(this.props.role)/* || data.permissions.includes("User")*/) {
+                        if (data.permissions.includes(this.props.firebaseUserData.role)/* || data.permissions.includes("User")*/) {
                             console.log("I entered");
                             this.content = data.content;
                             this.setState({
@@ -469,10 +469,10 @@ class AddPost extends React.Component {
                     />
                 </Editor>
                 <CheckBoxContainer>
-                    {this.props.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={this.state.isAnonymous}/> : this.selectedBoard.value == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
-                    {this.props.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.isPinned}/> : <div/>}
-                    {this.props.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.isHidden}/> : <div/>}
-                    {this.props.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={this.state.isAnnouncement}/> : <div/>}
+                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={this.state.isAnonymous}/> : this.selectedBoard.value == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
+                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.isPinned}/> : <div/>}
+                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.isHidden}/> : <div/>}
+                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={this.state.isAnnouncement}/> : <div/>}
                 </CheckBoxContainer>
                 <Submit onClick={this.handleSubmit} submitted={this.submitted}>Post</Submit>
             </Container>

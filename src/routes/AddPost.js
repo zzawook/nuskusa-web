@@ -138,7 +138,7 @@ const CheckBoxContainer = styled.div`
     width: ${450}px;
     position: absolute;
     bottom: 110px;
-    left: ${width * 0.15}px
+    left: ${width * 0.15}px;
 `
 
 class AddPost extends React.Component {
@@ -162,13 +162,13 @@ class AddPost extends React.Component {
     content = '<p></p>'
 
     componentDidMount() {
-        if (!this.props.isVerified) {
+        if (!this.props.firebaseUserData.isVerified) {
             window.alert("You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다.");
             window.history.go(-1);
             return;
         }
         this.setState({
-            author: this.props.username,
+            author: this.props.firebaseUserData.username,
         })
     }
 
@@ -269,7 +269,7 @@ class AddPost extends React.Component {
             height: '15px',
         }
 
-        const options = this.props.role === 'Admin' ? [
+        const options = this.props.firebaseUserData.role === 'Admin' ? [
             { value: 'announcement', label: '공지사항' },
             { value: 'event', label: '이벤트' },
             { value: 'general', label: '자유게시판' },
@@ -373,8 +373,9 @@ class AddPost extends React.Component {
 
         return (
             <Container>
-                <Navbar firebaseUserData={this.props.FirebaseUser} />
-                <Back><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
+                {console.log(this.props)}
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                <Back onClick={() => window.history.back()}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
                 <SelectContainer><Select options={options} styles={customStyle} onChange={this.handleSelectChange} /></SelectContainer>
                 <Form><Title type='text' key="titleInput" value={this.state.title} onChange={this.handleTitleChange} onBlur={this.handleTitleBlur} onFocus={this.handleTitleFocus} /></Form>
                 <Editor>
@@ -397,10 +398,10 @@ class AddPost extends React.Component {
                     />
                 </Editor>
                 <CheckBoxContainer>
-                    {this.props.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.selectedBoard == 'grove' ? <Checkbox label='Anonymous' /> : <div />}
-                    {this.props.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={false} /> : <div />}
-                    {this.props.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={false} /> : <div />}
-                    {this.props.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} /> : <div />}
+                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.selectedBoard == 'grove' ? <Checkbox label='Anonymous' /> : <div />}
+                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={false} /> : <div />}
+                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={false} /> : <div />}
+                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} /> : <div />}
                 </CheckBoxContainer>
                 <Submit onClick={this.handleSubmit}>Post</Submit>
             </Container>
