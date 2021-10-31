@@ -93,7 +93,7 @@ class Board extends React.Component<BoardProps, BoardState> {
     fetchPosts = () => {
         dbService
             .collection('boards').doc(this.props.boardId)
-            .collection('posts').orderBy(this.state.postOrder.value)
+            .collection('posts').orderBy('isPinned', 'desc').orderBy(this.state.postOrder.value)
             .onSnapshot((querySnapshot) => {
                 const arr: FirestorePost[] = [];
                 const componentArray: any[] = [];
