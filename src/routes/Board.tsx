@@ -275,7 +275,8 @@ class Board extends React.Component<BoardProps, BoardState> {
                         {this.state.postComponentArray}
                     </PostContainer>
                 }
-                <button onClick={() => GenerateSamplePost()}>Add Random Post</button>
+                <button onClick={() => GenerateSamplePost()}>Add Random Post (unpinned) </button>
+                <button onClick={() => GenerateSamplePost(true)}>Add Random Post (pinned) </button>
                 <ContactUs />
             </Container>
         )
