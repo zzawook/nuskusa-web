@@ -26,7 +26,6 @@ class ProfileBadge extends React.Component<BadgeProps, BadgeState> {
             justify-content: center;
             flex-direction: column;
         `
-        console.log(this.props.firebaseUserData)
         return (
             <Wrapper>
                 {/* Avatar here */}

@@ -5,7 +5,7 @@ export interface FirestorePost {
     isAnonymous: boolean,
     isPinned: boolean,
     isHidden: boolean,
-    lastModified: Date,
+    lastModified: firebase.default.firestore.Timestamp,
     upvotes: number,
     numComments: number,
     permissions: string[],
