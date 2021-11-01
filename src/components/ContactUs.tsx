@@ -18,9 +18,9 @@ const Container =  styled.div`
     display: flex;
     order: 3;
     position: relative;
-    width: ${(width * 0.7).toString()}px;
+    width: ${(width * 0.7)}px;
     height: 685px;
-    left: ${(width * 0.15).toString()}px;
+    left: 0px;
     background-color: transparent;
     font-family: var(--font-family-roboto);
 `
