@@ -14,7 +14,7 @@ import VerificationRequest from '../components/Verification/VerificationRequest'
 import { FirebaseUser } from '../types/FirebaseUser';
 import Select from 'react-select';
 import { ActionMeta } from 'react-select';
-import { GenerateSamplePost } from '../utils/SamplePost';
+import { generateSamplePost } from '../utils/SamplePost';
 
 type SelectOption = {
     value: string,
@@ -275,8 +275,29 @@ class Board extends React.Component<BoardProps, BoardState> {
                         {this.state.postComponentArray}
                     </PostContainer>
                 }
-                <button onClick={() => GenerateSamplePost()}>Add Random Post (unpinned) </button>
-                <button onClick={() => GenerateSamplePost(true)}>Add Random Post (pinned) </button>
+                {this.props.firebaseUserData.role === "Admin" ?
+                    <>
+                        <button onClick={() => generateSamplePost(
+                            false,
+                            this.props.boardId,
+                            this.state.firestoreBoard.title,
+                            this.state.firestoreBoard.boardColor,
+                            this.state.firestoreBoard.boardTextColor)}>
+                            Add Random Post (unpinned)
+                        </button>
+                        <button onClick={() => generateSamplePost(
+                            true,
+                            this.props.boardId,
+                            this.state.firestoreBoard.title,
+                            this.state.firestoreBoard.boardColor,
+                            this.state.firestoreBoard.boardTextColor)}>
+                            Add Random Post (pinned)
+                        </button>
+                    </>
+                    :
+                    <></>
+                }
+
                 <ContactUs />
             </Container>
         )

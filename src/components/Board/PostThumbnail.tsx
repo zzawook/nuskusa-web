@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { FirestorePost } from '../../types/FirestorePost'
-import { GenerateSamplePost } from '../../utils/SamplePost'
 import { Headline, DisplaySmall, DisplayMedium } from '../../utils/ThemeText'
 import BoardTag from './BoardTag'
 
