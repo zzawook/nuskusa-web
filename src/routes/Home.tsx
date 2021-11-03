@@ -51,6 +51,8 @@ class Home extends React.Component<HomeProps, HomeState> {
             display: flex;
             flex-direction: column;
             background: #18202B;
+            justify-content: center;
+            align-items: center;
         `
 
         const HomeBackground = styled.div`
