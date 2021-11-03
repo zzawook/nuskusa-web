@@ -4,6 +4,7 @@ import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
 import { FirestorePost } from '../types/FirestorePost'
 import { FirebaseUser } from "../types/FirebaseUser";
+import firebase from "firebase";
 
 type PostProps = {
     boardId: string,
@@ -39,7 +40,7 @@ class Post extends React.Component<PostProps, PostState> {
                 isAnonymous: true,
                 isPinned: false,
                 isHidden: false,
-                lastModified: new Date(),
+                lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
                 upvotes: 0,
                 numComments: 0,
                 permissions: [],

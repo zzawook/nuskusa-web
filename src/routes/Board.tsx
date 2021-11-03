@@ -14,6 +14,7 @@ import VerificationRequest from '../components/Verification/VerificationRequest'
 import { FirebaseUser } from '../types/FirebaseUser';
 import Select from 'react-select';
 import { ActionMeta } from 'react-select';
+import { generateSamplePost } from '../utils/SamplePost';
 
 type SelectOption = {
     value: string,
@@ -53,7 +54,7 @@ class Board extends React.Component<BoardProps, BoardState> {
         },
         postArray: [],
         postComponentArray: [],
-        postOrder: {value: 'lastModified', label: 'Latest'}
+        postOrder: { value: 'lastModified', label: 'Latest' }
     }
 
     componentDidMount = () => {
@@ -93,7 +94,7 @@ class Board extends React.Component<BoardProps, BoardState> {
     fetchPosts = () => {
         dbService
             .collection('boards').doc(this.props.boardId)
-            .collection('posts').orderBy(this.state.postOrder.value)
+            .collection('posts').orderBy("isPinned", 'desc').orderBy(this.state.postOrder.value, 'desc')
             .onSnapshot((querySnapshot) => {
                 const arr: FirestorePost[] = [];
                 const componentArray: any[] = [];
@@ -101,20 +102,14 @@ class Board extends React.Component<BoardProps, BoardState> {
                 querySnapshot.docs.forEach((doc) => {
                     key++
                     const data = doc.data() as FirestorePost;
-                    console.log(doc.data())
+                    console.log(data.isPinned)
+                    if (key === querySnapshot.size) {
+
+                    }
                     const component = (
                         <div key={key}>
                             <PostThumbnail
-                                postTitle={data.title}
-                                postContent={data.content}
-                                boardId={this.props.boardId}
-                                boardTitle={this.state.firestoreBoard.title}
-                                username={this.props.firebaseUserData.username}
-                                isVerified={this.props.firebaseUserData.isVerified}
-                                role={this.props.firebaseUserData.role}
-                                author={data.author}
-                                boxcolor={data.parentColor}
-                                textcolor={data.parentTextColor}
+                                firestorePost={data}
                                 to={`/boards/${this.props.boardId}/${doc.id}`}
                             />
                             {/* Allow to edit all posts in the list */}
@@ -280,6 +275,29 @@ class Board extends React.Component<BoardProps, BoardState> {
                         {this.state.postComponentArray}
                     </PostContainer>
                 }
+                {this.props.firebaseUserData.role === "Admin" ?
+                    <>
+                        <button onClick={() => generateSamplePost(
+                            false,
+                            this.props.boardId,
+                            this.state.firestoreBoard.title,
+                            this.state.firestoreBoard.boardColor,
+                            this.state.firestoreBoard.boardTextColor)}>
+                            Add Random Post (unpinned)
+                        </button>
+                        <button onClick={() => generateSamplePost(
+                            true,
+                            this.props.boardId,
+                            this.state.firestoreBoard.title,
+                            this.state.firestoreBoard.boardColor,
+                            this.state.firestoreBoard.boardTextColor)}>
+                            Add Random Post (pinned)
+                        </button>
+                    </>
+                    :
+                    <></>
+                }
+
                 <ContactUs />
             </Container>
         )

@@ -153,7 +153,7 @@ class AddPost extends React.Component {
             isHidden: false,
             author: '',
             upvotes: 0,
-            lastModified: new Date(),
+            lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
             permissions: ["Admin"],
         }
     }
