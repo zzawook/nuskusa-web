@@ -1,18 +1,11 @@
 import firebase from 'firebase'
 
-export interface FirestorePost {
-    title: string,
+export interface FirestoreComment {
     content: string,
-    isAnnouncement: boolean,
-    isAnonymous: boolean,
-    isPinned: boolean,
-    isHidden: boolean,
     lastModified: firebase.firestore.Timestamp,
-    upvotes: number,
-    numComments: number,
-    permissions: string[],
+    upvoteArray: firebase.firestore.DocumentReference[],
     author: string,
-
+    postId: string,
     parentBoardId: string,
     parentBoardTitle: string,
     parentColor: string,
