@@ -1,5 +1,6 @@
 export interface FirebaseUser {
     username: string,
+    userId: string,
     verificationFile?: File | undefined,
     isVerified: boolean,
     role: string, // User, Undergraduate, Graduate, Admin

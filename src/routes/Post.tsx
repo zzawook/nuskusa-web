@@ -45,6 +45,7 @@ class Post extends React.Component<PostProps, PostState> {
                 numComments: 0,
                 permissions: [],
                 author: "TempAuthor",
+                authorId: "",
                 parentBoardId: "",
                 parentBoardTitle: "",
                 parentColor: "",
@@ -78,6 +79,7 @@ class Post extends React.Component<PostProps, PostState> {
                                 firestorePost: {
                                     title: data.title,
                                     author: data.author,
+                                    authorId: data.authorId,
                                     content: data.content,
                                     isAnnouncement: data.isAnnouncement,
                                     isAnonymous: data.isAnonymous,
