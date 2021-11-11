@@ -12,6 +12,7 @@ export interface FirestorePost {
     numComments: number,
     permissions: string[],
     author: string,
+    authorId: string,
 
     parentBoardId: string,
     parentBoardTitle: string,

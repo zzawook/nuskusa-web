@@ -5,6 +5,7 @@ export interface FirestoreComment {
     lastModified: firebase.firestore.Timestamp,
     upvoteArray: firebase.firestore.DocumentReference[],
     author: string,
+    authorId: string,
     postId: string,
     parentBoardId: string,
     parentBoardTitle: string,
