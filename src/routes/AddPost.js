@@ -189,10 +189,17 @@ class AddPost extends React.Component {
                 window.alert("Please enter title. \n \n 제목을 작성해주세요.")
                 return;
             }
-            dbService
-                .collection('boards').doc(this.selectedBoard)
-                .collection('posts')
-                .add(this.state);
+            const batch = dbService.batch()
+            const userPostRef = dbService.collection('users').doc(authService.currentUser.uid).collection('posts').doc()
+            const postCollectionRef = dbService.collection('boards').doc(this.selectedBoard).collection('posts').doc(userPostRef.id)
+            try {
+                batch.set(postCollectionRef, this.state)
+                // Add document reference to user so the user can view all of their own posts.
+                batch.set(userPostRef, postCollectionRef)
+                batch.commit()
+            } catch (err) {
+                console.error(err)
+            }
         })
 
     }
