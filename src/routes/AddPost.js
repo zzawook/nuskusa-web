@@ -196,6 +196,7 @@ class AddPost extends React.Component {
                 batch.set(postCollectionRef, this.state)
                 // Add document reference to user so the user can view all of their own posts.
                 batch.set(userPostRef, postCollectionRef)
+                batch.commit()
             } catch (err) {
                 console.error(err)
             }
