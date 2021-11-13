@@ -8,7 +8,6 @@ import BoardTag from './BoardTag'
 type PostThumbnailProps = {
     to: string,
     firestorePost: FirestorePost
-
 }
 
 class PostThumbnail extends React.Component<PostThumbnailProps, {}> {

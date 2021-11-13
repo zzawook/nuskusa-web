@@ -66,7 +66,7 @@ const Submit = styled.button`
     }
 
     position: relative;
-    right: 0px;
+    left: 0px;
     margin-top: 10px;
     width: 100px;
     height: 35px;
@@ -79,7 +79,7 @@ const Submit = styled.button`
 const CommentBox = styled.div`
     position: relative;
     width: 100%;
-    top: 60px;
+    top: 50px;
 `
 
 class Comment extends React.Component<CommentProps, CommentState> {

@@ -10,10 +10,11 @@ type PrimaryProps = {
 type PrimaryState = {
     commentEntered: string,
     commentArray: [],
-    profileImg: string,
     lastModified: Date,
     secondaryOpen: boolean,
     secondary: any[],
+    replyOpen: boolean,
+    reply: string,
 }
 
 const PrimaryComment = styled.div`
@@ -80,21 +81,77 @@ const ReplyButton = styled.button`
     background-color: transparent;
     color: #a8a8a8;
 `
+const SecondaryOpener = styled.span`
+    &: hover {
+        text-decoration: underline;
+        color: white;
+    }
 
-const data = {
-    1: 'January',
-    2: 'February',
-    3: 'March',
-    4: 'April',
-    5: 'May',
-    6: 'June',
-    7: 'July',
-    8: 'August',
-    9: 'September',
-    10: 'October',
-    11: 'November',
-    12: 'December'
-}
+    position: relative;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 24.4px;
+    left: 90px;
+    top: 0px;
+    color: #b0b0b0;
+    cursor: pointer;
+`
+const Form = styled.form`
+    position: relative;
+    top: -10px;
+    left: 90px;
+    width: 100%;
+    margin-bottom: 10px;
+`
+const Input = styled.textarea`
+    width: ${(window.innerWidth * 0.49) - 110}px;
+    height: 70px;
+    padding: 10px;
+    background-color: #0B121C;
+    border: 1px solid #9c9c9c;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: var(--font-family-roboto);
+    resize: none;
+`
+const Cancel = styled.button`
+    &:hover {
+        color: white;
+    }
+
+    position: relative;
+    right: 0px;
+    margin-top: 10px;
+    width: 100px;
+    height: 35px;
+    background-color: transparent;
+    border: none;
+    color: #858585;
+    font-weight: bold;
+    font-size: 16px;
+    right: 0px;
+`
+const Submit = styled.button`
+    &: hover {
+        border: 1px solid white;
+    }
+
+    position: relative;
+    right: 0px;
+    margin-top: 10px;
+    width: 100px;
+    height: 35px;
+    background-color: #BDA06D;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+`
+const SmallArrow = styled.img`
+    position: relative;
+    left: 5px;
+`
 
 class Primary extends React.Component<PrimaryProps, PrimaryState> {
     constructor(props: PrimaryProps) {
@@ -105,28 +162,37 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             lastModified: new Date(),
             secondaryOpen: false,
             secondary: [],
-            profileImg: 'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5',
+            replyOpen: false,
+            reply: ""
         }
     }
 
     componentDidMount() {
+        this.fetchPost();
+    }
+
+    fetchPost() {
         if (this.props.data.replies) {
             const replyArray: FirestoreComment[] = [];
             for (let i = 0; i < this.props.data.replies.length; i = i + 1) {
                 this.props.data.replies[i].onSnapshot((querySnapshot: any) => {
                     if (querySnapshot.exists) {
                         let data = querySnapshot.data() as FirestoreComment;
-                        replyArray.push(data)
+                        replyArray.push(data);
+                        this.setState({
+                            secondary: replyArray,
+                        })
                     }
                 })
             }
-            this.setState({
-                secondary: replyArray,
-            })
         }
         this.setState({
             lastModified: this.props.data.lastModified + (2.88 * Math.pow(10, 7))
         })
+    }
+
+    componentDidUpdate() {
+        console.log(this.state.secondary)
     }
 
     getLastUpdated = (time: any) => {
@@ -190,19 +256,42 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
     }
 
     render() {
-        const handleReplyClick = (e: any) => {
+        const handleSecondaryClick = (e: any) => {
             e.preventDefault();
             this.setState({
-                secondaryOpen: true,
+                secondaryOpen: !this.state.secondaryOpen,
             })
         }
         const handleLikeClick = (e: any) => {
             e.preventDefault();
         }
+        const handleCancelClick = (e: any) => {
+            e.preventDefault()
+            this.setState({
+                reply: "",
+                replyOpen: false,
+            })
+        }
+        const handleInputChange = (e: any) => {
+            e.preventDefault();
+            this.setState({
+                reply: e.target.value,
+            })
+        }
+        const handleSubmitClick = (e: any) => {
+            e.preventDefault();
+            
+        }
+        const handleReplyClick = (e: any) => {
+            e.preventDefault();
+            this.setState({
+                replyOpen: !this.state.replyOpen,
+            })
+        }
         return (
             <PrimaryComment>
                 <CommentArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FcommentArrow.png?alt=media&token=e484a87e-cff6-4111-b36c-e82cedbe2584'} />
-                <ProfileImg src={this.state.profileImg} />
+                <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} />
                 <LastModified>
                     {this.getLastUpdated(this.props.data.lastModified)}
                 </LastModified>
@@ -210,7 +299,14 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                 <Like onClick={handleLikeClick} src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'}/>
                 <LikeNum>{this.props.data.likes.length}</LikeNum>
                 <ReplyButton onClick={handleReplyClick}>Reply</ReplyButton>
-                {this.state.secondaryOpen ? this.state.secondary.map(element => <Secondary data={element} />) : <div />}
+                {this.state.replyOpen ? <Form>
+                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered}/>
+                    <Cancel onClick={handleCancelClick}>Cancel</Cancel>
+                    <Submit onClick={handleSubmitClick}>Post</Submit>
+                </Form> : <div />}
+                {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%204.png?alt=media&token=e83189ba-d386-4232-a473-1b1656d553b3'}/> : <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%203.png?alt=media&token=c39d0931-41d8-4ed1-bd6f-a5491da24e8a'}/>}</SecondaryOpener> : <div/>}
+                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map(element => <Secondary data={element} />) : <div />}
+                
             </PrimaryComment>
         )
     }

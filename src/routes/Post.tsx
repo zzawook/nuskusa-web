@@ -7,6 +7,7 @@ import { FirebaseUser } from "../types/FirebaseUser";
 import firebase from "firebase";
 import styled from 'styled-components';
 import CSS from 'csstype'
+import OtherPost from '../components/Post/OtherPost'
 
 type PostProps = {
     boardId: string,
@@ -21,6 +22,7 @@ type PostState = {
     profileImg: string,
     retrieved: boolean,
     accessGranted: boolean,
+    recentPosts: any[],
 }
 
 const height = window.innerHeight;
@@ -35,6 +37,10 @@ const Container = styled.div`
     flex-direction: column;
 `
 const Back = styled.button`
+    &: hover {
+        border: 1px solid white;
+        color: white;
+    }
     width: 95px;
     height: 41px;
     background-color: #18202B;
@@ -63,13 +69,14 @@ const ProfileImg = styled.img`
     position: absolute;
     left: 0%;
 `
-const Title = styled.span`
-    width: 40%;
-    height: 50px;
-    position: absolute;
+const Title = styled.p`
+    position: relative;
+    width: 50%;
     left: 70px;
     font-weight: 800;
     font-size: 22px;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
 `
 const Content = styled.div`
     width: 70%;
@@ -93,6 +100,7 @@ const UpvoteNum = styled.div`
     left: 0%;
     top: 0px;
     padding-left: 25px;
+    cursor: pointer;
 `
 const UpvoteIcon = styled.img`
     width: 18px;
@@ -101,6 +109,7 @@ const UpvoteIcon = styled.img`
     position: absolute;
     left: 0px;
     top: 0px;
+    cursor: pointer;
 `
 const CommentNum = styled.div`
     position: absolute;
@@ -118,14 +127,28 @@ const CommentIcon = styled.img`
 `
 const DateWritten = styled.span`
     position: absolute;
-    left: 160px;
-    top: 0px;
+    right: 30%;
+    top: 100px;
     color: #9c9c9c;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 24.4px;
 `
-const Divider = styled.div`
-    position: relative;
-    order: 4;
-
+const RecentPosts = styled.div`
+    position: absolute;
+    width: 30%;
+    right: 0px;
+    top: 140px;
+`
+const RecentPostTitle = styled.span`
+    position: absolute;
+    left: 70%;
+    top: 100px;
+    padding-left: 3%;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    color: #a8a8a8;
 `
 class Post extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
@@ -152,6 +175,7 @@ class Post extends React.Component<PostProps, PostState> {
             commentArray: [],
             retrieved: false,
             accessGranted: false,
+            recentPosts: [],
             profileImg: 'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5',
 
         }
@@ -161,11 +185,75 @@ class Post extends React.Component<PostProps, PostState> {
         this.fetchPost()
     }
 
+    componentDidUpdate() {
+        console.log(this.state);
+    }
+
     static getDerivedStateFromProps = (nextProps: PostProps, prevState: PostState) => {
         if (prevState.retrieved && prevState.firestorePost.permissions.includes(nextProps.firebaseUserData.role)) { 
             return {
                 accessGranted: true,
             }
+        }
+    }
+
+    getLastUpdated = (time: any) => {
+        const timeFromNow = (Date.now() - (time.seconds * 1000)) / 1000;
+        const minutesFromNow = Math.floor(timeFromNow / 60)
+        const hoursFromNow = Math.floor(timeFromNow / (60 * 60))
+        if (hoursFromNow >= 1 && hoursFromNow < 24) {
+            return hoursFromNow.toString() + " hours ago"
+        }
+        else if (minutesFromNow >= 1 && minutesFromNow < 60) {
+            return minutesFromNow.toString() + " minutes ago"
+        }
+        else if (minutesFromNow <= 1) {
+            return 'Just now'
+        }
+        else {
+            return this.monthToString(time.toDate().getMonth()) + " " + time.toDate().getDate().toString() + " " + time.toDate().getFullYear().toString();
+        }
+    }
+
+    monthToString = (month: number) => {
+        if (month == 1) {
+            return "January";
+        }
+        else if (month === 2) {
+            return "February";
+        }
+        else if (month === 3) {
+            return "March";
+        }
+        else if (month === 4) {
+            return "April";
+        }
+        else if (month === 5) {
+            return "May";
+        }
+        else if (month === 6) {
+            return "June"
+        }
+        else if (month === 7) {
+            return 'July'
+        }
+        else if (month === 8) {
+            return 'August';
+        }
+        else if (month === 9) {
+            return 'September'
+        }
+        else if (month === 10) {
+            return 'October'
+        }
+        else if (month === 11) {
+            return 'November'
+        }
+        else if (month === 12) {
+            return "December"
+        }
+        else {
+            return 'Invalid Month'
         }
     }
 
@@ -220,11 +308,40 @@ class Post extends React.Component<PostProps, PostState> {
                                     retrieved: true,
                                 })
                             })
-                        
+                        const boardArray = ['announcement', 'event', 'general', 'grove', 'jobs'];
+                        const postArray: any[] = [];
+                        for (let i = 0; i < boardArray.length; i++) {
+                            dbService
+                            .collection('boards').doc(boardArray[i])
+                            .collection('posts').orderBy('lastModified', 'desc').limit(10).onSnapshot((querySnapshot) => {
+                                const postObjs = querySnapshot.docs;
+                                console.log(postObjs)
+                                for (let j = 0; j < postObjs.length; j++) {
+                                    postArray.push(postObjs[j].data());
+                                }
+                                this.setState({
+                                    recentPosts: this.sortByLastModified(postArray),
+                                })
+                            })
+                        }
                     }
                 }
             })
 
+    }
+
+    sortByLastModified(posts: any[]) {
+        return posts.sort((a: any, b: any) => {
+            if (a.lastModified.seconds > b.lastModified.seconds) {
+                return -1;
+            }
+            else if (a.lastModified.seconds < b.lastModified.seconds){
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        })
     }
 
     render = () => {
@@ -238,6 +355,9 @@ class Post extends React.Component<PostProps, PostState> {
             e.preventDefault();
             window.history.go(-1);
         }
+        const handleUpvoteClick = (e: any) => {
+            e.preventDefault();
+        }
 
         return (
             <div>
@@ -247,20 +367,23 @@ class Post extends React.Component<PostProps, PostState> {
                     <Header>
                         <ProfileImg src={this.state.profileImg} />
                         <Title>{this.state.firestorePost.title}</Title>
+                        <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
                     </Header>
                     <Content dangerouslySetInnerHTML={{__html: this.state.firestorePost.content}} />
                     <ETC>
-                        <UpvoteNum>
-                            <UpvoteIcon src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'}/>
+                        <UpvoteNum onClick={handleUpvoteClick}>
+                            <UpvoteIcon onClick={handleUpvoteClick}src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'}/>
                             {this.state.firestorePost.upvotes}
                         </UpvoteNum>
                         <CommentNum>
                             <CommentIcon src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcomment.png?alt=media&token=3bfd6a4c-7bec-4858-8d4b-f6d5223dd1fe'}/>
                             {this.state.firestorePost.numComments}
                         </CommentNum>
-                        <DateWritten>{this.state.firestorePost.lastModified.toDate().toUTCString()}</DateWritten>
+                        
                     </ETC>
                     <Comment comments={this.state.commentArray}/>
+                    <RecentPostTitle>Other posts</RecentPostTitle>
+                    <RecentPosts>{this.state.recentPosts.map(element => <OtherPost data={element}/>)}</RecentPosts>
                     {this.state.accessGranted ?
                         <>
                             
