@@ -1,9 +1,15 @@
+import firebase from 'firebase'
+
 export interface FirestoreComment {
-    author: string,
-    userId: string,
     content: string,
-    isReply: boolean,
-    lastModified: Date,
-    likes: [],
+    lastModified: firebase.firestore.Timestamp,
+    upvoteArray: firebase.firestore.DocumentReference[],
     replies: [],
+    author: string,
+    authorId: string,
+    postId: string,
+    parentBoardId: string,
+    parentBoardTitle: string,
+    parentColor: string,
+    parentTextColor: string
 }

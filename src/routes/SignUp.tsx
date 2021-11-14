@@ -13,7 +13,7 @@ type UserProps = {
 type UserState = {
     email: string,
     password: string,
-    fullName: string
+    username: string
 }
 
 const height = window.innerHeight;
@@ -142,7 +142,7 @@ class SignUp extends React.Component<UserProps, UserState> {
         this.state = {
             email: '',
             password: '',
-            fullName: '',
+            username: '',
         }
     }
     handleChange = (event: any) => {
@@ -157,9 +157,9 @@ class SignUp extends React.Component<UserProps, UserState> {
                 password: value
             })
         }
-        else if (event.target.name === 'fullName') {
+        else if (event.target.name === 'username') {
             this.setState({
-                fullName: value
+                username: value
             })
         }
     }
@@ -170,7 +170,8 @@ class SignUp extends React.Component<UserProps, UserState> {
             .then(async (userCredential) => {
                 const userObject = {
                     email: this.state.email,
-                    fullName: this.state.fullName,
+                    username: this.state.username,
+                    userId: userCredential.user?.uid,
                     isVerified: false,
                     role: 'User'
                 }
@@ -222,11 +223,11 @@ class SignUp extends React.Component<UserProps, UserState> {
                 </Container>
                 <Form onSubmit={this.handleSubmit}>
                     <NameInput
-                        name="fullName"
+                        name="username"
                         type="string"
                         placeholder="이름 (영어로, 성 먼저) / Name (Last name first)"
                         required
-                        value={this.state.fullName}
+                        value={this.state.username}
                         onChange={this.handleChange}
                     >
                     </NameInput>

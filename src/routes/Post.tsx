@@ -166,6 +166,7 @@ class Post extends React.Component<PostProps, PostState> {
                 numComments: 0,
                 permissions: [],
                 author: "TempAuthor",
+                authorId: "",
                 parentBoardId: "",
                 parentBoardTitle: "",
                 parentColor: "",
