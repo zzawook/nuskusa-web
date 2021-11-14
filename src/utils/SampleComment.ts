@@ -9,13 +9,15 @@ import { dbService } from "./firebaseFunctions";
 export const generateSampleComment = (postId: string, parentBoardId="general", parentBoardTitle="자유게시판", parentColor="#C4F2EF", parentTextColor="#3B8A85") => {
     const content = generateSlug(5);
     const author = generateSlug(1);
-
+    const authorId = 'id'
     const SampleComment: FirestoreComment = {
         content: content,
         lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
         upvoteArray: [],
         author: author,
+        authorId: authorId,
         postId: postId,
+        replies: [],
         parentBoardId: parentBoardId,
         parentBoardTitle: parentBoardTitle,
         parentColor: parentColor,

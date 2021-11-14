@@ -44,4 +44,16 @@ const Headline = styled.p` // Text
     color: ${props => props.color};
 `
 
-export { DisplayLarge, DisplayMedium, DisplaySmall, Headline  }
+const SubHeadline = styled.p`
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 10px;
+    line-height: 20px;
+    font-weight: 700;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    text-align: left;
+    color: ${props => props.color};
+`
+
+export { DisplayLarge, DisplayMedium, DisplaySmall, Headline, SubHeadline  }
