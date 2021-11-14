@@ -102,10 +102,6 @@ class Board extends React.Component<BoardProps, BoardState> {
                 querySnapshot.docs.forEach((doc) => {
                     key++
                     const data = doc.data() as FirestorePost;
-                    console.log(data.isPinned)
-                    if (key === querySnapshot.size) {
-
-                    }
                     const component = (
                         <div key={key}>
                             <PostThumbnail
