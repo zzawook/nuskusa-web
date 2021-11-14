@@ -37,7 +37,7 @@ const Container = styled.div`
     flex-direction: column;
 `
 const Back = styled.button`
-    &: hover {
+    :hover {
         border: 1px solid white;
         color: white;
     }
@@ -277,6 +277,7 @@ class Post extends React.Component<PostProps, PostState> {
                             firestorePost: {
                                 title: data.title,
                                 author: data.author,
+                                authorId: data.authorId,
                                 content: data.content,
                                 isAnnouncement: data.isAnnouncement,
                                 isAnonymous: data.isAnonymous,
