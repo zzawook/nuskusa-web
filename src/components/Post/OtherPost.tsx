@@ -62,7 +62,7 @@ const BoardType = styled.div<Props>`
     color: #808080;
     background-color: ${props => {
         return getColor(props.boardType)
-    }}
+    }};
 `
 const getColor = (boardType: string) => {
     if (boardType == "자유게시판") {

@@ -17,6 +17,7 @@ export const generateSampleComment = (postId: string, parentBoardId="general", p
         author: author,
         authorId: authorId,
         postId: postId,
+        replies: [],
         parentBoardId: parentBoardId,
         parentBoardTitle: parentBoardTitle,
         parentColor: parentColor,

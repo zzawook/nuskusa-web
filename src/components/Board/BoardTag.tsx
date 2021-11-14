@@ -5,7 +5,8 @@ import { Headline } from '../../utils/ThemeText'
 type BoardTagProps = {
     boxcolor: string,
     textcolor: string,
-    title: string
+    title: string,
+    style?: React.CSSProperties
 }
 
 type BoardTagState = {

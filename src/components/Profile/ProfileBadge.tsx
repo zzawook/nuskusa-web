@@ -49,7 +49,6 @@ class ProfileBadge extends React.Component<BadgeProps, BadgeState> {
         `
         return (
             <Wrapper>
-                {/* Avatar here */}
                 <ClickableDiv onClick={this.openProfileDisplay}>
                     <Headline color="white" style={{ margin: 'auto' }}>
                         {this.props.firebaseUserData.username}
