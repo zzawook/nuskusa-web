@@ -22,6 +22,7 @@ export const generateSamplePost = (isPinned=false, parentBoardId="general", pare
         numComments: 0,
         permissions: ["Admin"],
         author: author,
+        authorId: 'id',
         parentBoardId: parentBoardId,
         parentBoardTitle: parentBoardTitle,
         parentColor: parentColor,

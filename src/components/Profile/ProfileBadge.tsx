@@ -2,13 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser'
 import { Headline } from '../../utils/ThemeText'
+import Avatar from './Avatar'
+import ProfileDisplay from './ProfileDisplay'
 
 type BadgeProps = {
     firebaseUserData: FirebaseUser
 }
 
 type BadgeState = {
-
+    isOpen: boolean
 }
 
 // Badge for top-right side of the navbar
@@ -16,22 +18,45 @@ class ProfileBadge extends React.Component<BadgeProps, BadgeState> {
     constructor(props: BadgeProps) {
         super(props)
         this.state = {
-
+            isOpen: false
         }
+    }
+
+    closeProfileDisplay = () => {
+        this.setState({
+            isOpen: false
+        })
+    }
+
+    openProfileDisplay = () => {
+        this.setState({
+            isOpen: true
+        })
     }
 
     render = () => {
         const Wrapper = styled.div`
             display: flex;
             justify-content: center;
-            flex-direction: column;
+            flex-direction: row;
+            cursor: pointer;
+        `
+
+        const ClickableDiv = styled.div`
+            display: flex;
+            flex-direction: row;
+            cursor: pointer;
         `
         return (
             <Wrapper>
                 {/* Avatar here */}
-                <Headline color="white" style={{ marginLeft: '0px', marginRight: '0px', marginTop: '16px', marginBottom: '0px'}}>
-                    {this.props.firebaseUserData.username}
-                </Headline>
+                <ClickableDiv onClick={this.openProfileDisplay}>
+                    <Headline color="white" style={{ margin: 'auto' }}>
+                        {this.props.firebaseUserData.username}
+                    </Headline>
+                    <Avatar firebaseUserData={this.props.firebaseUserData} />
+                </ClickableDiv>
+                <ProfileDisplay firebaseUserData={this.props.firebaseUserData} onExitClick={this.closeProfileDisplay} isOpen={this.state.isOpen}></ProfileDisplay>
             </Wrapper >
         )
     }
