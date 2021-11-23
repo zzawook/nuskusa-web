@@ -2,7 +2,6 @@ import firebase from 'firebase'
 import React from 'react'
 import styled from 'styled-components'
 import { authService, dbService } from '../../utils/firebaseFunctions'
-import { Headline } from '../../utils/ThemeText'
 
 type UpvoteProps = {
     boardId: string,
@@ -11,7 +10,6 @@ type UpvoteProps = {
 }
 
 type UpvoteState = {
-    hasUpvoted: boolean
 }
 
 // Upvote button
@@ -19,7 +17,6 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
     constructor(props: UpvoteProps) {
         super(props)
         this.state = {
-            hasUpvoted: true
         }
     }
 
@@ -29,27 +26,30 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
 
     // true if upvoted, false if did not upvote
     checkUpvoted = () => {
+        let result = false;
         this.props.upvoteArray.forEach((userRef) => {
             if (!authService.currentUser) {
                 console.log("Not Logged In!")
-                return;
+                return false;
             }
-            if (authService.currentUser?.uid === userRef.id) {
-                this.setState({
-                    hasUpvoted: true
-                })
-                return;
+            else if (authService.currentUser?.uid === userRef.id) {
+                console.log(userRef.id)
+                console.log(authService.currentUser.uid)
+                console.log('upvoted already')
+                result = true;
+                return true;
             }
         })
-        this.setState({
-            hasUpvoted: false
-        })
-        return false;
+        return result;
     }
 
-    onUpvoteClick = () => {
-        if (!this.state.hasUpvoted) {
+    handleUpvoteClick = () => {
+        const hasUpvoted = this.checkUpvoted();
+        console.log(this.props.upvoteArray)
+        console.log(hasUpvoted)
+        if (hasUpvoted === false) {
             // If the user did not upvote, upvote.
+            console.log('case 1')
             dbService.collection('boards')
                 .doc(this.props.boardId)
                 .collection('posts')
@@ -57,11 +57,15 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
                 .update({
                     upvoteArray: firebase.firestore.FieldValue.arrayUnion(dbService.collection('users').doc(authService.currentUser?.uid))
                 })
+                .then(() => {
+
+                })
                 .catch(error => {
                     console.error(error)
                 })
-        } else {
+        } else if (hasUpvoted === true) {
             // If the user did upvote already, remove upvote
+            console.log('case 2')
             dbService.collection('boards')
                 .doc(this.props.boardId)
                 .collection('posts')
@@ -85,11 +89,37 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
 
         `
 
+        const UpvoteNum = styled.div`
+            position: absolute;
+            left: 0%;
+            top: 0px;
+            padding-left: 25px;
+            cursor: pointer;
+            color: white;
+        `
+        const UpvoteIcon = styled.img`
+            width: 18px;
+            height: 18px;
+            border: none;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            cursor: pointer;
+        `
+
         return (
             <UpvoteContainer>
-                <UpvoteButton>
-                    <Headline color='white' onClick={this.onUpvoteClick}>Upvote (temp)</Headline>
-                </UpvoteButton>
+                {this.checkUpvoted() ?
+                    <>
+                        <UpvoteIcon onClick={this.handleUpvoteClick} src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'} />
+                        <UpvoteNum onClick={this.handleUpvoteClick}>{this.props.upvoteArray.length}</UpvoteNum>
+                    </>
+                    :
+                    <>
+                        <UpvoteIcon onClick={this.handleUpvoteClick} src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'} />
+                        <UpvoteNum onClick={this.handleUpvoteClick}>{this.props.upvoteArray.length}</UpvoteNum>
+                    </>
+                }
             </UpvoteContainer>
         )
     }

@@ -18,7 +18,7 @@ export const generateSamplePost = (isPinned=false, parentBoardId="general", pare
         isPinned: isPinned,
         isHidden: false,
         lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-        upvotes: 0,
+        upvoteArray: [],
         numComments: 0,
         permissions: ["Admin"],
         author: author,

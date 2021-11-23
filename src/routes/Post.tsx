@@ -8,6 +8,7 @@ import firebase from "firebase";
 import styled from 'styled-components';
 import CSS from 'csstype'
 import OtherPost from '../components/Post/OtherPost'
+import Upvote from "../components/Post/Upvote";
 
 type PostProps = {
     boardId: string,
@@ -162,7 +163,7 @@ class Post extends React.Component<PostProps, PostState> {
                 isPinned: false,
                 isHidden: false,
                 lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                upvotes: 0,
+                upvoteArray: [],
                 numComments: 0,
                 permissions: [],
                 author: "TempAuthor",
@@ -284,7 +285,7 @@ class Post extends React.Component<PostProps, PostState> {
                                 isHidden: data.isHidden,
                                 isPinned: data.isPinned,
                                 lastModified: data.lastModified,
-                                upvotes: data.upvotes,
+                                upvoteArray: data.upvoteArray,
                                 permissions: data.permissions,
                                 numComments: data.numComments,
                                 parentBoardId: data.parentBoardId,
@@ -357,9 +358,6 @@ class Post extends React.Component<PostProps, PostState> {
             e.preventDefault();
             window.history.go(-1);
         }
-        const handleUpvoteClick = (e: any) => {
-            e.preventDefault();
-        }
 
         return (
             <div>
@@ -373,10 +371,7 @@ class Post extends React.Component<PostProps, PostState> {
                     </Header>
                     <Content dangerouslySetInnerHTML={{__html: this.state.firestorePost.content}} />
                     <ETC>
-                        <UpvoteNum onClick={handleUpvoteClick}>
-                            <UpvoteIcon onClick={handleUpvoteClick}src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'}/>
-                            {this.state.firestorePost.upvotes}
-                        </UpvoteNum>
+                        <Upvote boardId={this.props.boardId} postId={this.props.postId} upvoteArray={this.state.firestorePost.upvoteArray} />
                         <CommentNum>
                             <CommentIcon src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcomment.png?alt=media&token=3bfd6a4c-7bec-4858-8d4b-f6d5223dd1fe'}/>
                             {this.state.firestorePost.numComments}
