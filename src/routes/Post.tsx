@@ -9,6 +9,8 @@ import styled from 'styled-components';
 import CSS from 'csstype'
 import OtherPost from '../components/Post/OtherPost'
 import Upvote from "../components/Post/Upvote";
+import { FaRegComment } from "react-icons/fa"
+import { AiOutlineComment } from "react-icons/ai";
 
 type PostProps = {
     boardId: string,
@@ -91,41 +93,17 @@ const Content = styled.div`
 `
 const ETC = styled.div`
     margin-top: 15px;
-    margin-bottom: 40px;
     left: 0%;
+    display: flex;
     position: relative;
     order: 3;
 `
-const UpvoteNum = styled.div`
-    position: absolute;
-    left: 0%;
-    top: 0px;
-    padding-left: 25px;
-    cursor: pointer;
-`
-const UpvoteIcon = styled.img`
-    width: 18px;
-    height: 18px;
-    border: none;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    cursor: pointer;
-`
 const CommentNum = styled.div`
-    position: absolute;
-    left: 30px;
-    top: 0px;
-    padding-left: 75px;
+    position: flex;
+    flex-direction: row;
+    margin: auto 10px;
 `
-const CommentIcon = styled.img`
-    width: 18px;
-    height: 18px; 
-    border: none;
-    position: absolute;
-    left: 50px;
-    top: 0px;
-`
+
 const DateWritten = styled.span`
     position: absolute;
     right: 30%;
@@ -192,7 +170,7 @@ class Post extends React.Component<PostProps, PostState> {
     }
 
     static getDerivedStateFromProps = (nextProps: PostProps, prevState: PostState) => {
-        if (prevState.retrieved && prevState.firestorePost.permissions.includes(nextProps.firebaseUserData.role)) { 
+        if (prevState.retrieved && prevState.firestorePost.permissions.includes(nextProps.firebaseUserData.role)) {
             return {
                 accessGranted: true,
             }
@@ -315,17 +293,17 @@ class Post extends React.Component<PostProps, PostState> {
                         const postArray: any[] = [];
                         for (let i = 0; i < boardArray.length; i++) {
                             dbService
-                            .collection('boards').doc(boardArray[i])
-                            .collection('posts').orderBy('lastModified', 'desc').limit(10).onSnapshot((querySnapshot) => {
-                                const postObjs = querySnapshot.docs;
-                                console.log(postObjs)
-                                for (let j = 0; j < postObjs.length; j++) {
-                                    postArray.push(postObjs[j].data());
-                                }
-                                this.setState({
-                                    recentPosts: this.sortByLastModified(postArray),
+                                .collection('boards').doc(boardArray[i])
+                                .collection('posts').orderBy('lastModified', 'desc').limit(10).onSnapshot((querySnapshot) => {
+                                    const postObjs = querySnapshot.docs;
+                                    console.log(postObjs)
+                                    for (let j = 0; j < postObjs.length; j++) {
+                                        postArray.push(postObjs[j].data());
+                                    }
+                                    this.setState({
+                                        recentPosts: this.sortByLastModified(postArray),
+                                    })
                                 })
-                            })
                         }
                     }
                 }
@@ -338,7 +316,7 @@ class Post extends React.Component<PostProps, PostState> {
             if (a.lastModified.seconds > b.lastModified.seconds) {
                 return -1;
             }
-            else if (a.lastModified.seconds < b.lastModified.seconds){
+            else if (a.lastModified.seconds < b.lastModified.seconds) {
                 return 1;
             }
             else {
@@ -363,27 +341,27 @@ class Post extends React.Component<PostProps, PostState> {
             <div>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
                 <Container>
-                    <Back><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} onClick={handleBackClick}/>Back</Back>
+                    <Back><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} onClick={handleBackClick} />Back</Back>
                     <Header>
                         <ProfileImg src={this.state.profileImg} />
                         <Title>{this.state.firestorePost.title}</Title>
                         <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
                     </Header>
-                    <Content dangerouslySetInnerHTML={{__html: this.state.firestorePost.content}} />
+                    <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />
                     <ETC>
                         <Upvote boardId={this.props.boardId} postId={this.props.postId} upvoteArray={this.state.firestorePost.upvoteArray} />
-                        <CommentNum>
-                            <CommentIcon src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcomment.png?alt=media&token=3bfd6a4c-7bec-4858-8d4b-f6d5223dd1fe'}/>
+                        <FaRegComment size='20px' style={{ marginLeft: '10px' }} />
+                        <CommentNum style={{ margin: '0px 5px' }}>
                             {this.state.firestorePost.numComments}
                         </CommentNum>
-                        
+
                     </ETC>
-                    <Comment comments={this.state.commentArray}/>
+                    <Comment comments={this.state.commentArray} />
                     <RecentPostTitle>Other posts</RecentPostTitle>
-                    <RecentPosts>{this.state.recentPosts.map(element => <OtherPost data={element}/>)}</RecentPosts>
+                    <RecentPosts>{this.state.recentPosts.map(element => <OtherPost data={element} />)}</RecentPosts>
                     {this.state.accessGranted ?
                         <>
-                            
+
                         </>
                         :
                         <>
@@ -391,7 +369,7 @@ class Post extends React.Component<PostProps, PostState> {
                         </>
                     }
                 </Container>
-                
+
             </div>
         )
     }

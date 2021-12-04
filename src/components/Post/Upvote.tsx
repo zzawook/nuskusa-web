@@ -2,6 +2,8 @@ import firebase from 'firebase'
 import React from 'react'
 import styled from 'styled-components'
 import { authService, dbService } from '../../utils/firebaseFunctions'
+import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 type UpvoteProps = {
     boardId: string,
@@ -82,44 +84,24 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
     // an upvote image that is clickable and changes
     render = () => {
         const UpvoteContainer = styled.div`
-
-        `
-
-        const UpvoteButton = styled.button`
-
+            display: flex;
+            flex-direction: row;
         `
 
         const UpvoteNum = styled.div`
-            position: absolute;
-            left: 0%;
-            top: 0px;
-            padding-left: 25px;
-            cursor: pointer;
             color: white;
-        `
-        const UpvoteIcon = styled.img`
-            width: 18px;
-            height: 18px;
-            border: none;
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            cursor: pointer;
+            margin: 0px 5px;
         `
 
         return (
             <UpvoteContainer>
                 {this.checkUpvoted() ?
-                    <>
-                        <UpvoteIcon onClick={this.handleUpvoteClick} src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'} />
-                        <UpvoteNum onClick={this.handleUpvoteClick}>{this.props.upvoteArray.length}</UpvoteNum>
-                    </>
+                    <FaHeart color='white' style={{cursor:'pointer'}} onClick={this.handleUpvoteClick} size='20px'></FaHeart>
                     :
-                    <>
-                        <UpvoteIcon onClick={this.handleUpvoteClick} src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'} />
-                        <UpvoteNum onClick={this.handleUpvoteClick}>{this.props.upvoteArray.length}</UpvoteNum>
-                    </>
+                    <FaRegHeart style={{cursor:'pointer'}} onClick={this.handleUpvoteClick} size='20px'></FaRegHeart>
                 }
+                <UpvoteNum onClick={this.handleUpvoteClick}>{this.props.upvoteArray.length}</UpvoteNum>
+
             </UpvoteContainer>
         )
     }
