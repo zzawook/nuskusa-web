@@ -8,7 +8,7 @@ export interface FirestorePost {
     isPinned: boolean,
     isHidden: boolean,
     lastModified: firebase.firestore.Timestamp,
-    upvotes: number,
+    upvoteArray: firebase.firestore.DocumentReference[],
     numComments: number,
     permissions: string[],
     author: string,

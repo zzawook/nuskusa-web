@@ -2,7 +2,8 @@ import firebase from 'firebase'
 import React from 'react'
 import styled from 'styled-components'
 import { authService, dbService } from '../../utils/firebaseFunctions'
-import { Headline } from '../../utils/ThemeText'
+import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 type UpvoteProps = {
     boardId: string,
@@ -11,7 +12,6 @@ type UpvoteProps = {
 }
 
 type UpvoteState = {
-    hasUpvoted: boolean
 }
 
 // Upvote button
@@ -19,7 +19,6 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
     constructor(props: UpvoteProps) {
         super(props)
         this.state = {
-            hasUpvoted: true
         }
     }
 
@@ -29,27 +28,30 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
 
     // true if upvoted, false if did not upvote
     checkUpvoted = () => {
+        let result = false;
         this.props.upvoteArray.forEach((userRef) => {
             if (!authService.currentUser) {
                 console.log("Not Logged In!")
-                return;
+                return false;
             }
-            if (authService.currentUser?.uid === userRef.id) {
-                this.setState({
-                    hasUpvoted: true
-                })
-                return;
+            else if (authService.currentUser?.uid === userRef.id) {
+                console.log(userRef.id)
+                console.log(authService.currentUser.uid)
+                console.log('upvoted already')
+                result = true;
+                return true;
             }
         })
-        this.setState({
-            hasUpvoted: false
-        })
-        return false;
+        return result;
     }
 
-    onUpvoteClick = () => {
-        if (!this.state.hasUpvoted) {
+    handleUpvoteClick = () => {
+        const hasUpvoted = this.checkUpvoted();
+        console.log(this.props.upvoteArray)
+        console.log(hasUpvoted)
+        if (hasUpvoted === false) {
             // If the user did not upvote, upvote.
+            console.log('case 1')
             dbService.collection('boards')
                 .doc(this.props.boardId)
                 .collection('posts')
@@ -57,11 +59,15 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
                 .update({
                     upvoteArray: firebase.firestore.FieldValue.arrayUnion(dbService.collection('users').doc(authService.currentUser?.uid))
                 })
+                .then(() => {
+
+                })
                 .catch(error => {
                     console.error(error)
                 })
-        } else {
+        } else if (hasUpvoted === true) {
             // If the user did upvote already, remove upvote
+            console.log('case 2')
             dbService.collection('boards')
                 .doc(this.props.boardId)
                 .collection('posts')
@@ -78,18 +84,24 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
     // an upvote image that is clickable and changes
     render = () => {
         const UpvoteContainer = styled.div`
-
+            display: flex;
+            flex-direction: row;
         `
 
-        const UpvoteButton = styled.button`
-
+        const UpvoteNum = styled.div`
+            color: white;
+            margin: 0px 5px;
         `
 
         return (
             <UpvoteContainer>
-                <UpvoteButton>
-                    <Headline color='white' onClick={this.onUpvoteClick}>Upvote (temp)</Headline>
-                </UpvoteButton>
+                {this.checkUpvoted() ?
+                    <FaHeart color='white' style={{cursor:'pointer'}} onClick={this.handleUpvoteClick} size='20px'></FaHeart>
+                    :
+                    <FaRegHeart style={{cursor:'pointer'}} onClick={this.handleUpvoteClick} size='20px'></FaRegHeart>
+                }
+                <UpvoteNum onClick={this.handleUpvoteClick}>{this.props.upvoteArray.length}</UpvoteNum>
+
             </UpvoteContainer>
         )
     }
