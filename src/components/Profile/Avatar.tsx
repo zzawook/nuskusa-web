@@ -1,8 +1,7 @@
 import React from 'react'
 import styled, { CSSProperties } from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser'
-import { Headline } from '../../utils/ThemeText'
-
+import { CgProfile } from 'react-icons/cg'
 type AvatarProps = {
     firebaseUserData: FirebaseUser,
     style?: CSSProperties
@@ -38,9 +37,7 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         `
         return (
             <AvatarWrapper>
-                <Headline>
-                    I
-                </Headline>
+                <CgProfile size='32px'></CgProfile>
             </AvatarWrapper>
         )
     }

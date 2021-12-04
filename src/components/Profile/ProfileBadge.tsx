@@ -56,7 +56,7 @@ class ProfileBadge extends React.Component<BadgeProps, BadgeState> {
                     <Avatar firebaseUserData={this.props.firebaseUserData} />
                 </ClickableDiv>
                 <ProfileDisplay firebaseUserData={this.props.firebaseUserData} onExitClick={this.closeProfileDisplay} isOpen={this.state.isOpen}></ProfileDisplay>
-            </Wrapper >
+            </Wrapper>
         )
     }
 }
