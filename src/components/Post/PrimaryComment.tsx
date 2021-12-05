@@ -2,9 +2,16 @@ import React from "react";
 import styled from 'styled-components';
 import Secondary from './SecondaryComment';
 import { FirestoreComment } from '../../types/FirestoreComment'
+import { dbService } from '../../utils/firebaseFunctions'
+import { FirebaseUser } from "../../types/FirebaseUser";
+import firebase from 'firebase';
 
 type PrimaryProps = {
     data: any,
+    boardId: string,
+    postId: string,
+    commentId: string,
+    firebaseUserData: FirebaseUser,
 }
 
 type PrimaryState = {
@@ -13,6 +20,7 @@ type PrimaryState = {
     lastModified: Date,
     secondaryOpen: boolean,
     secondary: any[],
+    secondaryIds: any[],
     replyOpen: boolean,
     reply: string,
 }
@@ -58,6 +66,7 @@ const Like = styled.img`
     position: relative;
     left: 90px;
     top: -15px;
+    cursor: pointer;
 `
 const LikeNum = styled.span`
     position: relative;
@@ -80,6 +89,7 @@ const ReplyButton = styled.button`
     border: none;
     background-color: transparent;
     color: #a8a8a8;
+    cursor: pointer;
 `
 const SecondaryOpener = styled.span`
     &: hover {
@@ -92,7 +102,7 @@ const SecondaryOpener = styled.span`
     font-weight: 700;
     line-height: 24.4px;
     left: 90px;
-    top: 0px;
+    top: -10px;
     color: #b0b0b0;
     cursor: pointer;
 `
@@ -162,25 +172,29 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             lastModified: new Date(),
             secondaryOpen: false,
             secondary: [],
+            secondaryIds: [],
             replyOpen: false,
             reply: ""
         }
     }
 
     componentDidMount() {
-        this.fetchPost();
+        this.fetchComment();
     }
 
-    fetchPost() {
+    fetchComment() {
         if (this.props.data.replies) {
             const replyArray: FirestoreComment[] = [];
+            const replyIdArray: any[] = [];
             for (let i = 0; i < this.props.data.replies.length; i = i + 1) {
                 this.props.data.replies[i].onSnapshot((querySnapshot: any) => {
                     if (querySnapshot.exists) {
                         let data = querySnapshot.data() as FirestoreComment;
                         replyArray.push(data);
+                        replyIdArray.push(querySnapshot.id)
                         this.setState({
                             secondary: replyArray,
+                            secondaryIds: replyIdArray,
                         })
                     }
                 })
@@ -192,7 +206,6 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
     }
 
     componentDidUpdate() {
-        console.log(this.state.secondary)
     }
 
     getLastUpdated = (time: any) => {
@@ -275,13 +288,37 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
         const handleInputChange = (e: any) => {
             e.preventDefault();
             this.setState({
-                reply: e.target.value,
+                commentEntered: e.target.value,
             })
         }
-        const handleSubmitClick = (e: any) => {
+        const handleSubmitClick = async (e: any) => {
             e.preventDefault();
-            
+            const addedCommentId = await dbService
+                .collection('boards').doc(this.props.boardId)
+                .collection('posts').doc(this.props.postId)
+                .collection('comments')
+                .add({
+                    author: this.props.firebaseUserData.username,
+                    content: this.state.commentEntered,
+                    isReply: true,
+                    lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
+                    likes: [],
+                    replies: [],
+                })
+            await dbService
+                .collection('boards').doc(this.props.boardId)
+                .collection('posts').doc(this.props.postId)
+                .collection('comments').doc(this.props.commentId)
+                .update({
+                    replies: firebase.firestore.FieldValue.arrayUnion(dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${addedCommentId.id}`)),
+                })
+            this.setState({
+                commentEntered: "",
+                replyOpen: false,
+            })
+            this.fetchComment()
         }
+
         const handleReplyClick = (e: any) => {
             e.preventDefault();
             this.setState({
@@ -305,7 +342,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form> : <div />}
                 {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%204.png?alt=media&token=e83189ba-d386-4232-a473-1b1656d553b3'}/> : <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%203.png?alt=media&token=c39d0931-41d8-4ed1-bd6f-a5491da24e8a'}/>}</SecondaryOpener> : <div/>}
-                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map(element => <Secondary data={element} />) : <div />}
+                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData}/>) : <div />}
                 
             </PrimaryComment>
         )
