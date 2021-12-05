@@ -51,7 +51,6 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
         console.log(hasUpvoted)
         if (hasUpvoted === false) {
             // If the user did not upvote, upvote.
-            console.log('case 1')
             dbService.collection('boards')
                 .doc(this.props.boardId)
                 .collection('posts')
@@ -67,7 +66,6 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
                 })
         } else if (hasUpvoted === true) {
             // If the user did upvote already, remove upvote
-            console.log('case 2')
             dbService.collection('boards')
                 .doc(this.props.boardId)
                 .collection('posts')
@@ -101,7 +99,6 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
                     <FaRegHeart style={{cursor:'pointer'}} onClick={this.handleUpvoteClick} size='20px'></FaRegHeart>
                 }
                 <UpvoteNum onClick={this.handleUpvoteClick}>{this.props.upvoteArray.length}</UpvoteNum>
-
             </UpvoteContainer>
         )
     }
