@@ -61,7 +61,7 @@ const Cancel = styled.button`
     right: 0px;
 `
 const Submit = styled.button`
-    &: hover {
+    :hover {
         border: 1px solid white;
     }
 
