@@ -1,3 +1,5 @@
+import firebase from 'firebase'
+
 export interface FirestorePost {
     title: string,
     content: string,
@@ -5,11 +7,12 @@ export interface FirestorePost {
     isAnonymous: boolean,
     isPinned: boolean,
     isHidden: boolean,
-    lastModified: firebase.default.firestore.Timestamp,
-    upvotes: number,
+    lastModified: firebase.firestore.Timestamp,
+    upvoteArray: firebase.firestore.DocumentReference[],
     numComments: number,
     permissions: string[],
     author: string,
+    authorId: string,
 
     parentBoardId: string,
     parentBoardTitle: string,

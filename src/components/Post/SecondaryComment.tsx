@@ -82,7 +82,7 @@ const LikeNum = styled.span`
     cursor: pointer;
 `
 const ReplyButton = styled.button`
-    &: hover {
+    &:hover {
         color: white;
     }
 
@@ -116,7 +116,7 @@ const Input = styled.textarea`
     resize: none;
 `
 const Cancel = styled.button`
-    &:hover {
+    :hover {
         color: white;
     }
 
@@ -133,7 +133,7 @@ const Cancel = styled.button`
     right: 0px;
 `
 const Submit = styled.button`
-    &: hover {
+    :hover {
         border: 1px solid white;
     }
 

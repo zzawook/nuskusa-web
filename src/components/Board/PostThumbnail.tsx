@@ -3,9 +3,10 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { FirestorePost } from '../../types/FirestorePost'
-import { Headline, DisplaySmall, DisplayMedium } from '../../utils/ThemeText'
+import { Headline, DisplaySmall, DisplayMedium, SubHeadline } from '../../utils/ThemeText'
 import BoardTag from './BoardTag';
 import CSS from 'csstype';
+
 
 type PostThumbnailProps = {
     to: string,
@@ -52,6 +53,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
             position: 'relative',
             top: '-50px'
         }
+
         return (
             <Container>
                 <Link to={this.props.to} style={{ textDecoration: 'none' }}>
@@ -70,9 +72,10 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
                             <Headline color='black'style={tempStyle}>{this.props.firestorePost.author}</Headline>
                         }
                         <Headline color='black' style={tempStyle}>{this.props.firestorePost.lastModified.toDate().toDateString()}</Headline>
+
                     </Thumbnail>
                 </Link>
-            </Container>
+            </Container >
         )
     }
 }

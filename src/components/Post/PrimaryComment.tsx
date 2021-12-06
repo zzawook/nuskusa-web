@@ -76,7 +76,7 @@ const LikeNum = styled.span`
     font-size: 14px;
 `
 const ReplyButton = styled.button`
-    &: hover {
+    :hover {
         color: white;
     }
 
@@ -92,7 +92,7 @@ const ReplyButton = styled.button`
     cursor: pointer;
 `
 const SecondaryOpener = styled.span`
-    &: hover {
+    :hover {
         text-decoration: underline;
         color: white;
     }
@@ -143,7 +143,7 @@ const Cancel = styled.button`
     right: 0px;
 `
 const Submit = styled.button`
-    &: hover {
+    :hover {
         border: 1px solid white;
     }
 

@@ -8,6 +8,9 @@ import firebase from "firebase";
 import styled from 'styled-components';
 import CSS from 'csstype'
 import OtherPost from '../components/Post/OtherPost'
+import Upvote from "../components/Post/Upvote";
+import { FaRegComment } from "react-icons/fa"
+import { AiOutlineComment } from "react-icons/ai";
 
 type PostProps = {
     boardId: string,
@@ -39,7 +42,7 @@ const Container = styled.div`
     flex-direction: column;
 `
 const Back = styled.button`
-    &: hover {
+    :hover {
         border: 1px solid white;
         color: white;
     }
@@ -93,41 +96,17 @@ const Content = styled.div`
 `
 const ETC = styled.div`
     margin-top: 15px;
-    margin-bottom: 40px;
     left: 0%;
+    display: flex;
     position: relative;
     order: 3;
 `
-const UpvoteNum = styled.div`
-    position: absolute;
-    left: 0%;
-    top: 0px;
-    padding-left: 25px;
-    cursor: pointer;
-`
-const UpvoteIcon = styled.img`
-    width: 18px;
-    height: 18px;
-    border: none;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    cursor: pointer;
-`
 const CommentNum = styled.div`
-    position: absolute;
-    left: 30px;
-    top: 0px;
-    padding-left: 75px;
+    position: flex;
+    flex-direction: row;
+    margin: auto 10px;
 `
-const CommentIcon = styled.img`
-    width: 18px;
-    height: 18px; 
-    border: none;
-    position: absolute;
-    left: 50px;
-    top: 0px;
-`
+
 const DateWritten = styled.span`
     position: absolute;
     left: 70px;
@@ -165,10 +144,11 @@ class Post extends React.Component<PostProps, PostState> {
                 isPinned: false,
                 isHidden: false,
                 lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                upvotes: 0,
+                upvoteArray: [],
                 numComments: 0,
                 permissions: [],
                 author: "TempAuthor",
+                authorId: "",
                 parentBoardId: "",
                 parentBoardTitle: "",
                 parentColor: "",
@@ -196,7 +176,7 @@ class Post extends React.Component<PostProps, PostState> {
     }
 
     static getDerivedStateFromProps = (nextProps: PostProps, prevState: PostState) => {
-        if (prevState.retrieved && prevState.firestorePost.permissions.includes(nextProps.firebaseUserData.role)) { 
+        if (prevState.retrieved && prevState.firestorePost.permissions.includes(nextProps.firebaseUserData.role)) {
             return {
                 accessGranted: true,
             }
@@ -279,13 +259,14 @@ class Post extends React.Component<PostProps, PostState> {
                             firestorePost: {
                                 title: data.title,
                                 author: data.author,
+                                authorId: data.authorId,
                                 content: data.content,
                                 isAnnouncement: data.isAnnouncement,
                                 isAnonymous: data.isAnonymous,
                                 isHidden: data.isHidden,
                                 isPinned: data.isPinned,
                                 lastModified: data.lastModified,
-                                upvotes: data.upvotes,
+                                upvoteArray: data.upvoteArray,
                                 permissions: data.permissions,
                                 numComments: data.numComments,
                                 parentBoardId: data.parentBoardId,
@@ -327,7 +308,6 @@ class Post extends React.Component<PostProps, PostState> {
                             for (let j = 0; j < postObjs.length; j++) {
                                 tempArray.push([postObjs[j].data(), postObjs[j].id]);
                             }
-
                             tempArray = this.sortByLastModified(tempArray)
                         }
                         postArray = tempArray.map(element => element[0]);
@@ -367,9 +347,6 @@ class Post extends React.Component<PostProps, PostState> {
             e.preventDefault();
             window.history.go(-1);
         }
-        const handleUpvoteClick = (e: any) => {
-            e.preventDefault();
-        }
 
         return (
             <div>
@@ -381,24 +358,21 @@ class Post extends React.Component<PostProps, PostState> {
                         <Title>{this.state.firestorePost.title}</Title>
                         <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
                     </Header>
-                    <Content dangerouslySetInnerHTML={{__html: this.state.firestorePost.content}} />
+                    <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />
                     <ETC>
-                        <UpvoteNum onClick={handleUpvoteClick}>
-                            <UpvoteIcon onClick={handleUpvoteClick}src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'}/>
-                            {this.state.firestorePost.upvotes}
-                        </UpvoteNum>
-                        <CommentNum>
-                            <CommentIcon src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcomment.png?alt=media&token=3bfd6a4c-7bec-4858-8d4b-f6d5223dd1fe'}/>
+                        <Upvote boardId={this.props.boardId} postId={this.props.postId} upvoteArray={this.state.firestorePost.upvoteArray} />
+                        <FaRegComment size='20px' style={{ marginLeft: '10px' }} />
+                        <CommentNum style={{ margin: '0px 5px' }}>
                             {this.state.firestorePost.numComments}
                         </CommentNum>
-                        
+
                     </ETC>
                     <Comment comments={this.state.commentArray} commentIds={this.state.commentIdArray} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData}/>
                     <RecentPostTitle>Other posts</RecentPostTitle>
                     <RecentPosts>{this.state.recentPosts.map((element, i) => <OtherPost data={element} id={this.state.recentPostIds[i]}/>)}</RecentPosts>
                     {this.state.accessGranted ?
                         <>
-                            
+
                         </>
                         :
                         <>
@@ -406,7 +380,7 @@ class Post extends React.Component<PostProps, PostState> {
                         </>
                     }
                 </Container>
-                
+
             </div>
         )
     }

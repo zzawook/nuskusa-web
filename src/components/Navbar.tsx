@@ -36,21 +36,20 @@ class Navbar extends React.Component<NavbarProps, {}> {
             display: flex;
             flex-direction: row;
             width: 70vw;
-            justify-content: right;
+            justify-content: left;
             vertical-align: auto;
         `
         const Logo = styled.img`
-            width: auto;
-            top: 0;
-            bottom: 0;
+            /* width: auto; */
             margin: auto 0;
-            margin-right: auto;
+            margin-right: 0;
             justify-content: flex-start;
             cursor: pointer;
         `
         const NavbarButtonContainer = styled.div`
             display: flex;
-            width: fit-content;
+            flex-direction: row;
+            /* width: fit-content; */
         `
         const NavbarButton = styled.button`
             display: inline-block;
@@ -138,33 +137,34 @@ class Navbar extends React.Component<NavbarProps, {}> {
                         <NavbarButton>
                             <NavbarText><Link to='/contacts' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Contact Us</Link></NavbarText>
                         </NavbarButton>
-                        {authService.currentUser ?
-                            <>
-                                <ProfileBadge firebaseUserData={this.props.firebaseUserData} />
-                                {/* <SignOut>Sign Out</SignOut> */}
-                            </>
-                            :
-                            <>
-                                <SignUpButton>
-                                    <SignUpText>
-                                        <Link to='/signup' style={{ color: '#0B121C', textDecoration: 'none' }}>
-                                            Sign Up
-                                        </Link>
-                                    </SignUpText>
-                                </SignUpButton>
-                                <SignInButton>
-                                    <SignInText>
-                                        <Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                            Sign In
-                                        </Link>
-                                    </SignInText>
-                                </SignInButton>
-                            </>
-                        }
-
                     </NavbarButtonContainer>
                 </NavbarContent>
-            </NavbarWrapper>
+                {
+                    authService.currentUser ?
+                        <>
+                            <ProfileBadge firebaseUserData={this.props.firebaseUserData} />
+                            {/* <SignOut>Sign Out</SignOut> */}
+                        </>
+                        :
+                        <>
+                            <SignUpButton>
+                                <SignUpText>
+                                    <Link to='/signup' style={{ color: '#0B121C', textDecoration: 'none' }}>
+                                        Sign Up
+                                    </Link>
+                                </SignUpText>
+                            </SignUpButton>
+                            <SignInButton>
+                                <SignInText>
+                                    <Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                        Sign In
+                                    </Link>
+                                </SignInText>
+                            </SignInButton>
+                        </>
+                }
+
+            </NavbarWrapper >
         )
     }
 }
