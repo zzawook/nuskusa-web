@@ -2,9 +2,16 @@ import React from "react";
 import styled from 'styled-components';
 import CSS from 'csstype'
 import Primary from '../Post/PrimaryComment';
+import { dbService } from '../../utils/firebaseFunctions'
+import { FirebaseUser } from "../../types/FirebaseUser";
+import firebase from 'firebase'
 
 type CommentProps = {
     comments: any[],
+    commentIds: any[],
+    boardId: string,
+    postId: string,
+    firebaseUserData: FirebaseUser,
 }
 
 type CommentState = {
@@ -94,13 +101,13 @@ class Comment extends React.Component<CommentProps, CommentState> {
     componentDidMount() {
         console.log(this.props.comments)
         this.setState({
-            commentArray: this.props.comments.map(element => <Primary data={element} />)
+            commentArray: this.props.comments.map((element, i) => <Primary data={element} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData} commentId={this.props.commentIds[i]}/>)
         })
     }
 
     static getDerivedStateFromProps(nextProps: CommentProps, prevState: CommentState) {
         return {
-            commentArray: nextProps.comments.map(element => <Primary data={element} />)
+            commentArray: nextProps.comments.map((element, i) => <Primary data={element} boardId={nextProps.boardId} postId={nextProps.postId} firebaseUserData={nextProps.firebaseUserData} commentId={nextProps.commentIds[i]}/>)
         }
     }
 
@@ -119,7 +126,21 @@ class Comment extends React.Component<CommentProps, CommentState> {
         }
         const handleSubmitClick = (e: any) => {
             e.preventDefault();
-            
+            dbService
+                .collection('boards').doc(this.props.boardId)
+                .collection('posts').doc(this.props.postId)
+                .collection('comments')
+                .add({
+                    author: this.props.firebaseUserData.username,
+                    content: this.state.commentEntered,
+                    isReply: false,
+                    lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
+                    likes: [],
+                    replies: [],
+                })
+            this.setState({
+                commentEntered: ""
+            })
         }
 
         return (

@@ -31,6 +31,8 @@ class BoardTag extends React.Component<BoardTagProps, BoardTagState> {
             width: 66px;
             display: flex;
             margin: 0 10%;
+            position: relative;
+            top: -40px;
         `
         return (
             <TagWrapper>

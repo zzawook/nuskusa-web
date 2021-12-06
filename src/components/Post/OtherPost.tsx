@@ -1,9 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FirestorePost } from '../../types/FirestorePost'
+import { Link } from 'react-router-dom'
 
 type OtherPostProps = {
     data: FirestorePost,
+    id: string,
 }
 
 type OtherPostState = {
@@ -32,6 +34,7 @@ const Container = styled.div<Props>`
     height: 120px;
     margin-bottom: 20px;
     left: 10%;
+    cursor: pointer;
 `
 const Title = styled.span<newProps>`
     position: absolute;
@@ -90,6 +93,10 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
         }
     }
 
+    componentDidMount() {
+        console.log(this.props);
+    }
+
     getBoard(boardName: string) {
         return ""
     }
@@ -109,10 +116,12 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
         }
 
         return (
-            <Container boardType={this.props.data.parentBoardTitle} changeBorder={this.state.mouseEntered} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                <Title changeBorder={this.state.mouseEntered}>{this.props.data.title.substring(0, 50)}{this.props.data.title.length > 50 ? "..." : ""}</Title>
-                <BoardType boardType={this.props.data.parentBoardTitle} changeBorder={this.state.mouseEntered}>{this.props.data.parentBoardTitle}</BoardType>
-            </Container>
+            <Link to={`/boards/${this.props.data.parentBoardId}/${this.props.id}`} style={{ textDecoration: 'none' }}>
+                <Container boardType={this.props.data.parentBoardTitle} changeBorder={this.state.mouseEntered} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                    <Title changeBorder={this.state.mouseEntered}>{this.props.data.title.substring(0, 50)}{this.props.data.title.length > 50 ? "..." : ""}</Title>
+                    <BoardType boardType={this.props.data.parentBoardTitle} changeBorder={this.state.mouseEntered}>{this.props.data.parentBoardTitle}</BoardType>
+                </Container>
+            </Link>
         )
     }
 }
