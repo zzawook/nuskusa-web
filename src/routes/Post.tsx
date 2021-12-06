@@ -22,10 +22,12 @@ type PostState = {
     firestorePost: FirestorePost,
     errorMsg: string,
     commentArray: any[],
+    commentIdArray: any[],
     profileImg: string,
     retrieved: boolean,
     accessGranted: boolean,
     recentPosts: any[],
+    recentPostIds: any[],
 }
 
 const height = window.innerHeight;
@@ -74,8 +76,9 @@ const ProfileImg = styled.img`
 `
 const Title = styled.p`
     position: relative;
-    width: 50%;
+    width: 65%;
     left: 70px;
+    top: -10px;
     font-weight: 800;
     font-size: 22px;
     text-overflow: ellipsis;
@@ -106,8 +109,8 @@ const CommentNum = styled.div`
 
 const DateWritten = styled.span`
     position: absolute;
-    right: 30%;
-    top: 100px;
+    left: 70px;
+    top: 90px;
     color: #9c9c9c;
     font-size: 14px;
     font-weight: 700;
@@ -153,9 +156,11 @@ class Post extends React.Component<PostProps, PostState> {
             },
             errorMsg: "",
             commentArray: [],
+            commentIdArray: [],
             retrieved: false,
             accessGranted: false,
             recentPosts: [],
+            recentPostIds: [],
             profileImg: 'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5',
 
         }
@@ -166,7 +171,8 @@ class Post extends React.Component<PostProps, PostState> {
     }
 
     componentDidUpdate() {
-        console.log(this.state);
+        console.log(this.state.recentPosts)
+        console.log(this.state.recentPostIds)
     }
 
     static getDerivedStateFromProps = (nextProps: PostProps, prevState: PostState) => {
@@ -242,12 +248,9 @@ class Post extends React.Component<PostProps, PostState> {
             .collection('boards').doc(this.props.boardId)
             .collection('posts')
             .doc(this.props.postId)
-            .onSnapshot((querySnapshot) => {
+            .onSnapshot(async (querySnapshot) => {
                 if (querySnapshot.exists) {
-                    console.log(querySnapshot.data())
                     const data = querySnapshot.data() as FirestorePost;
-                    console.log(this.props.firebaseUserData.role);
-                    console.log(data.permissions.includes(this.props.firebaseUserData.role));
                     if (data === undefined) {
                         return;
                     }
@@ -277,34 +280,42 @@ class Post extends React.Component<PostProps, PostState> {
                         dbService // retrieve comments within the post
                             .collection('boards').doc(this.props.boardId)
                             .collection('posts').doc(this.props.postId)
-                            .collection('comments').where('isReply', '==', false).orderBy('lastModified').onSnapshot((querySnapshot) => {
-                                const commentObjs = querySnapshot.docs;
+                            .collection('comments').where('isReply', '==', false).orderBy('lastModified').onSnapshot((querySnapshot1) => {
+                                const commentObjs = querySnapshot1.docs;
                                 const commentArray = [];
+                                const commentIdArray = [];
                                 for (let i = 0; i < commentObjs.length; i++) {
                                     commentArray.push(commentObjs[i].data());
+                                    commentIdArray.push(commentObjs[i].id);
                                 }
-                                console.log(commentArray)
                                 this.setState({
                                     commentArray: commentArray,
+                                    commentIdArray: commentIdArray,
                                     retrieved: true,
                                 })
                             })
                         const boardArray = ['announcement', 'event', 'general', 'grove', 'jobs'];
-                        const postArray: any[] = [];
+                        let postArray: any[] = [];
+                        let postIdArray: any[] = [];
+                        let tempArray: any[] = [];
                         for (let i = 0; i < boardArray.length; i++) {
-                            dbService
-                                .collection('boards').doc(boardArray[i])
-                                .collection('posts').orderBy('lastModified', 'desc').limit(10).onSnapshot((querySnapshot) => {
-                                    const postObjs = querySnapshot.docs;
-                                    console.log(postObjs)
-                                    for (let j = 0; j < postObjs.length; j++) {
-                                        postArray.push(postObjs[j].data());
-                                    }
-                                    this.setState({
-                                        recentPosts: this.sortByLastModified(postArray),
-                                    })
-                                })
+                            const doc = await dbService
+                            .collection('boards').doc(boardArray[i])
+                            .collection('posts').orderBy('lastModified', 'desc').limit(10).get();
+
+                            const postObjs = doc.docs;
+
+                            for (let j = 0; j < postObjs.length; j++) {
+                                tempArray.push([postObjs[j].data(), postObjs[j].id]);
+                            }
+                            tempArray = this.sortByLastModified(tempArray)
                         }
+                        postArray = tempArray.map(element => element[0]);
+                        postIdArray = tempArray.map(element => element[1]);
+                        this.setState({
+                            recentPosts: postArray,
+                            recentPostIds: postIdArray,
+                        })
                     }
                 }
             })
@@ -313,12 +324,12 @@ class Post extends React.Component<PostProps, PostState> {
 
     sortByLastModified(posts: any[]) {
         return posts.sort((a: any, b: any) => {
-            if (a.lastModified.seconds > b.lastModified.seconds) {
+            if (a[0].lastModified.seconds > b[0].lastModified.seconds) {
                 return -1;
-            }
-            else if (a.lastModified.seconds < b.lastModified.seconds) {
+            }/*
+            else if (a[0].lastModified.seconds < b[0].lastModified.seconds){
                 return 1;
-            }
+            }*/
             else {
                 return 0;
             }
@@ -341,7 +352,7 @@ class Post extends React.Component<PostProps, PostState> {
             <div>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
                 <Container>
-                    <Back><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} onClick={handleBackClick} />Back</Back>
+                    <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle}/>Back</Back>
                     <Header>
                         <ProfileImg src={this.state.profileImg} />
                         <Title>{this.state.firestorePost.title}</Title>
@@ -356,9 +367,9 @@ class Post extends React.Component<PostProps, PostState> {
                         </CommentNum>
 
                     </ETC>
-                    <Comment comments={this.state.commentArray} />
+                    <Comment comments={this.state.commentArray} commentIds={this.state.commentIdArray} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData}/>
                     <RecentPostTitle>Other posts</RecentPostTitle>
-                    <RecentPosts>{this.state.recentPosts.map(element => <OtherPost data={element} />)}</RecentPosts>
+                    <RecentPosts>{this.state.recentPosts.map((element, i) => <OtherPost data={element} id={this.state.recentPostIds[i]}/>)}</RecentPosts>
                     {this.state.accessGranted ?
                         <>
 
