@@ -9,7 +9,8 @@ type UpvoteProps = {
     boardId: string,
     postId: string,
     commentId: string,
-    upvoteArray: firebase.firestore.DocumentReference[] // user reference of each upvoted person
+    upvoteArray: firebase.firestore.DocumentReference[], // user reference of each upvoted person
+    style?: React.CSSProperties
 }
 
 type UpvoteState = {
@@ -31,54 +32,21 @@ class CommentUpvote extends React.Component<UpvoteProps, UpvoteState> {
 
     // true if upvoted, false if did not upvote
     checkUpvoted = () => {
+        let result = false;
         this.props.upvoteArray.forEach((userRef) => {
             if (!authService.currentUser) {
                 console.log("Not Logged In!")
-                return;
+                return false;
             }
-            if (authService.currentUser?.uid === userRef.id) {
-                this.setState({
-                    hasUpvoted: true
-                })
-                return;
+            else if (authService.currentUser?.uid === userRef.id) {
+                console.log(userRef.id)
+                console.log(authService.currentUser.uid)
+                console.log('upvoted already')
+                result = true;
+                return true;
             }
         })
-        this.setState({
-            hasUpvoted: false
-        })
-        return false;
-    }
-
-    onUpvoteClick = () => {
-        if (!this.state.hasUpvoted) {
-            // If the user did not upvote, upvote.
-            dbService.collection('boards')
-                .doc(this.props.boardId)
-                .collection('posts')
-                .doc(this.props.postId)
-                .collection('comments')
-                .doc(this.props.commentId)
-                .update({
-                    upvoteArray: firebase.firestore.FieldValue.arrayUnion(dbService.collection('users').doc(authService.currentUser?.uid))
-                })
-                .catch(error => {
-                    console.error(error)
-                })
-        } else {
-            // If the user did upvote already, remove upvote
-            dbService.collection('boards')
-                .doc(this.props.boardId)
-                .collection('posts')
-                .doc(this.props.postId)
-                .collection('comments')
-                .doc(this.props.commentId)
-                .update({
-                    upvoteArray: firebase.firestore.FieldValue.arrayRemove(dbService.collection('users').doc(authService.currentUser?.uid))
-                })
-                .catch(error => {
-                    console.error(error)
-                })
-        }
+        return result;
     }
 
     handleUpvoteClick = () => {
@@ -108,6 +76,8 @@ class CommentUpvote extends React.Component<UpvoteProps, UpvoteState> {
                 .doc(this.props.boardId)
                 .collection('posts')
                 .doc(this.props.postId)
+                .collection('comments')
+                .doc(this.props.commentId)
                 .update({
                     upvoteArray: firebase.firestore.FieldValue.arrayRemove(dbService.collection('users').doc(authService.currentUser?.uid))
                 })
@@ -119,6 +89,7 @@ class CommentUpvote extends React.Component<UpvoteProps, UpvoteState> {
     // an upvote image that is clickable and changes
     render = () => {
         const UpvoteContainer = styled.div`
+            position: relative;
             display: flex;
             flex-direction: row;
         `

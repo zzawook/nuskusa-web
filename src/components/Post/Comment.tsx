@@ -135,7 +135,7 @@ class Comment extends React.Component<CommentProps, CommentState> {
                     content: this.state.commentEntered,
                     isReply: false,
                     lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                    likes: [],
+                    upvoteArray: [],
                     replies: [],
                 })
             this.setState({
