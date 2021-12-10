@@ -179,8 +179,8 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                 this.props.data.replies[i].onSnapshot((querySnapshot: any) => {
                     if (querySnapshot.exists) {
                         let data = querySnapshot.data() as FirestoreComment;
-                        replyArray.push(data);
-                        replyIdArray.push(querySnapshot.id)
+                        replyArray[i] = data;
+                        replyIdArray[i] = querySnapshot.id;
                         this.setState({
                             secondary: replyArray,
                             secondaryIds: replyIdArray,
