@@ -23,6 +23,7 @@ type AppRouterState = {
   isLoggedIn: boolean,
   loading: Boolean,
   firebaseUserData: FirebaseUser,
+  toggle: boolean
 }
 
 class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
@@ -41,7 +42,14 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
         major: "",
         faculty: ""
       },
+      toggle: false
     }
+  }
+
+  reloadFunction = () => {
+    this.setState({
+      toggle: !this.state.toggle
+    })
   }
 
   componentDidMount = () => {
@@ -120,24 +128,28 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/boards' render={() => <BoardHome
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
-                  <Route exact path='/boards/:boardTitle' sensitive render={(routerProps) => <Board
-                    boardId={routerProps.match.params.boardTitle}
+                  <Route exact path='/boards/:boardId' sensitive render={(routerProps) => <Board
+                    boardId={routerProps.match.params.boardId}
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
-                  <Route exact path='/boards/:boardTitle/:postId/edit' sensitive render={(routerProps) => <EditPost
-                    boardId={routerProps.match.params.boardTitle}
+                  <Route exact path='/boards/:boardId/:postId/edit' sensitive render={(routerProps) => <EditPost
+                    boardId={routerProps.match.params.boardId}
                     postId={routerProps.match.params.postId}
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
-                  <Route exact path='/boards/:boardTitle/new' sensitive render={(routerProps) => <AddPost
-                    boardId={routerProps.match.params.boardTitle}
-                    firebaseUserData={this.state.firebaseUserData}
-                  />} />
-                  <Route exact path='/boards/:boardTitle/:postId' sensitive render={(routerProps) => <Post
-                    boardId={routerProps.match.params.boardTitle}
-                    postId={routerProps.match.params.postId}
-                    firebaseUserData={this.state.firebaseUserData}
-                  />} />
+                  <Switch>
+                    <Route exact path='/boards/:boardId/new' sensitive render={(routerProps) => <AddPost
+                      boardId={routerProps.match.params.boardId}
+                      firebaseUserData={this.state.firebaseUserData}
+                    />} />
+                    <Route exact path='/boards/:boardId/:postId' sensitive render={(routerProps) => <Post
+                      history={routerProps.history}
+                      location={routerProps.location}
+                      match={routerProps.match}
+                      firebaseUserData={this.state.firebaseUserData}
+                      reloadFunction={this.reloadFunction}
+                    />} />
+                  </Switch>
 
                   <Route exact path='/profile' render={() => <Profile
                     firebaseUserData={this.state.firebaseUserData}
@@ -145,7 +157,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/verification' render={() => <Verification firebaseUserData={this.state.firebaseUserData} />} />
                   <Route exact path='/signin' render={() => <Redirect to='/' />} />
                   <Route exact path='/signup' render={() => <Redirect to='/' />} />
-                  <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData}/>} />
+                  <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData} />} />
                   <Route component={this.notFoundComponent} />
                 </Switch>
               )
@@ -158,23 +170,27 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     <Route exact path='/boards' render={() => <BoardHome
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
-                    <Route exact path='/boards/:boardTitle' sensitive render={(routerProps) => <Board
-                      boardId={routerProps.match.params.boardTitle}
+                    <Route exact path='/boards/:boardId' sensitive render={(routerProps) => <Board
+                      boardId={routerProps.match.params.boardId}
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
-                    <Route exact path='/boards/:boardTitle/new' sensitive render={(routerProps) => <AddPost
-                      boardId={routerProps.match.params.boardTitle}
-                      firebaseUserData={this.state.firebaseUserData}
-                    />} />
-                    <Route exact path='/boards/:boardTitle/:postId' sensitive render={(routerProps) => <Post
-                      boardId={routerProps.match.params.boardTitle}
-                      postId={routerProps.match.params.postId}
-                      firebaseUserData={this.state.firebaseUserData}
-                    />} />
+                    <Switch>
+                      <Route exact path='/boards/:boardId/new' sensitive render={(routerProps) => <AddPost
+                        boardId={routerProps.match.params.boardId}
+                        firebaseUserData={this.state.firebaseUserData}
+                      />} />
+                      <Route exact path='/boards/:boardId/:postId' sensitive render={(routerProps) => <Post
+                        history={routerProps.history}
+                        location={routerProps.location}
+                        match={routerProps.match}
+                        firebaseUserData={this.state.firebaseUserData}
+                        reloadFunction={this.reloadFunction}
+                      />} />
+                    </Switch>
                     <Route exact path='/signin' component={SignIn} />
                     <Route exact path='/signup' component={SignUp} />
                     <Route exact path='/profile' render={() => <Redirect to='/signin' />} />
-                    <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData}/>} />
+                    <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData} />} />
                     <Route component={this.notFoundComponent} />
                   </Switch>
                 )

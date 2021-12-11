@@ -11,11 +11,16 @@ import OtherPost from '../components/Post/OtherPost'
 import Upvote from "../components/Post/Upvote";
 import { FaRegComment } from "react-icons/fa"
 import { AiOutlineComment } from "react-icons/ai";
+import { RouteComponentProps } from "react-router-dom";
 
-type PostProps = {
+type RouteProps = {
     boardId: string,
-    postId: string,
-    firebaseUserData: FirebaseUser
+    postId: string
+}
+
+type PostProps = RouteComponentProps<RouteProps> & {
+    firebaseUserData: FirebaseUser,
+    reloadFunction: Function
 }
 
 type PostState = {
@@ -28,6 +33,7 @@ type PostState = {
     accessGranted: boolean,
     recentPosts: any[],
     recentPostIds: any[],
+    toggle: boolean,
 }
 
 const height = window.innerHeight;
@@ -154,6 +160,7 @@ class Post extends React.Component<PostProps, PostState> {
                 parentColor: "",
                 parentTextColor: ""
             },
+            toggle: false,
             errorMsg: "",
             commentArray: [],
             commentIdArray: [],
@@ -170,9 +177,10 @@ class Post extends React.Component<PostProps, PostState> {
         this.fetchPost()
     }
 
-    componentDidUpdate() {
-        console.log(this.state.recentPosts)
-        console.log(this.state.recentPostIds)
+    componentDidUpdate(prevProps: PostProps) {
+        if (prevProps.location.pathname !== this.props.location.pathname) {
+            this.fetchPost()
+        }
     }
 
     static getDerivedStateFromProps = (nextProps: PostProps, prevState: PostState) => {
@@ -180,6 +188,8 @@ class Post extends React.Component<PostProps, PostState> {
             return {
                 accessGranted: true,
             }
+        } else {
+            return null;
         }
     }
 
@@ -243,11 +253,18 @@ class Post extends React.Component<PostProps, PostState> {
         }
     }
 
+    setPostState = (data: FirestorePost) => {
+        this.setState({
+            firestorePost: data
+        })
+        this.forceUpdate()
+    }
+
     fetchPost = () => {
         dbService // Retrieve post information
-            .collection('boards').doc(this.props.boardId)
+            .collection('boards').doc(this.props.match.params.boardId)
             .collection('posts')
-            .doc(this.props.postId)
+            .doc(this.props.match.params.postId)
             .onSnapshot(async (querySnapshot) => {
                 if (querySnapshot.exists) {
                     const data = querySnapshot.data() as FirestorePost;
@@ -278,8 +295,8 @@ class Post extends React.Component<PostProps, PostState> {
                             accessGranted: data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User') ? true : false,
                         })
                         dbService // retrieve comments within the post
-                            .collection('boards').doc(this.props.boardId)
-                            .collection('posts').doc(this.props.postId)
+                            .collection('boards').doc(this.props.match.params.boardId)
+                            .collection('posts').doc(this.props.match.params.postId)
                             .collection('comments').where('isReply', '==', false).orderBy('lastModified').onSnapshot((querySnapshot1) => {
                                 const commentObjs = querySnapshot1.docs;
                                 const commentArray = [];
@@ -300,8 +317,8 @@ class Post extends React.Component<PostProps, PostState> {
                         let tempArray: any[] = [];
                         for (let i = 0; i < boardArray.length; i++) {
                             const doc = await dbService
-                            .collection('boards').doc(boardArray[i])
-                            .collection('posts').orderBy('lastModified', 'desc').limit(10).get();
+                                .collection('boards').doc(boardArray[i])
+                                .collection('posts').orderBy('lastModified', 'desc').limit(10).get();
 
                             const postObjs = doc.docs;
 
@@ -345,14 +362,14 @@ class Post extends React.Component<PostProps, PostState> {
         }
         const handleBackClick = (e: any) => {
             e.preventDefault();
-            window.history.go(-1);
+            this.props.history.push(`/boards/${this.props.match.params.boardId}`)
         }
-
+        let key = 0;
         return (
             <div>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
                 <Container>
-                    <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle}/>Back</Back>
+                    <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
                     <Header>
                         <ProfileImg src={this.state.profileImg} />
                         <Title>{this.state.firestorePost.title}</Title>
@@ -360,16 +377,27 @@ class Post extends React.Component<PostProps, PostState> {
                     </Header>
                     <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />
                     <ETC>
-                        <Upvote boardId={this.props.boardId} postId={this.props.postId} upvoteArray={this.state.firestorePost.upvoteArray} />
+                        <Upvote boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} upvoteArray={this.state.firestorePost.upvoteArray} />
                         <FaRegComment size='20px' style={{ marginLeft: '10px' }} />
                         <CommentNum style={{ margin: '0px 5px' }}>
                             {this.state.firestorePost.numComments}
                         </CommentNum>
 
                     </ETC>
-                    <Comment comments={this.state.commentArray} commentIds={this.state.commentIdArray} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData}/>
+                    <Comment comments={this.state.commentArray} commentIds={this.state.commentIdArray} boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} />
                     <RecentPostTitle>Other posts</RecentPostTitle>
-                    <RecentPosts>{this.state.recentPosts.map((element, i) => <OtherPost data={element} id={this.state.recentPostIds[i]}/>)}</RecentPosts>
+                    <RecentPosts>{this.state.recentPosts.map((element, i) => {
+                        key++
+                        return <OtherPost
+                            history={this.props.history}
+                            location={this.props.location}
+                            match={this.props.match}
+                            key={key}
+                            data={element}
+                            postId={this.state.recentPostIds[i]}
+                            reloadFunction={this.props.reloadFunction}
+                        /> })}
+                    </RecentPosts>
                     {this.state.accessGranted ?
                         <>
 
