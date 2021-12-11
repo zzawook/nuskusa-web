@@ -1,15 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FirestorePost } from '../../types/FirestorePost'
-import { Link } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
+import { dbService } from '../../utils/firebaseFunctions'
 
-type OtherPostProps = {
+type OtherPostProps = RouteComponentProps & {
     data: FirestorePost,
-    id: string,
+    postId: string,
+    reloadFunction: any,
 }
 
 type OtherPostState = {
     mouseEntered: boolean,
+    title: string
 }
 
 interface Props {
@@ -24,8 +27,8 @@ interface newProps {
 const Container = styled.div<Props>`
     &:hover {
         background-color: ${props => {
-            return getColor(props.boardType)
-        }}
+        return getColor(props.boardType)
+    }}
     }
 
     border: 1px solid #a8a8a8;
@@ -90,11 +93,22 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
         super(props);
         this.state = {
             mouseEntered: false,
+            title: '',
         }
+    }
+
+    reloader = () => {
+        this.props.reloadFunction();
+        this.forceUpdate()
+    }
+
+    goTo = () => {
+        this.props.history.push(`/boards/${this.props.data.parentBoardId}/${this.props.postId}`)
     }
 
     componentDidMount() {
         console.log(this.props);
+        console.log(this.state)
     }
 
     getBoard(boardName: string) {
@@ -108,7 +122,7 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
                 mouseEntered: true,
             })
         }
-        const handleMouseLeave = (e:any) => {
+        const handleMouseLeave = (e: any) => {
             e.preventDefault();
             this.setState({
                 mouseEntered: false,
@@ -116,7 +130,7 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
         }
 
         return (
-            <Link to={`/boards/${this.props.data.parentBoardId}/${this.props.id}`} style={{ textDecoration: 'none' }}>
+            <Link to={{ pathname: `/boards/${this.props.data.parentBoardId}/${this.props.postId}` }} style={{ textDecoration: 'none' }}>
                 <Container boardType={this.props.data.parentBoardTitle} changeBorder={this.state.mouseEntered} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     <Title changeBorder={this.state.mouseEntered}>{this.props.data.title.substring(0, 50)}{this.props.data.title.length > 50 ? "..." : ""}</Title>
                     <BoardType boardType={this.props.data.parentBoardTitle} changeBorder={this.state.mouseEntered}>{this.props.data.parentBoardTitle}</BoardType>
@@ -126,4 +140,4 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
     }
 }
 
-export default OtherPost
+export default (OtherPost)

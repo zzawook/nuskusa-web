@@ -4,8 +4,9 @@ import { FirestoreComment } from '../../types/FirestoreComment'
 import { FirebaseUser } from "../../types/FirebaseUser";
 import { dbService } from '../../utils/firebaseFunctions'
 import firebase from 'firebase';
+import CommentUpvote from "./CommentUpvote";
 
-type SecondaryProps= {
+type SecondaryProps = {
     data: any,
     boardId: string,
     postId: string,
@@ -283,7 +284,7 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
                     content: this.state.commentEntered,
                     isReply: true,
                     lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                    likes: [],
+                    upvoteArray: [],
                     replies: [],
                 })
             await dbService
@@ -303,18 +304,18 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
         return (
             <Container>
                 <LeftBar />
-                <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'}/>
+                <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} />
                 <LastModified>{this.getLastUpdated(this.props.data.lastModified)}</LastModified>
                 <Content>{this.props.data.content}</Content>
-                <Like src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'} />
-                <LikeNum>{this.props.data.likes.length}</LikeNum>
+
+                <CommentUpvote style={{ position: 'relative', left: '198px', top: '10px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
                 <ReplyButton onClick={handleReplyClick}>Reply</ReplyButton>
                 {this.state.replyOpen ? <Form>
-                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered}/>
+                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered} />
                     <Cancel onClick={handleCancelClick}>Cancel</Cancel>
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form> : <div />}
-                {this.state.secondary.map((element, i) => <Secondary data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData}/>)}
+                {this.state.secondary.map((element, i) => <Secondary data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData} />)}
             </Container>
         )
     }

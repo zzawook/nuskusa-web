@@ -5,6 +5,7 @@ import { FirestoreComment } from '../../types/FirestoreComment'
 import { dbService } from '../../utils/firebaseFunctions'
 import { FirebaseUser } from "../../types/FirebaseUser";
 import firebase from 'firebase';
+import CommentUpvote from "./CommentUpvote";
 
 type PrimaryProps = {
     data: any,
@@ -62,19 +63,7 @@ const Content = styled.p`
     line-height: 17px;
     width: 90%;
 `
-const Like = styled.img`
-    position: relative;
-    left: 90px;
-    top: -15px;
-    cursor: pointer;
-`
-const LikeNum = styled.span`
-    position: relative;
-    left: 98px;
-    top: -20px;
-    font-weight: 700;
-    font-size: 14px;
-`
+
 const ReplyButton = styled.button`
     :hover {
         color: white;
@@ -302,7 +291,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                     content: this.state.commentEntered,
                     isReply: true,
                     lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                    likes: [],
+                    upvoteArray: [],
                     replies: [],
                 })
             await dbService
@@ -333,8 +322,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                     {this.getLastUpdated(this.props.data.lastModified)}
                 </LastModified>
                 <Content>{this.props.data.content}</Content>
-                <Like onClick={handleLikeClick} src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Flike.png?alt=media&token=fab6ba94-6f21-46db-bec3-6a754fb7eedb'}/>
-                <LikeNum>{this.props.data.likes.length}</LikeNum>
+                <CommentUpvote style={{ position: 'relative', left: '118px', top: '-20px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
                 <ReplyButton onClick={handleReplyClick}>Reply</ReplyButton>
                 {this.state.replyOpen ? <Form>
                     <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered}/>

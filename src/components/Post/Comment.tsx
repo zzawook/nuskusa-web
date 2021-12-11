@@ -68,7 +68,7 @@ const Cancel = styled.button`
     right: 0px;
 `
 const Submit = styled.button`
-    &: hover {
+    :hover {
         border: 1px solid white;
     }
 
@@ -135,7 +135,7 @@ class Comment extends React.Component<CommentProps, CommentState> {
                     content: this.state.commentEntered,
                     isReply: false,
                     lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                    likes: [],
+                    upvoteArray: [],
                     replies: [],
                 })
             this.setState({

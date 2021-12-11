@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { FirestoreBoard } from '../../types/FirestoreBoard'
 import { dbService } from '../../utils/firebaseFunctions'
-import { DisplaySmall, Headline } from '../../utils/ThemeText'
+import { Headline } from '../../utils/ThemeText'
 
 type BoardNavbarProps = {
     currentRoute: string
