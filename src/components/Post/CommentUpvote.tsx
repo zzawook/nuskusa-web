@@ -94,7 +94,7 @@ class CommentUpvote extends React.Component<UpvoteProps, UpvoteState> {
         `
 
         return (
-            <UpvoteContainer>
+            <UpvoteContainer style={this.props.style}>
                 {this.checkUpvoted() ?
                     <FaHeart color='white' style={{ cursor: 'pointer' }} onClick={this.handleUpvoteClick} size='20px'></FaHeart>
                     :
