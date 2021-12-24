@@ -6,5 +6,6 @@ export interface FirebaseUser {
     role: string, // User, Undergraduate, Graduate, Admin
     enrolledYear?: string | undefined,
     major?: string | undefined,
-    faculty?: string | undefined
+    faculty?: string | undefined,
+    profilePictureURL?: string | undefined
 }

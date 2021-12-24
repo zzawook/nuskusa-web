@@ -40,7 +40,8 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
         role: "User", // User, Undergraduate, Graduate, Admin
         enrolledYear: "",
         major: "",
-        faculty: ""
+        faculty: "",
+        profilePictureURL: "",
       },
       toggle: false
     }
@@ -89,7 +90,8 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   role: data.role,
                   enrolledYear: data.enrolledYear,
                   major: data.major,
-                  faculty: data.faculty
+                  faculty: data.faculty,
+                  profilePictureURL: data.profilePictureURL
                 }
               })
             }
