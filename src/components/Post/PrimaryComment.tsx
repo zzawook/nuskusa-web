@@ -70,7 +70,7 @@ const ReplyButton = styled.button`
     }
 
     position: relative;
-    left: 118px;
+    left: 130px;
     top: -20px;
     font-weight: 700;
     font-size: 14px;
@@ -179,8 +179,8 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                 this.props.data.replies[i].onSnapshot((querySnapshot: any) => {
                     if (querySnapshot.exists) {
                         let data = querySnapshot.data() as FirestoreComment;
-                        replyArray.push(data);
-                        replyIdArray.push(querySnapshot.id)
+                        replyArray[i] = data;
+                        replyIdArray[i] = querySnapshot.id;
                         this.setState({
                             secondary: replyArray,
                             secondaryIds: replyIdArray,
@@ -322,7 +322,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                     {this.getLastUpdated(this.props.data.lastModified)}
                 </LastModified>
                 <Content>{this.props.data.content}</Content>
-                <CommentUpvote style={{ position: 'relative', left: '118px', top: '-20px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
+                <CommentUpvote style={{ position: 'relative', left: '90px', top: '5px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
                 <ReplyButton onClick={handleReplyClick}>Reply</ReplyButton>
                 {this.state.replyOpen ? <Form>
                     <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered}/>

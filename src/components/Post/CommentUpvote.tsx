@@ -35,13 +35,9 @@ class CommentUpvote extends React.Component<UpvoteProps, UpvoteState> {
         let result = false;
         this.props.upvoteArray.forEach((userRef) => {
             if (!authService.currentUser) {
-                console.log("Not Logged In!")
                 return false;
             }
             else if (authService.currentUser?.uid === userRef.id) {
-                console.log(userRef.id)
-                console.log(authService.currentUser.uid)
-                console.log('upvoted already')
                 result = true;
                 return true;
             }
@@ -51,8 +47,6 @@ class CommentUpvote extends React.Component<UpvoteProps, UpvoteState> {
 
     handleUpvoteClick = () => {
         const hasUpvoted = this.checkUpvoted();
-        console.log(this.props.upvoteArray)
-        console.log(hasUpvoted)
         if (hasUpvoted === false) {
             // If the user did not upvote, upvote.
             dbService.collection('boards')
@@ -100,7 +94,7 @@ class CommentUpvote extends React.Component<UpvoteProps, UpvoteState> {
         `
 
         return (
-            <UpvoteContainer>
+            <UpvoteContainer style={this.props.style}>
                 {this.checkUpvoted() ?
                     <FaHeart color='white' style={{ cursor: 'pointer' }} onClick={this.handleUpvoteClick} size='20px'></FaHeart>
                     :

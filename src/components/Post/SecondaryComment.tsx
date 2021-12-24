@@ -177,8 +177,8 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
                 this.props.data.replies[i].onSnapshot((querySnapshot: any) => {
                     if (querySnapshot.exists) {
                         let data = querySnapshot.data() as FirestoreComment;
-                        replyArray.push(data);
-                        replyIdArray.push(querySnapshot.id);
+                        replyArray[i] = data;
+                        replyIdArray[i] = querySnapshot.id;
                         this.setState({
                             secondary: replyArray,
                             secondaryIds: replyIdArray,
@@ -308,7 +308,7 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
                 <LastModified>{this.getLastUpdated(this.props.data.lastModified)}</LastModified>
                 <Content>{this.props.data.content}</Content>
 
-                <CommentUpvote style={{ position: 'relative', left: '198px', top: '10px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
+                <CommentUpvote style={{ position: 'relative', left: '160px', top: '34px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
                 <ReplyButton onClick={handleReplyClick}>Reply</ReplyButton>
                 {this.state.replyOpen ? <Form>
                     <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered} />
