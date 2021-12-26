@@ -62,9 +62,6 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             justify-content: center;
             margin-top: 20px;
         `
-        const ProfileDisplayEmpty = styled.div`
-            display: none;
-        `
         const CloseButton = styled.button`
         `
         return (

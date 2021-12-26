@@ -8,7 +8,6 @@ import styled from 'styled-components'
 import Select from 'react-select'
 import '../components/Post/custom.css'
 import Checkbox from '../../src/components/Post/Checkbox'
-import { runInThisContext } from "vm";
 
 class Uploader {
     constructor(loader) {

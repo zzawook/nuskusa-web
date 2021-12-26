@@ -37,7 +37,6 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         `
         return (
             <AvatarWrapper>
-                <CgProfile size='32px'></CgProfile>
                 {this.props.firebaseUserData.profilePictureURL ?
                     <img src={this.props.firebaseUserData.profilePictureURL} width='32px' height='32px'></img>
                 :
