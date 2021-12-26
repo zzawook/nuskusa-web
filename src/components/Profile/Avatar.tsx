@@ -27,7 +27,7 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         const AvatarWrapper = styled.div`
             width: 32px;
             height: 32px;
-            border: 1px #FFFFFF solid;
+            border: 0.5px #FFFFFF solid;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -36,15 +36,18 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
             margin-left: 10px;
         `
         return (
-            <AvatarWrapper>
-                <CgProfile size='32px'></CgProfile>
-                {this.props.firebaseUserData.profilePictureURL ?
-                    <img src={this.props.firebaseUserData.profilePictureURL} width='32px' height='32px'></img>
-                :
-                    <CgProfile size='32px'></CgProfile>
-
+            <>
+                {
+                    this.props.firebaseUserData.profilePictureURL ?
+                        <AvatarWrapper>
+                            <img src={this.props.firebaseUserData.profilePictureURL} width='32px' height='32px'></img>
+                        </AvatarWrapper>
+                        :
+                        <AvatarWrapper style={{border: "0px"}}>
+                            <CgProfile size='32px'></CgProfile>
+                        </AvatarWrapper>
                 }
-            </AvatarWrapper>
+            </>
         )
     }
 }

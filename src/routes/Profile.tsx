@@ -6,6 +6,7 @@ import { FirebaseUser } from '../types/FirebaseUser';
 import VerificationRequest from '../components/Verification/VerificationRequest';
 import styled from 'styled-components';
 import { darkTheme, Theme } from '../utils/ThemeColor';
+import ProfilePicker from '../components/Profile/ProfilePicker';
 
 type UserProps = {
     firebaseUserData: FirebaseUser
@@ -86,14 +87,13 @@ class Profile extends React.Component<UserProps, UserState> {
         return (
             <Wrapper>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {this.props.firebaseUserData.username}
+                {/* {this.props.firebaseUserData.username} */}
                 {this.props.firebaseUserData.isVerified ?
-                    <>
-                        You are verified!
-                    </>
+                    <></>
                     :
                     <VerificationRequest isModal={false} />
                 }
+                <ProfilePicker firebaseUserData={this.props.firebaseUserData} />
                 <SignOut />
             </Wrapper>
         )
