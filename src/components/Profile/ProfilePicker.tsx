@@ -54,7 +54,7 @@ class ProfilePicker extends React.Component<PickerProps, PickerState> {
     if (this.state.preview) {
       const uploadTask = storageService
         .ref(`users/${uid}`)
-        .put(this.state.preview);
+        .putString(this.state.preview, 'data_url');
       uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
         (snapshot) => { 
           storageService.ref('users')
