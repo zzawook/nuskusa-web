@@ -4,7 +4,8 @@ import { FirebaseUser } from '../../types/FirebaseUser'
 import { CgProfile } from 'react-icons/cg'
 type AvatarProps = {
     firebaseUserData: FirebaseUser,
-    style?: CSSProperties
+    dimension: number,
+    isOnNavbar: boolean,
 }
 
 type AvatarState = {
@@ -25,29 +26,20 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
 
     render = () => {
         const AvatarWrapper = styled.div`
-            width: 32px;
-            height: 32px;
-            border: 0.5px #FFFFFF solid;
+            width: ${this.props.dimension}px;
+            height: ${this.props.dimension}px;
+            border: 1px #FFFFFF solid;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             margin: auto 0;
-            margin-left: 10px;
+            margin-left: ${this.props.isOnNavbar ? '10px' : '4vh'};
         `
         return (
-            <>
-                {
-                    this.props.firebaseUserData.profilePictureURL ?
-                        <AvatarWrapper>
-                            <img src={this.props.firebaseUserData.profilePictureURL} width='32px' height='32px'></img>
-                        </AvatarWrapper>
-                        :
-                        <AvatarWrapper style={{border: "0px"}}>
-                            <CgProfile size='32px'></CgProfile>
-                        </AvatarWrapper>
-                }
-            </>
+            <AvatarWrapper>
+                <CgProfile size={`${this.props.dimension}px`}></CgProfile>
+            </AvatarWrapper>
         )
     }
 }

@@ -53,7 +53,7 @@ class ProfileBadge extends React.Component<BadgeProps, BadgeState> {
                     <Headline color="white" style={{ margin: 'auto' }}>
                         {this.props.firebaseUserData.username}
                     </Headline>
-                    <Avatar firebaseUserData={this.props.firebaseUserData} />
+                    <Avatar firebaseUserData={this.props.firebaseUserData} dimension={32} isOnNavbar={true}/>
                 </ClickableDiv>
                 <ProfileDisplay firebaseUserData={this.props.firebaseUserData} onExitClick={this.closeProfileDisplay} isOpen={this.state.isOpen}></ProfileDisplay>
             </Wrapper>
