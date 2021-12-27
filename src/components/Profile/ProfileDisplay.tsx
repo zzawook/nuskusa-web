@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser'
-import { Headline } from '../../utils/ThemeText'
+import { authService } from '../../utils/firebaseFunctions'
 import Avatar from './Avatar'
 import NewsElement from './NewsElement'
 
@@ -115,6 +115,16 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                 mouseLogoutEnter: false,
             })
         }
+
+        const handleLogout = (e: any) => {
+            authService.signOut().then(() => {
+                this.forceUpdate();
+            }).catch(error => {
+                console.log(error);
+                this.forceUpdate();
+            });
+        }
+
         return (
             <>
                 {
@@ -131,7 +141,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                                 
                             </ProfileDisplayWrapper>
                             {this.state.news.length > 0 ? this.state.news.map(data => <NewsElement data={data} />) : <NoNewsAlert>There is nothing new!</NoNewsAlert>}
-                            <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                            <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
                                 <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"}/>
                                 <LogOutText>Log Out</LogOutText>
                             </LogOut>
