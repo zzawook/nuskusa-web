@@ -137,8 +137,6 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                                 <Name>{this.props.firebaseUserData.username}</Name>
                                 <Email>{this.state.email}</Email>
                                 </NameEmailWrapper>
-                                    
-                                
                             </ProfileDisplayWrapper>
                             {this.state.news.length > 0 ? this.state.news.map(data => <NewsElement data={data} />) : <NoNewsAlert>There is nothing new!</NoNewsAlert>}
                             <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>

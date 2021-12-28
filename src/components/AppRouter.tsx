@@ -134,7 +134,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/signin' render={() => <Redirect to='/' />} />
                   <Route exact path='/signup' render={() => <Redirect to='/' />} />
                   <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData} />} />
-                  <Route component={this.notFoundComponent} />
                   <Route exact path='/boards' render={() => <BoardHome
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
@@ -159,6 +158,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       firebaseUserData={this.state.firebaseUserData}
                       reloadFunction={this.reloadFunction}
                     />} />
+                    <Route component={this.notFoundComponent} />
                   </Switch>
                 </Switch>
               )
