@@ -158,8 +158,8 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       firebaseUserData={this.state.firebaseUserData}
                       reloadFunction={this.reloadFunction}
                     />} />
-                    <Route component={this.notFoundComponent} />
                   </Switch>
+                  <Route component={this.notFoundComponent} />
                 </Switch>
               )
                 :
