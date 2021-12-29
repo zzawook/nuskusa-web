@@ -1,0 +1,14 @@
+[debug] [2021-12-29T19:31:21.246Z] ----------------------------------------------------------------------
+[debug] [2021-12-29T19:31:21.248Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\admin\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2021-12-29T19:31:21.248Z] CLI Version:   10.0.1
+[debug] [2021-12-29T19:31:21.248Z] Platform:      win32
+[debug] [2021-12-29T19:31:21.248Z] Node Version:  v12.18.4
+[debug] [2021-12-29T19:31:21.250Z] Time:          Thu Dec 30 2021 03:31:21 GMT+0800 (GMT+08:00)
+[debug] [2021-12-29T19:31:21.250Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-12-29T19:31:21.301Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-12-29T19:31:21.301Z] > authorizing via signed-in user (rygrobin@gmail.com)
+[debug] [2021-12-29T19:31:21.302Z] [iam] checking project nus-kusa-website for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2021-12-29T19:31:21.304Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-12-29T19:31:21.304Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
