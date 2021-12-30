@@ -1,9 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser'
-import { authService } from '../../utils/firebaseFunctions'
+import { authService, dbService } from '../../utils/firebaseFunctions'
 import Avatar from './Avatar'
-import NewsElement from './NewsElement'
+import NotificationComponent from './NotificationComponent'
+import Notification from './NotificationComponent'
+import NewsElement from './NotificationComponent'
 
 type ProfileDisplayProps = {
     firebaseUserData: FirebaseUser,
@@ -12,19 +14,45 @@ type ProfileDisplayProps = {
 }
 
 type ProfileDisplayState = {
-    news: any[],
+    notificationArray: any[],
     mouseLogoutEnter: boolean,
-    email: string,
 }
 
 class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplayState> {
     constructor(props: ProfileDisplayProps) {
         super(props)
         this.state = {
-            news: [],
+            notificationArray: [],
             mouseLogoutEnter: false,
-            email: 'tempEmail@u.nus.edu',
         }
+    }
+
+    componentDidMount = () => {
+        const NoNewsAlert = styled.p`
+            width: 42vh;
+            text-align: center;
+        `
+        dbService
+            .collection("users").doc(authService.currentUser?.uid)
+            .get()
+            .then((doc) => {
+                const data = doc.data();
+                const notifications = data?.notificationArray
+                let notificationComponents = notifications
+                    .map((element: any) => {
+                        return <>
+                            <NotificationComponent data={element} ></NotificationComponent>
+                        </>
+                    });
+                if (notificationComponents.length === 0) {
+                    this.setState({
+                        notificationArray: [<NoNewsAlert>There is nothing new!</NoNewsAlert>]
+                    })
+                }
+                this.setState({
+                    notificationArray: notificationComponents
+                })
+            })
     }
 
     render = () => {
@@ -78,10 +106,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             margin-left: 4vh;
             cursor: pointer;
         `
-        const NoNewsAlert = styled.p`
-            width: 42vh;
-            text-align: center;
-        `
+
         const LogOut = styled.button`
             border: none;
             background-color: transparent;
@@ -102,14 +127,14 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             margin-right: 2vh;
         `
 
-        const handleMouseEnter = (e :any) => {
+        const handleMouseEnter = (e: any) => {
             e.preventDefault();
             this.setState({
                 mouseLogoutEnter: true,
             })
         }
 
-        const handleMouseLeave = (e :any) => {
+        const handleMouseLeave = (e: any) => {
             e.preventDefault();
             this.setState({
                 mouseLogoutEnter: false,
@@ -130,17 +155,17 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                 {
                     this.props.isOpen ?
                         <Wrapper>
-                            <CloseButton onClick={this.props.onExitClick} src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FX.png?alt=media&token=187f4842-b226-4fbb-af49-c1f763517719"}/>
+                            <CloseButton onClick={this.props.onExitClick} src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FX.png?alt=media&token=187f4842-b226-4fbb-af49-c1f763517719"} />
                             <ProfileDisplayWrapper>
-                                <Avatar firebaseUserData={this.props.firebaseUserData} dimension={40} isOnNavbar={false}/>
+                                <Avatar firebaseUserData={this.props.firebaseUserData} dimension={40} isOnNavbar={false} />
                                 <NameEmailWrapper>
-                                <Name>{this.props.firebaseUserData.username}</Name>
-                                <Email>{this.state.email}</Email>
+                                    <Name>{this.props.firebaseUserData.username}</Name>
+                                    <Email>{this.props.firebaseUserData.username}</Email>
                                 </NameEmailWrapper>
                             </ProfileDisplayWrapper>
-                            {this.state.news.length > 0 ? this.state.news.map(data => <NewsElement data={data} />) : <NoNewsAlert>There is nothing new!</NoNewsAlert>}
+                            
                             <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
-                                <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"}/>
+                                <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
                                 <LogOutText>Log Out</LogOutText>
                             </LogOut>
                         </Wrapper>

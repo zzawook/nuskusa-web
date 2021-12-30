@@ -2,16 +2,16 @@ import React from 'react'
 import styled from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser'
 
-type NewsElementProps = {
+type NotificationComponentProps = {
     data: any
 }
 
-type NewsElementState = {
+type NotificationComponentState = {
 
 }
 
-class NewsElement extends React.Component<NewsElementProps, NewsElementState> {
-    constructor(props: NewsElementProps) {
+class NotificationComponent extends React.Component<NotificationComponentProps, NotificationComponentState> {
+    constructor(props: NotificationComponentProps) {
         super(props)
         this.state = {
         }
@@ -24,10 +24,10 @@ class NewsElement extends React.Component<NewsElementProps, NewsElementState> {
 
         return (
             <Wrapper>
-
+                
             </Wrapper>
         )
     }
 }
 
-export default NewsElement
+export default NotificationComponent
