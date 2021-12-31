@@ -6,15 +6,17 @@ import Navbar from '../components/Navbar';
 import styled from 'styled-components';
 import CSS from 'csstype';
 import { FirebaseUser } from '../types/FirebaseUser';
-import { SampleUser } from '../utils/SampleUser';
 
 type UserProps = {
-
+    history: any,
+    location: any,
+    match: any,
 }
 
 type UserObject = {
     email: string,
-    password: string
+    password: string,
+    failed: boolean,
 }
 
 const height = window.innerHeight;
@@ -133,7 +135,12 @@ const ToPassWord = styled.a`
     font-size: 12px;
     font-weight: 700;
 `
-
+const FailMessage = styled.span`
+    color: red;
+    position: absolute;
+    left: 20%;
+    top: ${(height * 0.1) + (19 * margin) + 65}px;
+`
 
 class SignIn extends React.Component<UserProps, UserObject> {
     constructor(props: UserProps) {
@@ -141,6 +148,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
         this.state = {
             email: '',
             password: '',
+            failed: false,
         }
     }
     handleChange = (event: any) => {
@@ -162,14 +170,20 @@ class SignIn extends React.Component<UserProps, UserObject> {
             .then(async () => {
                 return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
                     .then(() => {
-                        console.log('success!')
+                        window.history.back()
                     })
                     .catch((error) => {
                         console.error(error);
+                        this.setState({
+                            failed: true,
+                        })
                     });
             })
             .catch((error) => {
                 console.error(error);
+                this.setState({
+                    failed: true,
+                })
             });
     }
 
@@ -231,6 +245,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
                         onChange={this.handleChange}
                     />
                     {/* Will be adding name, nickname, etc. */}
+                    {this.state.failed ? <FailMessage>Login failed. Please check your ID and Password.</FailMessage> : <></>}
                     <ToPassWord onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Forgot Password?</ToPassWord>
                     <ToSignUp href="/signup" onClick={this.handleSignUpClick} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>
                     <SubmitButton type="submit" value="Submit" />

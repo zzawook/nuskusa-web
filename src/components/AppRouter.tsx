@@ -13,6 +13,8 @@ import AddPost from '../routes/AddPost.js';
 import BoardHome from '../routes/BoardHome';
 import AboutUs from '../routes/AboutUs';
 import { FirebaseUser } from '../types/FirebaseUser';
+import EditProfile from '../routes/EditProfile';
+import { Thumbs } from 'react-responsive-carousel';
 
 
 type AppRouterProps = {
@@ -23,7 +25,8 @@ type AppRouterState = {
   isLoggedIn: boolean,
   loading: Boolean,
   firebaseUserData: FirebaseUser,
-  toggle: boolean
+  toggle: boolean,
+  userId: string,
 }
 
 class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
@@ -35,7 +38,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
       firebaseUserData: {
         username: "",
         verificationFile: undefined,
-        userId: "",
+        email: "",
         isVerified: false,
         role: "User", // User, Undergraduate, Graduate, Admin
         enrolledYear: "",
@@ -43,7 +46,8 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
         faculty: "",
         profilePictureURL: "",
       },
-      toggle: false
+      toggle: false,
+      userId: "",
     }
   }
 
@@ -84,7 +88,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
               this.setState({
                 firebaseUserData: {
                   username: data.username,
-                  userId: data.userId,
+                  email: data.email,
                   verificationFile: data.verificationFile,
                   isVerified: data.isVerified,
                   role: data.role,
@@ -92,7 +96,8 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   major: data.major,
                   faculty: data.faculty,
                   profilePictureURL: data.profilePictureURL
-                }
+                },
+                userId: user.uid,
               })
             }
           }
@@ -127,13 +132,27 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/' render={() => <Home
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
+                  <Route exact path='/home' render={() => <Home
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
                   <Route exact path='/profile' render={() => <Profile
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
                   <Route exact path='/verification' render={() => <Verification firebaseUserData={this.state.firebaseUserData} />} />
-                  <Route exact path='/signin' render={() => <Redirect to='/' />} />
-                  <Route exact path='/signup' render={() => <Redirect to='/' />} />
+                  <Route exact path='/signin' render={(routerProps) => <SignIn 
+                    match={routerProps.match}
+                    history={routerProps.history}
+                    location={routerProps.location}
+                  />} />
+                  <Route exact path='/signup' render={(routerProps) => <SignUp 
+                    history={routerProps.history}
+                    location={routerProps.location}
+                  />} />
                   <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData} />} />
+                  <Route exact path='/editProfile' render={() => <EditProfile
+                    firebaseUserData={this.state.firebaseUserData}
+                    userId={this.state.userId}
+                  />} />
                   <Route exact path='/boards' render={() => <BoardHome
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
@@ -168,11 +187,25 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     <Route exact path='/' render={() => <Home
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
-                    <Route exact path='/signin' render={() => <SignIn />} />
-                    <Route exact path='/signup' render={() => <SignUp />} />
+                    <Route exact path='/home' render={() => <Home
+                    firebaseUserData={this.state.firebaseUserData}
+                  />} />
+                    <Route exact path='/signin' render={(routerProps) => <SignIn 
+                      match={routerProps.match}
+                      history={routerProps.history}
+                      location={routerProps.location}
+                    />} />
+                    <Route exact path='/signup' render={(routerProps) => <SignUp 
+                      history={routerProps.history}
+                      location={routerProps.location}
+                    />} />
                     <Route exact path='/profile' render={() => <Redirect to='/signin' />} />
                     <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData} />} />
                     <Route component={this.notFoundComponent} />
+                    <Route exact path='/editProfile' render={() => <EditProfile
+                    firebaseUserData={this.state.firebaseUserData}
+                    userId={this.state.userId}
+                  />} />
                     <Route exact path='/boards' render={() => <BoardHome
                       firebaseUserData={this.state.firebaseUserData}
                     />} />

@@ -4,6 +4,7 @@ import { FirebaseUser } from '../../types/FirebaseUser'
 import { authService } from '../../utils/firebaseFunctions'
 import Avatar from './Avatar'
 import NewsElement from './NewsElement'
+import { Link } from 'react-router-dom';
 
 type ProfileDisplayProps = {
     firebaseUserData: FirebaseUser,
@@ -82,6 +83,10 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             width: 42vh;
             text-align: center;
         `
+        const BottomWrapper = styled.div`
+            display: flex;
+            flex-direction: row;
+        `
         const LogOut = styled.button`
             border: none;
             background-color: transparent;
@@ -100,6 +105,21 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
         const LogOutImage = styled.img`
             vertical-align: middle;
             margin-right: 2vh;
+        `
+        const EmptyDiv = styled.div`
+            flex: 1
+        `
+        const ProfileEdit = styled.span`
+            :hover {
+                text-decoration: underline;
+            }
+
+            flex: 1;
+            line-height: 50px;
+            color: white;
+            margin-right: 10px;
+            text-decoration: none;
+            cursor: pointer;
         `
 
         const handleMouseEnter = (e :any) => {
@@ -139,10 +159,15 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                                 </NameEmailWrapper>
                             </ProfileDisplayWrapper>
                             {this.state.news.length > 0 ? this.state.news.map(data => <NewsElement data={data} />) : <NoNewsAlert>There is nothing new!</NoNewsAlert>}
-                            <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
-                                <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"}/>
-                                <LogOutText>Log Out</LogOutText>
-                            </LogOut>
+                            <BottomWrapper>
+                                <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
+                                    <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"}/>
+                                    <LogOutText>Log Out</LogOutText>
+                                </LogOut>
+                                <EmptyDiv/>
+                                <ProfileEdit><Link to='/editProfile' style={{color: 'white', textDecoration: 'none', cursor: 'pointer'}}>Edit Profile</Link></ProfileEdit>
+                            </BottomWrapper>
+                            
                         </Wrapper>
                         :
                         <ProfileDisplayEmpty />

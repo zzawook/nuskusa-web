@@ -6,6 +6,7 @@ import VerificationForm from './VerificationForm'
 
 type VerificationProps = {
     isModal: Boolean,
+    onClose: Function,
 }
 
 type VerificationState = {
@@ -24,17 +25,19 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
         this.setState({
             showModal: false
         })
+        this.props.onClose();
         localStorage.setItem("seeVerify", "no")
     }
 
     render = () => {
         const ModalWrapper = styled.div`
             position: fixed;
+            top: -80px;
             width: 100vw;
-            height: 100vh;
+            height: 200vh;
             overflow-y: clip;
             background: rgba(0, 0, 0, 0.5);
-            z-index: 20;
+            z-index: 100;
         `
         const ModalContent = styled.div`
             display: flex;
@@ -44,9 +47,10 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
             height: 70%;
             background: #FFFFFF;
             box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+            z-index: 100;
         `
         const CloseButton = styled.button`
-            display: inline;
+            display: flex;
             float: right;
             width: 30px;
             margin-right: 10px;
@@ -57,31 +61,34 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
             :hover {
                 background: rgba(0, 0, 0, 0.5);
             }
+            color: black;
+            z-index: 100;
+            text-align: center;
         `
 
         const ContentWrapper = styled.div`
             background: #FFFFFF;
             width: 70vw;
             margin: auto;
+            z-index: 100;
         `
         return (
             <>
-                {this.props.isModal === false && this.state.showModal ?
-                    <ModalWrapper onClick={(e) => { e.stopPropagation() }}>
-                        <ModalContent>
-                            <CloseButton onClick={this.onCloseClick}>X</CloseButton>
-                            <DisplayLarge color={"#000000"} style={{ marginLeft: '10%', opacity: '0.7' }}>학생 인증</DisplayLarge>
-                            <DisplaySmall color={"#000000"} style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
-                            <VerificationForm />
-                        </ModalContent>
-                    </ModalWrapper>
+                {! this.props.isModal ? 
+                        <ModalWrapper onClick={(e) => { e.stopPropagation() }}>
+                            <ModalContent>
+                                <CloseButton onClick={this.onCloseClick}>X</CloseButton>
+                                <DisplayLarge color={"#000000"} style={{ marginLeft: '10%', opacity: '0.7' }}>학생 인증</DisplayLarge>
+                                <DisplaySmall color={"#000000"} style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
+                                <VerificationForm />
+                            </ModalContent>
+                        </ModalWrapper>
                     :
                     <ContentWrapper>
                         <DisplayLarge color={"#000000"} style={{ marginLeft: '10%', opacity: '0.7', paddingTop: '5%' }}>학생 인증</DisplayLarge>
                         <DisplaySmall color={"#000000"} style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
                         <VerificationForm />
-                    </ContentWrapper>
-                }
+                    </ContentWrapper>}
             </>
         )
     }

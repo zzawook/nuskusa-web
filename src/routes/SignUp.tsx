@@ -4,10 +4,10 @@ import CSS from 'csstype';
 import Navbar from '../components/Navbar';
 import { authService, dbService } from '../utils/firebaseFunctions';
 import styled from 'styled-components'
-import { SampleUser } from '../utils/SampleUser';
 
 type UserProps = {
-    
+    history: any,
+    location: any,
 }
 
 type UserState = {
@@ -176,9 +176,11 @@ class SignUp extends React.Component<UserProps, UserState> {
                     role: 'User'
                 }
                 await dbService.collection('users').doc(userCredential.user?.uid).set(userObject);
+                window.history.back();
             })
             .catch((error) => {
                 console.error(error);
+                window.alert("Sign up failed. Please try again later.")
             });
     }
     
@@ -196,7 +198,6 @@ class SignUp extends React.Component<UserProps, UserState> {
     }
     handleSigninClick = (e: any) => {
         e.preventDefault();
-
     }
     arrowStyle: CSS.Properties = {
         position: "absolute",
