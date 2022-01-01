@@ -10,5 +10,6 @@ export interface FirestoreNotification {
 
 interface FirestoreNotificationData {
     title: string,
-    description: string,
+    content: string,
+    images: string, // empty string for comments
 }
