@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser'
+import { FirestoreNotification } from '../../types/FirestoreNotification'
 import { authService, dbService } from '../../utils/firebaseFunctions'
 import Avatar from './Avatar'
 import NotificationComponent from './NotificationComponent'
@@ -37,7 +38,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             .get()
             .then((doc) => {
                 const data = doc.data();
-                const notifications = data?.notificationArray
+                const notifications = data?.notificationArray as FirestoreNotification[];
                 let notificationComponents = notifications
                     .map((element: any) => {
                         return <>

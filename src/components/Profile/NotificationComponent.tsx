@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser'
+import { FirestoreNotification } from '../../types/FirestoreNotification'
 
 type NotificationComponentProps = {
-    data: any
+    data: FirestoreNotification
 }
 
 type NotificationComponentState = {
