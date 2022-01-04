@@ -6,7 +6,7 @@ import { dbService } from "./firebaseFunctions";
 
 
 
-export const generateSampleComment = (postId: string, parentBoardId="general", parentBoardTitle="자유게시판", parentColor="#C4F2EF", parentTextColor="#3B8A85") => {
+export const generateSampleComment = (postId: string, boardId="general") => {
     const content = generateSlug(5);
     const author = generateSlug(1);
     const authorId = 'id'
@@ -18,12 +18,10 @@ export const generateSampleComment = (postId: string, parentBoardId="general", p
         authorId: authorId,
         postId: postId,
         replies: [],
-        parentBoardId: parentBoardId,
-        parentBoardTitle: parentBoardTitle,
-        parentColor: parentColor,
-        parentTextColor: parentTextColor
+        boardId: boardId,
+        isReply: false,
     }
-    dbService.collection("boards").doc(parentBoardId).collection("posts").doc(postId).collection('comments').add(SampleComment)
+    dbService.collection("boards").doc(boardId).collection("posts").doc(postId).collection('comments').add(SampleComment)
     return SampleComment;
 }
 

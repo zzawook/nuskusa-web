@@ -1,15 +1,22 @@
-import firebase from 'firebase'
+/**
+ * type field is in the format of a/b
+ * a can be the following:
+ * new
+ * update (cannot use update yet. most likely will add new features on this later)
+ * 
+ * b can be the following:
+ * board
+ * post
+ * comment
+ * like
+ * 
+ */
 
 export interface FirestoreNotification {
     isRead: Boolean,
-    source: firebase.firestore.DocumentReference,
+    type: string,
+    source: any,
     message: string, 
     link: string,
-    data: FirestoreNotificationData,
-}
-
-interface FirestoreNotificationData {
-    title: string,
-    content: string,
-    images: string, // empty string for comments
+    data: any,
 }

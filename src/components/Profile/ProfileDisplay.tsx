@@ -39,10 +39,12 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             .then((doc) => {
                 const data = doc.data();
                 const notifications = data?.notificationArray as FirestoreNotification[];
+                let key = 0;
                 let notificationComponents = notifications
                     .map((element: any) => {
+                        key++;
                         return <>
-                            <NotificationComponent data={element} ></NotificationComponent>
+                            <NotificationComponent data={element} key={key} ></NotificationComponent>
                         </>
                     });
                 if (notificationComponents.length === 0) {
@@ -65,9 +67,12 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             flex-direction: column;
             cursor: default;
             z-index: 99;
-            background-color: #0b123c;
-            
+            height: 900px;
+            background-color: #0B121C;
+            /* border: 1px solid gray; */
+            box-shadow: -6px 0px 20px rgba(0, 0, 0, 0.25);
         `
+
         const ProfileDisplayWrapper = styled.div`
             width: 42vh;
             margin-top: 4vh;
@@ -101,10 +106,8 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             border: none;
             width: 20px;
             height: 20px;
-            top: 0vh;
-            right: 2vh;
             margin-top: 3vh;
-            margin-left: 4vh;
+            margin-left: 85%;
             cursor: pointer;
         `
 
@@ -164,7 +167,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                                     <Email>{this.props.firebaseUserData.username}</Email>
                                 </NameEmailWrapper>
                             </ProfileDisplayWrapper>
-                            
+                            {this.state.notificationArray}
                             <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
                                 <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
                                 <LogOutText>Log Out</LogOutText>
