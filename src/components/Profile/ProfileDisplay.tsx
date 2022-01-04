@@ -110,7 +110,9 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             margin-left: 85%;
             cursor: pointer;
         `
-
+        const NotificationWrapper = styled.div`
+            overflow-y: scroll;
+        `
         const LogOut = styled.button`
             border: none;
             background-color: transparent;
@@ -167,7 +169,9 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                                     <Email>{this.props.firebaseUserData.username}</Email>
                                 </NameEmailWrapper>
                             </ProfileDisplayWrapper>
-                            {this.state.notificationArray}
+                            <NotificationWrapper>
+                                {this.state.notificationArray}
+                            </NotificationWrapper>
                             <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
                                 <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
                                 <LogOutText>Log Out</LogOutText>

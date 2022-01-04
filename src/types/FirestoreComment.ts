@@ -5,7 +5,7 @@ export interface FirestoreComment {
     lastModified: firebase.firestore.Timestamp,
     upvoteArray: firebase.firestore.DocumentReference[],
     isReply: boolean,
-    replyTo: firebase.firestore.DocumentReference,
+    replyTo: firebase.firestore.DocumentReference | undefined,
     replies: [],
     author: string,
     authorId: string,

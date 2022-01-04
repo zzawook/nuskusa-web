@@ -282,6 +282,7 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
                 lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
                 upvoteArray: [],
                 replies: [],
+                replyTo: undefined,
                 postId: this.props.postId,
                 boardId: this.props.boardId,
             }

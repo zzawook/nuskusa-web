@@ -287,6 +287,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                 authorId: this.props.firebaseUserData.userId,
                 content: this.state.commentEntered,
                 isReply: true,
+                replyTo: undefined,
                 lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
                 upvoteArray: [],
                 replies: [],

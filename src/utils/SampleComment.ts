@@ -18,6 +18,7 @@ export const generateSampleComment = (postId: string, boardId="general") => {
         authorId: authorId,
         postId: postId,
         replies: [],
+        replyTo: undefined,
         boardId: boardId,
         isReply: false,
     }

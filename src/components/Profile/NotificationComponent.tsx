@@ -1,8 +1,9 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { FirestoreNotification } from '../../types/FirestoreNotification'
 import { getTypeMessage } from '../../utils/NotificationParser'
-import { Headline } from '../../utils/ThemeText'
+import { DisplaySmall, Headline, SubHeadline } from '../../utils/ThemeText'
 
 type NotificationComponentProps = {
     data: FirestoreNotification
@@ -31,25 +32,44 @@ class NotificationComponent extends React.Component<NotificationComponentProps, 
         const Wrapper = styled.div`
             display: flex;
             flex-direction: column;
-            justify-content: center;
             width: 80%;
             height: 262px;
             background: white;
             margin: auto;
+            margin-top: 10px;
         `
+
         const notificationData = this.props.data.data;
-        const title = this.props.data.data.title
+        const title = notificationData.title
+        const description = notificationData.description;
+        const content = notificationData.content;
         return (
-            <Wrapper>
-                <Headline color='#BDA06D'>{this.state.typeMessage}</Headline><br />
-                { title ?
-                    // This is a board/post related notification
-                    <Headline color='black'>{title}</Headline>
-                    :
-                    // This is a comment related notification
-                    <Headline color='black'>{notificationData.author} replied to your comment!</Headline>
-                }
-            </Wrapper>
+            <Link to={this.props.data.link} style={{ textDecoration: 'none' }}>
+                <Wrapper>
+                    <Headline color='#BDA06D' style={{ marginTop: '25px', marginBottom: '0px' }}>{this.state.typeMessage}</Headline><br />
+                    {
+                        title ?
+                            // This is a board/post related notification
+                            description ?
+                                <>
+                                    {/* This is a board related notification */}
+                                    <DisplaySmall color='black' style={{ marginTop: '0px', marginBottom: '0px' }}>{title}</DisplaySmall>
+                                    <Headline color='black'>{description}</Headline>
+                                </>
+                                :
+                                <>
+                                    {/* This is a post related notification */}
+                                    <DisplaySmall color='black' style={{ marginTop: '0px', marginBottom: '0px' }}>{title}</DisplaySmall>
+                                    <Headline color='black'>{content}</Headline>
+                                </>
+                            :
+                            // This is a comment related notification
+                            <>
+                                <DisplaySmall color='black' style={{ marginTop: '0px', marginBottom: '0px' }}>{notificationData.author} replied to your comment!</DisplaySmall>
+                            </>
+                    }
+                </Wrapper>
+            </Link>
         )
     }
 }
