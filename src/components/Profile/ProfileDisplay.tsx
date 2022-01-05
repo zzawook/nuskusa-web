@@ -5,8 +5,7 @@ import { FirestoreNotification } from '../../types/FirestoreNotification'
 import { authService, dbService } from '../../utils/firebaseFunctions'
 import Avatar from './Avatar'
 import NotificationComponent from './NotificationComponent'
-import Notification from './NotificationComponent'
-import NewsElement from './NotificationComponent'
+import { AiOutlineClose } from 'react-icons/ai';
 
 type ProfileDisplayProps = {
     firebaseUserData: FirebaseUser,
@@ -46,7 +45,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                         return <>
                             <NotificationComponent data={element} key={key} ></NotificationComponent>
                         </>
-                    });
+                    }).reverse();
                 if (notificationComponents.length === 0) {
                     this.setState({
                         notificationArray: [<NoNewsAlert>There is nothing new!</NoNewsAlert>]
@@ -102,14 +101,6 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
         const ProfileDisplayEmpty = styled.div`
             display: none;
         `
-        const CloseButton = styled.img`
-            border: none;
-            width: 20px;
-            height: 20px;
-            margin-top: 3vh;
-            margin-left: 85%;
-            cursor: pointer;
-        `
         const NotificationWrapper = styled.div`
             overflow-y: scroll;
         `
@@ -161,7 +152,9 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                 {
                     this.props.isOpen ?
                         <Wrapper>
-                            <CloseButton onClick={this.props.onExitClick} src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FX.png?alt=media&token=187f4842-b226-4fbb-af49-c1f763517719"} />
+                            <AiOutlineClose onClick={this.props.onExitClick} style={{
+                                border: 'none', width: '20px', height: '20px', marginTop: '3vh', marginLeft: '85%', cursor: 'pointer'
+                            }} />
                             <ProfileDisplayWrapper>
                                 <Avatar firebaseUserData={this.props.firebaseUserData} dimension={40} isOnNavbar={false} />
                                 <NameEmailWrapper>
