@@ -52,7 +52,11 @@ const GoldenButton = styled.button`
     text-decoration: none;
     :hover {
         transform: scale(1.05);
-    }
+    };
+    text-align: center;
+    color: white;
+    font-weight: 800;
+    font-size: 22px;
 `
 
 class VerificationForm extends React.Component<FormProps, FormState> {
@@ -213,9 +217,7 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                             style={{ border: "none", justifySelf: "right", marginLeft: "20px" }}>
                         </FormInput>
                         <GoldenButton onClick={this.handleSubmit} style={{ marginBottom: '5%' }}>
-                            <DisplayMedium color={this.state.theme.primary}>
-                                Submit
-                            </DisplayMedium>
+                            Submit
                         </GoldenButton>
                     </FormContentWrapper>
                 </Wrapper>

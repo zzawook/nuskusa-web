@@ -6,7 +6,8 @@ import { dbService } from '../../utils/firebaseFunctions'
 type DeleteProps = {
     boardId: string,
     postId: string,
-    firebaseUserData: FirebaseUser
+    firebaseUserData: FirebaseUser,
+    userId: string,
 }
 
 class DeletePost extends React.Component<DeleteProps, {}> {
@@ -21,7 +22,7 @@ class DeletePost extends React.Component<DeleteProps, {}> {
         const ok = window.prompt("Do you really want to delete this post? This action is irreversible.")
         if (ok) {
             const postRef = dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId)
-            const userPostRef = dbService.collection('users').doc(this.props.firebaseUserData.userId).collection('posts').doc()
+            const userPostRef = dbService.collection('users').doc(this.props.userId).collection('posts').doc()
             const batch = dbService.batch()
             try {
                 batch.delete(postRef)

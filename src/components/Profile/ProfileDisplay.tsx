@@ -104,6 +104,10 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
         const NotificationWrapper = styled.div`
             overflow-y: scroll;
         `
+        const BottomWrapper = styled.div`
+            display: flex;
+            flex-direction: row;
+        `
         const LogOut = styled.button`
             border: none;
             background-color: transparent;
@@ -122,6 +126,21 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
         const LogOutImage = styled.img`
             vertical-align: middle;
             margin-right: 2vh;
+        `
+        const EmptyDiv = styled.div`
+            flex: 1
+        `
+        const ProfileEdit = styled.span`
+            :hover {
+                text-decoration: underline;
+            }
+
+            flex: 1;
+            line-height: 50px;
+            color: white;
+            margin-right: 10px;
+            text-decoration: none;
+            cursor: pointer;
         `
 
         const handleMouseEnter = (e: any) => {
