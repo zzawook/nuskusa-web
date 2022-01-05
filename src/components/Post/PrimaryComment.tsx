@@ -282,18 +282,23 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
         }
         const handleSubmitClick = async (e: any) => {
             e.preventDefault();
+            const commentObject: FirestoreComment = {
+                author: this.props.firebaseUserData.username,
+                authorId: this.props.firebaseUserData.userId,
+                content: this.state.commentEntered,
+                isReply: true,
+                replyTo: undefined,
+                lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
+                upvoteArray: [],
+                replies: [],
+                postId: this.props.postId,
+                boardId: this.props.boardId,
+            }
             const addedCommentId = await dbService
                 .collection('boards').doc(this.props.boardId)
                 .collection('posts').doc(this.props.postId)
                 .collection('comments')
-                .add({
-                    author: this.props.firebaseUserData.username,
-                    content: this.state.commentEntered,
-                    isReply: true,
-                    lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                    upvoteArray: [],
-                    replies: [],
-                })
+                .add(commentObject)
             await dbService
                 .collection('boards').doc(this.props.boardId)
                 .collection('posts').doc(this.props.postId)

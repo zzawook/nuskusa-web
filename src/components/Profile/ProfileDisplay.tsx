@@ -1,10 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser'
-import { authService } from '../../utils/firebaseFunctions'
+import { FirestoreNotification } from '../../types/FirestoreNotification'
+import { authService, dbService } from '../../utils/firebaseFunctions'
 import Avatar from './Avatar'
-import NewsElement from './NewsElement'
-import { Link } from 'react-router-dom';
+import NotificationComponent from './NotificationComponent'
+import { AiOutlineClose } from 'react-icons/ai';
 
 type ProfileDisplayProps = {
     firebaseUserData: FirebaseUser,
@@ -13,19 +14,47 @@ type ProfileDisplayProps = {
 }
 
 type ProfileDisplayState = {
-    news: any[],
+    notificationArray: any[],
     mouseLogoutEnter: boolean,
-    email: string,
 }
 
 class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplayState> {
     constructor(props: ProfileDisplayProps) {
         super(props)
         this.state = {
-            news: [],
+            notificationArray: [],
             mouseLogoutEnter: false,
-            email: 'tempEmail@u.nus.edu',
         }
+    }
+
+    componentDidMount = () => {
+        const NoNewsAlert = styled.p`
+            width: 42vh;
+            text-align: center;
+        `
+        dbService
+            .collection("users").doc(authService.currentUser?.uid)
+            .get()
+            .then((doc) => {
+                const data = doc.data();
+                const notifications = data?.notificationArray as FirestoreNotification[];
+                let key = 0;
+                let notificationComponents = notifications
+                    .map((element: any) => {
+                        key++;
+                        return <>
+                            <NotificationComponent data={element} key={key} ></NotificationComponent>
+                        </>
+                    }).reverse();
+                if (notificationComponents.length === 0) {
+                    this.setState({
+                        notificationArray: [<NoNewsAlert>There is nothing new!</NoNewsAlert>]
+                    })
+                }
+                this.setState({
+                    notificationArray: notificationComponents
+                })
+            })
     }
 
     render = () => {
@@ -37,9 +66,12 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             flex-direction: column;
             cursor: default;
             z-index: 99;
-            background-color: #0b123c;
-            
+            height: 900px;
+            background-color: #0B121C;
+            /* border: 1px solid gray; */
+            box-shadow: -6px 0px 20px rgba(0, 0, 0, 0.25);
         `
+
         const ProfileDisplayWrapper = styled.div`
             width: 42vh;
             margin-top: 4vh;
@@ -69,19 +101,8 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
         const ProfileDisplayEmpty = styled.div`
             display: none;
         `
-        const CloseButton = styled.img`
-            border: none;
-            width: 20px;
-            height: 20px;
-            top: 0vh;
-            right: 2vh;
-            margin-top: 3vh;
-            margin-left: 4vh;
-            cursor: pointer;
-        `
-        const NoNewsAlert = styled.p`
-            width: 42vh;
-            text-align: center;
+        const NotificationWrapper = styled.div`
+            overflow-y: scroll;
         `
         const BottomWrapper = styled.div`
             display: flex;
@@ -122,14 +143,14 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             cursor: pointer;
         `
 
-        const handleMouseEnter = (e :any) => {
+        const handleMouseEnter = (e: any) => {
             e.preventDefault();
             this.setState({
                 mouseLogoutEnter: true,
             })
         }
 
-        const handleMouseLeave = (e :any) => {
+        const handleMouseLeave = (e: any) => {
             e.preventDefault();
             this.setState({
                 mouseLogoutEnter: false,
@@ -150,24 +171,23 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                 {
                     this.props.isOpen ?
                         <Wrapper>
-                            <CloseButton onClick={this.props.onExitClick} src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FX.png?alt=media&token=187f4842-b226-4fbb-af49-c1f763517719"}/>
+                            <AiOutlineClose onClick={this.props.onExitClick} style={{
+                                border: 'none', width: '20px', height: '20px', marginTop: '3vh', marginLeft: '85%', cursor: 'pointer'
+                            }} />
                             <ProfileDisplayWrapper>
-                                <Avatar firebaseUserData={this.props.firebaseUserData} dimension={40} isOnNavbar={false}/>
+                                <Avatar firebaseUserData={this.props.firebaseUserData} dimension={40} isOnNavbar={false} />
                                 <NameEmailWrapper>
-                                <Name>{this.props.firebaseUserData.username}</Name>
-                                <Email>{this.state.email}</Email>
+                                    <Name>{this.props.firebaseUserData.username}</Name>
+                                    <Email>{this.props.firebaseUserData.username}</Email>
                                 </NameEmailWrapper>
                             </ProfileDisplayWrapper>
-                            {this.state.news.length > 0 ? this.state.news.map(data => <NewsElement data={data} />) : <NoNewsAlert>There is nothing new!</NoNewsAlert>}
-                            <BottomWrapper>
-                                <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
-                                    <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"}/>
-                                    <LogOutText>Log Out</LogOutText>
-                                </LogOut>
-                                <EmptyDiv/>
-                                <ProfileEdit><Link to='/editProfile' style={{color: 'white', textDecoration: 'none', cursor: 'pointer'}}>Edit Profile</Link></ProfileEdit>
-                            </BottomWrapper>
-                            
+                            <NotificationWrapper>
+                                {this.state.notificationArray}
+                            </NotificationWrapper>
+                            <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
+                                <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
+                                <LogOutText>Log Out</LogOutText>
+                            </LogOut>
                         </Wrapper>
                         :
                         <ProfileDisplayEmpty />
