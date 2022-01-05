@@ -2,7 +2,7 @@ import { FirebaseUser } from "../types/FirebaseUser";
 
 export const SampleUser: FirebaseUser = {
     username: "",
-    userId: '',
+    email: '',
     verificationFile: undefined,
     isVerified: false,
     role: "User", // User, Undergraduate, Graduate, Admin

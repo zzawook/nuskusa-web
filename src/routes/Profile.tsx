@@ -91,7 +91,7 @@ class Profile extends React.Component<UserProps, UserState> {
                 {this.props.firebaseUserData.isVerified ?
                     <></>
                     :
-                    <VerificationRequest isModal={false} />
+                    <VerificationRequest isModal={false} onClose={() => {}} />
                 }
                 <ProfilePicker firebaseUserData={this.props.firebaseUserData} />
                 <SignOut />
