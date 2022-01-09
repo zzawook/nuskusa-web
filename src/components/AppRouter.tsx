@@ -37,6 +37,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
       loading: true,
       firebaseUserData: {
         username: "",
+        userId: "",
         verificationFile: undefined,
         email: "",
         isVerified: false,
@@ -88,6 +89,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
               this.setState({
                 firebaseUserData: {
                   username: data.username,
+                  userId: user.uid,
                   email: data.email,
                   verificationFile: data.verificationFile,
                   isVerified: data.isVerified,

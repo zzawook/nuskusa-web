@@ -251,6 +251,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         this.state = {
             userData: {
                 username: "username",
+                userId: "",
                 email: "tempEmail@u.nus.edu",
                 verificationFile: undefined,
                 isVerified: false,

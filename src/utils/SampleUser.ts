@@ -10,4 +10,5 @@ export const SampleUser: FirebaseUser = {
     major: "",
     faculty: "",
     profilePictureURL: "",
+    userId: "userId",
 }
