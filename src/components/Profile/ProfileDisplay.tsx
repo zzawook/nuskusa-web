@@ -128,7 +128,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             margin-right: 2vh;
         `
         const EmptyDiv = styled.div`
-            flex: 1
+            flex: 1;
         `
         const ProfileEdit = styled.span`
             :hover {
