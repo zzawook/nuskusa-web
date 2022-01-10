@@ -177,7 +177,7 @@ const EnrolledYear = styled.div`
     flex-direction: row;
     z-index: 10;
 `
-const EnrolledYearText =  styled.span`
+const EnrolledYearText = styled.span`
     margin-left: 10%;
     font-size: 17px;
     font-weight: 600;
@@ -277,7 +277,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
     }
 
     componentDidUpdate = () => {
-        if (! authService.currentUser) {
+        if (!authService.currentUser) {
             window.location.href = window.location.origin + '/#/';
         }
         console.log(this.state.profileChanged)
@@ -287,7 +287,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
 
     getDerivedStateFromProps = (newProps: any, prevState: any) => {
         console.log(authService.currentUser)
-        if (! authService.currentUser) {
+        if (!authService.currentUser) {
             window.location.href = window.location.origin + '/#/';
         }
         this.setState({
@@ -304,8 +304,8 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             if (window.confirm("This will remove your profile image and replace with default counterpart. Continue? \n 기존의 프로필 이미지를 삭제하고 기본 프로필 이미지로 대체합니다. 계속하시겠습니까?")) {
                 const currentProfile = this.state.userData;
                 currentProfile.profilePictureURL = 'undefined';
-                
-                dbService.collection('uers').doc(this.props.userId).update({profilePictureURL: 'undefined'})
+
+                dbService.collection('uers').doc(this.props.userId).update({ profilePictureURL: 'undefined' })
 
                 this.setState({
                     userData: currentProfile,
@@ -313,7 +313,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                 })
             }
 
-            
+
         }
 
         const handleImageUpload = (e: any) => {
@@ -398,10 +398,10 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             const user = authService.currentUser;
 
             if (typeof user?.email != 'string') {
-               window.alert("Please wait a few seconds and try again.")
-               return;
+                window.alert("Please wait a few seconds and try again.")
+                return;
             }
-            
+
             const credential = firebase.auth.EmailAuthProvider.credential(user?.email, this.state.currentPassword)
             user?.reauthenticateWithCredential(credential).then((newCredential) => {
                 const newPassword = this.state.newPassword;
@@ -425,8 +425,8 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
 
         return (
             <Container>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />  
-                {this.state.verificiationOpen ? <VerificationRequest isModal={false} onClose={closeModal}/> : <></>} 
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                {this.state.verificiationOpen ? <VerificationRequest isModal={false} onClose={closeModal} /> : <></>}
                 <ProfileContainer>
                     <ImgAndName>
                         <Profile src={this.state.profileChanged ? URL.createObjectURL(this.state.userData.profilePictureURL) : this.props.firebaseUserData.profilePictureURL === 'undefined' || this.props.firebaseUserData.profilePictureURL === "" || this.props.firebaseUserData.profilePictureURL === undefined ? defaultProfile : this.props.firebaseUserData.profilePictureURL}></Profile>
@@ -436,10 +436,10 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                     </ImgAndName>
                     <Email>
                         <EmailText>이메일 / Email</EmailText>
-                        <EmailInput value={this.props.firebaseUserData.email} readOnly={true}/>
+                        <EmailInput value={this.props.firebaseUserData.email} readOnly={true} />
                     </Email>
                     <Verified>
-                        <IsVerifiedText>Account Verification<br/> 계정 인증</IsVerifiedText>
+                        <IsVerifiedText>Account Verification<br /> 계정 인증</IsVerifiedText>
                         <IsVerifiedAlert>
                             <IsVerified>{this.props.firebaseUserData.isVerified ? 'This account is verified. Enjoy full functionality of the website!' : 'This account is not verified. Verify now to enjoy full functionality of this website.'}</IsVerified>
                             <IsVerified>{this.props.firebaseUserData.isVerified ? '이 계정은 인증되었습니다. 웹사이트의 모든 기능들을 사용하실 수 있습니다!' : '이 계정은 인증되지 않았습니다. 지금 인증하여 모든 기능들을 사용해보세요!'}</IsVerified>
@@ -461,9 +461,9 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                     <Password>
                         <PasswordText>Change Password</PasswordText>
                         <PasswordInputs>
-                            <OrigPassword placeholder={'Current Password / 현재 비밀번호'} type={'password'} onBlur={handleCurrentPasswordChange}/>
-                            <NewPassword placeholder={'New Password  / 새 비밀번호'} type={'password'} onBlur={handleNewPasswordChange}/>
-                            <ConfirmPassword placeholder={'Confirm New Password / 새 비밀번호 확인'} type={'password'} onBlur={handleConfirmNewPasswordChange}/>
+                            <OrigPassword placeholder={'Current Password / 현재 비밀번호'} type={'password'} onBlur={handleCurrentPasswordChange} />
+                            <NewPassword placeholder={'New Password  / 새 비밀번호'} type={'password'} onBlur={handleNewPasswordChange} />
+                            <ConfirmPassword placeholder={'Confirm New Password / 새 비밀번호 확인'} type={'password'} onBlur={handleConfirmNewPasswordChange} />
                             <PasswordButton onClick={handlePasswordChange}>Update Password</PasswordButton>
                         </PasswordInputs>
                     </Password>
