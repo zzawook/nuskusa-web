@@ -306,6 +306,13 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                 .update({
                     replies: firebase.firestore.FieldValue.arrayUnion(dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${addedCommentId.id}`)),
                 })
+            await dbService
+                .collection('boards').doc(this.props.boardId)
+                .collection('posts').doc(this.props.postId)
+                .collection('comments').doc(addedCommentId.id)
+                .update({
+                    replyTo: dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${this.props.commentId}`)
+                })
             this.setState({
                 commentEntered: "",
                 replyOpen: false,
