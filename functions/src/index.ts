@@ -5,6 +5,7 @@ import { FirestoreComment } from "../../src/types/FirestoreComment";
 import { FirestoreNotification } from "../../src/types/FirestoreNotification";
 
 import * as admin from "firebase-admin";
+import { firestore } from "firebase-admin";
 
 admin.initializeApp();
 
@@ -32,6 +33,7 @@ exports.createNotificationOnPostLike = functions.firestore
           message: "Someone liked your post!",
           link: `/boards/${boardId}/${postId}`,
           data: after,
+          timestamp: firestore.Timestamp.now()
         };
         db.doc(`/users/${after.authorId}`).update({
           notificationArray: admin.firestore.FieldValue.arrayUnion(component),
@@ -57,6 +59,7 @@ exports.createNotificationForBoard = functions.firestore
       message: `A new board has been created! ${title}, ${description}`,
       link: `/boards/${boardId}`,
       data: data,
+      timestamp: firestore.Timestamp.now(),
     };
     db.collection("users").get()
       .then((snapshot) => {
@@ -96,6 +99,7 @@ exports.createNotificationOnPostComment = functions.firestore
         message: "Someone posted a comment on your post!",
         link: `/boards/${boardId}/${postId}`,
         data: data,
+        timestamp: firestore.Timestamp.now(),
       };
       db.runTransaction(async (transaction) => {
         const postRef = db.collection("boards").doc(boardId).collection("posts").doc(postId);
@@ -115,6 +119,7 @@ exports.createNotificationOnPostComment = functions.firestore
         message: "Someone posted a comment on your post!",
         link: `/boards/${boardId}/${postId}`,
         data: data,
+        timestamp: firestore.Timestamp.now(),
       };
       db.runTransaction(async (transaction) => {
         if (data.replyTo) {

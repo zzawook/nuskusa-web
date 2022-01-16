@@ -134,7 +134,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                     <Navbar firebaseUserData={this.props.firebaseUserData} />
                     {this.props.firebaseUserData.isVerified != true
                         ? displayVerification === "yes"
-                            ? <VerificationRequest isModal={true} onClose={() => {}}/>
+                            ? <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={true} onClose={() => {}}/>
                             : <></>
                         : <></>}
                     <TextContainer>
