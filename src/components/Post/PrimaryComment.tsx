@@ -344,8 +344,10 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
         }
 
         const handleDeleteClick = () => {
-            dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId).delete();
-            this.props.reset();
+            if (window.confirm("정말 삭제하시겠습니까?")) {
+                dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId).delete();
+                this.props.reset();
+            }
         }
 
         const handleCommentDelete = (commentIndex: number) => {

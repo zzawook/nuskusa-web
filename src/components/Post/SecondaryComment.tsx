@@ -329,8 +329,14 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
         }
         
         const handleDeleteClick = () => {
-            dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId).delete()
-            this.props.delete(this.props.index);
+            const confirmed = window.confirm("정말 삭제하시겠습니까?");
+            if (confirmed) {
+                this.props.data.replyTo.update({
+                    replies: firebase.firestore.FieldValue.arrayRemove(dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId))   
+                });
+                dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId).delete();
+                this.props.delete(this.props.index);
+            }
         }
 
         const handleCommentDelete = (commentIndex: number) => {
