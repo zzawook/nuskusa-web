@@ -58,11 +58,13 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                                 permissions={data.permissions}
                                 boardColor={data.boardColor}
                                 boardTextColor={data.boardTextColor}
+                                editPermission={data.editPermission}
                             />
                         )
                         key++;
                         arr.push(data);
-                        if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User')) {
+                        console.log(data.permissions)
+                        if (data.permissions.includes(this.props.firebaseUserData.role)) {
                             componentArray.push(component);
                             console.log(componentArray)
                         }

@@ -36,9 +36,19 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
             margin: auto 0;
             margin-left: ${this.props.isOnNavbar ? '10px' : '4vh'};
         `
+        const ProfileImg = styled.img`
+            width: ${this.props.dimension}px;
+            height: ${this.props.dimension}px;
+            border: 1px #FFFFFF solid;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: auto 0;
+        `
         return (
             <AvatarWrapper>
-                <CgProfile size={`${this.props.dimension}px`}></CgProfile>
+                {this.props.firebaseUserData.profilePictureURL != undefined ? <ProfileImg src={this.props.firebaseUserData.profilePictureURL} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile>}
             </AvatarWrapper>
         )
     }

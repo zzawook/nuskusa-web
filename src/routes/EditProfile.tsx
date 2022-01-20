@@ -30,7 +30,6 @@ const ProfileContainer = styled.div`
     width: 70%;
     left: 15%;
     background-color: transparent;
-    border: 1px solid white;
     display: flex;
     flex-direction: column;
     z-index: 50;

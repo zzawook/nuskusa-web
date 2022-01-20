@@ -102,6 +102,10 @@ const Back = styled.button`
     border: none;
     font-weight: 600;
     padding-left: 30px;
+    cursor: pointer;
+    :hover {
+        color: white;
+    }
 `
 const Editor = styled.div` 
     position: absolute;
@@ -144,21 +148,38 @@ class AddPost extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: 'Enter title...',
-            content: "<p></p>",
-            isAnnouncement: false,
-            isAnonymous: false,
-            isPinned: false,
-            isHidden: false,
-            author: '',
-            upvotes: 0,
-            lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-            permissions: ["Admin"],
+            state: {
+                title: 'Enter title...',
+                content: "<p></p>",
+                isAnnouncement: false,
+                isAnonymous: false,
+                isPinned: false,
+                isHidden: false,
+                author: '',
+                authorId: "",
+                upvotes: 0,
+                lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
+                permissions: ["Admin"],
+                numComments: 0, //DO NOT CHANGE
+                parentBoardId: this.props.boardId,
+                upvoteArray: [], //DO NOT CHANGE
+                parentColor: "",
+                parentTextColor: "",
+                parentBoardTitle: "",
+            },
+            selectedBoard: this.props.boardId
         }
     }
 
-    selectedBoard = null;
     content = '<p></p>'
+    boardData = [
+        { value: 'announcement', label: '공지사항' },
+        { value: 'event', label: '이벤트' },
+        { value: 'general', label: '자유게시판' },
+        { value: 'grove', label: '대나무숲' },
+        { value: 'jobs', label: '취업/인턴' },
+    ]
+    
 
     componentDidMount() {
         if (!this.props.firebaseUserData.isVerified) {
@@ -166,54 +187,74 @@ class AddPost extends React.Component {
             window.history.go(-1);
             return;
         }
+        const stateCopy = this.state.state;
+        stateCopy.author = this.props.firebaseUserData.username;
+        stateCopy.authorId = authService.currentUser.uid;
         this.setState({
-            author: this.props.firebaseUserData.username,
+            state: stateCopy
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
+        if (this.state.selectedBoard === null) {
+            window.alert("Please select a board to post your article. \n \n 게시판을 선택해주세요.")
+            return;
+        }
+        if (this.content === '<p></p>') {
+            window.alert("Your post is empty! \n \n 포스트를 작성해주세요.")
+            return;
+        }
+        if (this.state.state.title.trim() === "" || this.state.state.title === "Enter title...") {
+            window.alert("Please enter title. \n \n 제목을 작성해주세요.")
+            return;
+        }
+        if (this.state.state.title.length > 30) {
+            window.alert("Your title is too long. Please ensure it's below 30 characters \n \n 제목이 너무 깁니다. 30자 이하로 제한해주세요.")
+            return;
+        }
+        const boardSnapshot = await dbService.collection('boards').doc(this.state.selectedBoard).get();
+        const boardData = boardSnapshot.data();
+        const stateCopy = this.state.state;
+        stateCopy.content = this.content;
+        stateCopy.parentBoardId = this.state.selectedBoard;
+        stateCopy.parentColor = boardData.boardColor;
+        stateCopy.parentTextColor = boardData.boardTextColor;
+        stateCopy.parentBoardTitle = boardData.title;
+        stateCopy.permissions = boardData.permissions
         this.setState({
-            content: this.content,
+            state: stateCopy
         }, () => {
-            if (this.selectedBoard === null) {
-                window.alert("Please select a board to post your article. \n \n 게시판을 선택해주세요.")
-                return;
-            }
-            if (this.content === '<p></p>') {
-                window.alert("Your post is empty! \n \n 포스트를 작성해주세요.")
-                return;
-            }
-            if (this.state.title.trim() === "" || this.state.title === "Enter title...") {
-                window.alert("Please enter title. \n \n 제목을 작성해주세요.")
-                return;
-            }
-            if (this.state.title.length > 30) {
-                window.alert("Your title is too long. Please ensure it's below 30 characters \n \n 제목이 너무 깁니다. 30자 이하로 제한해주세요.")
-                return;
-            }
             dbService
-                .collection('boards').doc(this.selectedBoard)
+                .collection('boards').doc(this.state.selectedBoard)
                 .collection('posts')
-                .add(this.state);
+                .add(this.state.state)
+                .then((docRef) => {
+                    window.location.href = "#/boards/" + this.state.selectedBoard + '/' + docRef.id
+                }).catch(err => {
+                    window.alert("게시글 업로드 도중 문제가 발생하였습니다." + err.toString())
+                }) ;
         })
-
     }
 
     handleTitleChange = (e) => {
-        const target = e.target;
-        this.setState({
-            title: target.value
-        })
         e.preventDefault();
+        const target = e.target;
+        const prevState = this.state.state;
+        prevState.title = target.value;
+        this.setState({
+            state: prevState,
+        })
     }
 
     handleTitleBlur = (e) => {
         e.preventDefault();
         const target = e.target;
         if (target.value.trim() == "") {
+            const prevState = this.state.state;
+            prevState.title = 'Enter title...'
             this.setState({
-                title: 'Enter title...'
+                state: prevState
             })
         }
     }
@@ -222,14 +263,19 @@ class AddPost extends React.Component {
         e.preventDefault();
         const target = e.target;
         if (target.value == "Enter title...") {
+            const prevState = this.state.state;
+            prevState.title = ''
             this.setState({
-                title: ""
+                state: prevState
             })
         }
     }
 
     handleSelectChange = (selected) => {
-        this.selectedBoard = selected.value;
+        console.log(selected)
+        this.setState({
+            selectedBoard: selected.value
+        })
     }
 
     render = () => {
@@ -249,7 +295,6 @@ class AddPost extends React.Component {
                     'insertTable',
                     '|',
                     'imageUpload',
-                    'mediaEmbed',
                     'undo',
                     'redo'
                 ]
@@ -288,11 +333,11 @@ class AddPost extends React.Component {
         const customStyle = {
             valueContainer: (provided, state) => ({
                 ...provided,
-                backgroundColor: this.selectedBoard == 'announcement' ? '#FFD3D3' :
-                    this.selectedBoard === 'event' ? '#D6F2C4' :
-                        this.selectedBoard === 'general' ? '#C4F2EF' :
-                            this.selectedBoard === 'grove' ? '#99CEA5' :
-                                this.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
+                backgroundColor: this.state.selectedBoard == 'announcement' ? '#FFD3D3' :
+                    this.state.selectedBoard === 'event' ? '#D6F2C4' :
+                        this.state.selectedBoard === 'general' ? '#C4F2EF' :
+                            this.state.selectedBoard === 'grove' ? '#99CEA5' :
+                                this.state.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
             }),
             option: (provided, state) => ({
                 ...provided,
@@ -303,11 +348,11 @@ class AddPost extends React.Component {
                 ...provided,
                 width: 'inherit',
                 fontSize: '10px',
-                backgroundColor: this.selectedBoard == 'announcement' ? '#FFD3D3' :
-                    this.selectedBoard === 'event' ? '#D6F2C4' :
-                        this.selectedBoard === 'general' ? '#C4F2EF' :
-                            this.selectedBoard === 'grove' ? '#99CEA5' :
-                                this.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
+                backgroundColor: this.state.selectedBoard == 'announcement' ? '#FFD3D3' :
+                    this.state.selectedBoard === 'event' ? '#D6F2C4' :
+                        this.state.selectedBoard === 'general' ? '#C4F2EF' :
+                            this.state.selectedBoard === 'grove' ? '#99CEA5' :
+                                this.state.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
                 color: 'white',
                 borderRadius: '0px',
                 border: '1px solid white'
@@ -316,11 +361,11 @@ class AddPost extends React.Component {
                 return {
                     ...provided,
                     fontSize: '10px',
-                    backgroundColor: this.selectedBoard == 'announcement' ? '#FFD3D3' :
-                        this.selectedBoard === 'event' ? '#D6F2C4' :
-                            this.selectedBoard === 'general' ? '#C4F2EF' :
-                                this.selectedBoard === 'grove' ? '#99CEA5' :
-                                    this.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
+                    backgroundColor: this.state.selectedBoard == 'announcement' ? '#FFD3D3' :
+                        this.state.selectedBoard === 'event' ? '#D6F2C4' :
+                            this.state.selectedBoard === 'general' ? '#C4F2EF' :
+                                this.state.selectedBoard === 'grove' ? '#99CEA5' :
+                                    this.state.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
                     color: 'black'
                 };
             },
@@ -350,7 +395,7 @@ class AddPost extends React.Component {
         const setAnnonymous = () => {
             console.log("Annonymouse set")
             this.setState({
-                isAnonymous: !this.state.isAnonymous,
+                isAnonymous: !this.state.state.isAnonymous,
             })
         }
 
@@ -358,29 +403,28 @@ class AddPost extends React.Component {
             console.log("Pinned set")
             this.setState({
 
-                isPinned: !this.state.isPinned,
+                isPinned: !this.state.state.isPinned,
             })
         }
         const setHidden = () => {
             console.log("Hidden set")
             this.setState({
-                isHidden: !this.state.isHidden,
+                isHidden: !this.state.state.isHidden,
             })
         }
         const setAnnouncement = () => {
             console.log("Announcement set")
             this.setState({
-                isAnnouncement: !this.state.isAnnouncement,
+                isAnnouncement: !this.state.state.isAnnouncement,
             })
         }
 
         return (
             <Container>
-                {console.log(this.props)}
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
                 <Back onClick={() => window.history.back()}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
-                <SelectContainer><Select options={options} styles={customStyle} onChange={this.handleSelectChange} /></SelectContainer>
-                <Form><Title type='text' key="titleInput" value={this.state.title} onChange={this.handleTitleChange} onBlur={this.handleTitleBlur} onFocus={this.handleTitleFocus} /></Form>
+                <SelectContainer><Select options={options} styles={customStyle} onChange={this.handleSelectChange} value={this.boardData.filter(data => data.value == this.state.selectedBoard)}/></SelectContainer>
+                <Form><Title type='text' key="titleInput" value={this.state.state.title} onChange={this.handleTitleChange} onBlur={this.handleTitleBlur} onFocus={this.handleTitleFocus} /></Form>
                 <Editor>
                     <CKEditor
                         editor={ClassicEditor}
@@ -401,10 +445,10 @@ class AddPost extends React.Component {
                     />
                 </Editor>
                 <CheckBoxContainer>
-                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.selectedBoard == 'grove' ? <Checkbox label='Anonymous' /> : <div />}
+                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
                     {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={false} /> : <div />}
                     {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={false} /> : <div />}
-                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} /> : <div />}
+                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
                 </CheckBoxContainer>
                 <Submit onClick={this.handleSubmit}>Post</Submit>
             </Container>

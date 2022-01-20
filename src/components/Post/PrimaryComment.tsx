@@ -6,6 +6,7 @@ import { dbService } from '../../utils/firebaseFunctions'
 import { FirebaseUser } from "../../types/FirebaseUser";
 import firebase from 'firebase';
 import CommentUpvote from "./CommentUpvote";
+import { throws } from "assert";
 
 type PrimaryProps = {
     data: any,
@@ -13,6 +14,7 @@ type PrimaryProps = {
     postId: string,
     commentId: string,
     firebaseUserData: FirebaseUser,
+    reset: any
 }
 
 type PrimaryState = {
@@ -151,6 +153,20 @@ const SmallArrow = styled.img`
     position: relative;
     left: 5px;
 `
+const Delete = styled.span`
+    position: relative;
+    left: 90px;
+    bottom: 10px;
+    color: white;
+    opacity: 0.6;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+
+    :hover {
+        opacity: 1;
+    }
+`
 
 class Primary extends React.Component<PrimaryProps, PrimaryState> {
     constructor(props: PrimaryProps) {
@@ -287,7 +303,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                 authorId: this.props.firebaseUserData.userId,
                 content: this.state.commentEntered,
                 isReply: true,
-                replyTo: undefined,
+                replyTo: dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${this.props.commentId}`),
                 lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
                 upvoteArray: [],
                 replies: [],
@@ -326,6 +342,25 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                 replyOpen: !this.state.replyOpen,
             })
         }
+
+        const handleDeleteClick = () => {
+            dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId).delete();
+            this.props.reset();
+        }
+
+        const handleCommentDelete = (commentIndex: number) => {
+            const temp = this.state.secondary;
+            temp.splice(commentIndex, 1);
+            if (temp.length == 0) {
+                this.setState({
+                    secondaryOpen: false,
+                })
+            }
+            this.setState({
+                secondary: temp
+            })
+        }
+
         return (
             <PrimaryComment>
                 <CommentArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FcommentArrow.png?alt=media&token=e484a87e-cff6-4111-b36c-e82cedbe2584'} />
@@ -333,6 +368,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                 <LastModified>
                     {this.getLastUpdated(this.props.data.lastModified)}
                 </LastModified>
+                {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete>: <div />}
                 <Content>{this.props.data.content}</Content>
                 <CommentUpvote style={{ position: 'relative', left: '90px', top: '5px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
                 <ReplyButton onClick={handleReplyClick}>Reply</ReplyButton>
@@ -342,7 +378,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form> : <div />}
                 {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%204.png?alt=media&token=e83189ba-d386-4232-a473-1b1656d553b3'}/> : <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%203.png?alt=media&token=c39d0931-41d8-4ed1-bd6f-a5491da24e8a'}/>}</SecondaryOpener> : <div/>}
-                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData}/>) : <div />}
+                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData}/>) : <div />}
                 
             </PrimaryComment>
         )

@@ -50,7 +50,8 @@ class Board extends React.Component<BoardProps, BoardState> {
             description: "",
             permissions: ["Admin"],
             boardColor: "",
-            boardTextColor: ""
+            boardTextColor: "",
+            editPermission: [],
         },
         postArray: [],
         postComponentArray: [],
@@ -60,6 +61,7 @@ class Board extends React.Component<BoardProps, BoardState> {
     componentDidMount = () => {
         this.fetchBoard();
         this.fetchPosts();
+        
     }
 
     componentDidUpdate = () => {
@@ -68,6 +70,9 @@ class Board extends React.Component<BoardProps, BoardState> {
             this.fetchBoard();
             this.fetchPosts();
         }
+        console.log(this.props.firebaseUserData.role)
+        console.log(this.state.firestoreBoard.editPermission)
+        console.log(this.state.firestoreBoard.editPermission.includes(this.props.firebaseUserData.role))
     }
 
     addPostLink = () => {
@@ -85,7 +90,8 @@ class Board extends React.Component<BoardProps, BoardState> {
                         description: data.description,
                         permissions: data.permissions,
                         boardColor: data.boardColor,
-                        boardTextColor: data.boardTextColor
+                        boardTextColor: data.boardTextColor,
+                        editPermission: data.editPermission,
                     }
                 })
             })
@@ -242,11 +248,15 @@ class Board extends React.Component<BoardProps, BoardState> {
                     <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
                         {this.state.firestoreBoard.description}
                     </Headline>
-                    <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
-                        <Headline color='white' style={{ textAlign: 'center' }}>
-                            + 게시글 올리기
-                        </Headline>
-                    </GoldenButton>
+                    {this.state.firestoreBoard.editPermission.includes(this.props.firebaseUserData.role) ? 
+                        <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
+                            <Headline color='white' style={{ textAlign: 'center' }}>
+                                + 게시글 올리기
+                            </Headline>
+                        </GoldenButton> 
+                    : 
+                        <div/>
+                    }
                 </TextContainer>
                 <BoardNavbarContainer>
                     <BoardNavbar currentRoute={this.props.boardId} />

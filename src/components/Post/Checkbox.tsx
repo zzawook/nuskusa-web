@@ -53,28 +53,13 @@ class Checkbox extends React.Component<CheckboxProps, CheckboxState> {
         }
     }
 
-    static getDerivedStateFromProps(newProps: any, prevState: any) {
-        return {
-            checked: newProps.init
-        }
+    componentDidUpdate() {
+        console.log(this.state.checked)
     }
 
+    
+
     render() {
-        const handleCheck = (e: any) => {
-            e.preventDefault();
-            this.props.setter();
-            console.log(this.props.setter)
-            if (! this.state.checked) {
-                this.setState({
-                    checked: true
-                })
-            }
-            else {
-                this.setState({
-                    checked: false
-                })
-            }
-        }
 
         const handleMouseEnter = (e: any) => {
             e.preventDefault();
@@ -89,15 +74,21 @@ class Checkbox extends React.Component<CheckboxProps, CheckboxState> {
                 mouseEntered: false
             })
         }
-        const checkboxStyle = {
-            height: '12px',
-            width: '12px',
-            border: '1px solid white',
-            backgroundColor: this.state.mouseEntered ? '#7d7d7d' : this.state.checked ? '#FFFFFF' : '#0B121C',
-        }
         return (
             <Container>
-                <CheckBox style={checkboxStyle} onClick={handleCheck} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}></CheckBox>
+                <CheckBox 
+                    style={{
+                        height: '12px',
+                        width: '12px',
+                        border: '1px solid white',
+                        backgroundColor: this.state.mouseEntered ? '#7d7d7d' : this.state.checked ? '#FFFFFF' : '#0B121C',
+                    }} 
+                    onClick={(e) => {
+                        e.preventDefault();
+                        this.setState({
+                            checked: !this.state.checked,
+                    })
+                }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}></CheckBox>
                 <Label>{this.state.label}</Label>
             </Container>
         )

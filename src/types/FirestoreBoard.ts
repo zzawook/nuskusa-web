@@ -4,5 +4,6 @@ export interface FirestoreBoard {
     permissions: string[],
     boardId: string,
     boardColor: string,
-    boardTextColor: string
+    boardTextColor: string,
+    editPermission: string[],
 }
