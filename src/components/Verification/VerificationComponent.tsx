@@ -1,4 +1,5 @@
 import React from 'react';
+import { FirebaseUser } from '../../types/FirebaseUser';
 import { FirestoreUserVerification } from '../../types/FirestoreUserVerification';
 import { dbService, storageService } from '../../utils/firebaseFunctions';
 
@@ -16,9 +17,14 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
     handleAccept = () => {
         storageService.ref(`verifications/${this.props.verificationId}`)
             .delete()
-            .then(() => {
+            .then(async () => {
+                const userDetail = (await dbService.collection('verifications').doc(this.props.verificationId).get()).data() as FirebaseUser
                 dbService.collection('users').doc(this.props.firestoreVerificationData.ownerUID).update({
-                    isVerified: true
+                    isVerified: true,
+                    enrolledYear: userDetail.enrolledYear,
+                    major: userDetail.major,
+                    faculty: userDetail.faculty,
+                    role: "student",
                 })
             })
             .then(() => {

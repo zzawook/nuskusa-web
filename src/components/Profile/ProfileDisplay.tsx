@@ -37,15 +37,36 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             .get()
             .then((doc) => {
                 const data = doc.data();
-                const notifications = data?.notificationArray as FirestoreNotification[];
-                let key = 0;
-                let notificationComponents = notifications
-                    .map((element: any) => {
-                        key++;
-                        return <>
-                            <NotificationComponent data={element} key={key} ></NotificationComponent>
-                        </>
-                    }).reverse();
+                let notifications = data?.notificationArray as FirestoreNotification[];
+                let notificationComponents: any[] = [];
+                if (notifications) {
+                    notifications = notifications.sort((a: FirestoreNotification, b: FirestoreNotification) => {
+                        if (a.isRead && !b.isRead) {
+                            return 1;
+                        } else if (a.isRead && b.isRead) {
+                            if (a.timestamp > b.timestamp) {
+                                return 1;
+                            } else if (a.timestamp.isEqual(b.timestamp)) {
+                                return 0;
+                            } else {
+                                return -1;
+                            }
+                        } else if (!a.isRead && b.isRead) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    })
+                    let key = 0;
+                    notificationComponents = notifications
+                        .map((element: any) => {
+                            key++;
+                            return <>
+                                <NotificationComponent data={element} key={key} ></NotificationComponent>
+                            </>
+                        }).reverse();
+                }
+
                 if (notificationComponents.length === 0) {
                     this.setState({
                         notificationArray: [<NoNewsAlert>There is nothing new!</NoNewsAlert>]

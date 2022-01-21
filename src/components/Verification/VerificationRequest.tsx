@@ -1,12 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { authService } from '../../utils/firebaseFunctions'
+import { FirebaseUser } from '../../types/FirebaseUser'
 import { DisplayLarge, DisplaySmall } from '../../utils/ThemeText'
 import VerificationForm from './VerificationForm'
 
 type VerificationProps = {
     isModal: Boolean,
     onClose: Function,
+    firebaseUserData: FirebaseUser,
 }
 
 type VerificationState = {
@@ -74,22 +75,28 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
         `
         return (
             <>
-                {! this.props.isModal ? 
-                        <ModalWrapper onClick={(e) => { e.stopPropagation() }}>
-                            <ModalContent>
-                                <CloseButton onClick={this.onCloseClick}>X</CloseButton>
-                                <DisplayLarge color={"#000000"} style={{ marginLeft: '10%', opacity: '0.7' }}>학생 인증</DisplayLarge>
+                {
+                    !this.props.firebaseUserData.isVerified ?
+                        !this.props.isModal ?
+                            <ModalWrapper onClick={(e) => { e.stopPropagation() }}>
+                                <ModalContent>
+                                    <CloseButton onClick={this.onCloseClick}>X</CloseButton>
+                                    <DisplayLarge color={"#000000"} style={{ marginLeft: '10%', opacity: '0.7' }}>학생 인증</DisplayLarge>
+                                    <DisplaySmall color={"#000000"} style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
+                                    <VerificationForm />
+                                </ModalContent>
+                            </ModalWrapper>
+                            :
+                            <ContentWrapper>
+                                <DisplayLarge color={"#000000"} style={{ marginLeft: '10%', opacity: '0.7', paddingTop: '5%' }}>학생 인증</DisplayLarge>
                                 <DisplaySmall color={"#000000"} style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
                                 <VerificationForm />
-                            </ModalContent>
-                        </ModalWrapper>
-                    :
-                    <ContentWrapper>
-                        <DisplayLarge color={"#000000"} style={{ marginLeft: '10%', opacity: '0.7', paddingTop: '5%' }}>학생 인증</DisplayLarge>
-                        <DisplaySmall color={"#000000"} style={{ opacity: '0.7' }}>Verify to get access to more boards and posts! </DisplaySmall>
-                        <VerificationForm />
-                    </ContentWrapper>}
+                            </ContentWrapper>
+                        :
+                        <></>
+                }
             </>
+
         )
     }
 

@@ -117,9 +117,10 @@ class VerificationForm extends React.Component<FormProps, FormState> {
 
     handleSubmit = async (event: any) => {
         event.preventDefault();
+        const verificationRef = dbService.collection("verifications").doc()
         if (this.state.verificationFile) {
             const uploadTask = storageService
-                .ref(`verifications/${this.state.verificationFile.name}`)
+                .ref(`verifications/${verificationRef.id}`)
                 .put(this.state.verificationFile);
 
             uploadTask.on('state_changed',
@@ -130,12 +131,11 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                 () => {
                     if (this.state.verificationFile) {
                         storageService.ref('verifications')
-                            .child(this.state.verificationFile.name)
+                            .child(verificationRef.id)
                             .getDownloadURL()
                             .then(async (url) => {
                                 const batch = await dbService.batch()
                                 try {
-                                    const verificationRef = dbService.collection("verifications").doc()
                                     const userRef = dbService.collection("users").doc(authService.currentUser?.uid)
                                     batch.set(verificationRef, {
                                         downloadURL: url,
@@ -159,9 +159,7 @@ class VerificationForm extends React.Component<FormProps, FormState> {
 
                 }
             )
-            this.setState({
-                isVisible: false
-            })
+
         }
     }
 

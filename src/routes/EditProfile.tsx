@@ -426,7 +426,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         return (
             <Container>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {this.state.verificiationOpen ? <VerificationRequest isModal={false} onClose={closeModal} /> : <></>}
+                {this.state.verificiationOpen ? <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={false} onClose={closeModal} /> : <></>}
                 <ProfileContainer>
                     <ImgAndName>
                         <Profile src={this.state.profileChanged ? URL.createObjectURL(this.state.userData.profilePictureURL) : this.props.firebaseUserData.profilePictureURL === 'undefined' || this.props.firebaseUserData.profilePictureURL === "" || this.props.firebaseUserData.profilePictureURL === undefined ? defaultProfile : this.props.firebaseUserData.profilePictureURL}></Profile>

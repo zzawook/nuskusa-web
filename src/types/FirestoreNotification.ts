@@ -1,3 +1,4 @@
+import firebase from "firebase";
 /**
  * type field is in the format of a/b
  * a can be the following:
@@ -19,4 +20,5 @@ export interface FirestoreNotification {
     message: string, 
     link: string,
     data: any,
+    timestamp: firebase.firestore.Timestamp,
 }

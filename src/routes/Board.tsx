@@ -231,7 +231,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 {this.props.firebaseUserData.isVerified != false//true
                     ? displayVerification === "yes"
                         ?
-                        <VerificationRequest isModal={true} onClose={() => {}}/>
+                        <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={true} onClose={() => {}}/>
                         :
                         <></>
                     : <></>}
