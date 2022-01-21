@@ -24,7 +24,7 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
                     enrolledYear: userDetail.enrolledYear,
                     major: userDetail.major,
                     faculty: userDetail.faculty,
-                    role: "Undergraduate",
+                    role: "student",
                 })
             })
             .then(() => {

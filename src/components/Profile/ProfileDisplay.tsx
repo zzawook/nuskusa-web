@@ -38,6 +38,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             .then((doc) => {
                 const data = doc.data();
                 let notifications = data?.notificationArray as FirestoreNotification[];
+                let notificationComponents: any[] = [];
                 if (notifications) {
                     notifications = notifications.sort((a: FirestoreNotification, b: FirestoreNotification) => {
                         if (a.isRead && !b.isRead) {
@@ -56,15 +57,16 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                             return 0;
                         }
                     })
+                    let key = 0;
+                    notificationComponents = notifications
+                        .map((element: any) => {
+                            key++;
+                            return <>
+                                <NotificationComponent data={element} key={key} ></NotificationComponent>
+                            </>
+                        }).reverse();
                 }
-                let key = 0;
-                let notificationComponents = notifications
-                    .map((element: any) => {
-                        key++;
-                        return <>
-                            <NotificationComponent data={element} key={key} ></NotificationComponent>
-                        </>
-                    }).reverse();
+
                 if (notificationComponents.length === 0) {
                     this.setState({
                         notificationArray: [<NoNewsAlert>There is nothing new!</NoNewsAlert>]
