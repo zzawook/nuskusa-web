@@ -103,13 +103,14 @@ const EmailText = styled.span`
     width: 20%;
     z-index: 10;
 `
-const EmailInput = styled.input`
+const EmailInput = styled.span`
     width: 60%;
     height: 30px;
     font-weight: 600;
     color: #d9d9d9;
     z-index: 10;
-    color: grey;
+    color: white;
+    opacity: 0.85;
 `
 const Verified = styled.div`
     margin-top: 30px;
@@ -304,7 +305,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                 const currentProfile = this.state.userData;
                 currentProfile.profilePictureURL = 'undefined';
 
-                dbService.collection('uers').doc(this.props.userId).update({ profilePictureURL: 'undefined' })
+                dbService.collection('users').doc(this.props.userId).update({ profilePictureURL: 'undefined' })
 
                 this.setState({
                     userData: currentProfile,
@@ -435,7 +436,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                     </ImgAndName>
                     <Email>
                         <EmailText>이메일 / Email</EmailText>
-                        <EmailInput value={this.props.firebaseUserData.email} readOnly={true} />
+                        <EmailInput>{this.props.firebaseUserData.email}</EmailInput>
                     </Email>
                     <Verified>
                         <IsVerifiedText>Account Verification<br /> 계정 인증</IsVerifiedText>

@@ -21,7 +21,7 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
     }
 
     componentDidMount = () => {
-
+        console.log(typeof this.props.firebaseUserData.profilePictureURL)
     }
 
     render = () => {
@@ -48,7 +48,7 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         `
         return (
             <AvatarWrapper>
-                {this.props.firebaseUserData.profilePictureURL != undefined ? <ProfileImg src={this.props.firebaseUserData.profilePictureURL} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile>}
+                {this.props.firebaseUserData.profilePictureURL != undefined && this.props.firebaseUserData.profilePictureURL != "undefined" ? <ProfileImg src={this.props.firebaseUserData.profilePictureURL} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile>}
             </AvatarWrapper>
         )
     }

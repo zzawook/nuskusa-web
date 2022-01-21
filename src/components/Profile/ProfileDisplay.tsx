@@ -138,6 +138,11 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             flex-direction: row;
             cursor: pointer;
             text-decoration: ${this.state.mouseLogoutEnter ? 'underline' : 'none'};
+            opacity: 0.6;
+
+            :hover {
+                opacity: 1.0;
+            }
         `
         const LogOutText = styled.span`
             line-height: 50px;
@@ -154,6 +159,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
         const ProfileEdit = styled.span`
             :hover {
                 text-decoration: underline;
+                opacity: 1.0;
             }
 
             flex: 1;
@@ -162,6 +168,13 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             margin-right: 10px;
             text-decoration: none;
             cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            opacity: 0.6;
+        `
+        const BottomBanner = styled.div`
+            display: flex;
+            flex-direction: row;
         `
 
         const handleMouseEnter = (e: any) => {
@@ -187,6 +200,10 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             });
         }
 
+        const handleEditProfile = () => {
+            window.location.href = "#/editProfile"
+        }
+
         return (
             <>
                 {
@@ -205,10 +222,15 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                             <NotificationWrapper>
                                 {this.state.notificationArray}
                             </NotificationWrapper>
-                            <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
-                                <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
-                                <LogOutText>Log Out</LogOutText>
-                            </LogOut>
+                            <BottomBanner>
+                                <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
+                                    <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
+                                    <LogOutText>Log Out</LogOutText>
+                                </LogOut>
+                                <EmptyDiv/>
+                                <ProfileEdit onClick={handleEditProfile}>Edit Profile</ProfileEdit>
+                            </BottomBanner>
+                            
                         </Wrapper>
                         :
                         <ProfileDisplayEmpty />

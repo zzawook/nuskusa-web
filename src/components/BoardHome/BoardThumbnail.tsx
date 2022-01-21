@@ -41,7 +41,7 @@ class BoardThumbnail extends React.Component<BoardProps, BoardState> {
             height: 15vh;
             overflow-x: hidden;
             margin-right: auto;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             :hover {
                 background: ${this.props.boardColor};
             }

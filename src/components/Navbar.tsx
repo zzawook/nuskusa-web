@@ -160,15 +160,13 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                 <NavbarContent>
                     <Logo src={logo} width='64' height='64' onClick={handleLogoClick}></Logo>
                     <NavbarButtonContainer>
-                        
-                            <NavbarButton onMouseEnter={() => this.setState({homeHover: true})} onMouseLeave={() => this.setState({homeHover: false})}>
+                        <NavbarButton onMouseEnter={() => this.setState({homeHover: true})} onMouseLeave={() => this.setState({homeHover: false})} onClick={() => window.location.href = "#/"}>
                             <Link to='/home' style={{ color: '#FFFFFF', textDecoration: 'none' }}><HomeText hover={this.state.homeHover}>Home</HomeText></Link>
-                            </NavbarButton>
-                        
-                        <NavbarButton onMouseEnter={() => this.setState({aboutUsHover: true})} onMouseLeave={() => this.setState({aboutUsHover: false})}>
+                        </NavbarButton>
+                        <NavbarButton onMouseEnter={() => this.setState({aboutUsHover: true})} onMouseLeave={() => this.setState({aboutUsHover: false})} onClick={() => window.location.href = "#/about-us"}>
                             <AboutUsText hover={this.state.aboutUsHover}><Link to='/about-us' style={{ color: '#FFFFFF', textDecoration: 'none' }}>About Us</Link></AboutUsText>
                         </NavbarButton>
-                        <NavbarButton onMouseEnter={() => this.setState({boardHover: true})} onMouseLeave={() => this.setState({boardHover: false})}>
+                        <NavbarButton onMouseEnter={() => this.setState({boardHover: true})} onMouseLeave={() => this.setState({boardHover: false})} onClick={() => window.location.href = "#/boards"}>
                             <BoardText hover={this.state.boardHover}><Link to='/boards' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
                         </NavbarButton>
                     </NavbarButtonContainer>
