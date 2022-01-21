@@ -199,7 +199,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                                 <Avatar firebaseUserData={this.props.firebaseUserData} dimension={40} isOnNavbar={false} />
                                 <NameEmailWrapper>
                                     <Name>{this.props.firebaseUserData.username}</Name>
-                                    <Email>{this.props.firebaseUserData.username}</Email>
+                                    <Email>{this.props.firebaseUserData.email}</Email>
                                 </NameEmailWrapper>
                             </ProfileDisplayWrapper>
                             <NotificationWrapper>

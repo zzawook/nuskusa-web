@@ -107,8 +107,6 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
     }
 
     componentDidMount() {
-        console.log(this.props);
-        console.log(this.state)
     }
 
     getBoard(boardName: string) {

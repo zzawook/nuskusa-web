@@ -12,6 +12,7 @@ type CommentProps = {
     boardId: string,
     postId: string,
     firebaseUserData: FirebaseUser,
+    reset: any,
 }
 
 type CommentState = {
@@ -101,13 +102,13 @@ class Comment extends React.Component<CommentProps, CommentState> {
     componentDidMount() {
         console.log(this.props.comments)
         this.setState({
-            commentArray: this.props.comments.map((element, i) => <Primary data={element} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData} commentId={this.props.commentIds[i]}/>)
+            commentArray: this.props.comments.map((element, i) => <Primary reset={this.props.reset} data={element} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData} commentId={this.props.commentIds[i]}/>)
         })
     }
 
     static getDerivedStateFromProps(nextProps: CommentProps, prevState: CommentState) {
         return {
-            commentArray: nextProps.comments.map((element, i) => <Primary data={element} boardId={nextProps.boardId} postId={nextProps.postId} firebaseUserData={nextProps.firebaseUserData} commentId={nextProps.commentIds[i]}/>)
+            commentArray: nextProps.comments.map((element, i) => <Primary reset={nextProps.reset} data={element} boardId={nextProps.boardId} postId={nextProps.postId} firebaseUserData={nextProps.firebaseUserData} commentId={nextProps.commentIds[i]}/>)
         }
     }
 
@@ -132,11 +133,15 @@ class Comment extends React.Component<CommentProps, CommentState> {
                 .collection('comments')
                 .add({
                     author: this.props.firebaseUserData.username,
+                    authorId: this.props.firebaseUserData.userId,
                     content: this.state.commentEntered,
                     isReply: false,
                     lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
                     upvoteArray: [],
                     replies: [],
+                    postId: this.props.postId,
+                    boardId: this.props.boardId,
+                    replyTo: null,
                 })
             this.setState({
                 commentEntered: ""

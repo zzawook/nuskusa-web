@@ -1,5 +1,5 @@
 import React from "react";
-import { dbService } from "../utils/firebaseFunctions";
+import { authService, dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
 import { FirestorePost } from '../types/FirestorePost'
@@ -12,6 +12,8 @@ import Upvote from "../components/Post/Upvote";
 import { FaRegComment } from "react-icons/fa"
 import { AiOutlineComment } from "react-icons/ai";
 import { RouteComponentProps } from "react-router-dom";
+import DeletePost from '../components/Post/DeletePost';
+import EditPostButton from '../components/Post/EditPostButton'
 
 type RouteProps = {
     boardId: string,
@@ -69,6 +71,9 @@ const Header = styled.div`
     left: 0%;
     order: 1;
     height: 60px;
+    width: 70%;
+    display: flex;
+    flex-direction: row;
 `
 const ProfileImg = styled.img`
     width: 20px;
@@ -138,6 +143,8 @@ const RecentPostTitle = styled.span`
     line-height: 24px;
     color: #a8a8a8;
 `
+const PostControl = styled.div`
+`
 class Post extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
         super(props);
@@ -169,7 +176,6 @@ class Post extends React.Component<PostProps, PostState> {
             recentPosts: [],
             recentPostIds: [],
             profileImg: 'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5',
-
         }
     }
 
@@ -191,6 +197,10 @@ class Post extends React.Component<PostProps, PostState> {
         } else {
             return null;
         }
+    }
+
+    reset = () => {
+        this.fetchPost()
     }
 
     getLastUpdated = (time: any) => {
@@ -374,6 +384,15 @@ class Post extends React.Component<PostProps, PostState> {
                         <ProfileImg src={this.state.profileImg} />
                         <Title>{this.state.firestorePost.title}</Title>
                         <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
+                        {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} userId={this.props.firebaseUserData.userId}/> : <div/>}
+                        {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <span style={{
+                            verticalAlign: 'bottom',
+                            lineHeight: '58px',
+                            color: 'white',
+                            opacity: '0.6',
+                        }}>|</span> : ''}
+                        {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div/>}    
+                        
                     </Header>
                     <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />
                     <ETC>
@@ -384,7 +403,7 @@ class Post extends React.Component<PostProps, PostState> {
                         </CommentNum>
 
                     </ETC>
-                    <Comment comments={this.state.commentArray} commentIds={this.state.commentIdArray} boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} />
+                    <Comment reset={this.fetchPost} comments={this.state.commentArray} commentIds={this.state.commentIdArray} boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} />
                     <RecentPostTitle>Other posts</RecentPostTitle>
                     <RecentPosts>{this.state.recentPosts.map((element, i) => {
                         key++

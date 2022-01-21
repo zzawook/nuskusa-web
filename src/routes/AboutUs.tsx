@@ -40,9 +40,12 @@ const Member = styled.div`
 `
 const GroupPhoto = styled.img`
     position: absolute;
-    height: 500px;
+    min-width: ${width * 0.49}px;
+    min-height: 200px;
+    max-height: 500px;
+    max-width: ${width * 0.7}px;
     top: 160px;
-    right: 0%;
+    left: ${((width * 0.7) - (width * 0.49)) / 2}px;
 `
 const HR = styled.div`
     position: absolute;

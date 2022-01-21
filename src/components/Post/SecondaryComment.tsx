@@ -12,6 +12,8 @@ type SecondaryProps = {
     postId: string,
     commentId: string,
     firebaseUserData: FirebaseUser,
+    delete: any,
+    index: number,
 }
 
 type SecondaryState = {
@@ -149,6 +151,20 @@ const Submit = styled.button`
     font-weight: bold;
     font-size: 16px;
 `
+const Delete = styled.span`
+    position: relative;
+    left: 180px;
+    bottom: 0px;
+    color: white;
+    opacity: 0.6;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+
+    :hover {
+        opacity: 1;
+    }
+`
 
 class Secondary extends React.Component<SecondaryProps, SecondaryState> {
     constructor(props: SecondaryProps) {
@@ -282,7 +298,7 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
                 lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
                 upvoteArray: [],
                 replies: [],
-                replyTo: undefined,
+                replyTo: dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${this.props.commentId}`),
                 postId: this.props.postId,
                 boardId: this.props.boardId,
             }
@@ -311,12 +327,32 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             })
             this.fetchComment()
         }
+        
+        const handleDeleteClick = () => {
+            const confirmed = window.confirm("정말 삭제하시겠습니까?");
+            if (confirmed) {
+                this.props.data.replyTo.update({
+                    replies: firebase.firestore.FieldValue.arrayRemove(dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId))   
+                });
+                dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId).delete();
+                this.props.delete(this.props.index);
+            }
+        }
+
+        const handleCommentDelete = (commentIndex: number) => {
+            const temp = this.state.secondary;
+            temp.splice(commentIndex, 1);
+            this.setState({
+                secondary: temp
+            })
+        }
 
         return (
             <Container>
                 <LeftBar />
                 <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} />
                 <LastModified>{this.getLastUpdated(this.props.data.lastModified)}</LastModified>
+                {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete>: <div />}
                 <Content>{this.props.data.content}</Content>
 
                 <CommentUpvote style={{ position: 'relative', left: '160px', top: '34px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
@@ -326,7 +362,7 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
                     <Cancel onClick={handleCancelClick}>Cancel</Cancel>
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form> : <div />}
-                {this.state.secondary.map((element, i) => <Secondary data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData} />)}
+                {this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData} />)}
             </Container>
         )
     }

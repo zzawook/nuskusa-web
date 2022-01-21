@@ -34,6 +34,7 @@ class BoardThumbnail extends React.Component<BoardProps, BoardState> {
         const ThumbnailContainer = styled.div`
             display: flex;
             flex-direction: column;
+            justify-content: center;
             background: rgba(0, 0, 0, 0); 
             border: 2px solid ${this.props.boardColor};
             width: 40%;

@@ -11,11 +11,19 @@ type NavbarProps = {
     firebaseUserData: FirebaseUser
 }
 
-class Navbar extends React.Component<NavbarProps, {}> {
+type NavBarState = {
+    homeHover: boolean,
+    aboutUsHover: boolean,
+    boardHover: boolean,
+}
+
+class Navbar extends React.Component<NavbarProps, NavBarState> {
     constructor(props: NavbarProps) {
         super(props)
         this.state = {
-
+            homeHover: true,
+            aboutUsHover: false,
+            boardHover: false,
         }
     }
 
@@ -42,7 +50,7 @@ class Navbar extends React.Component<NavbarProps, {}> {
         const Logo = styled.img`
             /* width: auto; */
             margin: auto 0;
-            margin-right: 0;
+            margin-right: 20px;
             justify-content: flex-start;
             cursor: pointer;
         `
@@ -52,6 +60,11 @@ class Navbar extends React.Component<NavbarProps, {}> {
             /* width: fit-content; */
         `
         const NavbarButton = styled.button`
+            :hover {
+                cursor: pointer;
+                opacity: 1;
+                background: #18202B;
+            }
             display: inline-block;
             border: none;
             background: #0B121C;
@@ -59,6 +72,7 @@ class Navbar extends React.Component<NavbarProps, {}> {
             width: fit-content;
             height: auto;
             vertical-align: middle;
+            opacity: 0.6;
             /* ::after {
                 border-bottom: 3px solid #FFFFFF;
                 width: 44px;
@@ -69,7 +83,7 @@ class Navbar extends React.Component<NavbarProps, {}> {
                 border-radius: 5px;
             } */
         `
-        const NavbarText = styled.p`
+        const HomeText = styled.p<{hover: boolean}>`
             color: #FFFFFF;
             font-size: 16px;
             padding-left: 2%;
@@ -78,13 +92,31 @@ class Navbar extends React.Component<NavbarProps, {}> {
             position: relative;
             margin-bottom: auto;
             box-sizing: border-box;
-            opacity: 0.6;
-            :hover {
-                opacity: 1;
-            }
         `
-
+        const AboutUsText = styled.p<{hover: boolean}>`
+            color: #FFFFFF;
+            font-size: 16px;
+            padding-left: 2%;
+            padding-right: 2%;
+            width: 100px;
+            position: relative;
+            margin-bottom: auto;
+            box-sizing: border-box;
+        `
+        const BoardText = styled.p<{hover: boolean}>`
+            color: #FFFFFF;
+            font-size: 16px;
+            padding-left: 2%;
+            padding-right: 2%;
+            width: 100px;
+            position: relative;
+            margin-bottom: auto;
+            box-sizing: border-box;
+        `
         const SignUpButton = styled.button`
+            :hover {
+                cursor: pointer;
+            }
             background-color: #FFFFFF;
             border: 1px;
             height: fit-content;
@@ -93,6 +125,9 @@ class Navbar extends React.Component<NavbarProps, {}> {
             margin-right: 5px;
         `
         const SignInButton = styled.button`
+            :hover {
+                cursor: pointer;
+            }
             background-color: #0B121C;
             border: 1px solid #FFFFFF;
             height: fit-content;
@@ -125,17 +160,16 @@ class Navbar extends React.Component<NavbarProps, {}> {
                 <NavbarContent>
                     <Logo src={logo} width='64' height='64' onClick={handleLogoClick}></Logo>
                     <NavbarButtonContainer>
-                        <NavbarButton>
-                            <NavbarText><Link to='/home' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Home</Link></NavbarText>
+                        
+                            <NavbarButton onMouseEnter={() => this.setState({homeHover: true})} onMouseLeave={() => this.setState({homeHover: false})}>
+                            <Link to='/home' style={{ color: '#FFFFFF', textDecoration: 'none' }}><HomeText hover={this.state.homeHover}>Home</HomeText></Link>
+                            </NavbarButton>
+                        
+                        <NavbarButton onMouseEnter={() => this.setState({aboutUsHover: true})} onMouseLeave={() => this.setState({aboutUsHover: false})}>
+                            <AboutUsText hover={this.state.aboutUsHover}><Link to='/about-us' style={{ color: '#FFFFFF', textDecoration: 'none' }}>About Us</Link></AboutUsText>
                         </NavbarButton>
-                        <NavbarButton>
-                            <NavbarText><Link to='/about-us' style={{ color: '#FFFFFF', textDecoration: 'none' }}>About Us</Link></NavbarText>
-                        </NavbarButton>
-                        <NavbarButton>
-                            <NavbarText><Link to='/boards' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></NavbarText>
-                        </NavbarButton>
-                        <NavbarButton>
-                            <NavbarText><Link to='/contacts' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Contact Us</Link></NavbarText>
+                        <NavbarButton onMouseEnter={() => this.setState({boardHover: true})} onMouseLeave={() => this.setState({boardHover: false})}>
+                            <BoardText hover={this.state.boardHover}><Link to='/boards' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
                         </NavbarButton>
                     </NavbarButtonContainer>
                 </NavbarContent>

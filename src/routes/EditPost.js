@@ -102,6 +102,10 @@ const Back = styled.button`
     border: none;
     font-weight: 600;
     padding-left: 30px;
+    cursor: pointer;
+    :hover {
+        color: white;
+    }
 `
 const Editor = styled.div` 
     position: absolute;
@@ -140,7 +144,7 @@ const CheckBoxContainer = styled.div`
     left: ${width * 0.15}px;
 `
 
-class AddPost extends React.Component {
+class EditPost extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -151,9 +155,16 @@ class AddPost extends React.Component {
             isPinned: false,
             isHidden: false,
             author: '',
+            authorId: "",
             upvotes: 0,
             lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
             permissions: ["Admin"],
+            numComments: 0, //DO NOT CHANGE
+            parentBoardId: this.props.boardId,
+            upvoteArray: [], //DO NOT CHANGE
+            parentColor: "",
+            parentTextColor: "",
+            parentBoardTitle: "",
         }
     }
 
@@ -186,16 +197,16 @@ class AddPost extends React.Component {
             }
             this.selectedBoard = { value: 'announcement', label: '공지사항' };
         }
-        else if (this.props.boardId = 'event') {
+        else if (this.props.boardId == 'event') {
             this.selectedBoard = { value: 'event', label: '이벤트' };
         }
-        else if (this.props.boardId = 'general') {
+        else if (this.props.boardId == 'general') {
             this.selectedBoard = { value: 'general', label: '자유게시판' };
         }
-        else if (this.props.boardId = 'grove') {
+        else if (this.props.boardId == 'grove') {
             this.selectedBoard = { value: 'grove', label: '대나무숲' };
         }
-        else if (this.props.boardId = 'jobs') {
+        else if (this.props.boardId == 'jobs') {
             this.selectedBoard = { value: 'jobs', label: '취업/인턴' };
         }
         this.fetchPost();
@@ -223,18 +234,7 @@ class AddPost extends React.Component {
                         if (data.permissions.includes(this.props.firebaseUserData.role)/* || data.permissions.includes("User")*/) {
                             console.log("I entered");
                             this.content = data.content;
-                            this.setState({
-                                title: data.title,
-                                content: data.content,
-                                author: data.author,
-                                isAnnouncement: data.isAnnouncement,
-                                isAnonymous: data.isAnonymous,
-                                isHidden: data.isHidden,
-                                isPinned: data.isPinned,
-                                lastModified: data.lastModified,
-                                permissions: data.permissions,
-                                upvotes: data.upvotes,
-                            }, () => {
+                            this.setState(data, () => {
                                 console.log(this.state)
                             })
                         } 
@@ -254,6 +254,7 @@ class AddPost extends React.Component {
         this.submitted = true;
         this.setState({
             content: this.content,
+            lastModified: firebase.firestore.Timestamp.fromDate(new Date())
         }, () => {
             if (this.selectedBoard === null) {
                 window.alert("Please select a board to post your article. \n \n 게시판을 선택해주세요.")
@@ -274,7 +275,12 @@ class AddPost extends React.Component {
             dbService
                 .collection('boards').doc(this.selectedBoard.value)
                 .collection('posts').doc(this.props.postId)
-                .update(this.state);
+                .update(this.state).then(() => {
+                    window.alert("게시물을 성공적으로 업데이트 했습니다.")
+                    window.location.href = `#/boards/${this.props.boardId}/${this.props.postId}`
+                }).catch(err => {
+                    window.alert('게시물을 업데이트 하는 중 오류가 발생했습니다. - ' + err.toString())
+                });
         })
         
     }
@@ -328,7 +334,6 @@ class AddPost extends React.Component {
                 'insertTable',
                 '|',
                 'imageUpload',
-                'mediaEmbed',
                 'undo',
                 'redo'
               ]
@@ -443,14 +448,14 @@ class AddPost extends React.Component {
         }
         const handleBackClick = (e) => {
             e.preventDefault();
-            window.history.go(-1);
+            window.history.back();
         }
 
         return (
             <Container>
-                <Navbar />
-                <Back><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} onClick={handleBackClick}/>Back</Back>
-                <SelectContainer><Select options={this.options} value={this.selectedBoard} styles={customStyle} onChange={this.handleSelectChange}/></SelectContainer>
+                <Navbar firebaseUserData={this.props.firebaseUserData}/>
+                <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
+                <SelectContainer><Select options={this.options} isDisabled={true} value={this.selectedBoard} styles={customStyle} onChange={this.handleSelectChange}/></SelectContainer>
                 <Form><Title type='text' key="titleInput" value={this.state.title} onChange={this.handleTitleChange} onBlur={this.handleTitleBlur} onFocus={this.handleTitleFocus}/></Form>
                 <Editor>
                     <CKEditor
@@ -477,10 +482,10 @@ class AddPost extends React.Component {
                     {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.isHidden}/> : <div/>}
                     {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={this.state.isAnnouncement}/> : <div/>}
                 </CheckBoxContainer>
-                <Submit onClick={this.handleSubmit} submitted={this.submitted}>Post</Submit>
+                <Submit onClick={this.handleSubmit} submitted={this.submitted}>Edit</Submit>
             </Container>
         )
     }
 }
 
-export default AddPost;
+export default EditPost;
