@@ -5,6 +5,7 @@ import { FirebaseUser } from "../../types/FirebaseUser";
 import { dbService } from '../../utils/firebaseFunctions'
 import firebase from 'firebase';
 import CommentUpvote from "./CommentUpvote";
+import { timestampToCommentDateString } from "../../utils/TimeHelper";
 
 type SecondaryProps = {
     data: any,
@@ -208,66 +209,6 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
         })
     }
 
-    getLastUpdated = (time: any) => {
-        const timeFromNow = (Date.now() - (time.seconds * 1000)) / 1000;
-        const minutesFromNow = Math.floor(timeFromNow / 60)
-        const hoursFromNow = Math.floor(timeFromNow / (60 * 60))
-        if (hoursFromNow >= 1 && hoursFromNow < 24) {
-            return hoursFromNow.toString() + " hours ago"
-        }
-        else if (minutesFromNow >= 1 && minutesFromNow < 60) {
-            return minutesFromNow.toString() + " minutes ago"
-        }
-        else if (minutesFromNow <= 1) {
-            return 'Just now'
-        }
-        else {
-            return this.monthToString(time.toDate().getMonth()) + " " + time.toDate().getDate().toString() + " " + time.toDate().getFullYear().toString();
-        }
-    }
-
-    monthToString = (month: number) => {
-        if (month == 1) {
-            return "January";
-        }
-        else if (month === 2) {
-            return "February";
-        }
-        else if (month === 3) {
-            return "March";
-        }
-        else if (month === 4) {
-            return "April";
-        }
-        else if (month === 5) {
-            return "May";
-        }
-        else if (month === 6) {
-            return "June"
-        }
-        else if (month === 7) {
-            return 'July'
-        }
-        else if (month === 8) {
-            return 'August';
-        }
-        else if (month === 9) {
-            return 'September'
-        }
-        else if (month === 10) {
-            return 'October'
-        }
-        else if (month === 11) {
-            return 'November'
-        }
-        else if (month === 12) {
-            return "December"
-        }
-        else {
-            return 'Invalid Month'
-        }
-    }
-
     render() {
         const handleReplyClick = (e: any) => {
             e.preventDefault();
@@ -351,7 +292,7 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             <Container>
                 <LeftBar />
                 <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} />
-                <LastModified>{this.getLastUpdated(this.props.data.lastModified)}</LastModified>
+                <LastModified>{timestampToCommentDateString(this.props.data.lastModified)}</LastModified>
                 {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete>: <div />}
                 <Content>{this.props.data.content}</Content>
 
