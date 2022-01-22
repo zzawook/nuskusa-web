@@ -8,6 +8,7 @@ import firebase from 'firebase';
 import CommentUpvote from "./CommentUpvote";
 import { throws } from "assert";
 import { timestampToCommentDateString } from "../../utils/TimeHelper";
+import { Headline } from "../../utils/ThemeText";
 
 type PrimaryProps = {
     data: any,
@@ -308,6 +309,9 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             <PrimaryComment>
                 <CommentArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FcommentArrow.png?alt=media&token=e484a87e-cff6-4111-b36c-e82cedbe2584'} />
                 <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} />
+                <Headline>
+                    {this.props.data.author}
+                </Headline>
                 <LastModified>
                     {timestampToCommentDateString(this.props.data.lastModified)}
                 </LastModified>
