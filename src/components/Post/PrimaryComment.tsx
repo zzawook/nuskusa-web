@@ -305,28 +305,43 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             })
         }
 
+        const ProfileBox = styled.div`
+            position: relative;
+            display: flex;
+            flex-direction: row;
+        `
+
+        const CommentInfoContainer = styled.div`
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        `
+
         return (
             <PrimaryComment>
                 <CommentArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FcommentArrow.png?alt=media&token=e484a87e-cff6-4111-b36c-e82cedbe2584'} />
-                <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} />
-                <Headline>
-                    {this.props.data.author}
-                </Headline>
-                <LastModified>
-                    {timestampToCommentDateString(this.props.data.lastModified)}
-                </LastModified>
-                {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete>: <div />}
+                <ProfileBox>
+                    <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} />
+                    <CommentInfoContainer>
+                        <Headline > {this.props.data.author} </Headline>
+                        <LastModified>
+                            {timestampToCommentDateString(this.props.data.lastModified)}
+                        </LastModified>
+                    </CommentInfoContainer>
+                </ProfileBox>
+
+                {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
                 <Content>{this.props.data.content}</Content>
                 <CommentUpvote style={{ position: 'relative', left: '90px', top: '5px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
                 <ReplyButton onClick={handleReplyClick}>Reply</ReplyButton>
                 {this.state.replyOpen ? <Form>
-                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered}/>
+                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered} />
                     <Cancel onClick={handleCancelClick}>Cancel</Cancel>
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form> : <div />}
-                {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%204.png?alt=media&token=e83189ba-d386-4232-a473-1b1656d553b3'}/> : <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%203.png?alt=media&token=c39d0931-41d8-4ed1-bd6f-a5491da24e8a'}/>}</SecondaryOpener> : <div/>}
-                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData}/>) : <div />}
-                
+                {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%204.png?alt=media&token=e83189ba-d386-4232-a473-1b1656d553b3'} /> : <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%203.png?alt=media&token=c39d0931-41d8-4ed1-bd6f-a5491da24e8a'} />}</SecondaryOpener> : <div />}
+                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData} />) : <div />}
+
             </PrimaryComment>
         )
     }
