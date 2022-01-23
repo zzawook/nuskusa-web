@@ -56,12 +56,8 @@ const ProfileImg = styled.img`
     background-color: #0B121C;
     position: absolute;
     left: 105px;
-    top: 7px;
 `
 const LastModified = styled.span`
-    position: relative;
-    left: 160px;
-    top: 0px;
     font-weight: 700;
     font-size: 14px;
     line-height: 24.4px;
@@ -70,6 +66,11 @@ const LastModified = styled.span`
 const Content = styled.div`
     position: relative;
     left: 160px;
+    top: 3px;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 17px;
+    width: 90%;
 `
 const Like = styled.img`
     position: relative;
@@ -154,13 +155,14 @@ const Submit = styled.button`
 `
 const Delete = styled.span`
     position: relative;
-    left: 180px;
     bottom: 0px;
     color: white;
     opacity: 0.6;
     cursor: pointer;
     font-weight: 600;
     font-size: 12px;
+    margin-left: 20px;
+    top: 4px;
 
     :hover {
         opacity: 1;
@@ -288,12 +290,44 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             })
         }
 
+        const ProfileBox = styled.div`
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            top: -10px;
+            align-items: flex-center;
+            ;
+        `
+
+        const CommentInfoContainer = styled.div`
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin-left: 160px;
+        `
+        const Name = styled.span`
+            font-size: 14px;
+            line-height: 22px;
+            font-weight: 700;
+            word-wrap: break-word;
+            box-sizing: border-box;
+            text-align: left;
+        `
+
         return (
             <Container>
                 <LeftBar />
-                <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} />
-                <LastModified>{timestampToCommentDateString(this.props.data.lastModified)}</LastModified>
-                {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete>: <div />}
+                <ProfileBox>
+                    <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} /> 
+                    <CommentInfoContainer>
+                        <Name > {this.props.data.author} </Name>    
+                        <LastModified>
+                            {timestampToCommentDateString(this.props.data.lastModified)}
+                        </LastModified>
+                    </CommentInfoContainer>
+                    {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
+                </ProfileBox>
+                
                 <Content>{this.props.data.content}</Content>
 
                 <CommentUpvote style={{ position: 'relative', left: '160px', top: '34px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
