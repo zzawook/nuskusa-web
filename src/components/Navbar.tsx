@@ -83,7 +83,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                 border-radius: 5px;
             } */
         `
-        const HomeText = styled.p<{hover: boolean}>`
+        const HomeText = styled.p<{ hover: boolean }>`
             color: #FFFFFF;
             font-size: 16px;
             padding-left: 2%;
@@ -93,7 +93,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
             margin-bottom: auto;
             box-sizing: border-box;
         `
-        const AboutUsText = styled.p<{hover: boolean}>`
+        const AboutUsText = styled.p<{ hover: boolean }>`
             color: #FFFFFF;
             font-size: 16px;
             padding-left: 2%;
@@ -103,7 +103,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
             margin-bottom: auto;
             box-sizing: border-box;
         `
-        const BoardText = styled.p<{hover: boolean}>`
+        const BoardText = styled.p<{ hover: boolean }>`
             color: #FFFFFF;
             font-size: 16px;
             padding-left: 2%;
@@ -160,14 +160,19 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                 <NavbarContent>
                     <Logo src={logo} width='64' height='64' onClick={handleLogoClick}></Logo>
                     <NavbarButtonContainer>
-                        <NavbarButton onMouseEnter={() => this.setState({homeHover: true})} onMouseLeave={() => this.setState({homeHover: false})} onClick={() => window.location.href = "#/"}>
+                        <NavbarButton onMouseEnter={() => this.setState({ homeHover: true })} onMouseLeave={() => this.setState({ homeHover: false })} onClick={() => window.location.href = "#/"}>
                             <Link to='/home' style={{ color: '#FFFFFF', textDecoration: 'none' }}><HomeText hover={this.state.homeHover}>Home</HomeText></Link>
                         </NavbarButton>
-                        <NavbarButton onMouseEnter={() => this.setState({aboutUsHover: true})} onMouseLeave={() => this.setState({aboutUsHover: false})} onClick={() => window.location.href = "#/about-us"}>
+                        <NavbarButton onMouseEnter={() => this.setState({ aboutUsHover: true })} onMouseLeave={() => this.setState({ aboutUsHover: false })} onClick={() => window.location.href = "#/about-us"}>
                             <AboutUsText hover={this.state.aboutUsHover}><Link to='/about-us' style={{ color: '#FFFFFF', textDecoration: 'none' }}>About Us</Link></AboutUsText>
                         </NavbarButton>
-                        <NavbarButton onMouseEnter={() => this.setState({boardHover: true})} onMouseLeave={() => this.setState({boardHover: false})} onClick={() => window.location.href = "#/boards"}>
-                            <BoardText hover={this.state.boardHover}><Link to='/boards' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
+                        <NavbarButton onMouseEnter={() => this.setState({ boardHover: true })} onMouseLeave={() => this.setState({ boardHover: false })} onClick={() => window.location.href = "#/boards"}>
+                            {
+                                authService.currentUser ?
+                                    <BoardText hover={this.state.boardHover}><Link to='/boards' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
+                                    :
+                                    <BoardText hover={this.state.boardHover}><Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
+                            }
                         </NavbarButton>
                     </NavbarButtonContainer>
                 </NavbarContent>
