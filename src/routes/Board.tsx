@@ -274,7 +274,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 </BoardNavbarContainer>
                 {this.state.postComponentArray.length == 0 ?
                     <DisplayMedium color='white'>
-                        There is no post here yet!
+                        등록된 게시글이 없습니다.
                     </DisplayMedium>
                     :
                     <PostContainer>
