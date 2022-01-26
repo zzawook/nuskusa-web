@@ -154,7 +154,6 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             margin-right: 2vh;
         `
         const EmptyDiv = styled.div`
-            flex: 1;
         `
         const ProfileEdit = styled.span`
             :hover {
@@ -162,10 +161,10 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                 opacity: 1.0;
             }
 
-            flex: 1;
             line-height: 50px;
             color: white;
-            margin-right: 10px;
+            margin-top: 30px;
+            margin-left: 4.5vh;
             text-decoration: none;
             cursor: pointer;
             font-weight: 700;
@@ -174,7 +173,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
         `
         const BottomBanner = styled.div`
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
         `
 
         const handleMouseEnter = (e: any) => {
@@ -223,12 +222,13 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                                 {this.state.notificationArray}
                             </NotificationWrapper>
                             <BottomBanner>
+                                <ProfileEdit onClick={handleEditProfile}>Edit Profile</ProfileEdit>
                                 <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
                                     <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
                                     <LogOutText>Log Out</LogOutText>
                                 </LogOut>
                                 <EmptyDiv/>
-                                <ProfileEdit onClick={handleEditProfile}>Edit Profile</ProfileEdit>
+                                
                             </BottomBanner>
                             
                         </Wrapper>
