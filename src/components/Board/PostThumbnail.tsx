@@ -21,6 +21,13 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
         }
     }
 
+    convertPost = (input: String) => {
+        const anyInput = input as any;
+        const htmlObject = document.createElement("div") as any;
+        htmlObject.innerHTML = anyInput;
+        return htmlObject.outerText.substring(0, 30);
+    }
+
     render = () => {
         const Container = styled.div`
             display: flex;
@@ -47,7 +54,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
         }
         const contentStyle: CSS.Properties = {
             position: 'relative',
-            top: '-40px'
+            top: '-40px',
         }
         const tempStyle: CSS.Properties = {
             position: 'relative',
@@ -56,6 +63,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
 
         return (
             <Container>
+                {this.convertPost(this.props.firestorePost.content)}
                 <Link to={this.props.to} style={{ textDecoration: 'none' }}>
                     <Thumbnail>
                         <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
@@ -65,7 +73,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
                             textcolor={this.props.firestorePost.parentTextColor}
                             
                         />
-                        <DisplaySmall color='black' style={contentStyle}>{this.props.firestorePost.content.substring(0, 30)}</DisplaySmall>
+                        <DisplaySmall color='black' style={contentStyle}>{this.convertPost(this.props.firestorePost.content)}</DisplaySmall>
                         {this.props.firestorePost.parentBoardId === 'grove' ?
                             <Headline color='black' style={tempStyle}>익명/Anonymous</Headline>
                             :
