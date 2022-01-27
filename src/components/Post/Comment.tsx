@@ -102,13 +102,13 @@ class Comment extends React.Component<CommentProps, CommentState> {
     componentDidMount() {
         console.log(this.props.comments)
         this.setState({
-            commentArray: this.props.comments.map((element, i) => <Primary reset={this.props.reset} data={element} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData} commentId={this.props.commentIds[i]}/>)
+            commentArray: this.props.comments.map((element, i) => <Primary reset={this.props.reset} data={element} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData} commentId={this.props.commentIds[i]}/>).reverse()
         })
     }
 
     static getDerivedStateFromProps(nextProps: CommentProps, prevState: CommentState) {
         return {
-            commentArray: nextProps.comments.map((element, i) => <Primary reset={nextProps.reset} data={element} boardId={nextProps.boardId} postId={nextProps.postId} firebaseUserData={nextProps.firebaseUserData} commentId={nextProps.commentIds[i]}/>)
+            commentArray: nextProps.comments.map((element, i) => <Primary reset={nextProps.reset} data={element} boardId={nextProps.boardId} postId={nextProps.postId} firebaseUserData={nextProps.firebaseUserData} commentId={nextProps.commentIds[i]}/>).reverse()
         }
     }
 

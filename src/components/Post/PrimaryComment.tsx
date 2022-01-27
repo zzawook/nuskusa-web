@@ -7,6 +7,8 @@ import { FirebaseUser } from "../../types/FirebaseUser";
 import firebase from 'firebase';
 import CommentUpvote from "./CommentUpvote";
 import { throws } from "assert";
+import { timestampToCommentDateString } from "../../utils/TimeHelper";
+import { Headline } from "../../utils/ThemeText";
 
 type PrimaryProps = {
     data: any,
@@ -45,12 +47,8 @@ const ProfileImg = styled.img`
     background-color: #0B121C;
     position: absolute;
     left: 30px;
-    top: -10px;
 `
 const LastModified = styled.span`
-    position: relative;
-    left: 73px;
-    top: -10px;
     font-weight: 700;
     font-size: 14px;
     line-height: 24.4px;
@@ -59,7 +57,7 @@ const LastModified = styled.span`
 const Content = styled.p`
     position: relative;
     left: 90px;
-    top: -20px;
+    top: -10px;
     font-size: 13px;
     font-weight: 800;
     line-height: 17px;
@@ -155,14 +153,13 @@ const SmallArrow = styled.img`
 `
 const Delete = styled.span`
     position: relative;
-    left: 90px;
-    bottom: 10px;
     color: white;
     opacity: 0.6;
     cursor: pointer;
     font-weight: 600;
     font-size: 12px;
-
+    margin-left: 20px;
+    top: 5px;
     :hover {
         opacity: 1;
     }
@@ -211,66 +208,6 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
     }
 
     componentDidUpdate() {
-    }
-
-    getLastUpdated = (time: any) => {
-        const timeFromNow = (Date.now() - (time.seconds * 1000)) / 1000;
-        const minutesFromNow = Math.floor(timeFromNow / 60)
-        const hoursFromNow = Math.floor(timeFromNow / (60 * 60))
-        if (hoursFromNow >= 1 && hoursFromNow < 24) {
-            return hoursFromNow.toString() + " hours ago"
-        }
-        else if (minutesFromNow >= 1 && minutesFromNow < 60) {
-            return minutesFromNow.toString() + " minutes ago"
-        }
-        else if (minutesFromNow <= 1) {
-            return 'Just now'
-        }
-        else {
-            return this.monthToString(time.toDate().getMonth()) + " " + time.toDate().getDate().toString() + " " + time.toDate().getFullYear().toString();
-        }
-    }
-
-    monthToString = (month: number) => {
-        if (month == 1) {
-            return "January";
-        }
-        else if (month === 2) {
-            return "February";
-        }
-        else if (month === 3) {
-            return "March";
-        }
-        else if (month === 4) {
-            return "April";
-        }
-        else if (month === 5) {
-            return "May";
-        }
-        else if (month === 6) {
-            return "June"
-        }
-        else if (month === 7) {
-            return 'July'
-        }
-        else if (month === 8) {
-            return 'August';
-        }
-        else if (month === 9) {
-            return 'September'
-        }
-        else if (month === 10) {
-            return 'October'
-        }
-        else if (month === 11) {
-            return 'November'
-        }
-        else if (month === 12) {
-            return "December"
-        }
-        else {
-            return 'Invalid Month'
-        }
     }
 
     render() {
@@ -363,25 +300,55 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             })
         }
 
+        const ProfileBox = styled.div`
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            top: -10px;
+            align-items: flex-center;
+            ;
+        `
+
+        const CommentInfoContainer = styled.div`
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin-left: 90px;
+        `
+        const Name = styled.span`
+            font-size: 14px;
+            line-height: 22px;
+            font-weight: 700;
+            word-wrap: break-word;
+            box-sizing: border-box;
+            text-align: left;
+        `
+
         return (
             <PrimaryComment>
                 <CommentArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FcommentArrow.png?alt=media&token=e484a87e-cff6-4111-b36c-e82cedbe2584'} />
-                <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} />
-                <LastModified>
-                    {this.getLastUpdated(this.props.data.lastModified)}
-                </LastModified>
-                {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete>: <div />}
+                <ProfileBox>
+                    <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} />
+                    <CommentInfoContainer>
+                        <Name > {this.props.data.author} </Name>    
+                        <LastModified>
+                            {timestampToCommentDateString(this.props.data.lastModified)}
+                        </LastModified>
+                    </CommentInfoContainer>
+                    {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
+                </ProfileBox>
+
                 <Content>{this.props.data.content}</Content>
                 <CommentUpvote style={{ position: 'relative', left: '90px', top: '5px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
                 <ReplyButton onClick={handleReplyClick}>Reply</ReplyButton>
                 {this.state.replyOpen ? <Form>
-                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered}/>
+                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered} />
                     <Cancel onClick={handleCancelClick}>Cancel</Cancel>
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form> : <div />}
-                {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%204.png?alt=media&token=e83189ba-d386-4232-a473-1b1656d553b3'}/> : <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%203.png?alt=media&token=c39d0931-41d8-4ed1-bd6f-a5491da24e8a'}/>}</SecondaryOpener> : <div/>}
-                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData}/>) : <div />}
-                
+                {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%204.png?alt=media&token=e83189ba-d386-4232-a473-1b1656d553b3'} /> : <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%203.png?alt=media&token=c39d0931-41d8-4ed1-bd6f-a5491da24e8a'} />}</SecondaryOpener> : <div />}
+                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData} />) : <div />}
+
             </PrimaryComment>
         )
     }
