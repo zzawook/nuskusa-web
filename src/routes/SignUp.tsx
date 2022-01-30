@@ -251,7 +251,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                     
                     {/* Will be adding name, nickname, etc. */}
                     <SubmitButton type="submit" value="Submit"/>
-                    <ToSignIn href="/signin" onClick={this.handleSigninClick} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Already have an account? Click here to Log in.</ToSignIn>
+                    <ToSignIn href="/#/signin" onClick={this.handleSigninClick} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Already have an account? Click here to Log in.</ToSignIn>
                 </Form>
             </>
         )

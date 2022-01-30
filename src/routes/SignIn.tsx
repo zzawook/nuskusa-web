@@ -247,7 +247,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
                     {/* Will be adding name, nickname, etc. */}
                     {this.state.failed ? <FailMessage>Login failed. Please check your ID and Password.</FailMessage> : <></>}
                     <ToPassWord onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Forgot Password?</ToPassWord>
-                    <ToSignUp href="/signup" onClick={this.handleSignUpClick} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>
+                    <ToSignUp href="/#/signup" onClick={this.handleSignUpClick} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>
                     <SubmitButton type="submit" value="Submit" />
                 </Form>
             </>
