@@ -11,6 +11,7 @@ export const generateSamplePost = (isPinned=false, parentBoardId="general", pare
     const author = generateSlug(1);
 
     const SamplePost: FirestorePost = {
+        postId: "postId",
         title: title,
         content: content,
         isAnnouncement: false,

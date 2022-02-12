@@ -3,21 +3,28 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { FirestorePost } from '../../types/FirestorePost'
-import { Headline, DisplaySmall, DisplayMedium, SubHeadline } from '../../utils/ThemeText'
+import { Headline, DisplaySmall, DisplayMedium } from '../../utils/ThemeText'
 import BoardTag from './BoardTag';
 import CSS from 'csstype';
+import { FirebaseUser } from '../../types/FirebaseUser'
+import PostApprover from '../Grove/PostApprover'
 
 
 type PostThumbnailProps = {
     to: string,
-    firestorePost: FirestorePost
+    firestorePost: FirestorePost,
+    firebaseUser: FirebaseUser
 }
 
-class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
+type PostThumbnailState = {
+    opacity: number,
+}
+
+class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailState> {
     constructor(props: PostThumbnailProps) {
         super(props)
         this.state = {
-
+            opacity: this.props.firestorePost.isHidden ? 0.7 : 1,
         }
     }
 
@@ -38,6 +45,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
             justify-content: center;
             background: white;
             margin: 10px 20px;
+            opacity: ${this.state.opacity};
         `
         const Thumbnail = styled.div`
             display: flex;
@@ -62,28 +70,56 @@ class PostThumbnail extends React.Component<PostThumbnailProps, {}> {
         }
 
         return (
-            <Container>
-                {this.convertPost(this.props.firestorePost.content)}
-                <Link to={this.props.to} style={{ textDecoration: 'none' }}>
-                    <Thumbnail>
-                        <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
-                        <BoardTag
-                            title={this.props.firestorePost.parentBoardTitle}
-                            boxcolor={this.props.firestorePost.parentColor}
-                            textcolor={this.props.firestorePost.parentTextColor}
-                            
-                        />
-                        <DisplaySmall color='black' style={contentStyle}>{this.convertPost(this.props.firestorePost.content)}</DisplaySmall>
-                        {this.props.firestorePost.parentBoardId === 'grove' ?
-                            <Headline color='black' style={tempStyle}>익명/Anonymous</Headline>
+            <>
+                {
+                    this.props.firestorePost.isHidden ?
+                        this.props.firebaseUser.role === "Admin" ?
+                            <>
+                                <Container>
+                                    <Link to={this.props.to} style={{ textDecoration: 'none' }}>
+                                        <Thumbnail style={{ height: "220px" }}>
+                                            <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
+                                            <BoardTag
+                                                title={this.props.firestorePost.parentBoardTitle}
+                                                boxcolor={this.props.firestorePost.parentColor}
+                                                textcolor={this.props.firestorePost.parentTextColor}
+                                            />
+                                            <DisplaySmall color='black' style={contentStyle}>{this.convertPost(this.props.firestorePost.content)}</DisplaySmall>
+                                            {this.props.firestorePost.parentBoardId === 'grove' ?
+                                                <Headline color='black' style={tempStyle}>익명/Anonymous</Headline>
+                                                :
+                                                <Headline color='black' style={tempStyle}>{this.props.firestorePost.author}</Headline>
+                                            }
+                                            <Headline color='black' style={tempStyle}>{this.props.firestorePost.lastModified.toDate().toDateString()}</Headline>
+                                        </Thumbnail>
+                                    </Link>
+                                    <PostApprover firebaseUser={this.props.firebaseUser} firestorePost={this.props.firestorePost} />
+                                </Container>
+                            </>
                             :
-                            <Headline color='black'style={tempStyle}>{this.props.firestorePost.author}</Headline>
-                        }
-                        <Headline color='black' style={tempStyle}>{this.props.firestorePost.lastModified.toDate().toDateString()}</Headline>
-
-                    </Thumbnail>
-                </Link>
-            </Container >
+                            <></>
+                        :
+                        <Container>
+                            <Link to={this.props.to} style={{ textDecoration: 'none' }}>
+                                <Thumbnail>
+                                    <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
+                                    <BoardTag
+                                        title={this.props.firestorePost.parentBoardTitle}
+                                        boxcolor={this.props.firestorePost.parentColor}
+                                        textcolor={this.props.firestorePost.parentTextColor}
+                                    />
+                                    <DisplaySmall color='black' style={contentStyle}>{this.convertPost(this.props.firestorePost.content)}</DisplaySmall>
+                                    {this.props.firestorePost.parentBoardId === 'grove' ?
+                                        <Headline color='black' style={tempStyle}>익명/Anonymous</Headline>
+                                        :
+                                        <Headline color='black' style={tempStyle}>{this.props.firestorePost.author}</Headline>
+                                    }
+                                    <Headline color='black' style={tempStyle}>{this.props.firestorePost.lastModified.toDate().toDateString()}</Headline>
+                                </Thumbnail>
+                            </Link>
+                        </Container>
+                }
+            </>
         )
     }
 }

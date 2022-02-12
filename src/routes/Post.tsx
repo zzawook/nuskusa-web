@@ -150,6 +150,7 @@ class Post extends React.Component<PostProps, PostState> {
         super(props);
         this.state = {
             firestorePost: {
+                postId: "",
                 title: "Title",
                 content: "Content",
                 isAnnouncement: false,
@@ -284,6 +285,7 @@ class Post extends React.Component<PostProps, PostState> {
                     else {
                         this.setState({
                             firestorePost: {
+                                postId: querySnapshot.id,
                                 title: data.title,
                                 author: data.author,
                                 authorId: data.authorId,

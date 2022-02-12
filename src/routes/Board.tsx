@@ -24,17 +24,10 @@ type SelectOption = {
 type BoardProps = {
     firebaseUserData: FirebaseUser
     boardId: string,
-    // username: string,
-    // isVerified: boolean,
-    // role: string
 }
 
 type BoardState = {
-    firestoreBoard: FirestoreBoard
-    // title: string,
-    // boardId: string,
-    // description: string,
-    // permissions: string[],
+    firestoreBoard: FirestoreBoard,
     postArray: FirestorePost[],
     postComponentArray: any[],
     postOrder: SelectOption
@@ -70,9 +63,9 @@ class Board extends React.Component<BoardProps, BoardState> {
             this.fetchBoard();
             this.fetchPosts();
         }
-        console.log(this.props.firebaseUserData.role)
-        console.log(this.state.firestoreBoard.editPermission)
-        console.log(this.state.firestoreBoard.editPermission.includes(this.props.firebaseUserData.role))
+        // console.log(this.props.firebaseUserData.role)
+        // console.log(this.state.firestoreBoard.editPermission)
+        // console.log(this.state.firestoreBoard.editPermission.includes(this.props.firebaseUserData.role))
     }
 
     addPostLink = () => {
@@ -112,6 +105,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                         <div key={key}>
                             <PostThumbnail
                                 firestorePost={data}
+                                firebaseUser={this.props.firebaseUserData}
                                 to={`/boards/${this.props.boardId}/${doc.id}`}
                             />
                             {/* Allow to edit all posts in the list */}

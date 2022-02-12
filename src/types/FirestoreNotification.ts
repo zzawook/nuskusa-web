@@ -10,9 +10,10 @@ import firebase from "firebase";
  * post
  * comment
  * like
+ * reject
+ * approve
  * 
  */
-
 export interface FirestoreNotification {
     isRead: Boolean,
     type: string,
