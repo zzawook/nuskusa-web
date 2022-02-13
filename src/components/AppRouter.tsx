@@ -15,6 +15,7 @@ import AboutUs from '../routes/AboutUs';
 import { FirebaseUser } from '../types/FirebaseUser';
 import EditProfile from '../routes/EditProfile';
 import { Thumbs } from 'react-responsive-carousel';
+import PasswordResetRequest from '../routes/PasswordResetRequest';
 
 
 type AppRouterProps = {
@@ -146,6 +147,9 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     history={routerProps.history}
                     location={routerProps.location}
                   />} />
+                  <Route exact path='/reset' render={() => <PasswordResetRequest />}
+
+                  />
                   <Route exact path='/signup' render={(routerProps) => <SignUp 
                     history={routerProps.history}
                     location={routerProps.location}
