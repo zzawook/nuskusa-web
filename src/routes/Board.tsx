@@ -24,17 +24,10 @@ type SelectOption = {
 type BoardProps = {
     firebaseUserData: FirebaseUser
     boardId: string,
-    // username: string,
-    // isVerified: boolean,
-    // role: string
 }
 
 type BoardState = {
-    firestoreBoard: FirestoreBoard
-    // title: string,
-    // boardId: string,
-    // description: string,
-    // permissions: string[],
+    firestoreBoard: FirestoreBoard,
     postArray: FirestorePost[],
     postComponentArray: any[],
     postOrder: SelectOption
@@ -61,7 +54,7 @@ class Board extends React.Component<BoardProps, BoardState> {
     componentDidMount = () => {
         this.fetchBoard();
         this.fetchPosts();
-        
+
     }
 
     componentDidUpdate = () => {
@@ -70,9 +63,9 @@ class Board extends React.Component<BoardProps, BoardState> {
             this.fetchBoard();
             this.fetchPosts();
         }
-        console.log(this.props.firebaseUserData.role)
-        console.log(this.state.firestoreBoard.editPermission)
-        console.log(this.state.firestoreBoard.editPermission.includes(this.props.firebaseUserData.role))
+        // console.log(this.props.firebaseUserData.role)
+        // console.log(this.state.firestoreBoard.editPermission)
+        // console.log(this.state.firestoreBoard.editPermission.includes(this.props.firebaseUserData.role))
     }
 
     addPostLink = () => {
@@ -112,6 +105,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                         <div key={key}>
                             <PostThumbnail
                                 firestorePost={data}
+                                firebaseUser={this.props.firebaseUserData}
                                 to={`/boards/${this.props.boardId}/${doc.id}`}
                             />
                             {/* Allow to edit all posts in the list */}
@@ -237,7 +231,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 {this.props.firebaseUserData.isVerified != false//true
                     ? displayVerification === "yes"
                         ?
-                        <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={true} onClose={() => {}}/>
+                        <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={true} onClose={() => { }} />
                         :
                         <></>
                     : <></>}
@@ -248,14 +242,14 @@ class Board extends React.Component<BoardProps, BoardState> {
                     <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
                         {this.state.firestoreBoard.description}
                     </Headline>
-                    {this.state.firestoreBoard.editPermission.includes(this.props.firebaseUserData.role) ? 
+                    {this.state.firestoreBoard.editPermission.includes(this.props.firebaseUserData.role) ?
                         <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
                             <Headline color='white' style={{ textAlign: 'center' }}>
                                 + 게시글 올리기
                             </Headline>
-                        </GoldenButton> 
-                    : 
-                        <div/>
+                        </GoldenButton>
+                        :
+                        <div />
                     }
                 </TextContainer>
                 <BoardNavbarContainer>
@@ -284,6 +278,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 {this.props.firebaseUserData.role === "Admin" ?
                     <>
                         <button onClick={() => generateSamplePost(
+                            dbService.collection("boards").doc(this.props.boardId).collection("posts").doc().id,
                             false,
                             this.props.boardId,
                             this.state.firestoreBoard.title,
@@ -292,6 +287,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                             Add Random Post (unpinned)
                         </button>
                         <button onClick={() => generateSamplePost(
+                            dbService.collection("boards").doc(this.props.boardId).collection("posts").doc().id,
                             true,
                             this.props.boardId,
                             this.state.firestoreBoard.title,

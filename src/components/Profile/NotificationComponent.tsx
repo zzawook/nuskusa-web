@@ -24,7 +24,7 @@ class NotificationComponent extends React.Component<NotificationComponentProps, 
     }
 
     componentDidMount = () => {
-        const typeMessage = getTypeMessage(this.props.data.type);
+        const typeMessage = getTypeMessage(this.props.data.notificationType, this.props.data.contentType);
         this.setState({
             typeMessage: typeMessage,
         });

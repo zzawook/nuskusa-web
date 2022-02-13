@@ -1,34 +1,33 @@
 // returns the type message based on the notification type
-export const getTypeMessage = (type: string) => {
-    const typeArray = type.split("/");
-    if (typeArray.length !== 2) {
-        throw new Error("Type is invalid!")
-    }
-    const firstType = typeArray[0];
-    const secondType = typeArray[1];
+export const getTypeMessage = (type: string, contentType: string) => {
+    const firstType = type;
+    const secondType = contentType;
     let message = "";
     if (firstType === "new") {
         message += "New "
         if (secondType === "board") {
             message += "board is created!"
-        }
-        else if (secondType === "post") {
+        } else if (secondType === "post") {
             // Does not exist yet
-        }
-        else if (secondType === "comment") {
+        } else if (secondType === "comment") {
             message += "comment on your post!"
-        }
-        else if (secondType === "like") {
+        } else if (secondType === "like") {
             message += "like on your post!"
         } else {
             throw new Error("Invalid second type argument for new type");
         }
+    } else if (firstType === "update") {
+        if (secondType === "comment") { // reply
+            message += "Reply on your comment!";
+        } else if (secondType === "reject") {
+            message += "Post not approved."
+        } else if (secondType === "approve") {
+            message += "Post approved!"
+        } else {
+            throw new Error("Invalid second type argument for new type");
+        }
     } else {
-        throw new Error("There is no update notification yet.")
-        // if (secondType === "comment") { // reply
-        //     message += "New reply on your comment!"
-        // } else {
-        // }
+        throw new Error("Nonexistent type message for notifications")
     }
     return message;
 }

@@ -1,21 +1,15 @@
 import firebase from "firebase";
-/**
- * type field is in the format of a/b
- * a can be the following:
- * new
- * update (cannot use update yet. most likely will add new features on this later)
- * 
- * b can be the following:
- * board
- * post
- * comment
- * like
- * 
- */
 
+/**
+ * notificationType is string: new, update.
+ * contentType is string: like, post, comment, reject, approve, and perhaps more to be added.
+ * notificationType determines whether the notification is about something new or something updated.
+ * contentType determines what the notification is about, could be new posts, new likes, post updates, etc.
+ */
 export interface FirestoreNotification {
     isRead: Boolean,
-    type: string,
+    notificationType: string,
+    contentType: string,
     source: any,
     message: string, 
     link: string,

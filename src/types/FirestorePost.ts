@@ -1,6 +1,7 @@
 import firebase from 'firebase'
 
 export interface FirestorePost {
+    postId: string,
     title: string,
     content: string,
     isAnnouncement: boolean,

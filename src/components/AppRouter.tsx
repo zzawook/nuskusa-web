@@ -206,7 +206,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       location={routerProps.location}
                     />} />
                     <Route exact path='/profile' render={() => <Redirect to='/signin' />} />
-                    <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData} />} />
+                    <Route exact path='/aboutUs' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData} />} />
                     <Route component={this.notFoundComponent} />
                     <Route exact path='/editProfile' render={() => <EditProfile
                     firebaseUserData={this.state.firebaseUserData}
