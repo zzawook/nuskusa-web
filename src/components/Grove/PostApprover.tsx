@@ -6,6 +6,7 @@ import { authService, dbService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components';
 import { Headline } from '../../utils/ThemeText';
 import { AiFillCheckSquare, AiFillCloseSquare } from 'react-icons/ai';
+import { FirestoreNotification } from '../../types/FirestoreNotification';
 
 type PostApproverProps = {
     firestorePost: FirestorePost,
@@ -46,9 +47,10 @@ class PostApprover extends React.Component<PostApproverProps, PostApproverState>
             transaction.update(postRef, {
                 isHidden: false,
             });
-            const notification = {
+            const notification: FirestoreNotification = {
                 isRead: false,
-                type: "post/approve",
+                notificationType: "update",
+                contentType: "approve",
                 source: postRef,
                 message: "Your post has been approved!",
                 link: `/boards/${this.props.firestorePost.parentBoardId}/${this.props.firestorePost.postId}`,
@@ -78,9 +80,10 @@ class PostApprover extends React.Component<PostApproverProps, PostApproverState>
             .collection("users").doc(authService.currentUser?.uid);
         await dbService.runTransaction(async transaction => {
             transaction.delete(postRef);
-            const notification = {
+            const notification: FirestoreNotification = {
                 isRead: false,
-                type: "post/reject",
+                notificationType: "update",
+                contentType: "reject",
                 source: null,
                 message: "Your post has been rejected. Reason: " + this.state.reason,
                 link: `/boards/${this.props.firestorePost.parentBoardId}/${this.props.firestorePost.postId}`,
