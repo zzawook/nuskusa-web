@@ -8,10 +8,9 @@ import { dbService } from "./firebaseFunctions";
 export const generateSamplePost = (isPinned=false, parentBoardId="general", parentBoardTitle="자유게시판", parentColor="#C4F2EF", parentTextColor="#3B8A85") => {
     const title = generateSlug(2);
     const content = generateSlug(5);
-    const author = generateSlug(1);
 
     const SamplePost: FirestorePost = {
-        postId: "postId",
+        postId: dbService.collection("boards").doc(parentBoardId).collection("posts").doc().id,
         title: title,
         content: content,
         isAnnouncement: false,
@@ -22,8 +21,8 @@ export const generateSamplePost = (isPinned=false, parentBoardId="general", pare
         upvoteArray: [],
         numComments: 0,
         permissions: ["Admin"],
-        author: author,
-        authorId: 'id',
+        author: "Roh Yong Gi",
+        authorId: 'X0xnw1p7iahO75DUpnWcYCmAdzY2',
         parentBoardId: parentBoardId,
         parentBoardTitle: parentBoardTitle,
         parentColor: parentColor,
