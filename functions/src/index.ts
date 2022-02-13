@@ -125,7 +125,7 @@ exports.createNotificationOnPostComment = functions.firestore
                 data: data,
                 timestamp: firestore.Timestamp.now(),
             };
-            db.runTransaction(async (transaction) => {
+            await db.runTransaction(async (transaction) => {
                 if (data.replyTo) {
                     const replyReference = db.doc(data.replyTo.path);
                     const replyTargetData = (await transaction.get(replyReference)).data() as FirestoreComment;
