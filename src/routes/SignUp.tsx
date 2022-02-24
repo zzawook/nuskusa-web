@@ -127,7 +127,7 @@ const SubmitButton = styled.input`
     font-family: var(--font-family-roboto);
     cursor: pointer;
 `
-const ToSignIn = styled.a`
+const ToSignIn = styled(Link)`
     position: absolute;
     left: 20%;
     bottom: 15%;
@@ -196,9 +196,6 @@ class SignUp extends React.Component<UserProps, UserState> {
         e.preventDefault();
         e.target.style.textDecoration = 'none';
     }
-    handleSigninClick = (e: any) => {
-        e.preventDefault();
-    }
     arrowStyle: CSS.Properties = {
         position: "absolute",
         left: "8px",
@@ -251,7 +248,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                     
                     {/* Will be adding name, nickname, etc. */}
                     <SubmitButton type="submit" value="Submit"/>
-                    <ToSignIn href="/#/signin" onClick={this.handleSigninClick} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Already have an account? Click here to Log in.</ToSignIn>
+                    <ToSignIn to="/signin"  onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Already have an account? Click here to Log in.</ToSignIn>
                 </Form>
             </>
         )

@@ -14,6 +14,7 @@ import { AiOutlineComment } from "react-icons/ai";
 import { RouteComponentProps } from "react-router-dom";
 import DeletePost from '../components/Post/DeletePost';
 import EditPostButton from '../components/Post/EditPostButton'
+import Avatar from "../components/Profile/Avatar";
 
 type RouteProps = {
     boardId: string,
@@ -30,7 +31,7 @@ type PostState = {
     errorMsg: string,
     commentArray: any[],
     commentIdArray: any[],
-    profileImg: string,
+    authorProfile: FirebaseUser,
     retrieved: boolean,
     accessGranted: boolean,
     recentPosts: any[],
@@ -74,26 +75,31 @@ const Header = styled.div`
     width: 70%;
     display: flex;
     flex-direction: row;
+    alignItems: center;
+    justifyContent: center;
 `
-const ProfileImg = styled.img`
+const ProfileImg = styled(Avatar)`
     width: 20px;
     height: 20px;
-    padding: 10px;
     border-radius: 25px;
     border: 1px solid white;
     background-color: #0B121C;
     position: absolute;
     left: 0%;
+    bottom: 30px;
+`
+const TitleAndDate = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
 `
 const Title = styled.p`
-    position: relative;
     width: 65%;
-    left: 70px;
-    top: -10px;
     font-weight: 800;
     font-size: 22px;
     text-overflow: ellipsis;
     word-wrap: break-word;
+    margin-top: 0px;
 `
 const Content = styled.div`
     width: 70%;
@@ -119,9 +125,7 @@ const CommentNum = styled.div`
 `
 
 const DateWritten = styled.span`
-    position: absolute;
-    left: 70px;
-    top: 90px;
+    width: 350px;
     color: #9c9c9c;
     font-size: 14px;
     font-weight: 700;
@@ -143,7 +147,8 @@ const RecentPostTitle = styled.span`
     line-height: 24px;
     color: #a8a8a8;
 `
-const PostControl = styled.div`
+const AuthorButtons = styled.div`
+    margin-left: auto;
 `
 class Post extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
@@ -176,7 +181,18 @@ class Post extends React.Component<PostProps, PostState> {
             accessGranted: false,
             recentPosts: [],
             recentPostIds: [],
-            profileImg: 'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5',
+            authorProfile: {
+                username: 'unknown user',
+                userId: 'unknown userid',
+                email: 'temp@email.com',
+                verificationFile: undefined,
+                isVerified: false,
+                role: 'User',
+                enrolledYear: undefined,
+                major: undefined,
+                faculty: undefined,
+                profilePictureURL: undefined
+            },
         }
     }
 
@@ -218,7 +234,8 @@ class Post extends React.Component<PostProps, PostState> {
             return 'Just now'
         }
         else {
-            return this.monthToString(time.toDate().getMonth()) + " " + time.toDate().getDate().toString() + " " + time.toDate().getFullYear().toString();
+            console.log(time.toDate().getMonth())
+            return this.monthToString(time.toDate().getMonth() + 1) + " " + time.toDate().getDate().toString() + " " + time.toDate().getFullYear().toString();
         }
     }
 
@@ -283,29 +300,34 @@ class Post extends React.Component<PostProps, PostState> {
                         return;
                     }
                     else {
-                        this.setState({
-                            firestorePost: {
-                                postId: querySnapshot.id,
-                                title: data.title,
-                                author: data.author,
-                                authorId: data.authorId,
-                                content: data.content,
-                                isAnnouncement: data.isAnnouncement,
-                                isAnonymous: data.isAnonymous,
-                                isHidden: data.isHidden,
-                                isPinned: data.isPinned,
-                                lastModified: data.lastModified,
-                                upvoteArray: data.upvoteArray,
-                                permissions: data.permissions,
-                                numComments: data.numComments,
-                                parentBoardId: data.parentBoardId,
-                                parentBoardTitle: data.parentBoardTitle,
-                                parentColor: data.parentColor,
-                                parentTextColor: data.parentTextColor
-                            },
-                            errorMsg: "Access denied; you do not have permission.",
-                            accessGranted: data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User') ? true : false,
+                        dbService.collection('users').doc(data.authorId).get().then(snapshot => {
+                            const authorData = snapshot.data() as FirebaseUser;
+                            this.setState({
+                                firestorePost: {
+                                    postId: querySnapshot.id,
+                                    title: data.title,
+                                    author: data.author,
+                                    authorId: data.authorId,
+                                    content: data.content,
+                                    isAnnouncement: data.isAnnouncement,
+                                    isAnonymous: data.isAnonymous,
+                                    isHidden: data.isHidden,
+                                    isPinned: data.isPinned,
+                                    lastModified: data.lastModified,
+                                    upvoteArray: data.upvoteArray,
+                                    permissions: data.permissions,
+                                    numComments: data.numComments,
+                                    parentBoardId: data.parentBoardId,
+                                    parentBoardTitle: data.parentBoardTitle,
+                                    parentColor: data.parentColor,
+                                    parentTextColor: data.parentTextColor,
+                                },
+                                errorMsg: "Access denied; you do not have permission.",
+                                accessGranted: data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User') ? true : false,
+                                authorProfile: authorData,
+                            })
                         })
+                        
                         dbService // retrieve comments within the post
                             .collection('boards').doc(this.props.match.params.boardId)
                             .collection('posts').doc(this.props.match.params.postId)
@@ -383,17 +405,22 @@ class Post extends React.Component<PostProps, PostState> {
                 <Container>
                     <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
                     <Header>
-                        <ProfileImg src={this.state.profileImg} />
-                        <Title>{this.state.firestorePost.title}</Title>
-                        <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
-                        {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} userId={this.props.firebaseUserData.userId}/> : <div/>}
-                        {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <span style={{
-                            verticalAlign: 'bottom',
-                            lineHeight: '58px',
-                            color: 'white',
-                            opacity: '0.6',
-                        }}>|</span> : ''}
-                        {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div/>}    
+                        <ProfileImg firebaseUserData={this.state.authorProfile} dimension={32} isOnNavbar={true} />
+                        <TitleAndDate>
+                            <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
+                            <Title>{this.state.firestorePost.title}</Title>                            
+                        </TitleAndDate>
+                        <AuthorButtons>
+                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} userId={this.props.firebaseUserData.userId}/> : <div/>}
+                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <span style={{
+                                verticalAlign: 'bottom',
+                                lineHeight: '58px',
+                                color: 'white',
+                                opacity: '0.6',
+                            }}>|</span> : ''}
+                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div/>}    
+                        </AuthorButtons>
+                        
                         
                     </Header>
                     <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />

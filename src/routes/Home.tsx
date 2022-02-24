@@ -142,7 +142,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                             <p style={{ margin: '0', marginBottom: '20px', color: '#0B121C', opacity: '0.5', fontSize: '13px' }}>
                                 NUS 한인 학생회 사이트에 오신 것을 환영합니다!
                             </p>
-                            <GoldenButton to='/boards'>
+                            <GoldenButton to='/about-us'>
                                 <DisplayMedium color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center' }}>
                                     + More Details
                                 </DisplayMedium>
