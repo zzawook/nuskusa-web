@@ -5,7 +5,6 @@ import firebase from 'firebase';
 import Navbar from '../components/Navbar';
 import styled from 'styled-components';
 import CSS from 'csstype';
-import { FirebaseUser } from '../types/FirebaseUser';
 
 type UserProps = {
     history: any,
@@ -117,7 +116,7 @@ const SubmitButton = styled.input`
     font-family: var(--font-family-roboto);
     cursor: pointer;
 `
-const ToSignUp = styled.a`
+const ToSignUp = styled(Link)`
     position: absolute;
     left: 20%;
     top: ${(height * 0.1) + (26 * margin) + 110}px;
@@ -134,6 +133,7 @@ const ToPassWord = styled.a`
     color: #808080;
     font-size: 12px;
     font-weight: 700;
+    cursor: pointer;
 `
 const FailMessage = styled.span`
     color: red;
@@ -185,11 +185,6 @@ class SignIn extends React.Component<UserProps, UserObject> {
                     failed: true,
                 })
             });
-    }
-
-    handleSignUpClick = (e: any) => {
-        e.preventDefault();
-
     }
 
     handleMouseEnter = (e: any) => {
@@ -247,7 +242,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
                     {/* Will be adding name, nickname, etc. */}
                     {this.state.failed ? <FailMessage>Login failed. Please check your ID and Password.</FailMessage> : <></>}
                     <ToPassWord onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Forgot Password?</ToPassWord>
-                    <ToSignUp href="/#/signup" onClick={this.handleSignUpClick} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>
+                    <ToSignUp to='/signup' href="/#/signup" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>
                     <SubmitButton type="submit" value="Submit" />
                 </Form>
             </>

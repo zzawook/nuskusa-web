@@ -442,6 +442,7 @@ class AddPost extends React.Component {
                                 );
                             })
                         }}
+                        id={"myCKEditor"}
                     />
                 </Editor>
                 <CheckBoxContainer>

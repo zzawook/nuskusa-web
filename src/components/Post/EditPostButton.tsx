@@ -26,6 +26,8 @@ class EditPostButton extends React.Component<EditProps, {}> {
         cursor: pointer;
         opacity: 0.6;
         width: 100px;
+        height: 100%;
+        line-height: 100%;
         :hover {
             opacity: 1;
         }

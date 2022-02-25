@@ -184,19 +184,19 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                         </>
                         :
                         <>
-                            <SignUpButton>
+                            <SignUpButton onClick={() => window.location.href="/#/signup"}>
                                 <SignUpText>
                                     <Link to='/signup' style={{ color: '#0B121C', textDecoration: 'none' }}>
                                         Sign Up
                                     </Link>
                                 </SignUpText>
                             </SignUpButton>
-                            <SignInButton>
-                                <SignInText>
-                                    <Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                            <SignInButton onClick={() => window.location.href="/#/signin"}>
+                                <Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                    <SignInText>
                                         Sign In
-                                    </Link>
-                                </SignInText>
+                                    </SignInText>
+                                </Link>
                             </SignInButton>
                         </>
                 }

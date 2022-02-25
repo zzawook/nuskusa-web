@@ -38,7 +38,8 @@ class DeletePost extends React.Component<DeleteProps, {}> {
             cursor: pointer;
             opacity: 0.6;
             width: 100px;
-            margin-left: ${(width * 0.7 * 0.35) - 200}px;
+            height: 100%;
+            line-height: 100%;
             :hover {
                 opacity: 1;
             }
