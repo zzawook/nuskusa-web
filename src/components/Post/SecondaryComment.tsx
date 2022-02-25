@@ -25,6 +25,7 @@ type SecondaryState = {
     lastModified: number,
     replyOpen: boolean,
     reply: string,
+    authorData: FirebaseUser,
 }
 const Container = styled.div`
     position: relative;
@@ -48,10 +49,9 @@ const LeftBar = styled.div`
     border-left: 1px solid #a8a8a8;
 `
 const ProfileImg = styled.img`
-    width: 20px;
-    height: 20px;
-    padding: 10px;
-    border-radius: 25px;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
     border: 1px solid white;
     background-color: #0B121C;
     position: absolute;
@@ -179,7 +179,16 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             secondaryIds: [],
             lastModified: 0,
             replyOpen: false,
-            reply: ""
+            reply: "",
+            authorData: {
+                username: "",
+                userId: "",
+                email: "",
+                verificationFile: undefined,
+                isVerified: false,
+                role: "User", // User, Undergraduate, Graduate, Admin
+                profilePictureURL: "", 
+            },
         }
     }
 
@@ -187,7 +196,11 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
         this.fetchComment();
     }
 
-    fetchComment() {
+    async fetchComment() {
+        const authorData = (await dbService.collection("users").doc(this.props.data.authorId).get()).data() as FirebaseUser;
+        this.setState({
+            authorData: authorData,
+        });
         if (this.props.data.replies) {
             const replyArray: FirestoreComment[] = [];
             const replyIdArray: any[] = [];
@@ -318,7 +331,7 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             <Container>
                 <LeftBar />
                 <ProfileBox>
-                    <ProfileImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'} /> 
+                    <ProfileImg src={this.state.authorData.profilePictureURL} /> 
                     <CommentInfoContainer>
                         <Name > {this.props.data.author} </Name>    
                         <LastModified>
