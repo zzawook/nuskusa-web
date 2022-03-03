@@ -66,7 +66,6 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                             componentArray.push(component);
                         }
                     })
-                    console.log(componentArray)
                     this.setState({
                         boardArray: arr,
                         boardComponentArray: componentArray

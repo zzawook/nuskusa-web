@@ -247,7 +247,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                     }
                 </TextContainer>
                 <BoardNavbarContainer>
-                    <BoardNavbar currentRoute={this.props.boardId} />
+                    <BoardNavbar currentRoute={this.props.boardId} firebaseUserData={this.props.firebaseUserData} />
                     <div style={{ margin: 'auto', width: '150px' }}>
                         <Select
                             options={[

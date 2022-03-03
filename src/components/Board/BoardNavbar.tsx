@@ -2,12 +2,14 @@ import { randomUUID } from 'crypto'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { FirebaseUser } from '../../types/FirebaseUser'
 import { FirestoreBoard } from '../../types/FirestoreBoard'
 import { dbService } from '../../utils/firebaseFunctions'
 import { Headline } from '../../utils/ThemeText'
 
 type BoardNavbarProps = {
-    currentRoute: string
+    currentRoute: string,
+    firebaseUserData: FirebaseUser,
 }
 
 type BoardNavbarState = {
@@ -46,30 +48,32 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
             querySnapshot.docs.forEach((doc) => {
                 key++
                 const data = doc.data() as FirestoreBoard
-                if (data.boardId !== this.props.currentRoute) {
-                    componentArray.push(
-                        <LinkContainer key={key}>
-                            <Link to={{ pathname: `/boards/${data.boardId}` }}
-                                style={{ textDecoration: 'none' }}
-                            >
-                                <Headline color='white' >
-                                    {data.title}
-                                </Headline>
-                            </Link>
-                        </LinkContainer >
-                    )
-                } else {
-                    componentArray.push(
-                        <CurrentContainer key={key}>
-                            <Link to={{ pathname: `/boards/${data.boardId}` }}
-                                style={{ textDecoration: 'none' }}
-                            >
-                                <Headline color='white'>
-                                    {data.title}
-                                </Headline>
-                            </Link>
-                        </CurrentContainer>
-                    )
+                if (data.permissions.includes(this.props.firebaseUserData.role)) {
+                    if (data.boardId !== this.props.currentRoute) {
+                        componentArray.push(
+                            <LinkContainer key={key}>
+                                <Link to={{ pathname: `/boards/${data.boardId}` }}
+                                    style={{ textDecoration: 'none' }}
+                                >
+                                    <Headline color='white' >
+                                        {data.title}
+                                    </Headline>
+                                </Link>
+                            </LinkContainer >
+                        )
+                    } else {
+                        componentArray.push(
+                            <CurrentContainer key={key}>
+                                <Link to={{ pathname: `/boards/${data.boardId}` }}
+                                    style={{ textDecoration: 'none' }}
+                                >
+                                    <Headline color='white'>
+                                        {data.title}
+                                    </Headline>
+                                </Link>
+                            </CurrentContainer>
+                        )
+                    }
                 }
             })
         })
