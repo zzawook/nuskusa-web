@@ -14,8 +14,8 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
         this.state = {}
     }
 
-    handleAccept = () => {
-        storageService.ref(`verifications/${this.props.verificationId}`)
+    handleAccept = async () => {
+        await storageService.ref(`verifications/${this.props.verificationId}`)
             .delete()
             .then(async () => {
                 const userDetail = (await dbService.collection('verifications').doc(this.props.verificationId).get()).data() as FirebaseUser
@@ -27,16 +27,16 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
                     role: "student",
                 })
             })
-            .then(() => {
-                dbService.collection('verifications').doc(this.props.verificationId).delete()
+            .then(async () => {
+                await dbService.collection('verifications').doc(this.props.verificationId).delete()
             })
             .catch(error => {
                 console.error(error);
             });
     }
 
-    handleReject = () => {
-        storageService.ref(`verifications/${this.props.verificationId}`)
+    handleReject = async () => {
+        await storageService.ref(`verifications/${this.props.verificationId}`)
             .delete()
             .then(() => {
                 try {
