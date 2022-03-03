@@ -48,7 +48,6 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                     let key = 0;
                     querySnapshot.docs.forEach((doc) => {
                         const data = doc.data() as FirestoreBoard;
-                        console.log(data)
                         const component = (
                             <BoardThumbnail
                                 key={key}
@@ -63,17 +62,15 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                         )
                         key++;
                         arr.push(data);
-                        console.log(data.permissions)
                         if (data.permissions.includes(this.props.firebaseUserData.role)) {
                             componentArray.push(component);
-                            console.log(componentArray)
                         }
                     })
+                    console.log(componentArray)
                     this.setState({
                         boardArray: arr,
                         boardComponentArray: componentArray
                     })
-                    console.log('all boards fetching successful')
                 }
             })
     }
@@ -130,21 +127,18 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
             flex-wrap: wrap;
             justify-content: left;
         `
-        const displayVerification = localStorage.getItem("seeVerify")
         return (
             <Container>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
                 {this.props.firebaseUserData.isVerified != true
-                    ? displayVerification === "yes"
-                        ? <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={true} onClose={() => {}}/>
-                        : <></>
-                    : <></>}
+                    ? <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={true} onClose={() => { }} />
+                    : <></>
+                }
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         게시판
                     </DisplayLarge>
-
-                    <Headline color='white' style={{ opacity: '0.5', marginLeft: '10px', marginRight: '10px', wordBreak: 'keep-all' ,overflow: 'clip', width: '40vw', marginBottom: '30px' }}>
+                    <Headline color='white' style={{ opacity: '0.5', marginLeft: '10px', marginRight: '10px', wordBreak: 'keep-all', overflow: 'clip', width: '40vw', marginBottom: '30px' }}>
                         NUS 한인회 게시판에 오신 것을 환영합니다. 저희 게시판은 여러 게시글들을 통해 NUS 학생들, 그리고 NUS에 관심있는 사람들과 서로 소통하고 정보 공유를 위해 만들어진 페이지입니다.
                     </Headline>
                     <ThumbnailContainer>
