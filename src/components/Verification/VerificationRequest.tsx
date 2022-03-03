@@ -27,7 +27,6 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
             showModal: false
         })
         this.props.onClose();
-        localStorage.setItem("seeVerify", "no")
     }
 
     render = () => {

@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { authService, dbService, storageService } from '../../utils/firebaseFunctions'
 import { darkTheme, Theme } from '../../utils/ThemeColor'
+import { Headline } from '../../utils/ThemeText'
+import FileUploader from '../util/FileUploader'
 
 type FormProps = {
 
@@ -15,9 +17,10 @@ type FormState = {
     enrolledYear: string,
     verificationFile: File | undefined,
     theme: Theme,
+    error: string,
 }
 
-const Wrapper = styled.form`
+const Wrapper = styled.div`
     margin: 0 10%;
     display: flex;
     flex-direction: column;
@@ -38,10 +41,9 @@ const FormInput = styled.input`
     line-height: 24px;
     font-weight: 700;
 `
-const GoldenButton = styled.button`
+const GoldenInput = styled.input`
     margin: auto;
-    margin-right: 0;
-    margin-top: 40%;
+    margin-top: 50%;
     background: #BDA06D;
     filter: drop-shadow(0px 0px 20px rgba(189, 160, 109, 0.6));
     width: 10vw;
@@ -69,7 +71,8 @@ class VerificationForm extends React.Component<FormProps, FormState> {
             faculty: "",
             enrolledYear: "",
             verificationFile: undefined,
-            theme: darkTheme
+            theme: darkTheme,
+            error: "",
         }
     }
 
@@ -112,9 +115,19 @@ class VerificationForm extends React.Component<FormProps, FormState> {
         }
     }
 
+    checkFile = (event: any) => {
+        event.preventDefault();
+        if (!this.state.verificationFile) {
+            this.setState({
+                error: "You must select a file!",
+            })
+        }
+    }
+
     handleSubmit = async (event: any) => {
         event.preventDefault();
-        const verificationRef = dbService.collection("verifications").doc()
+
+        const verificationRef = dbService.collection("verifications").doc(authService.currentUser?.uid);
         if (this.state.verificationFile) {
             const uploadTask = storageService
                 .ref(`verifications/${verificationRef.id}`)
@@ -125,9 +138,9 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                 (error) => {
                     console.error(error);
                 },
-                async () => {
+                () => {
                     if (this.state.verificationFile) {
-                        await storageService.ref('verifications')
+                        storageService.ref('verifications')
                             .child(verificationRef.id)
                             .getDownloadURL()
                             .then(async (url) => {
@@ -143,11 +156,11 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                                         enrolledYear: this.state.enrolledYear,
                                         major: this.state.major,
                                         faculty: this.state.faculty
-                                    })
+                                    });
                                     batch.update(userRef, {
                                         isVerified: true
-                                    })
-                                    batch.commit()
+                                    });
+                                    batch.commit();
                                 } catch (e) {
                                     console.error(e)
                                 }
@@ -163,55 +176,60 @@ class VerificationForm extends React.Component<FormProps, FormState> {
         return (
             <Wrapper>
                 <FormContentWrapper>
-                    <FormInputWrapper>
-                        <FormInput
-                            required
-                            name="fullname"
-                            type="text"
-                            placeholder="이름 / Name"
-                            value={this.state.fullname}
-                            onChange={this.handleChange}>
-                        </FormInput>
-                        <FormInput
-                            required
-                            name="schoolEmail"
-                            type="email"
-                            placeholder="학교 이메일 / School Email"
-                            value={this.state.schoolEmail}
-                            onChange={this.handleChange}>
-                        </FormInput>
-                        <FormInput
-                            required
-                            name="major"
-                            placeholder="전공 / Major"
-                            value={this.state.major}
-                            onChange={this.handleChange}>
-                        </FormInput>
-                        <FormInput
-                            required
-                            name="faculty"
-                            placeholder="학과 / Faculty"
-                            value={this.state.faculty}
-                            onChange={this.handleChange}>
-                        </FormInput>
-                        <FormInput
-                            required
-                            name="enrollmentYear"
-                            placeholder="입학 연도 / Enrollment Year"
-                            value={this.state.enrolledYear}
-                            onChange={this.handleChange}>
-                        </FormInput>
-                    </FormInputWrapper>
-                    <FormInput
-                        required
-                        name="verificationFile"
-                        type="file"
-                        onChange={this.handleFileChange}
-                        style={{ border: "none", justifySelf: "right", marginLeft: "20px" }}>
-                    </FormInput>
-                    <GoldenButton onClick={this.handleSubmit} style={{ marginBottom: '5%' }}>
-                        Submit
-                    </GoldenButton>
+                    <form id="myForm" style={{ display: "flex", flexDirection: "row" }} onSubmit={this.handleSubmit}>
+                        <FormInputWrapper>
+                            <FormInput
+                                required
+                                name="fullname"
+                                type="text"
+                                placeholder="이름 / Name"
+                                value={this.state.fullname}
+                                onChange={this.handleChange}>
+                            </FormInput>
+                            <FormInput
+                                required
+                                name="schoolEmail"
+                                type="email"
+                                placeholder="학교 이메일 / School Email"
+                                value={this.state.schoolEmail}
+                                onChange={this.handleChange}>
+                            </FormInput>
+                            <FormInput
+                                required
+                                name="major"
+                                placeholder="전공 / Major"
+                                value={this.state.major}
+                                onChange={this.handleChange}>
+                            </FormInput>
+                            <FormInput
+                                required
+                                name="faculty"
+                                placeholder="학과 / Faculty"
+                                value={this.state.faculty}
+                                onChange={this.handleChange}>
+                            </FormInput>
+                            <FormInput
+                                required
+                                name="enrollmentYear"
+                                placeholder="입학 연도 / Enrollment Year"
+                                value={this.state.enrolledYear}
+                                onChange={this.handleChange}>
+                            </FormInput>
+                        </FormInputWrapper>
+                        <div style={{ display: "flex", flexDirection: "column" }}>
+                            <Headline color="black" style={{ margin: "0px auto", textAlign: "center" }} >
+                                Upload Your NUS Student Card<br />(NOT Singapore Student Pass!)
+                            </Headline>
+                            <FileUploader
+                                required
+                                verificationFile={this.state.verificationFile}
+                                onChange={this.handleFileChange}
+                            >
+                            </FileUploader>
+                            <Headline color="red" style={{ margin: "auto", height: "40vh" }}>{this.state.error}</Headline>
+                        </div>
+                        <GoldenInput type="submit" onClick={this.checkFile} onSubmit={this.handleSubmit} style={{ marginBottom: '5%' }}  value="Submit" />
+                    </form>
                 </FormContentWrapper>
             </Wrapper>
         )

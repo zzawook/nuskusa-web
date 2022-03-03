@@ -63,9 +63,6 @@ class Board extends React.Component<BoardProps, BoardState> {
             this.fetchBoard();
             this.fetchPosts();
         }
-        // console.log(this.props.firebaseUserData.role)
-        // console.log(this.state.firestoreBoard.editPermission)
-        // console.log(this.state.firestoreBoard.editPermission.includes(this.props.firebaseUserData.role))
     }
 
     addPostLink = () => {
@@ -120,7 +117,6 @@ class Board extends React.Component<BoardProps, BoardState> {
                     postArray: arr,
                     postComponentArray: componentArray
                 })
-                console.log('all posts fetching successful');
             })
     }
 
@@ -224,17 +220,15 @@ class Board extends React.Component<BoardProps, BoardState> {
             }
         }
 
-        const displayVerification = localStorage.getItem("seeVerify")
         return (
             <Container>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {this.props.firebaseUserData.isVerified != false//true
-                    ? displayVerification === "yes"
-                        ?
-                        <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={true} onClose={() => { }} />
-                        :
-                        <></>
-                    : <></>}
+                {!this.props.firebaseUserData.isVerified
+                    ?
+                    <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={true} onClose={() => { }} />
+                    :
+                    <></>
+                }
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         {this.state.firestoreBoard.title}
@@ -266,7 +260,8 @@ class Board extends React.Component<BoardProps, BoardState> {
                         />
                     </div>
                 </BoardNavbarContainer>
-                {this.state.postComponentArray.length == 0 ?
+                
+                {this.state.postComponentArray.length === 0 ?
                     <DisplayMedium color='white'>
                         등록된 게시글이 없습니다.
                     </DisplayMedium>
@@ -275,6 +270,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                         {this.state.postComponentArray}
                     </PostContainer>
                 }
+
                 {this.props.firebaseUserData.role === "Admin" ?
                     <>
                         <button onClick={() => generateSamplePost(
