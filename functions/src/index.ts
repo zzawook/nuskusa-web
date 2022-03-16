@@ -1,8 +1,9 @@
 import * as admin from "firebase-admin";
 
-const { createNotificationForBoard, createNotificationOnPostComment, createNotificationOnPostLike } = require("./notification/createNotification");
+import {createNotificationForBoard, createNotificationOnPostComment, createNotificationOnPostLike} from "./notification/createNotification";
 
 admin.initializeApp();
+export const db = admin.firestore();
 
 exports.createNotificationOnPostLike = createNotificationOnPostLike;
 

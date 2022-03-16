@@ -3,13 +3,13 @@ import {FirestorePost} from "../../../src/types/FirestorePost";
 import {FirestoreBoard} from "../../../src/types/FirestoreBoard";
 import {FirestoreComment} from "../../../src/types/FirestoreComment";
 import {FirestoreNotification} from "../../../src/types/FirestoreNotification";
+import {db} from "../index";
 
 import * as admin from "firebase-admin";
 import {firestore} from "firebase-admin";
 
-const db = admin.firestore();
 
-exports.createNotificationOnPostLike = functions.firestore
+export const createNotificationOnPostLike = functions.firestore
     .document("/boards/{boardId}/posts/{postId}")
     .onUpdate(async (change, context) => {
         const previous = change.before.data() as FirestorePost;
@@ -43,7 +43,7 @@ exports.createNotificationOnPostLike = functions.firestore
         }
     });
 
-exports.createNotificationForBoard = functions.firestore
+export const createNotificationForBoard = functions.firestore
     .document("/boards/{boardId}")
     .onCreate(async (change, context) => {
         const data = change.data() as FirestoreBoard;
@@ -81,7 +81,7 @@ exports.createNotificationForBoard = functions.firestore
             });
     });
 
-exports.createNotificationOnPostComment = functions.firestore
+export const createNotificationOnPostComment = functions.firestore
     .document("/boards/{boardId}/posts/{postId}/comments/{commentId}")
     .onCreate(async (change, context) => {
         const data = change.data() as FirestoreComment;

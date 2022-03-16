@@ -1,0 +1,25 @@
+[debug] [2022-03-16T12:15:25.986Z] ----------------------------------------------------------------------
+[debug] [2022-03-16T12:15:25.988Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\admin\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2022-03-16T12:15:25.988Z] CLI Version:   10.0.1
+[debug] [2022-03-16T12:15:25.988Z] Platform:      win32
+[debug] [2022-03-16T12:15:25.988Z] Node Version:  v12.18.4
+[debug] [2022-03-16T12:15:25.989Z] Time:          Wed Mar 16 2022 20:15:25 GMT+0800 (GMT+08:00)
+[debug] [2022-03-16T12:15:25.990Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-03-16T12:15:26.041Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-03-16T12:15:26.041Z] > authorizing via signed-in user (rygrobin@gmail.com)
+[debug] [2022-03-16T12:15:26.041Z] [iam] checking project nus-kusa-website for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2022-03-16T12:15:26.043Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/nus-kusa-website:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2022-03-16T12:15:27.055Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Wed, 16 Mar 2022 12:15:26 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=958","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2022-03-16T12:15:27.056Z] >>> HTTP REQUEST POST https://iam.googleapis.com/v1/projects/nus-kusa-website/serviceAccounts/nus-kusa-website@appspot.gserviceaccount.com:testIamPermissions  
+ {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2022-03-16T12:15:28.143Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Wed, 16 Mar 2022 12:15:27 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Deploying to 'nus-kusa-website'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] +  functions: Finished running predeploy script. 
+[debug] [2022-03-16T12:15:45.614Z] Validating nodejs source
