@@ -472,6 +472,11 @@ class EditPost extends React.Component {
                                     `${(height * 0.9) - 380}px`,
                                     editor.editing.view.document.getRoot()
                                 );
+                                writer.setStyle(
+                                    "color",
+                                    "#0B121C",
+                                    editor.editing.view.document.getRoot()
+                                );
                             })
                         }}
                     />
