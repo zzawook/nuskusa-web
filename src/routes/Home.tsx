@@ -121,14 +121,14 @@ class Home extends React.Component<HomeProps, HomeState> {
                         showStatus={false} 
                         showThumbs={false}
                     >
-                        <div style={carouselDivStyle}>
-                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus2.png?alt=media&token=093e63b1-8970-42e5-91e9-2e1d24b6e17b" />
+                        <div style={carouselDivStyle} onClick={() => window.open('https://www.instagram.com/p/Cb6uxpCL_L8/?utm_source=ig_web_copy_link')}>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220404_100531025.jpg?alt=media&token=2719d84d-2325-4d8d-a83e-e978dad59996" />
                         </div>
-                        <div style={carouselDivStyle}>
-                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome1.png?alt=media&token=61ac81ed-3dff-4f66-a523-2600c4b35203" />
+                        <div style={carouselDivStyle} onClick={() => window.open('https://www.instagram.com/p/CbUY6AvJr5U/?utm_source=ig_web_copy_link')}>
+                        <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220320_102406142_01.png?alt=media&token=94e00dd9-6cdd-4897-b9a7-9123a687d47e" />
                         </div>
-                        <div style={carouselDivStyle}>
-                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome3.png?alt=media&token=3a7f0efb-dd6d-452d-91e0-3c08adca9c4e" />
+                        <div style={carouselDivStyle} onClick={() => window.open('https://www.instagram.com/p/CbUNejQLDRs/?utm_source=ig_web_copy_link')}>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220319_193657584_01.jpg?alt=media&token=08fae938-5af8-47eb-93a2-42522c3b73e4" />
                         </div>
                     </Carousel>  
                 </div>    
