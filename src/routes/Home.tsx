@@ -56,13 +56,15 @@ class Home extends React.Component<HomeProps, HomeState> {
         `
 
         const HomeBackground = styled.div`
-            justify-content: center;
+            justify-content: flex-start;
             display: flex;
             align-items: center;
             width: 100%;
             height: 90vh;
             background: linear-gradient(to bottom, #0B121C 55%, #18202B 35%);
             order: 1;
+            padding-left: 15vw;
+            padding-top: 5vh
         `
 
         const MainBannerContainer = styled.div`
@@ -76,7 +78,8 @@ class Home extends React.Component<HomeProps, HomeState> {
         const MainBanner = styled.div`
             display: flex;
             flex-direction: column;
-            width: 60%;
+            position: absolute;
+            width: 42%;
             height: 25vh;
             background: white;
             box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
@@ -133,22 +136,20 @@ class Home extends React.Component<HomeProps, HomeState> {
                     </Carousel>  
                 </div>    
                 <HomeBackground>
-                    <MainBannerContainer>
-                        <MainBanner>
-                            <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>
-                                Welcome to
-                            </p>
-                            <DisplayLarge color='#0B121C' style={{ marginTop: '5px', marginBottom: '5px' }}>NUS Korea Society</DisplayLarge>
-                            <p style={{ margin: '0', marginBottom: '20px', color: '#0B121C', opacity: '0.5', fontSize: '13px' }}>
-                                NUS 한인 학생회 사이트에 오신 것을 환영합니다!
-                            </p>
-                            <GoldenButton to='/about-us'>
-                                <DisplayMedium color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center' }}>
-                                    + More Details
-                                </DisplayMedium>
-                            </GoldenButton>
-                        </MainBanner>
-                    </MainBannerContainer>
+                    <MainBanner>
+                        <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>
+                            Welcome to
+                        </p>
+                        <DisplayLarge color='#0B121C' style={{ marginTop: '5px', marginBottom: '5px' }}>NUS Korea Society</DisplayLarge>
+                        <p style={{ margin: '0', marginBottom: '20px', color: '#0B121C', opacity: '0.5', fontSize: '13px' }}>
+                            NUS 한인 학생회 사이트에 오신 것을 환영합니다!
+                        </p>
+                        <GoldenButton to='/about-us'>
+                            <DisplayMedium color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center' }}>
+                                + More Details
+                            </DisplayMedium>
+                        </GoldenButton>
+                    </MainBanner>
                 </HomeBackground>
                 <Activity>
                     <DisplayLarge color='#FFFFFF' style={{ marginLeft: '10px' }}>Our Activities</DisplayLarge>

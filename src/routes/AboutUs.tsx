@@ -35,7 +35,7 @@ const Member = styled.div`
     position: relative;
     width: 70%;
     left: 15%;
-    height: 3150px;
+    height: 3500px;
     z-index: 10;
 `
 const GroupPhotoContainer = styled.div`
@@ -53,7 +53,7 @@ const GroupPhoto = styled.img`
 const HR = styled.div`
     position: absolute;
     left: 15%;
-    height: 3000px;
+    height: 3350px;
     width: 1px;
     border-left: 1px solid #BDA06D;
     z-index: 11;
@@ -90,7 +90,7 @@ const ExecImages = styled.div`
     left: 20%;
 `
 const ImageBreak = styled.div`
-    width: 17%;
+    width: 23%;
 `
 const Explanation = styled.span`
     position: absolute;
@@ -250,7 +250,7 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                         <ExecHead />
                         <Exec>임원진</Exec>
                         <ExecImages>
-                            <ExecImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_4626.jpg?alt=media&token=5b7a9e49-f2ca-44d9-9252-4a5b9f521d0f'}></ExecImg>
+                            <ExecImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_4626.jpg?alt=media&token=afbfc168-154e-4dd4-b934-dd1434f7e9e2'}></ExecImg>
                             <ImageBreak />
                             <ExecImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_0521.JPG?alt=media&token=2f4adaec-080d-4c4d-85ba-3becc4a99d82'}></ExecImg>
                         </ExecImages>
@@ -272,7 +272,7 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                         <ITHead />
                         <IT>IT</IT>
                         <ITImages>
-                            <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fshutterstock_554314555_copy.jpg?alt=media&token=8a93d427-1b65-4947-ba14-42c5bb0b8e95'} />
+                            <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220405_193229901.jpg?alt=media&token=28d17ec3-82d6-4d34-b639-a7eb17f29eac'} />
                             <ImageBreak />
                             <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FKakaoTalk_20211010_113309252_02.jpg?alt=media&token=369cd448-a7d6-47c4-b03f-f32dde60a297'} />
                         </ITImages>
@@ -281,7 +281,7 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                         <Profile top={2100} bottom={-1} right={0} left={-1} name={'김재혁'} role={'Information Technology'}/>
                         <PublicRelation>Public Relation</PublicRelation>
                         <PRImages>
-                            <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fshutterstock_554314555_copy.jpg?alt=media&token=8a93d427-1b65-4947-ba14-42c5bb0b8e95'} />
+                            <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220405_211536009.jpg?alt=media&token=155f3048-ed58-48c4-bcae-bf2f5d0eec0f'} />
                             <ImageBreak />
                             <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_6633.png?alt=media&token=9c3f4487-4d2c-47b5-a00d-d22679b25550'} />     
                         </PRImages>
