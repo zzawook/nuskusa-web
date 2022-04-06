@@ -56,13 +56,15 @@ class Home extends React.Component<HomeProps, HomeState> {
         `
 
         const HomeBackground = styled.div`
-            justify-content: center;
+            justify-content: flex-start;
             display: flex;
             align-items: center;
             width: 100%;
             height: 90vh;
             background: linear-gradient(to bottom, #0B121C 55%, #18202B 35%);
             order: 1;
+            padding-left: 15vw;
+            padding-top: 5vh
         `
 
         const MainBannerContainer = styled.div`
@@ -76,7 +78,8 @@ class Home extends React.Component<HomeProps, HomeState> {
         const MainBanner = styled.div`
             display: flex;
             flex-direction: column;
-            width: 60%;
+            position: absolute;
+            width: 42%;
             height: 25vh;
             background: white;
             box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
@@ -121,34 +124,32 @@ class Home extends React.Component<HomeProps, HomeState> {
                         showStatus={false} 
                         showThumbs={false}
                     >
-                        <div style={carouselDivStyle}>
-                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus2.png?alt=media&token=093e63b1-8970-42e5-91e9-2e1d24b6e17b" />
+                        <div style={carouselDivStyle} onClick={() => window.open('https://www.instagram.com/p/Cb6uxpCL_L8/?utm_source=ig_web_copy_link')}>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220404_100531025.jpg?alt=media&token=2719d84d-2325-4d8d-a83e-e978dad59996" />
                         </div>
-                        <div style={carouselDivStyle}>
-                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome1.png?alt=media&token=61ac81ed-3dff-4f66-a523-2600c4b35203" />
+                        <div style={carouselDivStyle} onClick={() => window.open('https://www.instagram.com/p/CbUY6AvJr5U/?utm_source=ig_web_copy_link')}>
+                        <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220320_102406142_01.png?alt=media&token=94e00dd9-6cdd-4897-b9a7-9123a687d47e" />
                         </div>
-                        <div style={carouselDivStyle}>
-                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome3.png?alt=media&token=3a7f0efb-dd6d-452d-91e0-3c08adca9c4e" />
+                        <div style={carouselDivStyle} onClick={() => window.open('https://www.instagram.com/p/CbUNejQLDRs/?utm_source=ig_web_copy_link')}>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220319_193657584_01.jpg?alt=media&token=08fae938-5af8-47eb-93a2-42522c3b73e4" />
                         </div>
                     </Carousel>  
                 </div>    
                 <HomeBackground>
-                    <MainBannerContainer>
-                        <MainBanner>
-                            <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>
-                                Welcome to
-                            </p>
-                            <DisplayLarge color='#0B121C' style={{ marginTop: '5px', marginBottom: '5px' }}>NUS Korea Society</DisplayLarge>
-                            <p style={{ margin: '0', marginBottom: '20px', color: '#0B121C', opacity: '0.5', fontSize: '13px' }}>
-                                NUS 한인 학생회 사이트에 오신 것을 환영합니다!
-                            </p>
-                            <GoldenButton to='/about-us'>
-                                <DisplayMedium color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center' }}>
-                                    + More Details
-                                </DisplayMedium>
-                            </GoldenButton>
-                        </MainBanner>
-                    </MainBannerContainer>
+                    <MainBanner>
+                        <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>
+                            Welcome to
+                        </p>
+                        <DisplayLarge color='#0B121C' style={{ marginTop: '5px', marginBottom: '5px' }}>NUS Korea Society</DisplayLarge>
+                        <p style={{ margin: '0', marginBottom: '20px', color: '#0B121C', opacity: '0.5', fontSize: '13px' }}>
+                            NUS 한인 학생회 사이트에 오신 것을 환영합니다!
+                        </p>
+                        <GoldenButton to='/about-us'>
+                            <DisplayMedium color='white' style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center' }}>
+                                + More Details
+                            </DisplayMedium>
+                        </GoldenButton>
+                    </MainBanner>
                 </HomeBackground>
                 <Activity>
                     <DisplayLarge color='#FFFFFF' style={{ marginLeft: '10px' }}>Our Activities</DisplayLarge>
