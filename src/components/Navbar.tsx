@@ -5,7 +5,6 @@ import logo from '../logo.png'
 import { FirebaseUser } from '../types/FirebaseUser';
 import { authService } from '../utils/firebaseFunctions';
 import ProfileBadge from './Profile/ProfileBadge';
-import SignOut from './SignOut';
 
 type NavbarProps = {
     firebaseUserData: FirebaseUser

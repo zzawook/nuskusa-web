@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { authService } from '../utils/firebaseFunctions';
 import firebase from 'firebase';
-import Navbar from '../components/Navbar';
 import styled from 'styled-components';
 import CSS from 'csstype';
 import { FlexColumn } from '../components/util/UsefulDiv';
@@ -149,7 +148,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
             .then(async () => {
                 return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
                     .then(() => {
-                        window.history.back()
+                        this.props.history.push("/")
                     })
                     .catch((error) => {
                         console.error(error);
@@ -228,7 +227,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
                         {/* Will be adding name, nickname, etc. */}
                         {this.state.failed ? <FailMessage>Login failed. Please check your ID and Password.</FailMessage> : <></>}
                         <ToPassWord to='/reset' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Forgot Password?</ToPassWord>
-                        <ToSignUp to='/signup' href="/#/signup" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>
+                        <ToSignUp to='/signup' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>
                         <SubmitButton type="submit" value="Submit" />
                     </Form>
                 </Container>

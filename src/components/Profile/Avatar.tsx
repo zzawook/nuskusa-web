@@ -21,10 +21,6 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         }
     }
 
-    componentDidMount = () => {
-        console.log(typeof this.props.firebaseUserData.profilePictureURL)
-    }
-
     render = () => {
         const AvatarWrapper = styled.div`
             width: ${this.props.dimension}px;
@@ -49,8 +45,6 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         `
         return (
             <AvatarWrapper>
-                {console.log(this.props.firebaseUserData)}
-                {console.log(authService.currentUser)}
                 {this.props.firebaseUserData.profilePictureURL ? <ProfileImg src={this.props.firebaseUserData.profilePictureURL} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile>}
             </AvatarWrapper>
         )

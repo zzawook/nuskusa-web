@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CSS from 'csstype';
-import Navbar from '../components/Navbar';
 import { authService, dbService } from '../utils/firebaseFunctions';
 import styled from 'styled-components'
 import { FlexColumn } from '../components/util/UsefulDiv';
@@ -146,7 +145,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                     role: 'User'
                 }
                 await dbService.collection('users').doc(userCredential.user?.uid).set(userObject);
-                window.history.back();
+                this.props.history.push("/")
             })
             .catch((error) => {
                 console.error(error);

@@ -94,7 +94,7 @@ const TitleAndDate = styled.div`
     margin-left: 20px;
 `
 const Title = styled.p`
-    width: 65%;
+    width: 100%;
     font-weight: 800;
     font-size: 22px;
     text-overflow: ellipsis;
@@ -304,23 +304,7 @@ class Post extends React.Component<PostProps, PostState> {
                             const authorData = snapshot.data() as FirebaseUser;
                             this.setState({
                                 firestorePost: {
-                                    postId: querySnapshot.id,
-                                    title: data.title,
-                                    author: data.author,
-                                    authorId: data.authorId,
-                                    content: data.content,
-                                    isAnnouncement: data.isAnnouncement,
-                                    isAnonymous: data.isAnonymous,
-                                    isHidden: data.isHidden,
-                                    isPinned: data.isPinned,
-                                    lastModified: data.lastModified,
-                                    upvoteArray: data.upvoteArray,
-                                    permissions: data.permissions,
-                                    numComments: data.numComments,
-                                    parentBoardId: data.parentBoardId,
-                                    parentBoardTitle: data.parentBoardTitle,
-                                    parentColor: data.parentColor,
-                                    parentTextColor: data.parentTextColor,
+                                    ...data,
                                 },
                                 errorMsg: "Access denied; you do not have permission.",
                                 accessGranted: data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User') ? true : false,
@@ -405,7 +389,7 @@ class Post extends React.Component<PostProps, PostState> {
                 <Container>
                     <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
                     <Header>
-                        <ProfileImg firebaseUserData={this.state.authorProfile} dimension={32} isOnNavbar={true} />
+                        <ProfileImg firebaseUserData={this.props.firebaseUserData} dimension={32} isOnNavbar={true} />
                         <TitleAndDate>
                             <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
                             <Title>{this.state.firestorePost.title}</Title>                            
