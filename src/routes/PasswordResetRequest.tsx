@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { authService } from '../utils/firebaseFunctions';
+import { authService, dbService } from '../utils/firebaseFunctions';
 import CSS from 'csstype';
 
 type PasswordResetRequestState = {
@@ -20,13 +20,19 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
         }
     }
 
-    handleResetClick = () => {
-        authService.sendPasswordResetEmail(this.state.email)
+    handleResetClick = async () => {
+        const userDocs = (await dbService.collection("users").where("email", "==", this.state.email).get()).docs
+        if (userDocs.length == 0) {
+            alert('This email does not exist!');
+            return;
+        } else {
+            authService.sendPasswordResetEmail(this.state.email)
             .then(function () {
                 alert('We will send an email to you soon!')
             }).catch(function (e) {
                 console.log(e);
             });
+        }
     }
 
     handleChange = (event: any) => {

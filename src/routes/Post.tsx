@@ -285,7 +285,7 @@ class Post extends React.Component<PostProps, PostState> {
         this.setState({
             firestorePost: data
         })
-        this.forceUpdate()
+        // this.forceUpdate()
     }
 
     fetchPost = () => {

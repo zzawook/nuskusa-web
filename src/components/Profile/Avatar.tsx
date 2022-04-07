@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { CSSProperties } from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser'
 import { CgProfile } from 'react-icons/cg'
+import { authService } from '../../utils/firebaseFunctions'
 type AvatarProps = {
     firebaseUserData: FirebaseUser,
     dimension: number,
@@ -48,7 +49,9 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         `
         return (
             <AvatarWrapper>
-                {this.props.firebaseUserData.profilePictureURL != undefined && this.props.firebaseUserData.profilePictureURL != "undefined" ? <ProfileImg src={this.props.firebaseUserData.profilePictureURL} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile>}
+                {console.log(this.props.firebaseUserData)}
+                {console.log(authService.currentUser)}
+                {this.props.firebaseUserData.profilePictureURL ? <ProfileImg src={this.props.firebaseUserData.profilePictureURL} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile>}
             </AvatarWrapper>
         )
     }

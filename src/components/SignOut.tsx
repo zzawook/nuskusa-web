@@ -1,7 +1,7 @@
 import React from 'react';
 import { authService } from '../utils/firebaseFunctions';
 
-class SignOut extends React.Component<{}, {}> {
+class SignOut extends React.Component<any, {}> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -11,6 +11,7 @@ class SignOut extends React.Component<{}, {}> {
 
     onSignOutClick = () => {
         authService.signOut();
+        window.location.reload();
     }
 
     render = () => {

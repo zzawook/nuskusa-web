@@ -109,7 +109,7 @@ const ToSignUp = styled(Link)`
     font-size: 12px;
     font-weight: 700;
 `
-const ToPassWord = styled.a`
+const ToPassWord = styled(Link)`
     width: 60%;
     color: #808080;
     margin-bottom: ${margin}px;
@@ -227,7 +227,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
                         />
                         {/* Will be adding name, nickname, etc. */}
                         {this.state.failed ? <FailMessage>Login failed. Please check your ID and Password.</FailMessage> : <></>}
-                        <ToPassWord onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Forgot Password?</ToPassWord>
+                        <ToPassWord to='/reset' onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Forgot Password?</ToPassWord>
                         <ToSignUp to='/signup' href="/#/signup" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>
                         <SubmitButton type="submit" value="Submit" />
                     </Form>
