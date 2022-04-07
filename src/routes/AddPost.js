@@ -216,6 +216,7 @@ class AddPost extends React.Component {
         const boardSnapshot = await dbService.collection('boards').doc(this.state.selectedBoard).get();
         const boardData = boardSnapshot.data();
         const stateCopy = this.state.state;
+        stateCopy.authorId = authService.currentUser.uid;
         stateCopy.content = this.content;
         stateCopy.parentBoardId = this.state.selectedBoard;
         stateCopy.parentColor = boardData.boardColor;
