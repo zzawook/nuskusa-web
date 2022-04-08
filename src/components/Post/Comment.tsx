@@ -100,7 +100,6 @@ class Comment extends React.Component<CommentProps, CommentState> {
     }
 
     componentDidMount() {
-        console.log(this.props.comments)
         this.setState({
             commentArray: this.props.comments.map((element, i) => <Primary reset={this.props.reset} data={element} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData} commentId={this.props.commentIds[i]}/>).reverse()
         })
