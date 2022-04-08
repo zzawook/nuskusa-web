@@ -19,6 +19,7 @@ type ProfileDisplayState = {
 }
 
 class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplayState> {
+    private _isMounted = false;
     constructor(props: ProfileDisplayProps) {
         super(props)
         this.state = {
@@ -28,11 +29,21 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
     }
 
     componentDidMount = () => {
+        if (this._isMounted) {
+            this.fetchNotification();
+        }
+    }
+
+    componentWillUnmount = () => {
+        this._isMounted = false;
+    }
+
+    fetchNotification = async () => {
         const NoNewsAlert = styled.p`
             width: 42vh;
             text-align: center;
         `
-        dbService
+        await dbService
             .collection("users").doc(authService.currentUser?.uid)
             .get()
             .then((doc) => {
@@ -227,10 +238,10 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                                     <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
                                     <LogOutText>Log Out</LogOutText>
                                 </LogOut>
-                                <EmptyDiv/>
-                                
+                                <EmptyDiv />
+
                             </BottomBanner>
-                            
+
                         </Wrapper>
                         :
                         <ProfileDisplayEmpty />
