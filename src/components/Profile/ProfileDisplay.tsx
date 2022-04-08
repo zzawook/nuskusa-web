@@ -29,6 +29,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
     }
 
     componentDidMount = () => {
+        this._isMounted = true;
         if (this._isMounted) {
             this.fetchNotification();
         }

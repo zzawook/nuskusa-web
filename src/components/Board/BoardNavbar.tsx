@@ -86,6 +86,7 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
     }
 
     componentDidMount = () => {
+        this._isMounted = true;
         if (this._isMounted) {
             this.fetchBoards()
         }
