@@ -31,9 +31,9 @@ class Verification extends React.Component<VerificationProps, VerificationState>
         if (authService.currentUser) {
             dbService
                 .collection('verifications')
-                .onSnapshot((querySnapshot) => {
+                .onSnapshot((querySnapshot: { empty: any; docs: any[] }) => {
                     if (!querySnapshot.empty) {
-                        const arr = querySnapshot.docs.map((element) => {
+                        const arr = querySnapshot.docs.map((element: { data: () => FirestoreUserVerification; id: string }) => {
                             const data = element.data() as FirestoreUserVerification
                             return (
                                 <VerificationComponent
@@ -54,9 +54,12 @@ class Verification extends React.Component<VerificationProps, VerificationState>
         return (
             <>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {this.props.firebaseUserData.role === 'Admin' ?
+                {this.props.firebaseUserData.role.toLowerCase() === 'admin' ?
                     <div>
-                        Admin!
+                        You are an administrator. <br />
+                        1. 신청인 이름 확인, 입학연도, 과 확인 <br />
+                        2. 신청인 이름과 학생증 상의 이름과 대조 <br />
+                        3. 이상 없을 시에 Accept하기. 이상이 있다면 이유를 적고 Reject하기 <br />
                         {this.state.verificationComponentArray}
                     </div>
                     :

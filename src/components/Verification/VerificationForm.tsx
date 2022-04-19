@@ -18,6 +18,7 @@ type FormState = {
     verificationFile: File | undefined,
     theme: Theme,
     error: string,
+    success: string,
 }
 
 const Wrapper = styled.div`
@@ -73,6 +74,7 @@ class VerificationForm extends React.Component<FormProps, FormState> {
             verificationFile: undefined,
             theme: darkTheme,
             error: "",
+            success: "",
         }
     }
 
@@ -108,10 +110,39 @@ class VerificationForm extends React.Component<FormProps, FormState> {
 
     handleFileChange = (event: any) => {
         event.preventDefault();
-        if (event.target.files[0]) {
-            this.setState({
-                verificationFile: event.target.files[0]
-            })
+        const file = event.target.files[0];
+        console.log(file)
+        if (file) {
+            const fileTypeArray = file.type.split("/");
+            if (file.size > 5000000) {
+                this.setState({
+                    error: "File size must be 5 MB or less!",
+                })
+                return false;
+            } else if (fileTypeArray[0] !== "image") {
+                this.setState({
+                    error: "Not an image; acceptable types are png, jpg, and jpeg.",
+                })
+                return false;
+            } else if (fileTypeArray[0] === "image") {
+                const validImageFormats = ["png", "jpeg"];
+                if (!validImageFormats.includes(fileTypeArray[1])) {
+                    this.setState({
+                        error: "Not an image; acceptable types are png, jpg, and jpeg.",
+                    })
+                    return false;
+                }
+                else {
+                    this.setState({
+                        verificationFile: file,
+                    })
+                }
+            } else {
+                this.setState({
+                    error: "Unknown error occurred while uploading file.",
+                })
+                return false;
+            }
         }
     }
 
@@ -121,29 +152,36 @@ class VerificationForm extends React.Component<FormProps, FormState> {
             this.setState({
                 error: "You must select a file!",
             })
+            return false;
         }
+        return true;
     }
 
     handleSubmit = async (event: any) => {
         event.preventDefault();
-
+        if (!this.checkFile(event)) {
+            return;
+        }
         const verificationRef = dbService.collection("verifications").doc(authService.currentUser?.uid);
         if (this.state.verificationFile) {
             const uploadTask = storageService
                 .ref(`verifications/${verificationRef.id}`)
                 .put(this.state.verificationFile);
-
+            console.log(uploadTask)
             uploadTask.on('state_changed',
-                (snapshot) => { },
-                (error) => {
+                (snapshot: any) => { },
+                (error: any) => {
                     console.error(error);
+                    this.setState({
+                        error: "File upload has failed.",
+                    })
                 },
                 () => {
                     if (this.state.verificationFile) {
                         storageService.ref('verifications')
                             .child(verificationRef.id)
                             .getDownloadURL()
-                            .then(async (url) => {
+                            .then(async (url: any) => {
                                 const batch = dbService.batch()
                                 try {
                                     const userRef = dbService.collection("users").doc(authService.currentUser?.uid)
@@ -160,9 +198,20 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                                     batch.update(userRef, {
                                         isVerified: true
                                     });
-                                    batch.commit();
-                                } catch (e) {
+                                    await batch.commit().then(() => {
+                                        this.setState({
+                                            success: "업로드 성공! 인증이 며칠 내로 완료됩니다. It will take a few days to verify.",
+                                        })
+                                    }).catch(() => {
+                                        this.setState({
+                                            error: "업로드 실패. 잠시 후 다시 시도해주세요. Upload failed. Please try again later.",
+                                        })
+                                    });
+                                } catch (e: any) {
                                     console.error(e)
+                                    this.setState({
+                                        error: e.toString(),
+                                    })
                                 }
                             })
                     }
@@ -218,7 +267,7 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                         </FormInputWrapper>
                         <div style={{ display: "flex", flexDirection: "column" }}>
                             <Headline color="black" style={{ margin: "0px auto", textAlign: "center" }} >
-                                Upload Your NUS Student Card<br />(NOT Singapore Student Pass!)
+                                Upload Your NUS Student Card<br />(NOT Green Card!)
                             </Headline>
                             <FileUploader
                                 required
@@ -228,7 +277,7 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                             </FileUploader>
                             <Headline color="red" style={{ margin: "auto", height: "40vh" }}>{this.state.error}</Headline>
                         </div>
-                        <GoldenInput type="submit" onClick={this.checkFile} onSubmit={this.handleSubmit} style={{ marginBottom: '5%' }}  value="Submit" />
+                        <GoldenInput type="submit" onClick={this.handleSubmit} style={{ marginBottom: '5%' }} value="Submit" />
                     </form>
                 </FormContentWrapper>
             </Wrapper>
