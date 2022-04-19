@@ -1,18 +1,22 @@
+import firebase from 'firebase';
 import React from 'react';
 import { FirebaseUser } from '../../types/FirebaseUser';
+import { FirestoreNotification } from '../../types/FirestoreNotification';
 import { FirestoreUserVerification } from '../../types/FirestoreUserVerification';
 import { dbService, storageService } from '../../utils/firebaseFunctions';
+import { Headline } from '../../utils/ThemeText';
 
 type VerificationProps = {
     verificationId: string,
     firestoreVerificationData: FirestoreUserVerification
 }
 
-class VerificationComponent extends React.Component<VerificationProps, {}> {
+class VerificationComponent extends React.Component<VerificationProps, { reason: string, error: string, }> {
     constructor(props: VerificationProps) {
         super(props);
         this.state = {
             reason: "",
+            error: "",
         }
     }
 
@@ -38,6 +42,12 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
     }
 
     handleReject = async () => {
+        if (this.state.reason.trim() === "") {
+            this.setState({
+                error: "There has to be a valid reason to reject."
+            })
+            return;
+        }
         await storageService.ref(`verifications/${this.props.verificationId}`)
             .delete()
             .then(async () => {
@@ -45,9 +55,20 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
                     const batch = dbService.batch()
                     const verificationsRef = dbService.collection('verifications').doc(this.props.verificationId)
                     const userRef = dbService.collection('users').doc(this.props.verificationId)
+                    const notification: FirestoreNotification = {
+                        isRead: false,
+                        notificationType: "verification",
+                        contentType: "reject",
+                        source: "verification",
+                        message: `Your verification was rejected. Reason: ${this.state.reason}`,
+                        link: `/boards`,
+                        data: this.state.reason,
+                        timestamp: firebase.firestore.Timestamp.now(),
+                    };
                     batch.delete(verificationsRef)
                     batch.update(userRef, {
-                        isVerified: false
+                        isVerified: false,
+                        notificationArray: firebase.firestore.FieldValue.arrayUnion(notification),
                     })
                     await batch.commit()
                 } catch (e) {
@@ -59,14 +80,24 @@ class VerificationComponent extends React.Component<VerificationProps, {}> {
             });
     }
 
+    handleReasonChange = (event: any) => {
+        console.log(event.target.value)
+        this.setState({
+            reason: event.target.value,
+        })
+    }
+
     render = () => {
         return (
             <div>
                 <img src={this.props.firestoreVerificationData.downloadURL} alt='' width="640"></img> <br />
-                {this.props.firestoreVerificationData.fullname} <br />
-                {this.props.firestoreVerificationData.owner} <br />
-                <button onClick={this.handleAccept}>Verify</button>
-                <button onClick={this.handleReject}>Reject</button>
+                <Headline>Name: {this.props.firestoreVerificationData.fullname}</Headline>
+                <Headline>Author: {this.props.firestoreVerificationData.owner}</Headline>
+                <Headline>Accept: <button onClick={this.handleAccept}>Verify</button></Headline>
+                <Headline>Reason: <input type="text" onChange={this.handleReasonChange}></input>
+                    <button onClick={this.handleReject}>Reject</button>
+                </Headline>
+                <Headline color="red">{this.state.error}</Headline>
             </div>
         )
     }

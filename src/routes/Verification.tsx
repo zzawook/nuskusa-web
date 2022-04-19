@@ -37,6 +37,7 @@ class Verification extends React.Component<VerificationProps, VerificationState>
                             const data = element.data() as FirestoreUserVerification
                             return (
                                 <VerificationComponent
+                                    key={element.id}
                                     verificationId={element.id}
                                     firestoreVerificationData={data}
                                 />

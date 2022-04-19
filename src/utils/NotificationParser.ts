@@ -26,6 +26,14 @@ export const getTypeMessage = (type: string, contentType: string) => {
         } else {
             throw new Error("Invalid second type argument for new type");
         }
+    } else if (firstType === "verification") {
+        if (secondType === "reject") {
+            message += "Your student verification has been rejected."
+        } else if (secondType === "approve") {
+            message += "Your student verification is successfully approved!"
+        } else {
+            throw new Error("Invalid second type argument for new type");
+        }
     } else {
         throw new Error("Nonexistent type message for notifications")
     }
