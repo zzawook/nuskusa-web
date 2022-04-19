@@ -18,6 +18,7 @@ type BoardNavbarState = {
 
 // Navigation bar for choosing individual boards
 class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
+    private _isMounted = false;
     constructor(props: BoardNavbarProps) {
         super(props)
         this.state = {
@@ -25,7 +26,7 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
         }
     }
 
-    fetchBoards = () => {
+    fetchBoards = async () => {
         const LinkContainer = styled.div`
             display: inline-block;
             opacity: 0.5;
@@ -43,7 +44,7 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
         `
 
         const componentArray: any = []
-        dbService.collection('boards').get().then((querySnapshot) => {
+        await dbService.collection('boards').get().then((querySnapshot) => {
             let key = 0;
             querySnapshot.docs.forEach((doc) => {
                 key++
@@ -85,7 +86,14 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
     }
 
     componentDidMount = () => {
-        this.fetchBoards()
+        this._isMounted = true;
+        if (this._isMounted) {
+            this.fetchBoards()
+        }
+    }
+
+    componentWillUnmount = () => {
+        this._isMounted = false;
     }
 
     render = () => {

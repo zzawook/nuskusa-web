@@ -66,10 +66,6 @@ class ActivityList extends React.Component<ActivityProps, {}> {
         super(props);
     }
 
-    componentDidMount() {
-        console.log(this.props.image);
-    }
-
     contentStyle: CSS.Properties = {
         color: '#7a7a7a',
     }

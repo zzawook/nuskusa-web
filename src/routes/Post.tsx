@@ -234,7 +234,6 @@ class Post extends React.Component<PostProps, PostState> {
             return 'Just now'
         }
         else {
-            console.log(time.toDate().getMonth())
             return this.monthToString(time.toDate().getMonth() + 1) + " " + time.toDate().getDate().toString() + " " + time.toDate().getFullYear().toString();
         }
     }
@@ -296,9 +295,7 @@ class Post extends React.Component<PostProps, PostState> {
             .onSnapshot(async (querySnapshot) => {
                 if (querySnapshot.exists) {
                     const data = querySnapshot.data() as FirestorePost;
-                    console.log(data)
                     if (data === undefined) {
-                        console.log(data)
                         return;
                     }
                     else {
@@ -312,7 +309,6 @@ class Post extends React.Component<PostProps, PostState> {
                                 accessGranted: data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User') ? true : false,
                                 authorProfile: authorData,
                             })
-                            console.log(authorData)
                         })
                         
                         dbService // retrieve comments within the post
@@ -392,7 +388,6 @@ class Post extends React.Component<PostProps, PostState> {
                 <Container>
                     <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
                     <Header>
-                        {console.log(this.state.authorProfile)}
                         <ProfileImg firebaseUserData={this.state.authorProfile} dimension={32} isOnNavbar={true} />
                         <TitleAndDate>
                             <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>

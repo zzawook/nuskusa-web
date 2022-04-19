@@ -2,7 +2,6 @@ import firebase from 'firebase'
 import React from 'react'
 import styled from 'styled-components'
 import { authService, dbService } from '../../utils/firebaseFunctions'
-import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 type UpvoteProps = {
@@ -31,13 +30,9 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
         let result = false;
         this.props.upvoteArray.forEach((userRef) => {
             if (!authService.currentUser) {
-                console.log("Not Logged In!")
                 return false;
             }
             else if (authService.currentUser?.uid === userRef.id) {
-                console.log(userRef.id)
-                console.log(authService.currentUser.uid)
-                console.log('upvoted already')
                 result = true;
                 return true;
             }

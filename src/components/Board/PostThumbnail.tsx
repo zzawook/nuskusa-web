@@ -1,4 +1,3 @@
-import { title } from 'process'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -8,6 +7,7 @@ import BoardTag from './BoardTag';
 import CSS from 'csstype';
 import { FirebaseUser } from '../../types/FirebaseUser'
 import PostApprover from '../Grove/PostApprover'
+import { parse } from 'node-html-parser'
 
 
 type PostThumbnailProps = {
@@ -33,6 +33,17 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
         const htmlObject = document.createElement("div") as any;
         htmlObject.innerHTML = anyInput;
         return htmlObject.outerText.substring(0, 30);
+    }
+
+    parseHtmlToThumbnailImage = () => {
+        const root = parse(this.props.firestorePost.content);
+        const imgHtml = root.getElementsByTagName("figure");
+        if (imgHtml.length === 0) {
+            return <></>
+        }
+        imgHtml[0].setAttribute("style", "overflow: hidden, width: 300, height: 300")
+        console.log(imgHtml[0])
+        return <div dangerouslySetInnerHTML={{__html: imgHtml[0].innerHTML}}></div>;
     }
 
     render = () => {
@@ -102,6 +113,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
                         <Container>
                             <Link to={this.props.to} style={{ textDecoration: 'none' }}>
                                 <Thumbnail>
+                                    {/* {this.parseHtmlToThumbnailImage()} */}
                                     <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
                                     <BoardTag
                                         title={this.props.firestorePost.parentBoardTitle}
