@@ -89,12 +89,18 @@ class VerificationComponent extends React.Component<VerificationProps, { reason:
 
     render = () => {
         return (
-            <div>
-                <img src={this.props.firestoreVerificationData.downloadURL} alt='' width="640"></img> <br />
+            <div style={{ border: "1px solid" }}>
+                <Headline><a target="_blank" rel="noopener noreferrer" href={this.props.firestoreVerificationData.downloadURL} style={{ color: "white" }}>Image/PDF Link</a></Headline>
+                {/* <img src={this.props.firestoreVerificationData.downloadURL} alt='' width="640"></img> <br /> */}
                 <Headline>Name: {this.props.firestoreVerificationData.fullname}</Headline>
                 <Headline>Author: {this.props.firestoreVerificationData.owner}</Headline>
+                <Headline>Faculty: {this.props.firestoreVerificationData.faculty}</Headline>
+                <Headline>Major: {this.props.firestoreVerificationData.major}</Headline>
+                <Headline>Enrolled Year: {this.props.firestoreVerificationData.enrolledYear}</Headline>
+                <Headline>School Email: {this.props.firestoreVerificationData.schoolEmail}</Headline>
                 <Headline>Accept: <button onClick={this.handleAccept}>Verify</button></Headline>
-                <Headline>Reason: <input type="text" onChange={this.handleReasonChange}></input>
+                <Headline>Reason: 
+                    <input type="text" onChange={this.handleReasonChange} />
                     <button onClick={this.handleReject}>Reject</button>
                 </Headline>
                 <Headline color="red">{this.state.error}</Headline>

@@ -117,29 +117,44 @@ class VerificationForm extends React.Component<FormProps, FormState> {
             if (file.size > 5000000) {
                 this.setState({
                     error: "File size must be 5 MB or less!",
+                    success: "",
                 })
                 return false;
             } else if (fileTypeArray[0] !== "image") {
+                if (fileTypeArray[0] === "application" && fileTypeArray[1] === "pdf") {
+                    this.setState({
+                        verificationFile: file,
+                        success: "Successfully added file!",
+                        error: "",
+                    })
+                    return true;
+                }
                 this.setState({
                     error: "Not an image; acceptable types are png, jpg, and jpeg.",
+                    success: "",
                 })
                 return false;
+
             } else if (fileTypeArray[0] === "image") {
                 const validImageFormats = ["png", "jpeg"];
                 if (!validImageFormats.includes(fileTypeArray[1])) {
                     this.setState({
                         error: "Not an image; acceptable types are png, jpg, and jpeg.",
+                        success: "",
                     })
                     return false;
-                }
-                else {
+                } else {
                     this.setState({
                         verificationFile: file,
+                        success: "Successfully added file!",
+                        error: "",
                     })
+                    return true;
                 }
             } else {
                 this.setState({
                     error: "Unknown error occurred while uploading file.",
+                    success: "",
                 })
                 return false;
             }
@@ -275,7 +290,16 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                                 onChange={this.handleFileChange}
                             >
                             </FileUploader>
-                            <Headline color="red" style={{ margin: "auto", height: "40vh" }}>{this.state.error}</Headline>
+                            {this.state.success !== "" ?
+                                <Headline color="green" style={{ }}>{this.state.success}</Headline>
+                                :
+                                <></>
+                            }
+                            {this.state.error !== "" ?
+                                <Headline color="red" style={{ }}>{this.state.error}</Headline>
+                                :
+                                <></>
+                            }
                         </div>
                         <GoldenInput type="submit" onClick={this.handleSubmit} style={{ marginBottom: '5%' }} value="Submit" />
                     </form>
