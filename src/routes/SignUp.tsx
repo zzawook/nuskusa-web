@@ -144,8 +144,14 @@ class SignUp extends React.Component<UserProps, UserState> {
                     isVerified: false,
                     role: 'User'
                 }
+                if (this.state.email.split("@")[1] === "u.nus.edu") {
+                    userObject.isVerified = true;
+                }
                 await dbService.collection('users').doc(userCredential.user?.uid).set(userObject);
-                this.props.history.push("/")
+                await authService.currentUser?.sendEmailVerification().then(() => {
+                    window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.")
+                    this.props.history.push("/")
+                })
             })
             .catch((error) => {
                 console.error(error);
