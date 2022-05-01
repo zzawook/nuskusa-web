@@ -93,7 +93,8 @@ Following Git & GitHub convention will allow your reviewer to review easily and 
 
 ## Code Quality Management & Important Instructions
 
-For now, follow these two to manage your code quality. This guide assumes that you know the general variable naming principles!
-
 1. Avoid arrowhead style codes!
 2. Avoid long functions (> 50 lines)
+3. Divide large functions into several different functions
+4. Remove console logs after debugging
+5. Minimize code duplication to minimize maintenance
