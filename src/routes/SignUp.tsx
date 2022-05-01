@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import CSS from 'csstype';
 import { authService, dbService } from '../utils/firebaseFunctions';
 import styled from 'styled-components'
-import { FlexColumn } from '../components/util/UsefulDiv';
+import { FlexColumn } from '../components/utils/UsefulDiv';
 
 type UserProps = {
     history: any,

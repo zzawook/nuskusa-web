@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { authService, dbService, storageService } from '../../utils/firebaseFunctions'
 import { darkTheme, Theme } from '../../utils/ThemeColor'
 import { Headline } from '../../utils/ThemeText'
-import FileUploader from '../util/FileUploader'
+import FileUploader from '../utils/FileUploader'
 
 type FormProps = {
 
