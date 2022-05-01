@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Developer Guide
+
 * Table of Contents
 {:toc}
 ---
@@ -90,9 +91,9 @@ Please refer to this [link](https://se-education.org/guides/conventions/git.html
 
 Following Git & GitHub convention will allow your reviewer to review easily and approve your PR faster!
 
-## Code Quality Management
+## Code Quality Management & Important Instructions
 
-For now, follow these two first.
+For now, follow these two to manage your code quality. This guide assumes that you know the general variable naming principles!
 
 1. Avoid arrowhead style codes!
 2. Avoid long functions (> 50 lines)
