@@ -1,5 +1,5 @@
 theme: jekyll-theme-slate
-name: NUS Korea Society
+title: NUS Korea Society
 markdown: kramdown
 header_pages:
   - DeveloperGuide.md
