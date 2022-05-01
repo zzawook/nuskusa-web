@@ -2,10 +2,11 @@
 layout: page
 title: Developer Guide
 
-* Table of Contents
-{:toc}
 ---
 
+* Table of Contents
+{:toc}
+-----
 This developer guide aims to provide a good overview of our website. Our purpose is to keep statistics of Korean students in NUS, and further utilize it to serve our population better.
 
 [Back to home](./index.md)
