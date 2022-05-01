@@ -1,4 +1,4 @@
-theme: jekyll-theme-slate
+theme: minima
 title: NUS Korea Society
 markdown: kramdown
 header_pages:
