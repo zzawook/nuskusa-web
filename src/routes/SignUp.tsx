@@ -150,6 +150,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                 await dbService.collection('users').doc(userCredential.user?.uid).set(userObject);
                 await authService.currentUser?.sendEmailVerification().then(() => {
                     window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.")
+                    authService.signOut();
                     this.props.history.push("/")
                 })
             })
