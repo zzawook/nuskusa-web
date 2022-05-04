@@ -148,7 +148,13 @@ class SignIn extends React.Component<UserProps, UserObject> {
             .then(async () => {
                 return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
                     .then(() => {
-                        this.props.history.push("/")
+                        if (! authService.currentUser?.emailVerified) {
+                            window.alert("이메일이 인증되지 않았습니다. 보내드린 인증 메일의 링크를 눌러 본인 인증을 완료해주세요.")
+                            authService.signOut();
+                        }
+                        else {
+                            this.props.history.push("/")
+                        }
                     })
                     .catch((error) => {
                         console.error(error);
