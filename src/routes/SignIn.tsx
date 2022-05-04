@@ -4,7 +4,7 @@ import { authService } from '../utils/firebaseFunctions';
 import firebase from 'firebase';
 import styled from 'styled-components';
 import CSS from 'csstype';
-import { FlexColumn } from '../components/util/UsefulDiv';
+import { FlexColumn } from '../components/utils/UsefulDiv';
 
 type UserProps = {
     history: any,

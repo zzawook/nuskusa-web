@@ -1,0 +1,6 @@
+theme: minima
+title: NUS Korea Society
+markdown: kramdown
+header_pages:
+  - DeveloperGuide.md
+  - Contributions.md

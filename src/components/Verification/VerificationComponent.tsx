@@ -81,7 +81,6 @@ class VerificationComponent extends React.Component<VerificationProps, { reason:
     }
 
     handleReasonChange = (event: any) => {
-        console.log(event.target.value)
         this.setState({
             reason: event.target.value,
         })
