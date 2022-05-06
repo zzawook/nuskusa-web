@@ -98,3 +98,4 @@ Following Git & GitHub convention will allow your reviewer to review easily and 
 3. Divide large functions into several different functions
 4. Remove console logs after debugging
 5. Minimize code duplication to minimize maintenance
+6. Divide code lines for lines longer than 100 characters
