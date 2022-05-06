@@ -142,7 +142,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
                   <Route exact path='/verification' render={() => <Verification firebaseUserData={this.state.firebaseUserData} />} />
-                  <Route exact path='/signin' render={(routerProps) => <SignIn 
+                  <Route exact path='/signin' render={(routerProps) => <SignIn
                     match={routerProps.match}
                     history={routerProps.history}
                     location={routerProps.location}
@@ -150,7 +150,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/reset' render={() => <PasswordResetRequest />}
 
                   />
-                  <Route exact path='/signup' render={(routerProps) => <SignUp 
+                  <Route exact path='/signup' render={(routerProps) => <SignUp
                     history={routerProps.history}
                     location={routerProps.location}
                   />} />
@@ -194,24 +194,28 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
                     <Route exact path='/home' render={() => <Home
-                    firebaseUserData={this.state.firebaseUserData}
-                  />} />
-                    <Route exact path='/signin' render={(routerProps) => <SignIn 
+                      firebaseUserData={this.state.firebaseUserData}
+                    />} />
+                    <Route exact path='/signin' render={(routerProps) => <SignIn
                       match={routerProps.match}
                       history={routerProps.history}
                       location={routerProps.location}
                     />} />
-                    <Route exact path='/signup' render={(routerProps) => <SignUp 
+                    <Route exact path='/signup' render={(routerProps) => <SignUp
                       history={routerProps.history}
                       location={routerProps.location}
                     />} />
+                    <Route exact path='/reset' render={() => <PasswordResetRequest />}
+
+                    />
                     <Route exact path='/profile' render={() => <Redirect to='/signin' />} />
                     <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData} />} />
                     <Route component={this.notFoundComponent} />
                     <Route exact path='/editProfile' render={() => <EditProfile
-                    firebaseUserData={this.state.firebaseUserData}
-                    userId={this.state.userId}
-                  />} />
+                      firebaseUserData={this.state.firebaseUserData}
+                      userId={this.state.userId}
+                    />} />
+
                     <Route exact path='/boards' render={() => <BoardHome
                       firebaseUserData={this.state.firebaseUserData}
                     />} />
