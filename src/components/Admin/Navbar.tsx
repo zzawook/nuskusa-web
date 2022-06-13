@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import logo from '../logo.png'
-import { FirebaseUser } from '../types/FirebaseUser';
-import { authService } from '../utils/firebaseFunctions';
-import ProfileBadge from './Profile/ProfileBadge';
+import logo from '../../logo.png'
+import { FirebaseUser } from '../../types/FirebaseUser';
+import { authService } from '../../utils/firebaseFunctions';
+import ProfileBadge from './../Profile/ProfileBadge';
 
 type NavbarProps = {
     firebaseUserData: FirebaseUser
@@ -74,7 +74,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
             opacity: 0.6;
             /* ::after {
                 border-bottom: 3px solid #FFFFFF;
-                width: 44px;
+                width: 100px;
                 display: block;
                 content: '';
                 margin: auto;
@@ -97,7 +97,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
             font-size: 16px;
             padding-left: 2%;
             padding-right: 2%;
-            width: 100px;
+            width: 200px;
             position: relative;
             margin-bottom: auto;
             box-sizing: border-box;
@@ -159,11 +159,11 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                 <NavbarContent>
                     <Logo src={logo} width='64' height='64' onClick={handleLogoClick}></Logo>
                     <NavbarButtonContainer>
-                        <NavbarButton onMouseEnter={() => this.setState({ homeHover: true })} onMouseLeave={() => this.setState({ homeHover: false })} onClick={() => window.location.href = "#/"}>
-                            <Link to='/home' style={{ color: '#FFFFFF', textDecoration: 'none' }}><HomeText hover={this.state.homeHover}>Home</HomeText></Link>
+                        <NavbarButton onMouseEnter={() => this.setState({ homeHover: true })} onMouseLeave={() => this.setState({ homeHover: false })} onClick={() => window.location.href = "#/admin/verification"}>
+                            <Link to='/admin/verification' style={{ color: '#FFFFFF', textDecoration: 'none' }}><HomeText hover={this.state.homeHover}>Verification</HomeText></Link>
                         </NavbarButton>
-                        <NavbarButton onMouseEnter={() => this.setState({ aboutUsHover: true })} onMouseLeave={() => this.setState({ aboutUsHover: false })} onClick={() => window.location.href = "#/about-us"}>
-                            <AboutUsText hover={this.state.aboutUsHover}><Link to='/about-us' style={{ color: '#FFFFFF', textDecoration: 'none' }}>About Us</Link></AboutUsText>
+                        <NavbarButton onMouseEnter={() => this.setState({ aboutUsHover: true })} onMouseLeave={() => this.setState({ aboutUsHover: false })} onClick={() => window.location.href = "https://console.firebase.google.com/u/0/project/nus-kusa-website/overview"}>
+                            <AboutUsText hover={this.state.aboutUsHover}><Link to='https://console.firebase.google.com/u/0/project/nus-kusa-website/overview' style={{ color: '#FFFFFF', textDecoration: 'none' }}>To Firebase Backend</Link></AboutUsText>
                         </NavbarButton>
                         <NavbarButton onMouseEnter={() => this.setState({ boardHover: true })} onMouseLeave={() => this.setState({ boardHover: false })} onClick={() => window.location.href = authService.currentUser ? "#/boards" : "#/signin"}>
                             {
@@ -183,14 +183,14 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                         </>
                         :
                         <>
-                            <SignUpButton onClick={() => window.location.href="/#/signup/select"}>
+                            <SignUpButton onClick={() => window.location.href = "/#/signup/select"}>
                                 <SignUpText>
                                     <Link to='/signup/select' style={{ color: '#0B121C', textDecoration: 'none' }}>
                                         Sign Up
                                     </Link>
                                 </SignUpText>
                             </SignUpButton>
-                            <SignInButton onClick={() => window.location.href="/#/signin"}>
+                            <SignInButton onClick={() => window.location.href = "/#/signin"}>
                                 <Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                     <SignInText>
                                         Sign In

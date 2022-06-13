@@ -356,8 +356,6 @@ class EditPost extends React.Component {
             height: '15px',
         }
 
-        
-
         const customStyle = {
             valueContainer: (provided, state) => ({
                 ...provided,
@@ -421,27 +419,23 @@ class EditPost extends React.Component {
         }
 
         const setAnnonymous = () => {
-            console.log("Annonymouse set")
             this.setState({
                 isAnonymous: ! this.state.isAnonymous,
             })
         }
 
         const setPinned = () => {
-            console.log("Pinned set")
             this.setState({
                 
                 isPinned: ! this.state.isPinned,
             })
         }
         const setHidden = () => {
-            console.log("Hidden set")
             this.setState({
                 isHidden: ! this.state.isHidden,
             })
         }
         const setAnnouncement = () => {
-            console.log("Announcement set")
             this.setState({
                 isAnnouncement: ! this.state.isAnnouncement,
             })
