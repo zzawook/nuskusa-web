@@ -129,10 +129,6 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
         return (
             <Container>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {this.props.firebaseUserData.isVerified != true
-                    ? <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={true} onClose={() => { }} />
-                    : <></>
-                }
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         게시판

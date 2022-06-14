@@ -5,7 +5,7 @@ export const SampleUser: FirebaseUser = {
     email: '',
     verificationFile: undefined,
     isVerified: false,
-    role: "User", // User, Undergraduate, Graduate, Admin
+    role: "User", // User, Registered, Offered, Current, Graduated, Admin
     enrolledYear: "",
     major: "",
     faculty: "",

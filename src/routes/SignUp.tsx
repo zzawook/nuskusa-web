@@ -146,13 +146,25 @@ class SignUp extends React.Component<UserProps, UserState> {
                 }
                 if (this.state.email.split("@")[1] === "u.nus.edu") {
                     userObject.isVerified = true;
+                    userObject.role = 'Current'
+                    dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
+                        
+                        window.alert("프로필 생성이 완료되었습니다. NUS 계정으로 가입해 재학생으로 가입되셨으며, 이메일 인증 단계를 건너뛰었습니다.")
+                    });
                 }
-                await dbService.collection('users').doc(userCredential.user?.uid).set(userObject);
-                await authService.currentUser?.sendEmailVerification().then(() => {
-                    window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.")
-                    authService.signOut();
-                    this.props.history.push("/")
-                })
+                else {
+                    dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
+                        authService.languageCode = 'kr'
+                        authService.signInWithEmailAndPassword(this.state.email, this.state.password).then(() => {
+                            authService.currentUser?.sendEmailVerification().then(() => {
+                                authService.signOut();
+                                window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.")
+                            })
+                        })
+                        
+                    });
+                }
+                this.props.history.push("/")
             })
             .catch((error) => {
                 console.error(error);
@@ -164,19 +176,23 @@ class SignUp extends React.Component<UserProps, UserState> {
         event.preventDefault();
         window.history.back();
     }
+    
     handleMouseEnter = (e: any) => {
         e.preventDefault();
         e.target.style.textDecoration = 'underline';
     }
+
     handleMouseLeave = (e: any) => {
         e.preventDefault();
         e.target.style.textDecoration = 'none';
     }
+
     arrowStyle: CSS.Properties = {
         height: '15px',
         marginTop: '14px',
         marginRight: '10px',
     }
+
     imgStyle: CSS.Properties = {
         width: '60%',
     }
