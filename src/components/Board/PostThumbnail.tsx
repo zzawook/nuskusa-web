@@ -104,7 +104,6 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
                                             <Headline color='black' style={tempStyle}>{this.props.firestorePost.lastModified.toDate().toDateString()}</Headline>
                                         </Thumbnail>
                                     </Link>
-                                    <PostApprover firebaseUser={this.props.firebaseUser} firestorePost={this.props.firestorePost} />
                                 </Container>
                             </>
                             :

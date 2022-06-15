@@ -87,7 +87,8 @@ class Checkbox extends React.Component<CheckboxProps, CheckboxState> {
                         e.preventDefault();
                         this.setState({
                             checked: !this.state.checked,
-                    })
+                        })
+                        this.props.setter()
                 }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}></CheckBox>
                 <Label>{this.state.label}</Label>
             </Container>

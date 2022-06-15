@@ -98,25 +98,23 @@ class Board extends React.Component<BoardProps, BoardState> {
                 querySnapshot.docs.forEach((doc) => {
                     key++
                     const data = doc.data() as FirestorePost;
-                    if (!data.isHidden || this.props.firebaseUserData.role == "Admin") {
-                        const component = (
-                            <div key={key}>
-                                <PostThumbnail
-                                    firestorePost={data}
-                                    firebaseUser={this.props.firebaseUserData}
-                                    to={`/boards/${this.props.boardId}/${doc.id}`}
-                                />
-                                {/* Allow to edit all posts in the list */}
-                            </div>
-                        )
-                        arr.push(data);
-                        if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User')) {
-                            if (data.isPinned) {
-                                componentArray.unshift(component)
-                            }
-                            else {
-                                componentArray.push(component)
-                            }
+                    const component = (
+                        <div key={key}>
+                            <PostThumbnail
+                                firestorePost={data}
+                                firebaseUser={this.props.firebaseUserData}
+                                to={`/boards/${this.props.boardId}/${doc.id}`}
+                            />
+                            {/* Allow to edit all posts in the list */}
+                        </div>
+                    )
+                    arr.push(data);
+                    if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User')) {
+                        if (data.isPinned) {
+                            componentArray.unshift(component)
+                        }
+                        else {
+                            componentArray.push(component)
                         }
                     }
                 })

@@ -394,29 +394,32 @@ class AddPost extends React.Component {
         }
 
         const setAnnonymous = () => {
-            console.log("Annonymouse set")
+            const copy = this.state.state;
+            copy.isAnonymous = ! copy.isAnonymous
             this.setState({
-                isAnonymous: !this.state.state.isAnonymous,
+                state: copy,
             })
         }
 
         const setPinned = () => {
-            console.log("Pinned set")
+            const copy = this.state.state;
+            copy.isPinned = !copy.isPinned
             this.setState({
-
-                isPinned: !this.state.state.isPinned,
+                state: copy,
             })
         }
         const setHidden = () => {
-            console.log("Hidden set")
+            const copy = this.state.state;
+            copy.isHidden = !copy.isHidden
             this.setState({
-                isHidden: !this.state.state.isHidden,
+                state: copy,
             })
         }
         const setAnnouncement = () => {
-            console.log("Announcement set")
+            const copy = this.state.state;
+            copy.isAnnouncement = !copy.isAnnouncement
             this.setState({
-                isAnnouncement: !this.state.state.isAnnouncement,
+                copy
             })
         }
 
