@@ -4,6 +4,7 @@ import CSS from 'csstype';
 import { authService, dbService, storageService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components'
 import { FlexColumn } from '../../components/utils/UsefulDiv';
+import { CgYoutube } from 'react-icons/cg';
 
 
 
@@ -182,7 +183,9 @@ type UserState = {
     gender: string,
     KTId: string,
     fileSelected: File | undefined,
-    loading: boolean
+    loading: boolean,
+    enrolledYear: string,
+    yob: string,
 }
 
 class SignUp extends React.Component<UserProps, UserState> {
@@ -197,6 +200,8 @@ class SignUp extends React.Component<UserProps, UserState> {
             KTId: "",
             fileSelected: undefined,
             loading: false,
+            enrolledYear: "",
+            yob: "",
         }
     }
     handleChange = (event: any) => {
@@ -226,9 +231,14 @@ class SignUp extends React.Component<UserProps, UserState> {
                 gender: value
             })
         }
-        else if (event.target.name == "KTId") {
+        else if (event.target.name == "yob") {
             this.setState({
-                KTId: value
+                yob: value
+            })
+        }
+        else if (event.target.name == "enrolledYear") {
+            this.setState({
+                enrolledYear: value
             })
         }
     }
@@ -237,6 +247,14 @@ class SignUp extends React.Component<UserProps, UserState> {
         event.preventDefault();
         if (!this.state.fileSelected) {
             window.alert("합격 증명서를 첨부하지 않았습니다. 합격 증명서를 첨부해주세요.");
+            return;
+        }
+        if (this.state.enrolledYear.split("/")[0].length != 4 || this.state.enrolledYear.split("/")[1].length != 4) {
+            window.alert("입학년도 입력형식이 잘못되었습니다. 수정 후 다시 제출해주세요!")
+            return;
+        }
+        if (this.state.yob.length != 4 && ! /^\d+$/.test(this.state.yob)) {
+            window.alert("출생년도 입력형식이 잘못되었습니다. 수정 후 다시 제출해주세요!")
             return;
         }
         else {
@@ -253,6 +271,8 @@ class SignUp extends React.Component<UserProps, UserState> {
                         role: 'Current',
                         gender: this.state.gender,
                         major: this.state.major,
+                        enrolledYear: this.state.enrolledYear,
+                        yob: this.state.yob,
                     }
                     if (this.state.email.split("@")[1] === "u.nus.edu") {
                         userObject.isVerified = true;
@@ -423,7 +443,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                             </InputInner>
                         </InputContainer>
                         <InputContainer>
-                            <InputMandatoryIndicator></InputMandatoryIndicator>
+                            <InputMandatoryIndicator>*</InputMandatoryIndicator>
                             <InputInner>
                                 <Input
                                     name="major"
@@ -437,20 +457,47 @@ class SignUp extends React.Component<UserProps, UserState> {
                             </InputInner>
                         </InputContainer>
                         <InputContainer>
-                            <InputMandatoryIndicator></InputMandatoryIndicator>
+                            <InputMandatoryIndicator>*</InputMandatoryIndicator>
+                            <InputInner>
+                                <Input
+                                    name="enrolledYear"
+                                    type="string"
+                                    placeholder="입학 년도 / Year of Admission"
+                                    required
+                                    value={this.state.enrolledYear}
+                                    onChange={this.handleChange}
+                                />
+                                <InputGuide>YYYY/YYYY 형식으로 적어주세요! ex) 2021/2022</InputGuide>
+                            </InputInner>
+                        </InputContainer>
+                        <InputContainer>
+                            <InputMandatoryIndicator>*</InputMandatoryIndicator>
                             <InputInner>
                                 <Input
                                     name="gender"
                                     type="string"
                                     placeholder="성별 / Gender"
-                                    required={false}
+                                    required
                                     value={this.state.gender}
                                     onChange={this.handleChange}
                                 />
                                 <InputGuide>Male / Female / 기타 (자유롭게 기재)</InputGuide>
                             </InputInner>
                         </InputContainer>
-
+                        <InputContainer>
+                            <InputMandatoryIndicator>*</InputMandatoryIndicator>
+                            <InputInner>
+                                <Input
+                                    name="yob"
+                                    type="string"
+                                    placeholder="출생년도 / Year of Birth"
+                                    required
+                                    value={this.state.yob}
+                                    onChange={this.handleChange}
+                                />
+                                <InputGuide>Male / Female / 기타 (자유롭게 기재)</InputGuide>
+                            </InputInner>
+                        </InputContainer>
                         {/* Will be adding name, nickname, etc. */}
                         <SubmitButton type="submit" value="Sign Up!" />
                         <ToSignIn to="/signin" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>계정이 이미 있으신가요? 여길 눌러 로그인하세요!</ToSignIn>

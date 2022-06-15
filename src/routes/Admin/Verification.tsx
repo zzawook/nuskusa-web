@@ -5,6 +5,7 @@ import { FirebaseUser } from '../../types/FirebaseUser';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { dbService } from '../../utils/firebaseFunctions';
 import UserSlip from '../../components/Admin/UserSlip'
+import { AiOutlineConsoleSql } from 'react-icons/ai';
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -41,9 +42,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                     const userData = userDoc.data();
                     if (userData) {
                         userData.userType = data.userType;
-                        userData.docURL = data.docURL;
                         userArray.push(userData)
-                        console.log(userData)
                     }
                 })
             })
@@ -51,7 +50,6 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
             this.setState({
                 users: userArray,
             })
-            console.log(userArray)
         })
     }
 
@@ -61,7 +59,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
             <Wrapper>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
                 {this.state.users.map(user => {
-                    return <UserSlip docURL={user.docURL} email={user.email} role={user.role} userId={user.userId} userName={user.username} gender={user.gender} major={user.major} userType={user.userType} KTId={user.KTId}/>
+                    return <UserSlip graduationLetterURL={user.graduationLetterURL} enrolledLetterURL={user.enrolledLetterURL} acceptanceLetterURL={user.acceptanceLetterURL} email={user.email} role={user.role} userId={user.userId} userName={user.username} gender={user.gender} major={user.major} userType={user.userType} KTId={user.KTId}/>
                 })}
             </Wrapper>
         )

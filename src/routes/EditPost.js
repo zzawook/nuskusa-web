@@ -234,6 +234,7 @@ class EditPost extends React.Component {
                         if (data.permissions.includes(this.props.firebaseUserData.role)/* || data.permissions.includes("User")*/) {
                             console.log("I entered");
                             this.content = data.content;
+                            console.log(data)
                             this.setState(data, () => {
                                 console.log(this.state)
                             })
@@ -426,7 +427,6 @@ class EditPost extends React.Component {
 
         const setPinned = () => {
             this.setState({
-                
                 isPinned: ! this.state.isPinned,
             })
         }
@@ -476,15 +476,18 @@ class EditPost extends React.Component {
                     />
                 </Editor>
                 <CheckBoxContainer>
-                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={this.state.isAnonymous}/> : this.selectedBoard.value == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
                     {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.isPinned}/> : <div/>}
                     {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.isHidden}/> : <div/>}
-                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={this.state.isAnnouncement}/> : <div/>}
                 </CheckBoxContainer>
                 <Submit onClick={this.handleSubmit} submitted={this.submitted}>Edit</Submit>
             </Container>
         )
     }
 }
+
+/*
+{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={this.state.isAnonymous}/> : this.selectedBoard.value == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
+{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={this.state.isAnnouncement}/> : <div/>}
+*/
 
 export default EditPost;

@@ -110,7 +110,12 @@ class Board extends React.Component<BoardProps, BoardState> {
                     )
                     arr.push(data);
                     if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User')) {
-                        componentArray.push(component)
+                        if (data.isPinned) {
+                            componentArray.unshift(component)
+                        }
+                        else {
+                            componentArray.push(component)
+                        }
                     }
                 })
                 this.setState({
@@ -260,7 +265,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                         />
                     </div>
                 </BoardNavbarContainer>
-                
+
                 {this.state.postComponentArray.length === 0 ?
                     <DisplayMedium color='white'>
                         등록된 게시글이 없습니다.
