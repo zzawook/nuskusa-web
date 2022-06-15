@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { authService } from '../utils/firebaseFunctions';
+import { authService, dbService } from '../utils/firebaseFunctions';
 import firebase from 'firebase';
 import styled from 'styled-components';
 import CSS from 'csstype';
 import { FlexColumn } from '../components/utils/UsefulDiv';
+import { FirebaseUser } from '../types/FirebaseUser'
 
 type UserProps = {
     history: any,
@@ -148,13 +149,29 @@ class SignIn extends React.Component<UserProps, UserObject> {
             .then(async () => {
                 return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
                     .then(() => {
-                        if (! authService.currentUser?.emailVerified) {
-                            window.alert("이메일이 인증되지 않았습니다. 보내드린 인증 메일의 링크를 눌러 본인 인증을 완료해주세요.")
-                            authService.signOut();
-                        }
-                        else {
-                            this.props.history.push("/")
-                        }
+                        console.log(authService.currentUser?.uid)
+                        dbService.collection('users').doc(authService.currentUser?.uid).get().then((doc) => {
+                            if (! doc.exists) {
+                                console.log("Document does not exist")
+                                this.setState({
+                                    failed: true,
+                                })
+                                return
+                            }
+                            const data = doc.data()
+                            console.log(data)
+                            if (!authService.currentUser?.emailVerified) {
+                                window.alert("이메일이 인증되지 않았습니다. 보내드린 인증 메일의 링크를 눌러 본인 인증을 완료해주세요.")
+                                authService.signOut();
+                            }
+                            else if (!data?.isVerified) {
+                                window.alert("제출해주신 문서를 검증하고 있습니다. 1~2일 내로 완료될 예정입니다. 조금만 기다려주세요!")
+                                authService.signOut();
+                            }
+                            else {
+                                this.props.history.push("/")
+                            }
+                        })
                     })
                     .catch((error) => {
                         console.error(error);

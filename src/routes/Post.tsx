@@ -301,6 +301,8 @@ class Post extends React.Component<PostProps, PostState> {
                     else {
                         await dbService.collection('users').doc(data.authorId).get().then(snapshot => {
                             const authorData = snapshot.data() as FirebaseUser;
+                            console.log(this.props.firebaseUserData.role)
+                            console.log(data.permissions)
                             this.setState({
                                 firestorePost: {
                                     ...data,
@@ -403,8 +405,6 @@ class Post extends React.Component<PostProps, PostState> {
                             }}>|</span> : ''}
                             {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div/>}    
                         </AuthorButtons>
-                        
-                        
                     </Header>
                     <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />
                     <ETC>

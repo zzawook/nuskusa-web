@@ -234,6 +234,7 @@ class EditPost extends React.Component {
                         if (data.permissions.includes(this.props.firebaseUserData.role)/* || data.permissions.includes("User")*/) {
                             console.log("I entered");
                             this.content = data.content;
+                            console.log(data)
                             this.setState(data, () => {
                                 console.log(this.state)
                             })
@@ -356,8 +357,6 @@ class EditPost extends React.Component {
             height: '15px',
         }
 
-        
-
         const customStyle = {
             valueContainer: (provided, state) => ({
                 ...provided,
@@ -421,27 +420,22 @@ class EditPost extends React.Component {
         }
 
         const setAnnonymous = () => {
-            console.log("Annonymouse set")
             this.setState({
                 isAnonymous: ! this.state.isAnonymous,
             })
         }
 
         const setPinned = () => {
-            console.log("Pinned set")
             this.setState({
-                
                 isPinned: ! this.state.isPinned,
             })
         }
         const setHidden = () => {
-            console.log("Hidden set")
             this.setState({
                 isHidden: ! this.state.isHidden,
             })
         }
         const setAnnouncement = () => {
-            console.log("Announcement set")
             this.setState({
                 isAnnouncement: ! this.state.isAnnouncement,
             })
@@ -482,15 +476,18 @@ class EditPost extends React.Component {
                     />
                 </Editor>
                 <CheckBoxContainer>
-                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={this.state.isAnonymous}/> : this.selectedBoard.value == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
                     {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.isPinned}/> : <div/>}
                     {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.isHidden}/> : <div/>}
-                    {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={this.state.isAnnouncement}/> : <div/>}
                 </CheckBoxContainer>
                 <Submit onClick={this.handleSubmit} submitted={this.submitted}>Edit</Submit>
             </Container>
         )
     }
 }
+
+/*
+{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={this.state.isAnonymous}/> : this.selectedBoard.value == 'grove' ? <Checkbox label='Anonymous'/> : <div/>}
+{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={this.state.isAnnouncement}/> : <div/>}
+*/
 
 export default EditPost;

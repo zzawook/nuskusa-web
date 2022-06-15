@@ -6,6 +6,11 @@ import Home from '../routes/Home';
 import Post from '../routes/Post';
 import SignIn from '../routes/SignIn';
 import SignUp from '../routes/SignUp';
+import SignUpSelect from '../routes/SignUp/SignUpSelect';
+import SignUpFreshmen from '../routes/SignUp/SignUpFreshmen'
+import SignUpEnrolled from '../routes/SignUp/SignUpEnrolled'
+import SignUpGraduated from '../routes/SignUp/SignUpGraduated'
+import SignUpOther from '../routes/SignUp/SignUpOther'
 import Profile from '../routes/Profile';
 import Verification from '../routes/Verification';
 import EditPost from '../routes/EditPost.js';
@@ -17,6 +22,8 @@ import EditProfile from '../routes/EditProfile';
 import { Thumbs } from 'react-responsive-carousel';
 import PasswordResetRequest from '../routes/PasswordResetRequest';
 
+import Admin from '../routes/Admin/Admin'
+import AdminVerification from '../routes/Admin/Verification'
 
 type AppRouterProps = {
 
@@ -150,6 +157,10 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/reset' render={() => <PasswordResetRequest />}
 
                   />
+                  <Route exact path='/signup/select' render={(routerProps) => <SignUpSelect
+                    history={routerProps.history}
+                    location={routerProps.location}
+                  />} />
                   <Route exact path='/signup' render={(routerProps) => <SignUp
                     history={routerProps.history}
                     location={routerProps.location}
@@ -183,6 +194,12 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       firebaseUserData={this.state.firebaseUserData}
                       reloadFunction={this.reloadFunction}
                     />} />
+                    <Route exact path='/admin' render={() => <Admin
+                      firebaseUserData={this.state.firebaseUserData}
+                    />} />
+                    <Route exact path='/admin/verification' render={() => <AdminVerification
+                      firebaseUserData={this.state.firebaseUserData}
+                    />} />
                   </Switch>
                   <Route component={this.notFoundComponent} />
                 </Switch>
@@ -201,7 +218,23 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       history={routerProps.history}
                       location={routerProps.location}
                     />} />
-                    <Route exact path='/signup' render={(routerProps) => <SignUp
+                    <Route exact path='/signup/select' render={(routerProps) => <SignUpSelect
+                      history={routerProps.history}
+                      location={routerProps.location}
+                    />} />
+                    <Route exact path='/signup/freshmen' render={(routerProps) => <SignUpFreshmen
+                      history={routerProps.history}
+                      location={routerProps.location}
+                    />} />
+                    <Route exact path='/signup/enrolled' render={(routerProps) => <SignUpEnrolled
+                      history={routerProps.history}
+                      location={routerProps.location}
+                    />} />
+                    <Route exact path='/signup/graduated' render={(routerProps) => <SignUpGraduated
+                      history={routerProps.history}
+                      location={routerProps.location}
+                    />} />
+                    <Route exact path='/signup/other' render={(routerProps) => <SignUpOther
                       history={routerProps.history}
                       location={routerProps.location}
                     />} />

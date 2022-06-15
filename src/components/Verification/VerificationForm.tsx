@@ -114,7 +114,7 @@ class VerificationForm extends React.Component<FormProps, FormState> {
         console.log(file)
         if (file) {
             const fileTypeArray = file.type.split("/");
-            if (file.size > 5000000) {
+            if (file.size > 1048576 * 5) {
                 this.setState({
                     error: "File size must be 5 MB or less!",
                     success: "",
