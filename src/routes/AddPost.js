@@ -167,19 +167,15 @@ class AddPost extends React.Component {
                 parentTextColor: "",
                 parentBoardTitle: "",
             },
-            selectedBoard: this.props.boardId
+            selectedBoard: this.props.boardId,
+            boardData: [],
+            boardDataProcessed: [],
+            dummy: false,
+            bc: "#FFFFFF"
         }
     }
 
     content = '<p></p>'
-    boardData = [
-        { value: 'announcement', label: '공지사항' },
-        { value: 'event', label: '이벤트' },
-        { value: 'general', label: '자유게시판' },
-        { value: 'grove', label: '대나무숲' },
-        { value: 'jobs', label: '취업/인턴' },
-    ]
-    
 
     componentDidMount() {
         if (!this.props.firebaseUserData.isVerified) {
@@ -187,11 +183,40 @@ class AddPost extends React.Component {
             window.history.go(-1);
             return;
         }
-        const stateCopy = this.state.state;
-        stateCopy.author = this.props.firebaseUserData.username;
-        stateCopy.authorId = authService.currentUser.uid;
-        this.setState({
-            state: stateCopy
+        const boardProcessed = [];
+        const boardRaw = [];
+        dbService.collection('boards').get().then(boards => {
+            boards.forEach(board => {
+                const data = board.data();
+                if (data.editPermission.includes(this.props.firebaseUserData.role)) {
+                    boardProcessed.push({
+                        value: board.id,
+                        label: data.title,
+                    })
+                    boardRaw.push(data);
+                }
+            })
+        }).then(() => {
+            let backgroundColor = "#FFFFFF"
+            if (boardRaw.find(elem => elem.boardId == this.props.boardId)) {
+                backgroundColor = boardRaw.find(elem => elem.boardId == this.props.boardId).boardColor
+            }
+
+            console.log(backgroundColor)
+
+            const stateCopy = this.state.state;
+            stateCopy.author = this.props.firebaseUserData.username;
+            stateCopy.authorId = authService.currentUser.uid;
+
+            this.setState(prevState => {
+                return {
+                    state: stateCopy,
+                    boardDataProcessed: boardProcessed,
+                    boardData: boardRaw,
+                    selectedBoard: this.props.boardId,
+                    bc: backgroundColor,
+                }
+            })
         })
     }
 
@@ -234,7 +259,7 @@ class AddPost extends React.Component {
                     window.location.href = "#/boards/" + this.state.selectedBoard + '/' + docRef.id
                 }).catch(err => {
                     window.alert("게시글 업로드 도중 문제가 발생하였습니다." + err.toString())
-                }) ;
+                });
         })
     }
 
@@ -273,10 +298,20 @@ class AddPost extends React.Component {
     }
 
     handleSelectChange = (selected) => {
-        console.log(selected)
+        let backgroundColor = "#FFFFFF"
+        if (this.state.boardData.find(elem => elem.boardId == selected.value)) {
+            backgroundColor = this.state.boardData.find(elem => elem.boardId == selected.value).boardColor
+        }
         this.setState({
-            selectedBoard: selected.value
+            selectedBoard: selected.value,
+            bc: backgroundColor
         })
+    }
+
+    componentDidUpdate() {
+        console.log(this.props.boardId)
+        console.log(this.state.boardDataProcessed)
+        console.log(this.state.selectedBoard)
     }
 
     render = () => {
@@ -318,27 +353,10 @@ class AddPost extends React.Component {
             height: '15px',
         }
 
-        const options = this.props.firebaseUserData.role === 'Admin' ? [
-            { value: 'announcement', label: '공지사항' },
-            { value: 'event', label: '이벤트' },
-            { value: 'general', label: '자유게시판' },
-            { value: 'grove', label: '대나무숲' },
-            { value: 'jobs', label: '취업/인턴' },
-        ] : [
-            { value: 'event', label: '이벤트' },
-            { value: 'general', label: '자유게시판' },
-            { value: 'grove', label: '대나무숲' },
-            { value: 'jobs', label: '취업/인턴' },
-        ]
-
         const customStyle = {
             valueContainer: (provided, state) => ({
                 ...provided,
-                backgroundColor: this.state.selectedBoard == 'announcement' ? '#FFD3D3' :
-                    this.state.selectedBoard === 'event' ? '#D6F2C4' :
-                        this.state.selectedBoard === 'general' ? '#C4F2EF' :
-                            this.state.selectedBoard === 'grove' ? '#99CEA5' :
-                                this.state.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
+                backgroundColor: this.state.bc,
             }),
             option: (provided, state) => ({
                 ...provided,
@@ -349,11 +367,7 @@ class AddPost extends React.Component {
                 ...provided,
                 width: 'inherit',
                 fontSize: '10px',
-                backgroundColor: this.state.selectedBoard == 'announcement' ? '#FFD3D3' :
-                    this.state.selectedBoard === 'event' ? '#D6F2C4' :
-                        this.state.selectedBoard === 'general' ? '#C4F2EF' :
-                            this.state.selectedBoard === 'grove' ? '#99CEA5' :
-                                this.state.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
+                backgroundColor: this.state.bc,
                 color: 'white',
                 borderRadius: '0px',
                 border: '1px solid white'
@@ -362,11 +376,7 @@ class AddPost extends React.Component {
                 return {
                     ...provided,
                     fontSize: '10px',
-                    backgroundColor: this.state.selectedBoard == 'announcement' ? '#FFD3D3' :
-                        this.state.selectedBoard === 'event' ? '#D6F2C4' :
-                            this.state.selectedBoard === 'general' ? '#C4F2EF' :
-                                this.state.selectedBoard === 'grove' ? '#99CEA5' :
-                                    this.state.selectedBoard === 'jobs' ? '#F2CEFF' : '#0B121C',
+                    backgroundColor: this.state.bc,
                     color: 'black'
                 };
             },
@@ -393,6 +403,7 @@ class AddPost extends React.Component {
             }
         }
 
+        /*
         const setAnnonymous = () => {
             const copy = this.state.state;
             copy.isAnonymous = ! copy.isAnonymous
@@ -400,6 +411,7 @@ class AddPost extends React.Component {
                 state: copy,
             })
         }
+        */
 
         const setPinned = () => {
             const copy = this.state.state;
@@ -415,6 +427,7 @@ class AddPost extends React.Component {
                 state: copy,
             })
         }
+        /*
         const setAnnouncement = () => {
             const copy = this.state.state;
             copy.isAnnouncement = !copy.isAnnouncement
@@ -422,13 +435,32 @@ class AddPost extends React.Component {
                 copy
             })
         }
-
+        */
         return (
             <Container>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
-                <Back onClick={() => window.history.back()}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
-                <SelectContainer><Select options={options} styles={customStyle} onChange={this.handleSelectChange} value={this.boardData.filter(data => data.value == this.state.selectedBoard)}/></SelectContainer>
-                <Form><Title type='text' key="titleInput" value={this.state.state.title} onChange={this.handleTitleChange} onBlur={this.handleTitleBlur} onFocus={this.handleTitleFocus} /></Form>
+                <Back
+                    onClick={() => window.history.back()}>
+                    <img
+                        src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'}
+                        style={imageStyle} />
+                    Back
+                </Back>
+                <SelectContainer>
+                    <Select
+                        options={this.state.boardDataProcessed}
+                        styles={customStyle}
+                        onChange={this.handleSelectChange}
+                        value={this.state.boardDataProcessed.find(data => data.value == this.state.selectedBoard)} />
+                </SelectContainer>
+                <Form>
+                    <Title
+                        type='text'
+                        key="titleInput"
+                        value={this.state.state.title}
+                        onChange={this.handleTitleChange}
+                        onBlur={this.handleTitleBlur}
+                        onFocus={this.handleTitleFocus} /></Form>
                 <Editor>
                     <CKEditor
                         editor={ClassicEditor}
