@@ -4,6 +4,7 @@ import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
 import { FirestorePost } from '../types/FirestorePost'
 import { FirebaseUser } from "../types/FirebaseUser";
+import { FirestoreBoard } from "../types/FirestoreBoard";
 import firebase from "firebase";
 import styled from 'styled-components';
 import CSS from 'csstype'
@@ -23,7 +24,7 @@ type RouteProps = {
 
 type PostProps = RouteComponentProps<RouteProps> & {
     firebaseUserData: FirebaseUser,
-    reloadFunction: Function
+    reloadFunction: Function,
 }
 
 type PostState = {
@@ -37,6 +38,7 @@ type PostState = {
     recentPosts: any[],
     recentPostIds: any[],
     toggle: boolean,
+    boardData: any[],
 }
 
 const height = window.innerHeight;
@@ -193,11 +195,13 @@ class Post extends React.Component<PostProps, PostState> {
                 faculty: undefined,
                 profilePictureURL: undefined
             },
+            boardData: [],
         }
     }
 
     componentDidMount = () => {
         this.fetchPost()
+        this.fetchBoard()
     }
 
     componentDidUpdate(prevProps: PostProps) {
@@ -218,6 +222,20 @@ class Post extends React.Component<PostProps, PostState> {
 
     reset = () => {
         this.fetchPost()
+        this.fetchBoard()
+    }
+
+    fetchBoard = () => {
+        const arr: any[] = [];
+        dbService.collection('boards').get().then(boards => {
+            boards.forEach(board => {
+                const data = board.data();
+                arr.push(data);
+                this.setState({
+                    boardData: arr,
+                })
+            })
+        })
     }
 
     getLastUpdated = (time: any) => {
@@ -427,6 +445,7 @@ class Post extends React.Component<PostProps, PostState> {
                             data={element}
                             postId={this.state.recentPostIds[i]}
                             reloadFunction={this.props.reloadFunction}
+                            boardData={this.state.boardData}
                         /> })}
                     </RecentPosts>
                     {this.state.accessGranted ?

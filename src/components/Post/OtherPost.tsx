@@ -3,20 +3,23 @@ import styled from 'styled-components'
 import { FirestorePost } from '../../types/FirestorePost'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { dbService } from '../../utils/firebaseFunctions'
+import { FirestoreBoard } from '../../types/FirestoreBoard'
 
 type OtherPostProps = RouteComponentProps & {
     data: FirestorePost,
     postId: string,
     reloadFunction: any,
+    boardData: any[],
 }
 
 type OtherPostState = {
     mouseEntered: boolean,
-    title: string
+    title: string,
+    boardColor: string,
 }
 
 interface Props {
-    boardType: string,
+    boardColor: string,
     changeBorder: boolean,
 }
 
@@ -27,7 +30,7 @@ interface newProps {
 const Container = styled.div<Props>`
     &:hover {
         background-color: ${props => {
-        return getColor(props.boardType)
+        return props.boardColor
     }}
     }
 
@@ -67,26 +70,9 @@ const BoardType = styled.div<Props>`
     border: ${props => props.changeBorder ? "1px solid black" : 'none'};
     color: #808080;
     background-color: ${props => {
-        return getColor(props.boardType)
+        return props.boardColor
     }};
 `
-const getColor = (boardType: string) => {
-    if (boardType == "자유게시판") {
-        return "#C4F2EF"
-    }
-    else if (boardType === "이벤트") {
-        return "#D6F2C4"
-    }
-    else if (boardType === "대나무숲") {
-        return "#99CEA5"
-    }
-    else if (boardType === "공지사항") {
-        return "#FFD3D3"
-    }
-    else if (boardType === "취업/인턴") {
-        return "#F2CEFF"
-    }
-}
 
 class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
     constructor(props: OtherPostProps) {
@@ -94,6 +80,7 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
         this.state = {
             mouseEntered: false,
             title: '',
+            boardColor: ""
         }
     }
 
@@ -107,10 +94,24 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
     }
 
     componentDidMount() {
+        let bc = ""
+        console.log(this.props.boardData)
+        if (! this.props.boardData.find(elem => elem.boardId == this.props.data.parentBoardId) == undefined) {
+            bc = this.props.boardData.find(elem => elem.boardId == this.props.data.parentBoardId).boardColor
+        }
+        this.setState({
+            boardColor: bc,
+        })
     }
 
-    getBoard(boardName: string) {
-        return ""
+    static getDerivedStateFromProps(newProps: any, prevState: any) {        
+        let bc = ""
+        if (newProps.boardData.find((elem: any) => elem.boardId == newProps.data.parentBoardId) != undefined) {
+            bc = newProps.boardData.find((elem: any) => elem.boardId == newProps.data.parentBoardId).boardColor
+        }
+        return {
+            boardColor: bc,
+        }
     }
 
     render() {
@@ -129,9 +130,10 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
 
         return (
             <Link to={{ pathname: `/boards/${this.props.data.parentBoardId}/${this.props.postId}` }} style={{ textDecoration: 'none' }}>
-                <Container boardType={this.props.data.parentBoardTitle} changeBorder={this.state.mouseEntered} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                <Container 
+                    boardColor={this.state.boardColor} changeBorder={this.state.mouseEntered} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     <Title changeBorder={this.state.mouseEntered}>{this.props.data.title.substring(0, 50)}{this.props.data.title.length > 50 ? "..." : ""}</Title>
-                    <BoardType boardType={this.props.data.parentBoardTitle} changeBorder={this.state.mouseEntered}>{this.props.data.parentBoardTitle}</BoardType>
+                    <BoardType boardColor={this.state.boardColor} changeBorder={this.state.mouseEntered}>{this.props.data.parentBoardTitle}</BoardType>
                 </Container>
             </Link>
         )
