@@ -82,7 +82,9 @@ const DeclineButton = styled.div`
     cursor: pointer;
 `
 type AdminVerificationProps = {
-    docURL: string,
+    acceptanceLetterURL: string,
+    enrolledLetterURL: string,
+    graduationLetterURL: string,
     email: string,
     role: string,
     userId: string,
@@ -108,13 +110,13 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
     }
 
     userTypeMap: {[name: string]: string} = {
-        'Offered': '신입',
-        'Grduated': '졸업'
+        'Offered': '신입생',
+        'Grduated': '졸업생'
     }
 
     componentDidMount() {
+        console.log(this.props)
     }
-    
 
     handleAccept(event: any) {
         if (! window.confirm(this.props.userName + "님을 승인하시겠습니까?")) {
@@ -187,7 +189,9 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                         <InfoSlip>- 성별: {this.props.gender}</InfoSlip>
                         <InfoSlip>- 학과: {this.props.major}</InfoSlip>
                         <InfoSlip>- 카카오톡 ID: {this.props.KTId}</InfoSlip>
-                        <DocLink href={this.props.docURL} target="_blank" rel="noreferrer noopener">인증문서 링크</DocLink>
+                        {this.props.acceptanceLetterURL ? <DocLink href={this.props.acceptanceLetterURL} target="blank" rel="noreferrer noopener">입학증명서 링크</DocLink>: <></>}
+                        {this.props.enrolledLetterURL ? <DocLink href={this.props.enrolledLetterURL} target="blank" rel="noreferrer noopener">재학증명서 링크</DocLink> : <></>}
+                        {this.props.graduationLetterURL ? <DocLink href={this.props.graduationLetterURL} target="blank" rel="noreferrer noopener">재학증명서 링크</DocLink> : <></>}
                     </Profile>
                     <ButtonDiv>
                         <Buttons>

@@ -182,7 +182,9 @@ type UserState = {
     gender: string,
     KTId: string,
     fileSelected: File | undefined,
-    loading: boolean
+    loading: boolean,
+    yob: string,
+    enrolledYear: string,
 }
 
 class SignUp extends React.Component<UserProps, UserState> {
@@ -197,6 +199,8 @@ class SignUp extends React.Component<UserProps, UserState> {
             KTId: "",
             fileSelected: undefined,
             loading: false,
+            yob: "",
+            enrolledYear: "",
         }
     }
     handleChange = (event: any) => {
@@ -229,6 +233,16 @@ class SignUp extends React.Component<UserProps, UserState> {
         else if (event.target.name == "KTId") {
             this.setState({
                 KTId: value
+            })
+        }
+        else if (event.target.name == "yob") {
+            this.setState({
+                yob: value,
+            })
+        }
+        else if (event.target.name == "enrolledYear") {
+            this.setState({
+                enrolledYear: value
             })
         }
     }
@@ -412,13 +426,13 @@ class SignUp extends React.Component<UserProps, UserState> {
                             </InputInner>
                         </InputContainer>
                         <InputContainer>
-                            <InputMandatoryIndicator></InputMandatoryIndicator>
+                            <InputMandatoryIndicator>*</InputMandatoryIndicator>
                             <InputInner>
                                 <Input
                                     name="major"
                                     type="string"
                                     placeholder="최종 졸업 학과 / Final Home Course"
-                                    required={false}
+                                    required
                                     value={this.state.major}
                                     onChange={this.handleChange}
                                 />
@@ -426,17 +440,45 @@ class SignUp extends React.Component<UserProps, UserState> {
                             </InputInner>
                         </InputContainer>
                         <InputContainer>
-                            <InputMandatoryIndicator></InputMandatoryIndicator>
+                            <InputMandatoryIndicator>*</InputMandatoryIndicator>
                             <InputInner>
                                 <Input
                                     name="gender"
                                     type="string"
                                     placeholder="성별 / Gender"
-                                    required={false}
+                                    required
                                     value={this.state.gender}
                                     onChange={this.handleChange}
                                 />
                                 <InputGuide>Male / Female / 기타 (자유롭게 기재)</InputGuide>
+                            </InputInner>
+                        </InputContainer>
+                        <InputContainer>
+                            <InputMandatoryIndicator>*</InputMandatoryIndicator>
+                            <InputInner>
+                                <Input
+                                    name="enrolledYear"
+                                    type="string"
+                                    placeholder="입학 년도 / Year of Admission"
+                                    required
+                                    value={this.state.enrolledYear}
+                                    onChange={this.handleChange}
+                                />
+                                <InputGuide>YYYY/YYYY 형식으로 적어주세요! ex) 2021/2022</InputGuide>
+                            </InputInner>
+                        </InputContainer>
+                        <InputContainer>
+                            <InputMandatoryIndicator>*</InputMandatoryIndicator>
+                            <InputInner>
+                                <Input
+                                    name="yob"
+                                    type="string"
+                                    placeholder="출생 년도 / Year of Birth"
+                                    required
+                                    value={this.state.yob}
+                                    onChange={this.handleChange}
+                                />
+                                <InputGuide>"2002" 처럼 4자리 숫자로 적어주세요!</InputGuide>
                             </InputInner>
                         </InputContainer>
 
