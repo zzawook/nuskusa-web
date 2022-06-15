@@ -42,10 +42,10 @@ class Home extends React.Component<HomeProps, HomeState> {
     carouselStyle: CSS.Properties = {
         position: 'absolute',
         top: `${(height * 0.1) + 50}px`,
-        left: '58vw',
-        width: '60vh',
+        right: '15vw',
+        width: '30vw',
         //left: '20%',
-        height: '60vh',
+        height: '30vw',
     }
 
     render = () => {
@@ -72,8 +72,8 @@ class Home extends React.Component<HomeProps, HomeState> {
         const AnnouncementDisplay = styled.div`
             position: absolute;
             top: ${(height * 0.1) + 50}px;
-            left: 7vw;
-            width: 50vw;
+            left: 15vw;
+            width: 39vw;
             height: 60vh;
             background: #f2f2f2
         `
