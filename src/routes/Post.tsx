@@ -396,14 +396,14 @@ class Post extends React.Component<PostProps, PostState> {
                             <Title>{this.state.firestorePost.title}</Title>                            
                         </TitleAndDate>
                         <AuthorButtons>
-                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} userId={this.props.firebaseUserData.userId}/> : <div/>}
-                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <span style={{
+                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId || this.props.firebaseUserData.role == "Admin" ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} userId={this.props.firebaseUserData.userId}/> : <div/>}
+                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId || this.props.firebaseUserData.role == "Admin"? <span style={{
                                 verticalAlign: 'bottom',
                                 lineHeight: '58px',
                                 color: 'white',
                                 opacity: '0.6',
                             }}>|</span> : ''}
-                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div/>}    
+                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId || this.props.firebaseUserData.role == "Admin"? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div/>}    
                         </AuthorButtons>
                     </Header>
                     <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />

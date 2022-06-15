@@ -191,7 +191,7 @@ class EditPost extends React.Component {
             return;
         }
         if (this.props.boardId == 'announcement') {
-            if (this.props.firebaseUserData.role != 'admin') {
+            if (this.props.firebaseUserData.role != 'Admin') {
                 window.alert("You do not have access to edit this post. \n \n 이 포스트를 수정할 권한이 없습니다.")
                 window.history.go(-1);
             }
