@@ -12,6 +12,8 @@ import { FirebaseUser } from '../types/FirebaseUser';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import CSS from 'csstype'
+import PostPreview from '../components/Home/PostPreview';
+import AnnouncementList from '../components/Home/AnnouncementList';
 
 
 type HomeProps = {
@@ -24,7 +26,6 @@ type HomeState = {
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-
 
 
 /**
@@ -41,9 +42,10 @@ class Home extends React.Component<HomeProps, HomeState> {
     carouselStyle: CSS.Properties = {
         position: 'absolute',
         top: `${(height * 0.1) + 50}px`,
-        width: '60%',
-        left: '20%',
-        height: '90vh',
+        left: '100vh',
+        width: '60vh',
+        //left: '20%',
+        height: '60vh',
     }
 
     render = () => {
@@ -67,7 +69,16 @@ class Home extends React.Component<HomeProps, HomeState> {
             padding-top: 5vh
         `
 
-        const MainBannerContainer = styled.div`
+        const AnnouncementDisplay = styled.div`
+            position: absolute;
+            top: ${(height * 0.1) + 50}px;
+            left: 15vh;
+            width: 80vh;
+            height: 60vh;
+            background: #f2f2f2
+        `
+
+        /* const MainBannerContainer = styled.div`
             display: flex;
             width: 70vw;
             height: 65vh;
@@ -89,7 +100,8 @@ class Home extends React.Component<HomeProps, HomeState> {
         const MainBannerImage = styled.img`
             height: auto;
             width: auto;
-        `
+        ` */
+
         const Activity = styled.div`
             display: flex;
             flex-direction: column;
@@ -136,7 +148,11 @@ class Home extends React.Component<HomeProps, HomeState> {
                     </Carousel>  
                 </div>    
                 <HomeBackground>
-                    <MainBanner>
+                    <AnnouncementDisplay>
+                        <p style={{ margin: '25px', color: '#000000', fontSize: '26px', fontWeight: 'bold'}}>공지사항</p>
+                        <AnnouncementList postArray={[]} postListArray={[]}></AnnouncementList>
+                    </AnnouncementDisplay>
+                    {/* <MainBanner>
                         <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>
                             Welcome to
                         </p>
@@ -149,7 +165,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                                 + More Details
                             </DisplayMedium>
                         </GoldenButton>
-                    </MainBanner>
+                    </MainBanner> */}
                 </HomeBackground>
                 <Activity>
                     <DisplayLarge color='#FFFFFF' style={{ marginLeft: '10px' }}>Our Activities</DisplayLarge>
