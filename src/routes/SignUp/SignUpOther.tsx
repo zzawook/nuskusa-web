@@ -235,12 +235,8 @@ class SignUp extends React.Component<UserProps, UserState> {
 
     handleSubmit = async (event: any) => {
         event.preventDefault();
-        if (!this.state.fileSelected) {
-            window.alert("합격 증명서를 첨부하지 않았습니다. 합격 증명서를 첨부해주세요.");
-            return;
-        }
-        else if (this.state.email.split("@")[1] == "u.nus.edu") {
-            window.alert("NUS 이메일을 입력하셨습니다. NUS 관계자시라면 이전 화면에서 신입생, 재학생, 졸업생 중 골라 가입해주세요!")
+        if (this.state.email.split("@")[1] == "u.nus.edu") {
+            window.alert("NUS 이메일을 입력하셨습니다. NUS 관계자시라면 이전 화면에서 신입생, 재학생, 졸업생 중 선택해 가입해주세요!")
             return;
         }
         else {
@@ -276,27 +272,9 @@ class SignUp extends React.Component<UserProps, UserState> {
                         loading: false,
                     })
                     window.alert("Sign up failed. Please try again later.")
-
                 });
         }
 
-    }
-
-    handleFileSelect = (event: any) => {
-        event.preventDefault();
-        const file = event.target.files[0]
-        console.log(file)
-        if (file) {
-            if (file.size > 1048576 * 5) {
-                window.alert("파일 크기는 5MB 이하여야 합니다. 파일 업로드를 취소합니다.")
-                return;
-            }
-            else {
-                this.setState({
-                    fileSelected: file
-                })
-            }
-        }
     }
 
     handleBackClick = (event: any) => {

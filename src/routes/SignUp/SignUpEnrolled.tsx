@@ -182,7 +182,6 @@ type UserState = {
     major: string,
     gender: string,
     KTId: string,
-    fileSelected: File | undefined,
     loading: boolean,
     enrolledYear: string,
     yob: string,
@@ -198,7 +197,6 @@ class SignUp extends React.Component<UserProps, UserState> {
             major: "",
             gender: "",
             KTId: "",
-            fileSelected: undefined,
             loading: false,
             enrolledYear: "",
             yob: "",
@@ -245,10 +243,6 @@ class SignUp extends React.Component<UserProps, UserState> {
 
     handleSubmit = async (event: any) => {
         event.preventDefault();
-        if (!this.state.fileSelected) {
-            window.alert("합격 증명서를 첨부하지 않았습니다. 합격 증명서를 첨부해주세요.");
-            return;
-        }
         if (this.state.enrolledYear.split("/")[0].length != 4 || this.state.enrolledYear.split("/")[1].length != 4) {
             window.alert("입학년도 입력형식이 잘못되었습니다. 수정 후 다시 제출해주세요!")
             return;
@@ -256,6 +250,9 @@ class SignUp extends React.Component<UserProps, UserState> {
         if (this.state.yob.length != 4 && ! /^\d+$/.test(this.state.yob)) {
             window.alert("출생년도 입력형식이 잘못되었습니다. 수정 후 다시 제출해주세요!")
             return;
+        }
+        if (this.state.email.split("@")[1] != "u.nus.edu") {
+            window.alert("NUS 이메일 주소를 사용하지 않았습니다. 학교 이메일로 가입해주세요!")
         }
         else {
             this.setState({
@@ -274,54 +271,15 @@ class SignUp extends React.Component<UserProps, UserState> {
                         enrolledYear: this.state.enrolledYear,
                         yob: this.state.yob,
                     }
-                    if (this.state.email.split("@")[1] === "u.nus.edu") {
-                        userObject.isVerified = true;
-                        userObject.role = 'Current'
-                        dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
-                            if (this.state.fileSelected) {
-                                const uploadTask = storageService.ref('verifications/' + userCredential.user?.uid).put(this.state.fileSelected);
-                                uploadTask.then(() => {
-                                    storageService.ref('verifications/' + userCredential.user?.uid).getDownloadURL().then((url: string) => {
-                                        dbService.collection('users').doc(userCredential.user?.uid).update({
-                                            'acceptanceLetterURL': url
-                                        }).then(() => {
-                                            window.alert("프로필 생성이 완료되었습니다. NUS 계정으로 가입해 이메일 인증 단계를 건너뛰었습니다.")
-                                            this.setState({
-                                                loading: false,
-                                            })
-                                            this.props.history.push("/")
-                                        })
-                                    })
-                                })
-                            }
-                        });
-                    }
-                    else {
-                        dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
-                            authService.languageCode = 'kr'
-                            if (this.state.fileSelected) {
-                                const uploadTask = storageService.ref('verifications/' + userCredential.user?.uid).put(this.state.fileSelected);
-                                uploadTask.then(() => {
-                                    storageService.ref('verifications/' + userCredential.user?.uid).getDownloadURL().then((url: string) => {
-                                        dbService.collection('users').doc(userCredential.user?.uid).update({
-                                            'acceptanceLetterURL': url
-                                        }).then(() => {
-                                            authService.signInWithEmailAndPassword(this.state.email, this.state.password).then(() => {
-                                                authService.currentUser?.sendEmailVerification().then(() => {
-                                                    authService.signOut();
-                                                    window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.")
-                                                    this.setState({
-                                                        loading: false,
-                                                    })
-                                                    this.props.history.push("/")
-                                                })
-                                            })
-                                        })
-                                    })
-                                })
-                            }
-                        });
-                    }
+                    userObject.isVerified = true;
+                    userObject.role = 'Current'
+                    dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
+                        window.alert("프로필 생성이 완료되었습니다. NUS 계정으로 가입해 이메일 인증 단계를 건너뛰었습니다.")
+                        this.setState({
+                            loading: false,
+                        })
+                        this.props.history.push("/")
+                    });
                 })
                 .catch((error) => {
                     console.error(error);
@@ -333,23 +291,6 @@ class SignUp extends React.Component<UserProps, UserState> {
                 });
         }
 
-    }
-
-    handleFileSelect = (event: any) => {
-        event.preventDefault();
-        const file = event.target.files[0]
-        console.log(file)
-        if (file) {
-            if (file.size > 1048576 * 5) {
-                window.alert("파일 크기는 5MB 이하여야 합니다. 파일 업로드를 취소합니다.")
-                return;
-            }
-            else {
-                this.setState({
-                    fileSelected: file
-                })
-            }
-        }
     }
 
     handleBackClick = (event: any) => {
@@ -495,7 +436,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                                     value={this.state.yob}
                                     onChange={this.handleChange}
                                 />
-                                <InputGuide>Male / Female / 기타 (자유롭게 기재)</InputGuide>
+                                <InputGuide>"2002" 와 같이 4자리 숫자로 적어주세요!</InputGuide>
                             </InputInner>
                         </InputContainer>
                         {/* Will be adding name, nickname, etc. */}
