@@ -389,7 +389,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                                 <Input
                                     name="major"
                                     type="string"
-                                    placeholder="입학 학과 / Home Course"
+                                    placeholder="학과 / Major & Minor"
                                     required={false}
                                     value={this.state.major}
                                     onChange={this.handleChange}
