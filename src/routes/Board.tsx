@@ -168,6 +168,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 background: white;
                 border-radius: 5px;
             }
+            margin-bottom: 10vh;
         `
         const BoardNavbarContainer = styled.div`
             display: flex;
@@ -276,7 +277,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                     </PostContainer>
                 }
 
-                {this.props.firebaseUserData.role === "Admin" ?
+                {/* {this.props.firebaseUserData.role === "Admin" ?
                     <>
                         <button onClick={() => generateSamplePost(
                             dbService.collection("boards").doc(this.props.boardId).collection("posts").doc().id,
@@ -299,7 +300,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                     </>
                     :
                     <></>
-                }
+                } */}
 
                 <ContactUs />
             </Container>

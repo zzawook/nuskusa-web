@@ -8,6 +8,8 @@ import CSS from 'csstype';
 import { FirebaseUser } from '../../types/FirebaseUser'
 import PostApprover from '../Grove/PostApprover'
 import { parse } from 'node-html-parser'
+import { BsFillPinAngleFill } from 'react-icons/bs'
+import { FaBlackberry } from 'react-icons/fa'
 
 
 type PostThumbnailProps = {
@@ -65,6 +67,16 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
             height: 260px;
             background: white;
         `
+        const TitleContainer = styled.div`
+            display: flex;
+            flex-direction: row;
+        `
+        const Pin = styled.div`
+            position: relative;
+            left: -10px;
+            top: -10px
+
+        `
         const titleStyle: CSS.Properties = {
             width: '85%',
             position: 'relative',
@@ -89,7 +101,10 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
                                 <Container>
                                     <Link to={this.props.to} style={{ textDecoration: 'none' }}>
                                         <Thumbnail style={{ height: "220px" }}>
-                                            <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
+                                            <TitleContainer>
+                                                <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
+                                                {this.props.firestorePost.isPinned ? <Pin><BsFillPinAngleFill size="20" color="black"/></Pin> : <></>}
+                                            </TitleContainer>
                                             <BoardTag
                                                 title={this.props.firestorePost.parentBoardTitle}
                                                 boxcolor={this.props.firestorePost.parentColor}
@@ -113,7 +128,10 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
                             <Link to={this.props.to} style={{ textDecoration: 'none' }}>
                                 <Thumbnail>
                                     {/* {this.parseHtmlToThumbnailImage()} */}
-                                    <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
+                                    <TitleContainer>
+                                        <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
+                                        {this.props.firestorePost.isPinned ? <Pin><BsFillPinAngleFill size="20" color="black"/></Pin> : <></>}
+                                    </TitleContainer>
                                     <BoardTag
                                         title={this.props.firestorePost.parentBoardTitle}
                                         boxcolor={this.props.firestorePost.parentColor}
