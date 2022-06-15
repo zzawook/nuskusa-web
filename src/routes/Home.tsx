@@ -74,7 +74,7 @@ class Home extends React.Component<HomeProps, HomeState> {
             top: ${(height * 0.1) + 50}px;
             left: 15vw;
             width: 39vw;
-            height: 60vh;
+            height: 30vw;
             background: #f2f2f2
         `
 
