@@ -139,7 +139,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                     <ThumbnailContainer>
                         {this.state.boardComponentArray}
                     </ThumbnailContainer>
-                    {this.props.firebaseUserData.role === 'Admin' ?
+                    {/* {this.props.firebaseUserData.role === 'Admin' ?
                         <form onSubmit={this.handleSubmit}>
                             <input name='title' type='string' onChange={this.handleChange} />
                             <input name='description' type='string' onChange={this.handleChange} /> <br />
@@ -153,7 +153,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                         <div>
 
                         </div>
-                    }
+                    } */}
                 </TextContainer>
                 <ContactUs />
             </Container>
