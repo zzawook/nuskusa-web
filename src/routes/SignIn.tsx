@@ -17,6 +17,7 @@ type UserObject = {
     email: string,
     password: string,
     failed: boolean,
+    loading: boolean,
 }
 
 const height = window.innerHeight;
@@ -120,7 +121,24 @@ const ToPassWord = styled(Link)`
 const FailMessage = styled.span`
     color: red;
 `
-
+const LoadingBlocker = styled.div`
+    opacity: 0.5;
+    background-color: black;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+const LoadingText = styled.span`
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+`
 class SignIn extends React.Component<UserProps, UserObject> {
     constructor(props: UserProps) {
         super(props);
@@ -128,6 +146,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
             email: '',
             password: '',
             failed: false,
+            loading: false,
         }
     }
     handleChange = (event: any) => {
@@ -145,6 +164,9 @@ class SignIn extends React.Component<UserProps, UserObject> {
 
     handleSubmit = async (event: any) => {
         event.preventDefault();
+        this.setState({
+            loading: true,
+        })
         authService.setPersistence(firebase.auth.Auth.Persistence.SESSION)
             .then(async () => {
                 return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -155,6 +177,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
                                 console.log("Document does not exist")
                                 this.setState({
                                     failed: true,
+                                    loading: false,
                                 })
                                 return
                             }
@@ -162,13 +185,22 @@ class SignIn extends React.Component<UserProps, UserObject> {
                             console.log(data)
                             if (!authService.currentUser?.emailVerified) {
                                 window.alert("이메일이 인증되지 않았습니다. 보내드린 인증 메일의 링크를 눌러 본인 인증을 완료해주세요.")
+                                this.setState({
+                                    loading: false,
+                                })
                                 authService.signOut();
                             }
                             else if (!data?.isVerified) {
                                 window.alert("제출해주신 문서를 검증하고 있습니다. 1~2일 내로 완료될 예정입니다. 조금만 기다려주세요!")
+                                this.setState({
+                                    loading: false,
+                                })
                                 authService.signOut();
                             }
                             else {
+                                this.setState({
+                                    loading: false,
+                                })
                                 this.props.history.push("/")
                             }
                         })
@@ -177,6 +209,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
                         console.error(error);
                         this.setState({
                             failed: true,
+                            loading: false,
                         })
                     });
             })
@@ -184,6 +217,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
                 console.error(error);
                 this.setState({
                     failed: true,
+                    loading: false,
                 })
             });
     }
@@ -212,6 +246,7 @@ class SignIn extends React.Component<UserProps, UserObject> {
     render() {
         return (
             <>
+                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
                 <Container>
                     <FlexColumn>
                         <Back onClick={this.handleBackClick}>

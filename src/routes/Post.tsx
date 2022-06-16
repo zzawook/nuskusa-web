@@ -193,7 +193,8 @@ class Post extends React.Component<PostProps, PostState> {
                 enrolledYear: undefined,
                 major: undefined,
                 faculty: undefined,
-                profilePictureURL: undefined
+                profilePictureURL: undefined,
+                yob: "",
             },
             boardData: [],
         }

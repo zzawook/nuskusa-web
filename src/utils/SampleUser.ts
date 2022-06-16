@@ -11,4 +11,5 @@ export const SampleUser: FirebaseUser = {
     faculty: "",
     profilePictureURL: "",
     userId: "userId",
+    yob: "",
 }

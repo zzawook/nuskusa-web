@@ -153,7 +153,7 @@ class Board extends React.Component<BoardProps, BoardState> {
             box-sizing: border-box;
             overflow-x: hidden;
             overflow-y: scroll;
-            margin: auto;
+            //margin: auto;
             ::-webkit-scrollbar {
                 width: 10px;
             }

@@ -185,6 +185,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                 isVerified: false,
                 role: "User", // User, Undergraduate, Graduate, Admin
                 profilePictureURL: "", 
+                yob: "",
             },
         }
     }
