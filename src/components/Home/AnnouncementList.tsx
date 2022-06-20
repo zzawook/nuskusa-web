@@ -73,7 +73,7 @@ class AnnouncementList extends React.Component<PostState> {
                     rawData.push(data);
                     const component = (
                         <AnnouncementLink style={data.isPinned ? {backgroundColor: "#d9d9d9"} : {}} onClick={() => window.location.href="/#/boards/announcement/" + doc.id}>
-                            <TitleWrapper>{data.title}</TitleWrapper>
+                            <TitleWrapper style={data.isPinned ? {fontWeight: "bold"} : {}}>{data.title}</TitleWrapper>
                             <DateWrapper>{this.formatDate(data.lastModified.toDate())}</DateWrapper>
                         </AnnouncementLink>
                     )
