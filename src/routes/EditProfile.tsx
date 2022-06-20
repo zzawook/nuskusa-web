@@ -117,6 +117,7 @@ const EmailInput = styled.input`
     opacity: 0.85;
     margin-right: 15px;
     line-height: 30px;
+    border: 1px solid white;
 `
 const EmailButton = styled.div`
     width: 150px;
@@ -148,11 +149,28 @@ const MajorText = styled.span`
     width: 20%;
     z-index: 10;
 `
-const MajorInput = styled.span`
-    width: 60%;
+const MajorInput = styled.input`
+    width: 50%;
     height: 30px;
     color: #d9d9d9;
     z-index: 10;
+    background-color: transparent;
+    border: 1px solid white;
+    margin-right: 10px;
+`
+const MajorButton = styled.button`
+    width: 10%;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    color: white;
+    background-color: transparent;
+    border: 1px solid white;
+    cursor: pointer;
+    
+    :hover {
+        background-color: white;
+        color: #0b121c;
+    }
 `
 const EnrolledYear = styled.div`
     margin-top: 30px;
@@ -242,9 +260,9 @@ const LoadingText = styled.span`
     z-index: 99999;
 `
 class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
-    
+
     private inputRef: React.RefObject<HTMLInputElement>
-    
+
     constructor(props: any) {
         super(props);
         this.inputRef = React.createRef();
@@ -496,6 +514,30 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
 
         }
 
+        const handleMajorInputChange = (e: any) => {
+            e.preventDefault();
+            const temp = this.state.userData
+            temp.major = e.target.value;
+            this.setState({
+                userData: temp,
+            })
+        }
+
+        const handleMajorChangeSubmit = (e: any) => {
+            e.preventDefault();
+            this.setState({
+                loading: true,
+            })
+            dbService.collection('users').doc(this.props.firebaseUserData.userId).update({
+                major: this.state.userData.major,
+            }).then(() => {
+                this.setState({
+                    loading: false,
+                })
+                window.alert("학과를 변경했습니다. ")
+            })
+        }
+
         return (
             <>
                 {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
@@ -515,7 +557,8 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                         </Email>
                         <Major>
                             <MajorText>Major / 전공</MajorText>
-                            <MajorInput>{this.props.firebaseUserData.major === undefined ? 'N/A. Verify account to register major.' : this.props.firebaseUserData.major}</MajorInput>
+                            <MajorInput value={this.props.firebaseUserData.major === undefined ? 'N/A. Verify account to register major.' : this.props.firebaseUserData.major} onChange={handleMajorInputChange}></MajorInput>
+                            <MajorButton onClick={handleMajorChangeSubmit}>Apply</MajorButton>
                         </Major>
                         <EnrolledYear>
                             <EnrolledYearText>Enrolled Year / 입학년도</EnrolledYearText>

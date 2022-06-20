@@ -254,8 +254,8 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                             <ImageBreak />
                             <ExecImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_0521.JPG?alt=media&token=2f4adaec-080d-4c4d-85ba-3becc4a99d82'}></ExecImg>
                         </ExecImages>
-                        <Profile top={390} bottom={-1} right={-1} left={50} name={'박진아'} role={'학부생회장'}/>
-                        <Profile top={190} bottom={-1} right={0} left={-1} name={'박수연'} role={'학부생부회장'}/>
+                        <Profile top={390} bottom={-1} right={-1} left={50} name={'강준혁'} role={'학부생회장'}/>
+                        <Profile top={190} bottom={-1} right={0} left={-1} name={'유다현'} role={'학부생부회장'}/>
                         <SAHead />
                         <StudentAffairs>Student Affairs</StudentAffairs>
                         <SAImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_0394.JPG?alt=media&token=695817b2-4d35-4c1f-ba4d-00872b31c2da'}></SAImg>
@@ -277,8 +277,8 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                             <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FKakaoTalk_20211010_113309252_02.jpg?alt=media&token=369cd448-a7d6-47c4-b03f-f32dde60a297'} />
                         </ITImages>
                         
-                        <Profile top={2200} bottom={-1} right={-1} left={50} name={'노영기'} role={'Information Technology'}/>
-                        <Profile top={2100} bottom={-1} right={0} left={-1} name={'김재혁'} role={'Information Technology'}/>
+                        <Profile top={2200} bottom={-1} right={-1} left={50} name={'김재혁'} role={'Information Technology'}/>
+                        <Profile top={2100} bottom={-1} right={0} left={-1} name={'신진'} role={'Information Technology'}/>
                         <PublicRelation>Public Relation</PublicRelation>
                         <PRImages>
                             <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220405_211536009.jpg?alt=media&token=155f3048-ed58-48c4-bcae-bf2f5d0eec0f'} />
@@ -286,8 +286,8 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                             <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_6633.png?alt=media&token=9c3f4487-4d2c-47b5-a00d-d22679b25550'} />     
                         </PRImages>
                         <PRHead />
-                        <Profile top={2750} bottom={-1} right={-1} left={50} name={'유다현'} role={'Public Relations'}/>
-                        <Profile top={2900} bottom={-1} right={0} left={-1} name={'강민구'} role={'Public Relations'}/>
+                        <Profile top={2750} bottom={-1} right={-1} left={50} name={'고선민'} role={'Student Affairs'}/>
+                        <Profile top={2900} bottom={-1} right={0} left={-1} name={'강민구'} role={'Student Affairs'}/>
                     </Member>    
                 </MemberContainer>
             </Container>

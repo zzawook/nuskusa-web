@@ -275,7 +275,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                     userObject.role = 'Current'
                     dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
                         authService.currentUser?.sendEmailVerification().then(() => {
-                            window.alert("프로필 생성이 완료되었습니다. 입력하신 NUS 이메일로 보내드린 메일의 링크를 클릭하셔서 이메일 인증을 완료해주세요!")
+                            window.alert("프로필 생성이 완료되었습니다. 입력하신 NUS 이메일로 보내드린 메일의 링크를 클릭하셔서 이메일 인증을 완료해주세요! \n\n 이메일이 오지 않는다면 Junk 폴더를 확인해주세요!")
                             authService.signOut()
                             this.setState({
                                 loading: false,
