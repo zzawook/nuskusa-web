@@ -4,7 +4,7 @@ import { FirebaseUser } from '../../types/FirebaseUser'
 import { CgProfile } from 'react-icons/cg'
 import { authService } from '../../utils/firebaseFunctions'
 type AvatarProps = {
-    firebaseUserData: FirebaseUser,
+    firebaseUserData: FirebaseUser | undefined,
     dimension: number,
     isOnNavbar: boolean,
 }
@@ -19,6 +19,10 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         this.state = {
 
         }
+    }
+
+    componentDidUpdate() {
+        console.log(this.props.firebaseUserData)
     }
 
     render = () => {
@@ -45,7 +49,7 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         `
         return (
             <AvatarWrapper>
-                {this.props.firebaseUserData.profilePictureURL ? <ProfileImg src={this.props.firebaseUserData.profilePictureURL} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile>}
+                {this.props.firebaseUserData ? this.props.firebaseUserData.profilePictureURL ? <ProfileImg src={this.props.firebaseUserData.profilePictureURL} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile> : <></>}
             </AvatarWrapper>
         )
     }
