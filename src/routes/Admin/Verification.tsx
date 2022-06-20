@@ -17,13 +17,32 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
 `
+const LoadingBlocker = styled.div`
+    opacity: 0.5;
+    background-color: black;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+const LoadingText = styled.span`
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+`
 type AdminVerificationProps = {
-    firebaseUserData: FirebaseUser
+    firebaseUserData: FirebaseUser,
 }
 
 type AdminVerificationState = {
     users: Array<any>,
     dummy: boolean,
+    loading: boolean,
 }
 
 class AdminVerification extends React.Component<AdminVerificationProps, AdminVerificationState> {
@@ -32,28 +51,44 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         this.state = {
             users: [],
             dummy: false,
+            loading: false,
         }
+        this.setLoading.bind(this);
+        this.unsetLoading.bind(this);
     }
 
     componentDidMount() {
-        
-        dbService.collection('toVerify').onSnapshot(docs => {
-            const userArray: Array<any> = [];
-            docs.forEach(doc => {
+        dbService.collection('toVerify').onSnapshot(async docs => {
+            let userArray: Array<any> = [];
+            let promiseArray: Array<any> = [];
+            docs.forEach(async doc => {
                 const data = doc.data();
-                console.log(data)
-                dbService.collection('users').doc(data.userId).get().then(userDoc => {
+                let promise = dbService.collection('users').doc(data.userId).get().then(userDoc => {
                     const userData = userDoc.data();
-                    console.log(userData)
                     if (userData) {
                         userData.userType = data.userType;
                         userArray.push(userData)
                     }
-                    this.setState({
-                        users: userArray,
-                    })
+                })
+                promiseArray.push(promise);
+            })
+            Promise.all(promiseArray).then(() => {
+                this.setState({
+                    users: userArray,
                 })
             })
+        })
+    }
+
+    setLoading = ()  => {
+        this.setState({
+            loading: true,
+        })
+    }
+
+    unsetLoading = () => {
+        this.setState({
+            loading: false,
         })
     }
 
@@ -69,12 +104,16 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
 
     render = () => {
         return (
-            <Wrapper>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {this.state.users.map(user => {
-                    return <UserSlip graduationLetterURL={user.graduationDocumentURL} acceptanceLetterURL={user.acceptanceLetterURL} email={user.email} role={user.role} userId={user.userId} userName={user.username} gender={user.gender} major={user.major} userType={user.userType} KTId={user.KTId}/>
-                })}
-            </Wrapper>
+            <>
+                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
+                <Wrapper>
+                    <Navbar firebaseUserData={this.props.firebaseUserData} />
+                    {this.state.users.map(user => {
+                        return <UserSlip setLoading={this.setLoading} unsetLoading={this.unsetLoading} graduationLetterURL={user.graduationDocumentURL} acceptanceLetterURL={user.acceptanceLetterURL} email={user.email} role={user.role} userId={user.userId} userName={user.username} gender={user.gender} major={user.major} userType={user.userType} KTId={user.KTId} />
+                    })}
+                </Wrapper>
+            </>
+            
         )
     }
 }
