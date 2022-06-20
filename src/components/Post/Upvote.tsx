@@ -42,8 +42,6 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
 
     handleUpvoteClick = () => {
         const hasUpvoted = this.checkUpvoted();
-        console.log(this.props.upvoteArray)
-        console.log(hasUpvoted)
         if (hasUpvoted === false) {
             // If the user did not upvote, upvote.
             dbService.collection('boards')
@@ -56,9 +54,6 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
                 .then(() => {
 
                 })
-                .catch(error => {
-                    console.error(error)
-                })
         } else if (hasUpvoted === true) {
             // If the user did upvote already, remove upvote
             dbService.collection('boards')
@@ -67,9 +62,6 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
                 .doc(this.props.postId)
                 .update({
                     upvoteArray: firebase.firestore.FieldValue.arrayRemove(dbService.collection('users').doc(authService.currentUser?.uid))
-                })
-                .catch(error => {
-                    console.error(error)
                 })
         }
     }

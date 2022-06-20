@@ -63,7 +63,7 @@ class NotificationComponent extends React.Component<NotificationComponentProps, 
             display: flex;
             flex-direction: column;
             width: 80%;
-            height: 262px;
+            height: 150px;
             background: white;
             margin: auto;
             margin-top: 10px;

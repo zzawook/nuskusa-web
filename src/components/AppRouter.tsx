@@ -138,7 +138,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
             <>
               {this.state.isLoggedIn ? (
                 <Switch>
-                  {console.log('logged in')}
                   <Route exact path='/' render={() => <Home
                     firebaseUserData={this.state.firebaseUserData}
                   />} />

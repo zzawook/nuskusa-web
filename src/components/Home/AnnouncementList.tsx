@@ -75,7 +75,6 @@ class AnnouncementList extends React.Component<PostState> {
                             <DateWrapper>{this.formatDate(data.lastModified.toDate())}</DateWrapper>
                         </AnnouncementLink>
                     )
-                    console.log(data)
                 })
                 this.setState({
                     postArray: rawData,

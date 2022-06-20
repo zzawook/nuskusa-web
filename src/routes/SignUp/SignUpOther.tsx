@@ -267,7 +267,6 @@ class SignUp extends React.Component<UserProps, UserState> {
                     });
                 })
                 .catch((error) => {
-                    console.error(error);
                     this.setState({
                         loading: false,
                     })

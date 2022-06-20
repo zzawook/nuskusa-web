@@ -270,7 +270,6 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
     }
 
     componentDidMount = () => {
-        console.log(authService.currentUser)
         this.setState({
             userData: this.props.firebaseUserData,
         })
@@ -280,13 +279,9 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         if (!authService.currentUser) {
             window.location.href = window.location.origin + '/#/';
         }
-        console.log(this.state.profileChanged)
-        console.log(this.state.userData)
-        console.log(this.state.verificiationOpen)
     }
 
     getDerivedStateFromProps = (newProps: any, prevState: any) => {
-        console.log(authService.currentUser)
         if (!authService.currentUser) {
             window.location.href = window.location.origin + '/#/';
         }
@@ -346,15 +341,12 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                         })
                         window.alert("Profile image is successfully changed! 프로필 사진을 성공적으로 바꾸었어요!")
                     }).catch(err => {
-                        console.log(err)
                         window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
                     })
                 }).catch(err => {
-                    console.log(err);
                     window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
                 });
             }).catch(err => {
-                console.log(err);
                 window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
             })
         }
@@ -411,12 +403,10 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                     return;
                 }).catch(error => {
                     window.alert("An error occurred. Please try again")
-                    console.log(error)
                     return;
                 })
 
             }).catch(error => {
-                console.log(error)
                 window.alert("An unknown error occurred during confirming current password.")
                 return;
             })

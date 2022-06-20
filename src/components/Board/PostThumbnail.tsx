@@ -44,7 +44,6 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
             return <></>
         }
         imgHtml[0].setAttribute("style", "overflow: hidden, width: 300, height: 300")
-        console.log(imgHtml[0])
         return <div dangerouslySetInnerHTML={{__html: imgHtml[0].innerHTML}}></div>;
     }
 
@@ -74,8 +73,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
         const Pin = styled.div`
             position: relative;
             left: -10px;
-            top: -10px
-
+            top: -10px;
         `
         const titleStyle: CSS.Properties = {
             width: '85%',

@@ -24,11 +24,6 @@ class Uploader {
                         firebase.storage.TaskEvent.STATE_CHANGED,
                         function(snapshot) {
                             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            console.log("Upload is " + progress + "% done");
-                            switch (snapshot.state) {
-                                case firebase.storage.TaskState.PAUSED:
-                                    console.log("Upload is paused");
-                            }
                         },
                         function(error) {
                             switch (error.code) {
@@ -44,12 +39,10 @@ class Uploader {
                           }
                         },
                         function() {
-                            console.log("Upload successful")
                             // Upload completed successfully, now we can get the download URL
                             uploadTask.snapshot.ref
                                 .getDownloadURL()
                                 .then(function(downloadURL) {
-                                console.log("File available at", downloadURL);
                                 resolve({
                                     urls: {
                                         'default': downloadURL
@@ -212,9 +205,6 @@ class EditPost extends React.Component {
         this.fetchPost();
         this.setState({
             author: this.props.firebaseUserData.username,
-        },
-        () => {
-            console.log(this.state)
         })
     }
 
@@ -226,17 +216,13 @@ class EditPost extends React.Component {
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
                     let data = querySnapshot.data();
-                    console.log(data);
                     if (data == undefined) {
                         return;
                     }
                     else {
                         if (data.permissions.includes(this.props.firebaseUserData.role)/* || data.permissions.includes("User")*/) {
-                            console.log("I entered");
                             this.content = data.content;
-                            console.log(data)
                             this.setState(data, () => {
-                                console.log(this.state)
                             })
                         } 
                         else {
@@ -246,7 +232,6 @@ class EditPost extends React.Component {
                         }
                     }
                 }
-                console.log('post fetching successful')
             })
     }
 

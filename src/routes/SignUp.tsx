@@ -167,7 +167,6 @@ class SignUp extends React.Component<UserProps, UserState> {
                 this.props.history.push("/")
             })
             .catch((error) => {
-                console.error(error);
                 window.alert("Sign up failed. Please try again later.")
             });
     }

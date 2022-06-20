@@ -29,9 +29,7 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
             authService.sendPasswordResetEmail(this.state.email)
             .then(function () {
                 alert('We will send an email to you soon!')
-            }).catch(function (e) {
-                console.log(e);
-            });
+            })
         }
     }
 

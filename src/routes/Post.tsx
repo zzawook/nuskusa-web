@@ -319,8 +319,6 @@ class Post extends React.Component<PostProps, PostState> {
                     else {
                         await dbService.collection('users').doc(data.authorId).get().then(snapshot => {
                             const authorData = snapshot.data() as FirebaseUser;
-                            console.log(this.props.firebaseUserData.role)
-                            console.log(data.permissions)
                             this.setState({
                                 firestorePost: {
                                     ...data,
