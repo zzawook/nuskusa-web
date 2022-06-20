@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { dbService } from '../../utils/firebaseFunctions';
 import { FirestorePost } from '../../types/FirestorePost';
 import { format } from 'path/posix';
+import { BsFillPinAngleFill } from 'react-icons/bs'
+import { transform } from 'typescript';
 
 type PostState = {
     postArray: FirestorePost[],
@@ -69,12 +71,13 @@ class AnnouncementList extends React.Component<PostState> {
                 querySnapshot.forEach((doc) => {
                     const data = doc.data() as FirestorePost;
                     rawData.push(data);
-                    list.push(
-                        <AnnouncementLink onClick={() => window.location.href="/#/boards/announcement/" + doc.id}>
-                            <TitleWrapper>{data.title}</TitleWrapper>
+                    const component = (
+                        <AnnouncementLink style={data.isPinned ? {backgroundColor: "#d9d9d9"} : {}} onClick={() => window.location.href="/#/boards/announcement/" + doc.id}>
+                            <TitleWrapper style={data.isPinned ? {fontWeight: "bold"} : {}}>{data.title}</TitleWrapper>
                             <DateWrapper>{this.formatDate(data.lastModified.toDate())}</DateWrapper>
                         </AnnouncementLink>
                     )
+                    data.isPinned ? list.unshift(component) : list.push(component)
                 })
                 this.setState({
                     postArray: rawData,
