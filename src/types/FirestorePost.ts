@@ -1,5 +1,4 @@
 import firebase from 'firebase'
-import { getSystemErrorMap } from 'util'
 
 export interface FirestorePost {
     postId: string,

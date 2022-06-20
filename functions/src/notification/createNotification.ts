@@ -11,7 +11,7 @@ import {firestore} from "firebase-admin";
 
 export const createNotificationOnPostLike = functions.firestore
     .document("/boards/{boardId}/posts/{postId}")
-    .onUpdate(async (change, context) => {
+    .onUpdate(async (change: any, context: any) => {
         const previous = change.before.data() as FirestorePost;
         const after = change.after.data() as FirestorePost;
         const boardId = context.params.boardId;
@@ -45,7 +45,7 @@ export const createNotificationOnPostLike = functions.firestore
 
 export const createNotificationForBoard = functions.firestore
     .document("/boards/{boardId}")
-    .onCreate(async (change, context) => {
+    .onCreate(async (change: any, context: any) => {
         const data = change.data() as FirestoreBoard;
         const boardId = context.params.boardId;
         const title = data.title;
@@ -62,20 +62,20 @@ export const createNotificationForBoard = functions.firestore
             timestamp: firestore.Timestamp.now(),
         };
         db.collection("users").get()
-            .then((snapshot) => {
+            .then((snapshot: any) => {
                 const batch = db.batch();
-                snapshot.docs.forEach((doc) => {
+                snapshot.docs.forEach((doc: any) => {
                     batch.update(doc.ref, {
                         notificationArray: admin.firestore.FieldValue.arrayUnion(component),
                     });
                 });
                 batch.commit()
-                    .catch((error) => {
+                    .catch((error: any) => {
                         console.error(error);
                         throw new Error("User update failed");
                     });
             })
-            .catch((error) => {
+            .catch((error: any) => {
                 console.error(error);
                 throw new Error("Error occured while creating notification for new board");
             });
@@ -83,7 +83,7 @@ export const createNotificationForBoard = functions.firestore
 
 export const createNotificationOnPostComment = functions.firestore
     .document("/boards/{boardId}/posts/{postId}/comments/{commentId}")
-    .onCreate(async (change, context) => {
+    .onCreate(async (change: any, context: any) => {
         const data = change.data() as FirestoreComment;
         const boardId = context.params.boardId;
         const postId = context.params.postId;
@@ -102,7 +102,7 @@ export const createNotificationOnPostComment = functions.firestore
                 data: data,
                 timestamp: firestore.Timestamp.now(),
             };
-            db.runTransaction(async (transaction) => {
+            db.runTransaction(async (transaction: any) => {
                 const postRef = db.collection("boards").doc(boardId).collection("posts").doc(postId);
                 const postData = (await transaction.get(postRef)).data() as FirestoreComment;
                 if (data.authorId !== postData.authorId) {
@@ -126,14 +126,16 @@ export const createNotificationOnPostComment = functions.firestore
                 data: data,
                 timestamp: firestore.Timestamp.now(),
             };
-            await db.runTransaction(async (transaction) => {
+            await db.runTransaction(async (transaction: any) => {
                 if (data.replyTo) {
                     const replyReference = db.doc(data.replyTo.path);
                     const replyTargetData = (await transaction.get(replyReference)).data() as FirestoreComment;
                     const targetId = replyTargetData.authorId;
-                    db.doc(`/users/${targetId}`).update({
-                        notificationArray: admin.firestore.FieldValue.arrayUnion(component),
-                    });
+                    if (replyTargetData.authorId !== data.authorId) {
+                        db.doc(`/users/${targetId}`).update({
+                            notificationArray: admin.firestore.FieldValue.arrayUnion(component),
+                        });
+                    }
                 }
             });
         }

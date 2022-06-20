@@ -206,6 +206,7 @@ class Post extends React.Component<PostProps, PostState> {
     }
 
     componentDidUpdate(prevProps: PostProps) {
+        console.log(this.state.commentArray)
         if (prevProps.location.pathname !== this.props.location.pathname) {
             this.fetchPost()
         }
@@ -428,7 +429,7 @@ class Post extends React.Component<PostProps, PostState> {
                         <Upvote boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} upvoteArray={this.state.firestorePost.upvoteArray} />
                         <FaRegComment size='20px' style={{ marginLeft: '10px' }} />
                         <CommentNum style={{ margin: '0px 5px' }}>
-                            {this.state.firestorePost.numComments}
+                            {this.state.commentArray.length}
                         </CommentNum>
 
                     </ETC>
