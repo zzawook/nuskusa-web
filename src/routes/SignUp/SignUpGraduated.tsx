@@ -284,7 +284,6 @@ class SignUp extends React.Component<UserProps, UserState> {
                                         const toReviewObject = {
                                             userType: 'Graduated',
                                             userId: userCredential.user?.uid,
-                                            docURL: url,
                                         }
                                         const toReview = dbService.collection('toVerify').doc(userCredential.user?.uid).set(toReviewObject);
                                         toReview.then(() => {

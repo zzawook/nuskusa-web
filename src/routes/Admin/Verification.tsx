@@ -36,12 +36,15 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
     }
 
     componentDidMount() {
-        const userArray: Array<any> = [];
+        
         dbService.collection('toVerify').onSnapshot(docs => {
+            const userArray: Array<any> = [];
             docs.forEach(doc => {
                 const data = doc.data();
+                console.log(data)
                 dbService.collection('users').doc(data.userId).get().then(userDoc => {
                     const userData = userDoc.data();
+                    console.log(userData)
                     if (userData) {
                         userData.userType = data.userType;
                         userArray.push(userData)
@@ -52,6 +55,10 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                 })
             })
         })
+    }
+
+    componentDidUpdate() {
+        console.log(this.state.users)
     }
 
     static getDerivedStateFromProps(newProps: AdminVerificationProps, prevState: AdminVerificationState) {

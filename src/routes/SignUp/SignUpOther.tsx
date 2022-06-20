@@ -271,6 +271,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                         loading: false,
                     })
                     window.alert("Sign up failed. Please try again later.")
+                    console.log(error)
                 });
         }
 
