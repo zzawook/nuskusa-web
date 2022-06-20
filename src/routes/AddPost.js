@@ -82,9 +82,10 @@ const Title = styled.input`
   outline: none;
 `;
 const Container = styled.div`
-  background: #0b121c;
-  width: ${width}px;
-  height: ${height}px;
+    background: #0B121C;
+    width: ${width}px;
+    height: ${height}px;
+    z-index: 100;
 `;
 const Back = styled.button`
   width: 95px;
@@ -131,45 +132,65 @@ const SelectContainer = styled.div`
   background-color: #0b121c;
 `;
 const CheckBoxContainer = styled.div`
-  display: flex;
-  flex-flow: row nowrap;
-  height: 50px;
-  width: ${450}px;
-  position: absolute;
-  bottom: 110px;
-  left: ${width * 0.15}px;
-`;
-
+    display: flex;
+    flex-flow: row nowrap;
+    height: 50px;
+    width: ${450}px;
+    position: absolute;
+    bottom: 110px;
+    left: ${width * 0.15}px;
+`
+const LoadingBlocker = styled.div`
+    opacity: 0.5;
+    background-color: black;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000000,
+`
+const LoadingText = styled.span`
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 1000000,
+`
 class AddPost extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      state: {
-        title: "Enter title...",
-        content: "<p></p>",
-        isAnnouncement: false,
-        isAnonymous: false,
-        isPinned: false,
-        isHidden: false,
-        author: "",
-        authorId: "",
-        upvotes: 0,
-        lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-        permissions: ["Admin"],
-        numComments: 0, //DO NOT CHANGE
-        parentBoardId: this.props.boardId,
-        upvoteArray: [], //DO NOT CHANGE
-        parentColor: "",
-        parentTextColor: "",
-        parentBoardTitle: "",
-      },
-      selectedBoard: this.props.boardId,
-      boardData: [],
-      boardDataProcessed: [],
-      dummy: false,
-      bc: "#FFFFFF",
-    };
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            state: {
+                title: 'Enter title...',
+                content: `<p></p>`,
+                isAnnouncement: false,
+                isAnonymous: false,
+                isPinned: false,
+                isHidden: false,
+                author: '',
+                authorId: "",
+                upvotes: 0,
+                lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
+                permissions: ["Admin"],
+                numComments: 0, //DO NOT CHANGE
+                parentBoardId: this.props.boardId,
+                upvoteArray: [], //DO NOT CHANGE
+                parentColor: "",
+                parentTextColor: "",
+                parentBoardTitle: "",
+            },
+            selectedBoard: this.props.boardId,
+            boardData: [],
+            boardDataProcessed: [],
+            dummy: false,
+            bc: "#FFFFFF",
+            loading: false,
+        }
+    }
 
   content = "<p></p>";
 
@@ -230,9 +251,57 @@ class AddPost extends React.Component {
       );
       return;
     }
-    if (this.content === "<p></p>") {
-      window.alert("Your post is empty! \n \n 포스트를 작성해주세요.");
-      return;
+
+    handleSubmit = async (e) => {
+        e.preventDefault();
+        if (this.state.selectedBoard === null) {
+            window.alert("Please select a board to post your article. \n \n 게시판을 선택해주세요.")
+            return;
+        }
+        if (this.content === '<p></p>') {
+            window.alert("Your post is empty! \n \n 포스트를 작성해주세요.")
+            return;
+        }
+        if (this.state.state.title.trim() === "" || this.state.state.title === "Enter title...") {
+            window.alert("Please enter title. \n \n 제목을 작성해주세요.")
+            return;
+        }
+        if (this.state.state.title.length > 30) {
+            window.alert("Your title is too long. Please ensure it's below 30 characters \n \n 제목이 너무 깁니다. 30자 이하로 제한해주세요.")
+            return;
+        }
+        this.setState({
+            loading: true,
+        })
+        const boardSnapshot = await dbService.collection('boards').doc(this.state.selectedBoard).get();
+        const boardData = boardSnapshot.data();
+        const stateCopy = this.state.state;
+        stateCopy.authorId = authService.currentUser.uid;
+        stateCopy.content = this.content;
+        stateCopy.parentBoardId = this.state.selectedBoard;
+        stateCopy.parentColor = boardData.boardColor;
+        stateCopy.parentTextColor = boardData.boardTextColor;
+        stateCopy.parentBoardTitle = boardData.title;
+        stateCopy.permissions = boardData.permissions
+        this.setState({
+            state: stateCopy
+        }, () => {
+            dbService
+                .collection('boards').doc(this.state.selectedBoard)
+                .collection('posts')
+                .add(this.state.state)
+                .then((docRef) => {
+                    this.setState({
+                        loading: false,
+                    })
+                    window.location.href = "#/boards/" + this.state.selectedBoard + '/' + docRef.id
+                }).catch(err => {
+                    this.setState({
+                        loading: false,
+                    })
+                    window.alert("게시글 업로드 도중 문제가 발생하였습니다." + err.toString())
+                });
+        })
     }
     if (
       this.state.state.title.trim() === "" ||
@@ -317,12 +386,8 @@ class AddPost extends React.Component {
     }
   };
 
-  handleSelectChange = (selected) => {
-    let backgroundColor = "#FFFFFF";
-    if (this.state.boardData.find((elem) => elem.boardId === selected.value)) {
-      backgroundColor = this.state.boardData.find(
-        (elem) => elem.boardId === selected.value
-      ).boardColor;
+    componentDidUpdate() {
+        console.log(this.state.selectedBoard)
     }
     this.setState({
       selectedBoard: selected.value,
@@ -454,79 +519,68 @@ class AddPost extends React.Component {
             })
         }
         */
-    return (
-      <Container>
-        <Navbar firebaseUserData={this.props.firebaseUserData} />
-        <Back onClick={() => window.history.back()}>
-          <img
-            src={
-              "https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f"
-            }
-            style={imageStyle}
-          />
-          Back
-        </Back>
-        <SelectContainer>
-          <Select
-            options={this.state.boardDataProcessed}
-            styles={customStyle}
-            onChange={this.handleSelectChange}
-            value={this.state.boardDataProcessed.find(
-              (data) => data.value === this.state.selectedBoard
-            )}
-          />
-        </SelectContainer>
-        <Form>
-          <Title
-            type="text"
-            key="titleInput"
-            value={this.state.state.title}
-            onChange={this.handleTitleChange}
-            onBlur={this.handleTitleBlur}
-            onFocus={this.handleTitleFocus}
-          />
-        </Form>
-        <Editor>
-          <CKEditor
-            editor={ClassicEditor}
-            data={this.content}
-            config={custom_config}
-            onChange={(event, editor) => {
-              this.content = editor.getData();
-            }}
-            onReady={(editor) => {
-              editor.editing.view.change((writer) => {
-                writer.setStyle(
-                  "height",
-                  `${height * 0.9 - 380}px`,
-                  editor.editing.view.document.getRoot()
-                );
-                writer.setStyle(
-                  "color",
-                  "#0B121C",
-                  editor.editing.view.document.getRoot()
-                );
-              });
-            }}
-            id={"myCKEditor"}
-          />
-        </Editor>
-        <CheckBoxContainer>
-          {this.props.firebaseUserData.role === "Admin" ? (
-            <Checkbox label="Pinned" setter={setPinned} init={false} />
-          ) : (
-            <div />
-          )}
-          {this.props.firebaseUserData.role === "Admin" ? (
-            <Checkbox label="Hidden" setter={setHidden} init={false} />
-          ) : (
-            <div />
-          )}
-        </CheckBoxContainer>
-        <Submit onClick={this.handleSubmit}>Post</Submit>
-      </Container>
-    );
-  };
+
+        return (
+            <>
+                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
+                <Container>
+                    <Navbar firebaseUserData={this.props.firebaseUserData} />
+                    <Back
+                        onClick={() => window.history.back()}>
+                        <img
+                            src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'}
+                            style={imageStyle} />
+                        Back
+                    </Back>
+                    <SelectContainer>
+                        <Select
+                            options={this.state.boardDataProcessed}
+                            styles={customStyle}
+                            onChange={this.handleSelectChange}
+                            value={this.state.boardDataProcessed.find(data => data.value == this.state.selectedBoard)} />
+                    </SelectContainer>
+                    <Form>
+                        <Title
+                            type='text'
+                            key="titleInput"
+                            value={this.state.state.title}
+                            onChange={this.handleTitleChange}
+                            onBlur={this.handleTitleBlur}
+                            onFocus={this.handleTitleFocus} /></Form>
+                    <Editor>
+                        <CKEditor
+                            editor={ClassicEditor}
+                            data={this.content}
+                            config={custom_config}
+                            onChange={(event, editor) => {
+                                this.content = editor.getData();
+                            }}
+                            onReady={(editor) => {
+                                editor.editing.view.change((writer) => {
+                                    writer.setStyle(
+                                        "height",
+                                        `${(height * 0.9) - 380}px`,
+                                        editor.editing.view.document.getRoot()
+                                    );
+                                    writer.setStyle(
+                                        "color",
+                                        "#0B121C",
+                                        editor.editing.view.document.getRoot()
+                                    );
+                                })
+                            }}
+                            id={"myCKEditor"}
+                        />
+                    </Editor>
+                    <CheckBoxContainer>
+                        {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.state.isPinned} /> : <div />}
+                        {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.state.isHidden} /> : <div />}
+                    </CheckBoxContainer>
+                    <Submit onClick={this.handleSubmit}>Post</Submit>
+                </Container>
+            </>
+        )
+    }
 }
 
 /*

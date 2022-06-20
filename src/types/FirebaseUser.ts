@@ -9,5 +9,6 @@ export interface FirebaseUser {
     major?: string | undefined,
     faculty?: string | undefined,
     profilePictureURL?: string | undefined,
-    gender?: string | undefined
+    gender?: string | undefined,
+    yob: string,
 }

@@ -18,6 +18,8 @@ type EditProfileState = {
     currentPassword: string,
     newPassword: string,
     confirmNewPassword: string,
+    emailChange: boolean,
+    loading: boolean,
 }
 
 const Container = styled.div`
@@ -94,6 +96,8 @@ const Email = styled.div`
     margin-top: 30px;
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
     z-index: 10;
 `
 const EmailText = styled.span`
@@ -101,39 +105,35 @@ const EmailText = styled.span`
     font-size: 17px;
     font-weight: 600;
     width: 20%;
-    z-index: 10;
+    z-index: 10;   
 `
-const EmailInput = styled.span`
-    width: 60%;
+const EmailInput = styled.input`
+    //width: 60%;
     height: 30px;
     font-weight: 600;
     color: #d9d9d9;
     z-index: 10;
-    color: white;
+    background-color: transparent;
     opacity: 0.85;
+    margin-right: 15px;
+    line-height: 30px;
 `
-const Verified = styled.div`
-    margin-top: 30px;
+const EmailButton = styled.div`
+    width: 150px;
+    height: 35px;
+    background-color: #0B121C;
+    cursor: pointer;
     display: flex;
     flex-direction: row;
-    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid white;
 `
-const IsVerifiedText = styled.span`
-    margin-left: 10%;
-    font-size: 17px;
-    font-weight: 600;
-    width: 20%;
-    z-index: 10;
-`
-const IsVerifiedAlert = styled.div`
-    display: flex;
-    flex-direction: column;
-    z-index: 10;
-`
-const IsVerified = styled.span`
-    font-weight: 600;
-    color: #d9d9d9;
-    z-index: 10;
+const EmailButonText = styled.span`
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+    color: white;
 `
 const Major = styled.div`
     margin-top: 30px;
@@ -151,23 +151,6 @@ const MajorText = styled.span`
 const MajorInput = styled.span`
     width: 60%;
     height: 30px;
-    color: #d9d9d9;
-    z-index: 10;
-`
-const Faculty = styled.div`
-    margin-top: 30px;
-    display: flex;
-    flex-direction: row;
-    z-index: 10;
-`
-const FacultyText = styled.span`
-    margin-left: 10%;
-    font-size: 17px;
-    font-weight: 600;
-    width: 20%;
-    z-index: 10;
-`
-const FacultyInput = styled.span`
     color: #d9d9d9;
     z-index: 10;
 `
@@ -189,17 +172,10 @@ const EnrolledYearInput = styled.span`
     color: #d9d9d9;
     z-index: 10;
 `
-const GetVerified = styled.span`
-    :hover {
-        text-decoration: underline;
-        color: white;
-    }
-    cursor: pointer;
-    z-index: 10;
-`
 const Password = styled.div`
     display: flex;
     flex-direction: row;
+    margin-top: 25px;
 `
 const PasswordText = styled.span`
     margin-left: 10%;
@@ -245,9 +221,33 @@ const PasswordButton = styled.button`
     border: none;
     cursor: pointer;
 `
+const LoadingBlocker = styled.div`
+    opacity: 0.5;
+    background-color: black;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+`
+const LoadingText = styled.span`
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 99999;
+`
 class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
+    
+    private inputRef: React.RefObject<HTMLInputElement>
+    
     constructor(props: any) {
         super(props);
+        this.inputRef = React.createRef();
         this.state = {
             userData: {
                 username: "username",
@@ -259,19 +259,28 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                 enrolledYear: undefined,
                 major: undefined,
                 faculty: undefined,
-                profilePictureURL: undefined
+                profilePictureURL: undefined,
+                yob: "",
+                gender: "",
             },
             profileChanged: false,
             verificiationOpen: false,
             currentPassword: '',
             newPassword: '',
-            confirmNewPassword: ''
+            confirmNewPassword: '',
+            emailChange: false,
+            loading: false,
         }
     }
 
     componentDidMount = () => {
+        let canChangeEmail = false;
+        if (this.props.firebaseUserData.role == "Offered" && authService.currentUser?.email?.split("@")[1] != "u.nus.edu") {
+            canChangeEmail = true;
+        }
         this.setState({
             userData: this.props.firebaseUserData,
+            emailChange: canChangeEmail,
         })
     }
 
@@ -281,13 +290,21 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         }
     }
 
-    getDerivedStateFromProps = (newProps: any, prevState: any) => {
+    static getDerivedStateFromProps = (newProps: any, prevState: any) => {
         if (!authService.currentUser) {
             window.location.href = window.location.origin + '/#/';
         }
-        this.setState({
-            userData: this.props.firebaseUserData,
-        })
+        let canChangeEmail = false;
+        if (newProps.firebaseUserData.role == "Offered" && authService.currentUser?.email?.split("@")[1] != "u.nus.edu") {
+            canChangeEmail = true;
+        }
+        console.log(newProps.firebaseUserData.role)
+        console.log(newProps.firebaseUserData.email.split("@")[1])
+        console.log(canChangeEmail)
+        return {
+            userData: newProps.firebaseUserData,
+            emailChange: canChangeEmail,
+        }
     }
 
     render = () => {
@@ -297,22 +314,77 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             e.preventDefault();
 
             if (window.confirm("This will remove your profile image and replace with default counterpart. Continue? \n 기존의 프로필 이미지를 삭제하고 기본 프로필 이미지로 대체합니다. 계속하시겠습니까?")) {
+                this.setState({
+                    loading: true,
+                })
                 const currentProfile = this.state.userData;
                 currentProfile.profilePictureURL = 'undefined';
 
-                dbService.collection('users').doc(this.props.userId).update({ profilePictureURL: 'undefined' })
-
-                this.setState({
-                    userData: currentProfile,
-                    profileChanged: false,
+                dbService.collection('users').doc(this.props.userId).update({ profilePictureURL: 'undefined' }).then(() => {
+                    this.setState({
+                        userData: currentProfile,
+                        profileChanged: false,
+                        loading: false,
+                    })
                 })
             }
+        }
 
+        const handleEmailChangeClick = (e: any) => {
+            if (this.state.userData.email.split("@")[1] != "u.nus.edu") {
+                window.alert("@u.nus.edu로 끝나는 NUS 이메일이 아닙니다. 다시 입력해주세요.")
+                let tempProfile = this.state.userData;
+                if (authService.currentUser?.email) {
+                    tempProfile.email = authService.currentUser?.email
+                }
+                this.setState({
+                    userData: tempProfile,
+                })
+                return;
+            }
+            this.setState({
+                loading: true,
+            })
+            authService.currentUser?.updateEmail(this.state.userData.email).catch(err => {
+                window.alert("이메일 변경을 실패했습니다.");
+                console.log(err);
+                this.setState({
+                    loading: false,
+                })
+            }).then(() => {
+                authService.currentUser?.sendEmailVerification().catch(err => {
+                    window.alert("인증 이메일을 보내지 못했습니다.")
+                    console.log(err);
+                }).then(() => {
+                    dbService.collection('users').doc(authService.currentUser?.uid).update({
+                        email: this.state.userData.email,
+                        role: 'Current'
+                    }).then(() => {
+                        window.alert("이메일 변경이 성공적으로 완료되었습니다. 입력하신 이메일로 인증 메일을 보내드렸습니다. 메일의 링크를 눌러 이메일 주소를 인증해주세요! 재학생으로 처리됩니다.");
+                        this.setState({
+                            loading: false,
+                        })
+                        authService.signOut();
+                        window.location.href = "/#/"
+                    })
+                })
+            })
+        }
 
+        const handleEmailChange = (e: any) => {
+            e.preventDefault();
+            const temp = this.state.userData
+            temp.email = e.target.value;
+            this.setState({
+                userData: temp,
+            })
         }
 
         const handleImageUpload = (e: any) => {
             e.preventDefault();
+            this.setState({
+                loading: true,
+            })
             const target = e.target;
             const profile = this.state.userData;
 
@@ -338,28 +410,26 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                         this.setState({
                             profileChanged: true,
                             userData: profile,
+                            loading: false,
                         })
                         window.alert("Profile image is successfully changed! 프로필 사진을 성공적으로 바꾸었어요!")
                     }).catch(err => {
                         window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
+                        this.setState({
+                            loading: false,
+                        })
                     })
                 }).catch(err => {
                     window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
+                    this.setState({
+                        loading: false,
+                    })
                 });
             }).catch(err => {
                 window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
-            })
-        }
-
-        const handleOpenVerify = (e: any) => {
-            this.setState({
-                verificiationOpen: true,
-            })
-        }
-
-        const closeModal = (e: any) => {
-            this.setState({
-                verificiationOpen: false,
+                this.setState({
+                    loading: false,
+                })
             })
         }
 
@@ -394,71 +464,83 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                 return;
             }
 
+            this.setState({
+                loading: true,
+            })
+
             const credential = firebase.auth.EmailAuthProvider.credential(user?.email, this.state.currentPassword)
             user?.reauthenticateWithCredential(credential).then((newCredential) => {
                 const newPassword = this.state.newPassword;
 
                 user?.updatePassword(newPassword).then(() => {
                     window.alert("Password was updated successfully")
+                    this.setState({
+                        loading: false,
+                    })
                     return;
                 }).catch(error => {
                     window.alert("An error occurred. Please try again")
+                    this.setState({
+                        loading: false,
+                    })
                     return;
                 })
 
             }).catch(error => {
                 window.alert("An unknown error occurred during confirming current password.")
+                this.setState({
+                    loading: false,
+                })
                 return;
             })
 
         }
 
         return (
-            <Container>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {this.state.verificiationOpen ? <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={false} onClose={closeModal} /> : <></>}
-                <ProfileContainer>
-                    <ImgAndName>
-                        <Profile src={this.state.profileChanged ? URL.createObjectURL(this.state.userData.profilePictureURL) : this.props.firebaseUserData.profilePictureURL === 'undefined' || this.props.firebaseUserData.profilePictureURL === "" || this.props.firebaseUserData.profilePictureURL === undefined ? defaultProfile : this.props.firebaseUserData.profilePictureURL}></Profile>
-                        <RemoveProfile onClick={handleRemoveProfile}>Remove Profile Image</RemoveProfile>
-                        <ChangeProfile htmlFor="profile-upload"><Change id={'profile-upload'} onChange={handleImageUpload} type='file' accept="image/png, image/gif, image/jpeg" />Change Profile Image</ChangeProfile>
-                        <Name>{this.props.firebaseUserData.username}</Name>
-                    </ImgAndName>
-                    <Email>
-                        <EmailText>이메일 / Email</EmailText>
-                        <EmailInput>{this.props.firebaseUserData.email}</EmailInput>
-                    </Email>
-                    <Verified>
-                        <IsVerifiedText>Account Verification<br /> 계정 인증</IsVerifiedText>
-                        <IsVerifiedAlert>
-                            <IsVerified>{this.props.firebaseUserData.isVerified ? 'This account is verified. Enjoy full functionality of the website!' : 'This account is not verified. Verify now to enjoy full functionality of this website.'}</IsVerified>
-                            <IsVerified>{this.props.firebaseUserData.isVerified ? '이 계정은 인증되었습니다. 웹사이트의 모든 기능들을 사용하실 수 있습니다!' : '이 계정은 인증되지 않았습니다. 지금 인증하여 모든 기능들을 사용해보세요!'}</IsVerified>
-                            {this.props.firebaseUserData.isVerified ? <></> : <GetVerified onClick={handleOpenVerify}>Get Verified! / 계정 인증하기!</GetVerified>}
-                        </IsVerifiedAlert>
-                    </Verified>
-                    <Major>
-                        <MajorText>Major / 전공</MajorText>
-                        <MajorInput>{this.props.firebaseUserData.major === undefined ? 'N/A. Verify account to register major.' : this.props.firebaseUserData.major}</MajorInput>
-                    </Major>
-                    <Faculty>
-                        <FacultyText>Faculty / 학부</FacultyText>
-                        <FacultyInput>{this.props.firebaseUserData.faculty === undefined ? 'N/A. Verify account to register faculty' : this.props.firebaseUserData.faculty}</FacultyInput>
-                    </Faculty>
-                    <EnrolledYear>
-                        <EnrolledYearText>Enrolled Year / 입학년도</EnrolledYearText>
-                        <EnrolledYearInput>{this.props.firebaseUserData.enrolledYear === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.firebaseUserData.enrolledYear}</EnrolledYearInput>
-                    </EnrolledYear>
-                    <Password>
-                        <PasswordText>Change Password</PasswordText>
-                        <PasswordInputs>
-                            <OrigPassword placeholder={'Current Password / 현재 비밀번호'} type={'password'} onBlur={handleCurrentPasswordChange} />
-                            <NewPassword placeholder={'New Password  / 새 비밀번호'} type={'password'} onBlur={handleNewPasswordChange} />
-                            <ConfirmPassword placeholder={'Confirm New Password / 새 비밀번호 확인'} type={'password'} onBlur={handleConfirmNewPasswordChange} />
-                            <PasswordButton onClick={handlePasswordChange}>Update Password</PasswordButton>
-                        </PasswordInputs>
-                    </Password>
-                </ProfileContainer>
-            </Container>
+            <>
+                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
+                <Container>
+                    <Navbar firebaseUserData={this.props.firebaseUserData} />
+                    <ProfileContainer>
+                        <ImgAndName>
+                            <Profile src={this.state.profileChanged ? this.props.firebaseUserData.profilePictureURL : this.props.firebaseUserData.profilePictureURL === 'undefined' || this.props.firebaseUserData.profilePictureURL === "" || this.props.firebaseUserData.profilePictureURL === undefined ? defaultProfile : this.props.firebaseUserData.profilePictureURL}></Profile>
+                            <RemoveProfile onClick={handleRemoveProfile}>Remove Profile Image</RemoveProfile>
+                            <ChangeProfile htmlFor="profile-upload"><Change id={'profile-upload'} onChange={handleImageUpload} type='file' accept="image/png, image/gif, image/jpeg" />Change Profile Image</ChangeProfile>
+                            <Name>{this.props.firebaseUserData.username}</Name>
+                        </ImgAndName>
+                        <Email>
+                            <EmailText>이메일 / Email</EmailText>
+                            <EmailInput value={this.props.firebaseUserData.email} onChange={handleEmailChange} disabled={!this.state.emailChange} ref={this.inputRef} />
+                            {this.state.emailChange ? <EmailButton onClick={handleEmailChangeClick}><EmailButonText>NUS Email로 변경하기</EmailButonText></EmailButton> : <></>}
+                        </Email>
+                        <Major>
+                            <MajorText>Major / 전공</MajorText>
+                            <MajorInput>{this.props.firebaseUserData.major === undefined ? 'N/A. Verify account to register major.' : this.props.firebaseUserData.major}</MajorInput>
+                        </Major>
+                        <EnrolledYear>
+                            <EnrolledYearText>Enrolled Year / 입학년도</EnrolledYearText>
+                            <EnrolledYearInput>{this.props.firebaseUserData.enrolledYear === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.firebaseUserData.enrolledYear}</EnrolledYearInput>
+                        </EnrolledYear>
+                        <EnrolledYear>
+                            <EnrolledYearText>Year of Birth / 출생년도</EnrolledYearText>
+                            <EnrolledYearInput>{this.props.firebaseUserData.yob === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.firebaseUserData.yob}</EnrolledYearInput>
+                        </EnrolledYear>
+                        <EnrolledYear>
+                            <EnrolledYearText>Gender / 성별</EnrolledYearText>
+                            <EnrolledYearInput>{this.props.firebaseUserData.gender === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.firebaseUserData.gender}</EnrolledYearInput>
+                        </EnrolledYear>
+                        <Password>
+                            <PasswordText>Change Password</PasswordText>
+                            <PasswordInputs>
+                                <OrigPassword placeholder={'Current Password / 현재 비밀번호'} type={'password'} onBlur={handleCurrentPasswordChange} />
+                                <NewPassword placeholder={'New Password  / 새 비밀번호'} type={'password'} onBlur={handleNewPasswordChange} />
+                                <ConfirmPassword placeholder={'Confirm New Password / 새 비밀번호 확인'} type={'password'} onBlur={handleConfirmNewPasswordChange} />
+                                <PasswordButton onClick={handlePasswordChange}>Update Password</PasswordButton>
+                            </PasswordInputs>
+                        </Password>
+                    </ProfileContainer>
+                </Container>
+            </>
         )
     }
 }

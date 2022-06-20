@@ -188,6 +188,7 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
                 isVerified: false,
                 role: "User", // User, Undergraduate, Graduate, Admin
                 profilePictureURL: "", 
+                yob: "",
             },
         }
     }

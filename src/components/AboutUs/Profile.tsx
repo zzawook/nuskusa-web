@@ -83,8 +83,8 @@ class Profile extends React.Component<AboutUsProps, AboutUsState> {
     render = () => {
         const Container = styled.div`
             position: absolute;
-            ${this.state.isTop ?  'top : ' + this.state.top.toString() : 'bottom: ' + this.state.bottom.toString()}px;
-            ${this.state.isLeft ? 'left: ' + this.state.left.toString() : 'right: ' + this.state.right.toString()}px;
+            ${this.state.isTop ?  'top : ' + this.state.top.toString() + 'px' : 'bottom: ' + this.state.bottom.toString() + 'px'};
+            ${this.state.isLeft ? 'left: ' + this.state.left.toString() + 'px': 'right: ' + this.state.right.toString() + 'px'};
             background-color: white;
             border: none;
             width: ${0.15 * width}px;

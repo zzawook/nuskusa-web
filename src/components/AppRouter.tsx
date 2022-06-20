@@ -54,6 +54,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
         major: "",
         faculty: "",
         profilePictureURL: "",
+        yob: "",
       },
       toggle: false,
       userId: "",
@@ -105,7 +106,9 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   enrolledYear: data.enrolledYear,
                   major: data.major,
                   faculty: data.faculty,
-                  profilePictureURL: data.profilePictureURL
+                  profilePictureURL: data.profilePictureURL,
+                  yob: data.yob,
+                  gender: data.gender,
                 },
                 userId: user.uid,
               })

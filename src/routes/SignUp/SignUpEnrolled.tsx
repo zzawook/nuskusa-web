@@ -274,7 +274,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                     userObject.isVerified = true;
                     userObject.role = 'Current'
                     dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
-                        window.alert("프로필 생성이 완료되었습니다. NUS 계정으로 가입해 이메일 인증 단계를 건너뛰었습니다.")
+                        window.alert("프로필 생성이 완료되었습니다. 입력하신 NUS 이메일로 보내드린 메일의 링크를 클릭하셔서 이메일 인증을 완료해주세요!")
                         this.setState({
                             loading: false,
                         })
@@ -393,7 +393,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                                     value={this.state.major}
                                     onChange={this.handleChange}
                                 />
-                                <InputGuide>ex) Computer Science Course with Minor in Entrepreneurship</InputGuide>
+                                <InputGuide>재학증명서에 기재된대로 적어주세요! ex) Computer Science Course with Minor in Entrepreneurship</InputGuide>
                             </InputInner>
                         </InputContainer>
                         <InputContainer>

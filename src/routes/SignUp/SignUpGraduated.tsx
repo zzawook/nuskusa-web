@@ -434,7 +434,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                                     value={this.state.major}
                                     onChange={this.handleChange}
                                 />
-                                <InputGuide>ex) Computer Science Course with Minor in Entrepreneurship</InputGuide>
+                                <InputGuide>졸업증명서에 적힌대로 적어주세요! ex) Computer Science Course with Minor in Entrepreneurship</InputGuide>
                             </InputInner>
                         </InputContainer>
                         <InputContainer>
