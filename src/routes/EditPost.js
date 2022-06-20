@@ -48,7 +48,8 @@ class Uploader {
                                     urls: {
                                         'default': downloadURL
                                     }
-                                });
+                                })}
+                            );
                         }
                     );
                 })
