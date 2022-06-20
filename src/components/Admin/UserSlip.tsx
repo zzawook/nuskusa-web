@@ -92,6 +92,8 @@ type AdminVerificationProps = {
     gender: string,
     major: string,
     KTId: string,
+    setLoading: Function,
+    unsetLoading: Function,
 }
 
 type AdminVerificationState = {
@@ -121,10 +123,12 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         if (! window.confirm(this.props.userName + "님을 승인하시겠습니까?")) {
             return;
         }
+        this.props.setLoading()
         dbService.collection('toVerify').doc(this.props.userId).delete().then(() => {
             dbService.collection('users').doc(this.props.userId).update({
                 isVerified: true,
             }).then(async () => {
+                this.props.unsetLoading();
                 window.alert("정상적으로 승인되었습니다.")
                 /*const transporter = nodemailer.createTransport({
                     host: "u.nus.edu",
@@ -152,7 +156,9 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         if (!window.confirm(this.props.userName + "님의 인증요청을 거부하시겠습니까?")) {
             return;
         }
+        this.props.setLoading();
         dbService.collection('toVerify').doc(this.props.userId).delete().then(async () => {
+            this.props.unsetLoading();
             window.alert("정상적으로 반려되었습니다. 해당 유저에게 고지하는 것 잊지 말아주세요! 이메일 주소: " + this.props.email)
             /*const transporter = nodemailer.createTransport({
                 host: "u.nus.edu",
@@ -175,7 +181,6 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
     }
 
     render = () => {
-        
         return (
             <Wrapper>
                 <TopBlock>
