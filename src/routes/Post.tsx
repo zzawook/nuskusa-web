@@ -190,10 +190,10 @@ class Post extends React.Component<PostProps, PostState> {
                 verificationFile: undefined,
                 isVerified: false,
                 role: 'User',
-                enrolledYear: undefined,
-                major: undefined,
-                faculty: undefined,
-                profilePictureURL: undefined,
+                enrolledYear: "2022/2023",
+                major: "Major",
+                faculty: "Faculty",
+                profilePictureURL: "profilePicutreUrl",
                 yob: "",
             },
             boardData: [],
@@ -206,7 +206,6 @@ class Post extends React.Component<PostProps, PostState> {
     }
 
     componentDidUpdate(prevProps: PostProps) {
-        console.log(this.state.commentArray)
         if (prevProps.location.pathname !== this.props.location.pathname) {
             this.fetchPost()
         }
@@ -304,7 +303,6 @@ class Post extends React.Component<PostProps, PostState> {
         this.setState({
             firestorePost: data
         })
-        // this.forceUpdate()
     }
 
     fetchPost = async () => {
@@ -319,8 +317,9 @@ class Post extends React.Component<PostProps, PostState> {
                         return;
                     }
                     else {
-                        await dbService.collection('users').doc(data.authorId).get().then(snapshot => {
-                            const authorData = snapshot.data() as FirebaseUser;
+                        dbService.collection('users').doc(data.authorId).get().then(doc => {
+                            const authorData = doc.data() as FirebaseUser;
+                            console.log(authorData)
                             this.setState({
                                 firestorePost: {
                                     ...data,
@@ -328,6 +327,8 @@ class Post extends React.Component<PostProps, PostState> {
                                 errorMsg: "Access denied; you do not have permission.",
                                 accessGranted: data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User') ? true : false,
                                 authorProfile: authorData,
+                            }, () => {
+                                this.forceUpdate()
                             })
                         })
                         
@@ -408,7 +409,7 @@ class Post extends React.Component<PostProps, PostState> {
                 <Container>
                     <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
                     <Header>
-                        <ProfileImg firebaseUserData={this.props.firebaseUserData} dimension={32} isOnNavbar={true} />
+                        <ProfileImg firebaseUserData={this.state.authorProfile} dimension={32} isOnNavbar={true} />
                         <TitleAndDate>
                             <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
                             <Title>{this.state.firestorePost.title}</Title>                            

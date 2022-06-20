@@ -42,7 +42,6 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                 const data = doc.data();
                 dbService.collection('users').doc(data.userId).get().then(userDoc => {
                     const userData = userDoc.data();
-                    console.log(userData)
                     if (userData) {
                         userData.userType = data.userType;
                         userArray.push(userData)
