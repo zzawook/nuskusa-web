@@ -307,7 +307,6 @@ class SignUp extends React.Component<UserProps, UserState> {
                     });
                 })
                 .catch((error) => {
-                    console.error(error);
                     this.setState({
                         loading: false,
                     })
@@ -321,7 +320,6 @@ class SignUp extends React.Component<UserProps, UserState> {
     handleFileSelect = (event: any) => {
         event.preventDefault();
         const file = event.target.files[0]
-        console.log(file)
         if (file) {
             if (file.size > 1048576 * 5) {
                 window.alert("파일 크기는 5MB 이하여야 합니다. 파일 업로드를 취소합니다.")

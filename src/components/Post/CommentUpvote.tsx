@@ -61,9 +61,6 @@ class CommentUpvote extends React.Component<UpvoteProps, UpvoteState> {
                 .then(() => {
 
                 })
-                .catch(error => {
-                    console.error(error)
-                })
         } else if (hasUpvoted === true) {
             // If the user did upvote already, remove upvote
             dbService.collection('boards')
@@ -74,9 +71,6 @@ class CommentUpvote extends React.Component<UpvoteProps, UpvoteState> {
                 .doc(this.props.commentId)
                 .update({
                     upvoteArray: firebase.firestore.FieldValue.arrayRemove(dbService.collection('users').doc(authService.currentUser?.uid))
-                })
-                .catch(error => {
-                    console.error(error)
                 })
         }
     }

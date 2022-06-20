@@ -206,7 +206,6 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             const replyArray: FirestoreComment[] = [];
             const replyIdArray: any[] = [];
             for (let i = 0; i < this.props.data.replies.length; i = i + 1) {
-                console.log(this.props.data.replies[i])
                 this.props.data.replies[i].onSnapshot((querySnapshot: any) => {
                     if (querySnapshot.exists) {
                         let data = querySnapshot.data() as FirestoreComment;

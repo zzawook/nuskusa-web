@@ -24,11 +24,6 @@ class Uploader {
                         firebase.storage.TaskEvent.STATE_CHANGED,
                         function (snapshot) {
                             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            console.log("Upload is " + progress + "% done");
-                            switch (snapshot.state) {
-                                case firebase.storage.TaskState.PAUSED:
-                                    console.log("Upload is paused");
-                            }
                         },
                         function (error) {
                             switch (error.code) {
@@ -43,18 +38,16 @@ class Uploader {
                                     break;
                             }
                         },
-                        function () {
-                            console.log("Upload successful")
+
+                        function() {
                             // Upload completed successfully, now we can get the download URL
                             uploadTask.snapshot.ref
                                 .getDownloadURL()
-                                .then(function (downloadURL) {
-                                    console.log("File available at", downloadURL);
-                                    resolve({
-                                        urls: {
-                                            'default': downloadURL
-                                        }
-                                    });
+                                .then(function(downloadURL) {
+                                resolve({
+                                    urls: {
+                                        'default': downloadURL
+                                    }
                                 });
                         }
                     );
@@ -243,7 +236,6 @@ class EditPost extends React.Component {
             .onSnapshot((querySnapshot) => {
                 if (querySnapshot.exists) {
                     let data = querySnapshot.data();
-                    console.log(data);
                     if (data == undefined) {
                         return;
                     }
@@ -279,7 +271,6 @@ class EditPost extends React.Component {
                         }
                     }
                 }
-                console.log('post fetching successful')
             })
     }
 

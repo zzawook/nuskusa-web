@@ -278,9 +278,6 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         if (this.props.firebaseUserData.role == "Offered" && authService.currentUser?.email?.split("@")[1] != "u.nus.edu") {
             canChangeEmail = true;
         }
-        console.log(this.props.firebaseUserData.role)
-        console.log(authService.currentUser?.email?.split("@")[1])
-        //console.log(canChangeEmail)
         this.setState({
             userData: this.props.firebaseUserData,
             emailChange: canChangeEmail,
@@ -417,21 +414,18 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                         })
                         window.alert("Profile image is successfully changed! 프로필 사진을 성공적으로 바꾸었어요!")
                     }).catch(err => {
-                        console.log(err)
                         window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
                         this.setState({
                             loading: false,
                         })
                     })
                 }).catch(err => {
-                    console.log(err);
                     window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
                     this.setState({
                         loading: false,
                     })
                 });
             }).catch(err => {
-                console.log(err);
                 window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
                 this.setState({
                     loading: false,
@@ -486,7 +480,6 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                     return;
                 }).catch(error => {
                     window.alert("An error occurred. Please try again")
-                    console.log(error)
                     this.setState({
                         loading: false,
                     })
@@ -494,7 +487,6 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                 })
 
             }).catch(error => {
-                console.log(error)
                 window.alert("An unknown error occurred during confirming current password.")
                 this.setState({
                     loading: false,

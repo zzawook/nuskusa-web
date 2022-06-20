@@ -171,10 +171,8 @@ class SignIn extends React.Component<UserProps, UserObject> {
             .then(async () => {
                 return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
                     .then(() => {
-                        console.log(authService.currentUser?.uid)
                         dbService.collection('users').doc(authService.currentUser?.uid).get().then((doc) => {
                             if (! doc.exists) {
-                                console.log("Document does not exist")
                                 this.setState({
                                     failed: true,
                                     loading: false,
@@ -182,7 +180,6 @@ class SignIn extends React.Component<UserProps, UserObject> {
                                 return
                             }
                             const data = doc.data()
-                            console.log(data)
                             if (!authService.currentUser?.emailVerified) {
                                 window.alert("이메일이 인증되지 않았습니다. 보내드린 인증 메일의 링크를 눌러 본인 인증을 완료해주세요.")
                                 this.setState({
@@ -206,7 +203,6 @@ class SignIn extends React.Component<UserProps, UserObject> {
                         })
                     })
                     .catch((error) => {
-                        console.error(error);
                         this.setState({
                             failed: true,
                             loading: false,
@@ -214,7 +210,6 @@ class SignIn extends React.Component<UserProps, UserObject> {
                     });
             })
             .catch((error) => {
-                console.error(error);
                 this.setState({
                     failed: true,
                     loading: false,

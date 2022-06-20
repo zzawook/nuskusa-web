@@ -66,7 +66,7 @@ class Home extends React.Component<HomeProps, HomeState> {
             background: linear-gradient(to bottom, #0B121C 55%, #18202B 35%);
             order: 1;
             padding-left: 15vw;
-            padding-top: 5vh
+            padding-top: 5vh;
         `
 
         const AnnouncementDisplay = styled.div`
@@ -75,7 +75,7 @@ class Home extends React.Component<HomeProps, HomeState> {
             left: 15vw;
             width: 39vw;
             height: 30vw;
-            background: #f2f2f2
+            background: #f2f2f2;
         `
 
         /* const MainBannerContainer = styled.div`
@@ -119,7 +119,7 @@ class Home extends React.Component<HomeProps, HomeState> {
             justify-content: center;
         `
         const carouselDivStyle: CSS.Properties = {
-            height: '70vh',
+            height: '30vw',
             zIndex: -1,
         }
 
@@ -152,6 +152,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                         <p style={{ margin: '25px', color: '#000000', fontSize: '26px', fontWeight: 'bold'}}>공지사항</p>
                         <AnnouncementList postArray={[]} postListArray={[]}></AnnouncementList>
                     </AnnouncementDisplay>
+                    
                     {/* <MainBanner>
                         <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>
                             Welcome to

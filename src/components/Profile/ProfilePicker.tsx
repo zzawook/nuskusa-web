@@ -69,9 +69,6 @@ class ProfilePicker extends React.Component<PickerProps, PickerState> {
             })
           })
         },
-        (error) => {
-          console.error(error);
-        },
       )
     }
     this.setState({ preview: null })

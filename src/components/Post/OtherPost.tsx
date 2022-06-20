@@ -95,7 +95,6 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
 
     componentDidMount() {
         let bc = ""
-        console.log(this.props.boardData)
         if (! this.props.boardData.find(elem => elem.boardId == this.props.data.parentBoardId) == undefined) {
             bc = this.props.boardData.find(elem => elem.boardId == this.props.data.parentBoardId).boardColor
         }

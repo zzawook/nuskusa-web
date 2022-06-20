@@ -55,9 +55,6 @@ class Profile extends React.Component<UserProps, UserState> {
                 .put(this.props.firebaseUserData.verificationFile);
             uploadTask.on('state_changed',
                 (snapshot) => { },
-                (error) => {
-                    console.error(error);
-                },
                 () => {
                     if (this.props.firebaseUserData.verificationFile) {
                         storageService.ref('verifications')

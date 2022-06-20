@@ -206,7 +206,6 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             authService.signOut().then(() => {
                 window.location.reload();
             }).catch(error => {
-                console.log(error);
                 window.location.reload();
             });
         }
