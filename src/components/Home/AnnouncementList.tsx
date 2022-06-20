@@ -71,13 +71,15 @@ class AnnouncementList extends React.Component<PostState> {
                 querySnapshot.forEach((doc) => {
                     const data = doc.data() as FirestorePost;
                     rawData.push(data);
-                    const component = (
-                        <AnnouncementLink style={data.isPinned ? {backgroundColor: "#d9d9d9"} : {}} onClick={() => window.location.href="/#/boards/announcement/" + doc.id}>
-                            <TitleWrapper style={data.isPinned ? {fontWeight: "bold"} : {}}>{data.title}</TitleWrapper>
-                            <DateWrapper>{this.formatDate(data.lastModified.toDate())}</DateWrapper>
-                        </AnnouncementLink>
-                    )
-                    data.isPinned ? list.unshift(component) : list.push(component)
+                    if(!data.isHidden) {
+                        const component = (
+                            <AnnouncementLink style={data.isPinned ? {backgroundColor: "#d9d9d9"} : {}} onClick={() => window.location.href="/#/boards/announcement/" + doc.id}>
+                                <TitleWrapper style={data.isPinned ? {fontWeight: "bold"} : {}}>{data.title}</TitleWrapper>
+                                <DateWrapper>{this.formatDate(data.lastModified.toDate())}</DateWrapper>
+                            </AnnouncementLink>
+                        )
+                        data.isPinned ? list.unshift(component) : list.push(component)
+                    }
                 })
                 this.setState({
                     postArray: rawData,

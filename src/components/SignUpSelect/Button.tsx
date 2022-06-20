@@ -40,15 +40,18 @@ class Button extends React.Component<ButtonProps, ButtonState> {
 
         const Title = styled.span`
             color: ${this.state.onHover ? 'white' : 'black'};
-            font-size: 16px;
+            font-size: 19px;
             font-weight: 700;
             margin-bottom: 30px;
         `
 
         const Description = styled.span`
             color: ${this.state.onHover ? 'white' : 'black'};
+            font-size: 14px;
+            font-weight: bold;
             margin-top: auto;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            word-break: keep-all;
         `
 
         return (
