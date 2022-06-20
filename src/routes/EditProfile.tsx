@@ -363,7 +363,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                         email: this.state.userData.email,
                         role: 'Current'
                     }).then(() => {
-                        window.alert("이메일 변경이 성공적으로 완료되었습니다. 입력하신 이메일로 인증 메일을 보내드렸습니다. 메일의 링크를 눌러 이메일 주소를 인증해주세요!재학생으로 처리됩니다.");
+                        window.alert("이메일 변경이 성공적으로 완료되었습니다. 입력하신 이메일로 인증 메일을 보내드렸습니다. 메일의 링크를 눌러 이메일 주소를 인증해주세요! 재학생으로 처리됩니다.");
                         this.setState({
                             loading: false,
                         })

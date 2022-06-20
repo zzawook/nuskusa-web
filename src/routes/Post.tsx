@@ -77,8 +77,8 @@ const Header = styled.div`
     width: 70%;
     display: flex;
     flex-direction: row;
-    alignItems: center;
-    justifyContent: center;
+    //align-items: center;
+    //justify-content: center;
 `
 const ProfileImg = styled(Avatar)`
     width: 20px;
@@ -320,8 +320,6 @@ class Post extends React.Component<PostProps, PostState> {
                     else {
                         await dbService.collection('users').doc(data.authorId).get().then(snapshot => {
                             const authorData = snapshot.data() as FirebaseUser;
-                            console.log(this.props.firebaseUserData.role)
-                            console.log(data.permissions)
                             this.setState({
                                 firestorePost: {
                                     ...data,
@@ -409,7 +407,7 @@ class Post extends React.Component<PostProps, PostState> {
                 <Container>
                     <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
                     <Header>
-                        <ProfileImg firebaseUserData={this.state.authorProfile} dimension={32} isOnNavbar={true} />
+                        <ProfileImg firebaseUserData={this.props.firebaseUserData} dimension={32} isOnNavbar={true} />
                         <TitleAndDate>
                             <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
                             <Title>{this.state.firestorePost.title}</Title>                            
