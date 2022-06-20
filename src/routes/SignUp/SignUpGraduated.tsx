@@ -290,7 +290,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                                             authService.signInWithEmailAndPassword(this.state.email, this.state.password).then(() => {
                                                 authService.currentUser?.sendEmailVerification().then(() => {
                                                     authService.signOut();
-                                                    window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.")
+                                                    window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.\n\n 이메일이 오지 않는다면 스팸함을 확인해주세요!")
                                                     this.setState({
                                                         loading: false,
                                                     })
