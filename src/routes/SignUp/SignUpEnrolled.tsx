@@ -274,11 +274,14 @@ class SignUp extends React.Component<UserProps, UserState> {
                     userObject.isVerified = true;
                     userObject.role = 'Current'
                     dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
-                        window.alert("프로필 생성이 완료되었습니다. 입력하신 NUS 이메일로 보내드린 메일의 링크를 클릭하셔서 이메일 인증을 완료해주세요!")
-                        this.setState({
-                            loading: false,
+                        authService.currentUser?.sendEmailVerification().then(() => {
+                            window.alert("프로필 생성이 완료되었습니다. 입력하신 NUS 이메일로 보내드린 메일의 링크를 클릭하셔서 이메일 인증을 완료해주세요!")
+                            authService.signOut()
+                            this.setState({
+                                loading: false,
+                            })
+                            this.props.history.push("/")
                         })
-                        this.props.history.push("/")
                     });
                 })
                 .catch((error) => {

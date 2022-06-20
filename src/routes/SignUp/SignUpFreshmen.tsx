@@ -282,11 +282,10 @@ class SignUp extends React.Component<UserProps, UserState> {
                                             const toReviewObject = {
                                                 userType: 'Offered',
                                                 userId: userCredential.user?.uid,
-                                                docURL: url,
                                             }
                                             const toReview = dbService.collection('toVerify').doc(userCredential.user?.uid).set(toReviewObject);
                                             toReview.then(() => {
-                                                window.alert("프로필 생성이 완료되었습니다. NUS 계정으로 가입해 이메일 인증 단계를 건너뛰었습니다.")
+                                                window.alert("프로필 생성이 완료되었습니다. \nNUS 이메일을 사용하여 재학생으로 처리되었습니다. \n보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.")
                                                 this.setState({
                                                     loading: false,
                                                 })
