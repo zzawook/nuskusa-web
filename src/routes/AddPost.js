@@ -339,8 +339,6 @@ class AddPost extends React.Component {
     }
 
     componentDidUpdate() {
-        console.log(this.props.boardId)
-        console.log(this.state.boardDataProcessed)
         console.log(this.state.selectedBoard)
     }
 
@@ -519,8 +517,8 @@ class AddPost extends React.Component {
                         />
                     </Editor>
                     <CheckBoxContainer>
-                        {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={false} /> : <div />}
-                        {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={false} /> : <div />}
+                        {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.state.isPinned} /> : <div />}
+                        {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.state.isHidden} /> : <div />}
                     </CheckBoxContainer>
                     <Submit onClick={this.handleSubmit}>Post</Submit>
                 </Container>

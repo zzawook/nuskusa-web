@@ -83,7 +83,6 @@ const DeclineButton = styled.div`
 `
 type AdminVerificationProps = {
     acceptanceLetterURL: string,
-    enrolledLetterURL: string,
     graduationLetterURL: string,
     email: string,
     role: string,
@@ -111,7 +110,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
 
     userTypeMap: {[name: string]: string} = {
         'Offered': '신입생',
-        'Grduated': '졸업생'
+        'Graduated': '졸업생'
     }
 
     componentDidMount() {
@@ -190,8 +189,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                         <InfoSlip>- 학과: {this.props.major}</InfoSlip>
                         <InfoSlip>- 카카오톡 ID: {this.props.KTId}</InfoSlip>
                         {this.props.acceptanceLetterURL ? <DocLink href={this.props.acceptanceLetterURL} target="blank" rel="noreferrer noopener">입학증명서 링크</DocLink>: <></>}
-                        {this.props.enrolledLetterURL ? <DocLink href={this.props.enrolledLetterURL} target="blank" rel="noreferrer noopener">재학증명서 링크</DocLink> : <></>}
-                        {this.props.graduationLetterURL ? <DocLink href={this.props.graduationLetterURL} target="blank" rel="noreferrer noopener">재학증명서 링크</DocLink> : <></>}
+                        {this.props.graduationLetterURL ? <DocLink href={this.props.graduationLetterURL} target="blank" rel="noreferrer noopener">졸업증명서 링크</DocLink> : <></>}
                     </Profile>
                     <ButtonDiv>
                         <Buttons>
