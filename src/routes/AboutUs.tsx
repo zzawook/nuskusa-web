@@ -35,7 +35,7 @@ const Member = styled.div`
     position: relative;
     width: 70%;
     left: 15%;
-    height: 3500px;
+    height: 2900px;
     z-index: 10;
 `
 const GroupPhotoContainer = styled.div`
@@ -53,7 +53,7 @@ const GroupPhoto = styled.img`
 const HR = styled.div`
     position: absolute;
     left: 15%;
-    height: 3350px;
+    height: 2750px;
     width: 1px;
     border-left: 1px solid #BDA06D;
     z-index: 11;
@@ -115,22 +115,8 @@ const Snap = styled.span`
     font-size: 40px;
     font-weight: 800;
 `
-const Exec = styled.span`
-    position: absolute;
-    top: 145px;
-    left: 30px;
-    font-weight: 800;
-    font-size: 22px;
-`
 const ExecImg = styled.img`
     width: 30%; 
-`
-const StudentAffairs = styled.div`
-    position: absolute;
-    top: 750px;
-    left: 30px;
-    font-weight: 800;
-    font-size: 22px;
 `
 const SAHead = styled.div`
     position: absolute;
@@ -139,19 +125,6 @@ const SAHead = styled.div`
     width: 20px;
     height: 20px;
     background-color: #BDA06D;
-`
-const SAImg = styled.img`
-    position: absolute;
-    top: 815px;
-    left: 20%;
-    width: 25%;
-`
-const Finance = styled.div`
-    position: absolute;
-    top: 1390px;
-    left: 30px;
-    font-weight: 800;
-    font-size: 22px;
 `
 const FinanceHead = styled.div`
     position: absolute;
@@ -166,17 +139,10 @@ const FinanceImg = styled.img`
 `
 const FinanceImages = styled.div`
     position: absolute;
-    top: 1450px;
+    top: 850px;
     left: 20%;
     display: flex;
     flex-direction: row;
-`
-const IT = styled.div`
-    position: absolute;
-    top: 1990px;
-    left: 30px;
-    font-weight: 800;
-    font-size: 22px;
 `
 const ITHead = styled.div`
     position: absolute;
@@ -191,35 +157,20 @@ const ITImg = styled.img`
 `
 const ITImages = styled.div`
     position: absolute;
-    top: 2050px;
+    top: 1450px;
     left: 15%;
     display: flex;
     flex-direction: row;
-`
-const PublicRelation = styled.div`
-    position: absolute;
-    top: 2640px;
-    left: 30px;
-    font-weight: 800;
-    font-size: 22px;
 `
 const PRImg = styled.img`
     width: 30%;
 `
 const PRImages = styled.div`
     position: absolute;
-    top: 2700px;
+    top: 2100px;
     left: 15%;
     display: flex;
     flex-direction: row;
-`
-const PRHead = styled.div`
-    position: absolute;
-    left: -10px;
-    top: 2647px;
-    width: 20px;
-    height: 20px;
-    background-color: #BDA06D;
 `
 class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
     constructor(props: any) {
@@ -232,7 +183,7 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
 
         return (
             <Container>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />   
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
                 <Intro>
                     <WhoAreWe>Who are we?</WhoAreWe>
                     <Title>한인회 소개</Title>
@@ -248,47 +199,38 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                         <Introducing>Introducing</Introducing>
                         <Snap>한인회 멤버</Snap>
                         <ExecHead />
-                        <Exec>임원진</Exec>
                         <ExecImages>
-                            <ExecImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_4626.jpg?alt=media&token=afbfc168-154e-4dd4-b934-dd1434f7e9e2'}></ExecImg>
+                            <ExecImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%EA%B0%95%EC%A4%80%ED%98%81.jpg?alt=media&token=3f8d3883-6f7a-4dcc-bbb8-8501c8e31613'}></ExecImg>
                             <ImageBreak />
-                            <ExecImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_0521.JPG?alt=media&token=2f4adaec-080d-4c4d-85ba-3becc4a99d82'}></ExecImg>
+                            <ExecImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%EC%9C%A0%EB%8B%A4%ED%98%84.jpg?alt=media&token=cc922885-9b9a-448e-9c5b-397c98a2fdff'}></ExecImg>
                         </ExecImages>
-                        <Profile top={390} bottom={-1} right={-1} left={50} name={'강준혁'} role={'학부생회장'}/>
-                        <Profile top={190} bottom={-1} right={0} left={-1} name={'유다현'} role={'학부생부회장'}/>
+                        <Profile top={390} bottom={-1} right={-1} left={50} name={'강준혁'} role={'학부생회장'} />
+                        <Profile top={190} bottom={-1} right={0} left={-1} name={'유다현'} role={'학부생부회장'} />
                         <SAHead />
-                        <StudentAffairs>Student Affairs</StudentAffairs>
-                        <SAImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_0394.JPG?alt=media&token=695817b2-4d35-4c1f-ba4d-00872b31c2da'}></SAImg>
-                        <Profile top={850} bottom={-1} right={-1} left={50} name={'이소연'} role={'Student Affairs'}/>
                         <FinanceHead />
-                        <Finance>Finance</Finance>
                         <FinanceImages>
                             <FinanceImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_9916.JPG?alt=media&token=e4d3f7f7-c3a8-41a5-a182-b49fb93aa5c1'} />
                             <ImageBreak />
                             <FinanceImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FKakaoTalk_Photo_2022-02-18-22-20-17.jpeg?alt=media&token=9879e58a-e7c8-4705-aa65-0663648a13cb'} />
                         </FinanceImages>
-                        <Profile top={1500} bottom={-1} right={-1} left={50} name={'하아연'} role={'Finance'}/>
-                        <Profile top={1600} bottom={-1} right={0} left={-1} name={'권두현'} role={'Finance'}/>
+                        <Profile top={900} bottom={-1} right={-1} left={50} name={'하아연'} role={'Sponsor & Alumni Relations'} />
+                        <Profile top={1000} bottom={-1} right={-20} left={-1} name={'권두현'} role={'Sponsor & Alumni Relations'} />
                         <ITHead />
-                        <IT>IT</IT>
                         <ITImages>
-                            <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220405_193229901.jpg?alt=media&token=28d17ec3-82d6-4d34-b639-a7eb17f29eac'} />
-                            <ImageBreak />
                             <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FKakaoTalk_20211010_113309252_02.jpg?alt=media&token=369cd448-a7d6-47c4-b03f-f32dde60a297'} />
-                        </ITImages>
-                        
-                        <Profile top={2200} bottom={-1} right={-1} left={50} name={'김재혁'} role={'Information Technology'}/>
-                        <Profile top={2100} bottom={-1} right={0} left={-1} name={'신진'} role={'Information Technology'}/>
-                        <PublicRelation>Public Relation</PublicRelation>
-                        <PRImages>
-                            <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FKakaoTalk_20220405_211536009.jpg?alt=media&token=155f3048-ed58-48c4-bcae-bf2f5d0eec0f'} />
                             <ImageBreak />
-                            <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_6633.png?alt=media&token=9c3f4487-4d2c-47b5-a00d-d22679b25550'} />     
+                            <ITImg src={''} />
+                        </ITImages>
+                        <Profile top={1700} bottom={-1} right={-1} left={50} name={'김재혁'} role={'Information Technology'} />
+                        <Profile top={1500} bottom={-1} right={0} left={-1} name={'신진'} role={'Information Technology'} />
+                        <PRImages>
+                            <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%EA%B3%A0%EC%84%A0%EB%AF%BC.jpg?alt=media&token=893eae2b-0534-4d61-900f-df341341504e'} />
+                            <ImageBreak />
+                            <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_6633.png?alt=media&token=9c3f4487-4d2c-47b5-a00d-d22679b25550'} />
                         </PRImages>
-                        <PRHead />
-                        <Profile top={2750} bottom={-1} right={-1} left={50} name={'고선민'} role={'Student Affairs'}/>
-                        <Profile top={2900} bottom={-1} right={0} left={-1} name={'강민구'} role={'Student Affairs'}/>
-                    </Member>    
+                        <Profile top={2370} bottom={-1} right={-1} left={20} name={'고선민'} role={'Public Relations & Management'} />
+                        <Profile top={2150} bottom={-1} right={0} left={-1} name={'강민구'} role={'Student Affairs'} />
+                    </Member>
                 </MemberContainer>
             </Container>
         )

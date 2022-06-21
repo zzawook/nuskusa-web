@@ -557,7 +557,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                         </Email>
                         <Major>
                             <MajorText>Major / 전공</MajorText>
-                            <MajorInput value={this.props.firebaseUserData.major === undefined ? 'N/A. Verify account to register major.' : this.props.firebaseUserData.major} onChange={handleMajorInputChange}></MajorInput>
+                            <MajorInput value={this.props.firebaseUserData.major === undefined ? 'N/A. Verify account to register major.' : this.props.firebaseUserData.major} onChange={handleMajorInputChange} disabled={this.props.firebaseUserData.role == 'Graduate' || this.props.firebaseUserData.role == "Registered"}></MajorInput>
                             <MajorButton onClick={handleMajorChangeSubmit}>Apply</MajorButton>
                         </Major>
                         <EnrolledYear>
