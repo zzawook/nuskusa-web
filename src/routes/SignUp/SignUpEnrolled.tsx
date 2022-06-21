@@ -253,6 +253,7 @@ class SignUp extends React.Component<UserProps, UserState> {
         }
         if (this.state.email.split("@")[1] != "u.nus.edu") {
             window.alert("NUS 이메일 주소를 사용하지 않았습니다. 학교 이메일로 가입해주세요!")
+            return;
         }
         else {
             this.setState({
