@@ -183,7 +183,7 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
 
         return (
             <Container>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />   
+                <Navbar firebaseUserData={this.props.firebaseUserData} />
                 <Intro>
                     <WhoAreWe>Who are we?</WhoAreWe>
                     <Title>한인회 소개</Title>
@@ -204,7 +204,7 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                             <ImageBreak />
                             <ExecImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%EC%9C%A0%EB%8B%A4%ED%98%84.jpg?alt=media&token=cc922885-9b9a-448e-9c5b-397c98a2fdff'}></ExecImg>
                         </ExecImages>
-                        <Profile top={390} bottom={-1} right={-1} left={50} name={'강준혁'} role={'학부생회장'}/>
+                        <Profile top={390} bottom={-1} right={-1} left={50} name={'강준혁'} role={'학부생회장'} />
                         <Profile top={190} bottom={-1} right={0} left={-1} name={'유다현'} role={'학부생부회장'} />
                         <SAHead />
                         <FinanceHead />
@@ -213,24 +213,24 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                             <ImageBreak />
                             <FinanceImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FKakaoTalk_Photo_2022-02-18-22-20-17.jpeg?alt=media&token=9879e58a-e7c8-4705-aa65-0663648a13cb'} />
                         </FinanceImages>
-                        <Profile top={900} bottom={-1} right={-1} left={50} name={'하아연'} role={'Sponsor & Alumni Relations'}/>
-                        <Profile top={1000} bottom={-1} right={-20} left={-1} name={'권두현'} role={'Sponsor & Alumni Relations'}/>
+                        <Profile top={900} bottom={-1} right={-1} left={50} name={'하아연'} role={'Sponsor & Alumni Relations'} />
+                        <Profile top={1000} bottom={-1} right={-20} left={-1} name={'권두현'} role={'Sponsor & Alumni Relations'} />
                         <ITHead />
                         <ITImages>
                             <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FKakaoTalk_20211010_113309252_02.jpg?alt=media&token=369cd448-a7d6-47c4-b03f-f32dde60a297'} />
                             <ImageBreak />
-                            <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FKakaoTalk_20220621_%E3%85%85.jpg?alt=media&token=4a92d0fa-2855-4590-a101-91af9e14ae69'} />
+                            <ITImg src={''} />
                         </ITImages>
-                        <Profile top={1700} bottom={-1} right={-1} left={50} name={'김재혁'} role={'Information Technology'}/>
-                        <Profile top={1500} bottom={-1} right={0} left={-1} name={'신진'} role={'Information Technology'}/>
+                        <Profile top={1700} bottom={-1} right={-1} left={50} name={'김재혁'} role={'Information Technology'} />
+                        <Profile top={1500} bottom={-1} right={0} left={-1} name={'신진'} role={'Information Technology'} />
                         <PRImages>
                             <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%EA%B3%A0%EC%84%A0%EB%AF%BC.jpg?alt=media&token=893eae2b-0534-4d61-900f-df341341504e'} />
                             <ImageBreak />
-                            <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_6633.png?alt=media&token=9c3f4487-4d2c-47b5-a00d-d22679b25550'} />     
+                            <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_6633.png?alt=media&token=9c3f4487-4d2c-47b5-a00d-d22679b25550'} />
                         </PRImages>
-                        <Profile top={2370} bottom={-1} right={-1} left={20} name={'고선민'} role={'Public Relations & Management'}/>
-                        <Profile top={2150} bottom={-1} right={0} left={-1} name={'강민구'} role={'Student Affairs'}/>
-                    </Member>    
+                        <Profile top={2370} bottom={-1} right={-1} left={20} name={'고선민'} role={'Public Relations & Management'} />
+                        <Profile top={2150} bottom={-1} right={0} left={-1} name={'강민구'} role={'Student Affairs'} />
+                    </Member>
                 </MemberContainer>
             </Container>
         )
