@@ -117,6 +117,7 @@ const Snap = styled.span`
 `
 const ExecImg = styled.img`
     width: 30%; 
+    height: 30%;
 `
 const SAHead = styled.div`
     position: absolute;
@@ -154,6 +155,7 @@ const ITHead = styled.div`
 `
 const ITImg = styled.img`
     width: 30%;
+    height: 30%;
 `
 const ITImages = styled.div`
     position: absolute;
@@ -217,11 +219,11 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                         <Profile top={1000} bottom={-1} right={-20} left={-1} name={'권두현'} role={'Sponsor & Alumni Relations'} />
                         <ITHead />
                         <ITImages>
-                            <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FKakaoTalk_20211010_113309252_02.jpg?alt=media&token=369cd448-a7d6-47c4-b03f-f32dde60a297'} />
+                            <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%EA%B9%80%EC%9E%AC%ED%98%81.jpg?alt=media&token=f27929c3-6984-450d-9bfb-d68e9c1d410f'} />
                             <ImageBreak />
                             <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_2152.jpg?alt=media&token=75e7c450-9a25-4954-814c-a01c6b99dfc8'} />
                         </ITImages>
-                        <Profile top={1700} bottom={-1} right={-1} left={50} name={'김재혁'} role={'Information Technology'} />
+                        <Profile top={1700} bottom={-1} right={-1} left={35} name={'김재혁'} role={'Information Technology'} />
                         <Profile top={1500} bottom={-1} right={0} left={-1} name={'신진'} role={'Information Technology'} />
                         <PRImages>
                             <PRImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%EA%B3%A0%EC%84%A0%EB%AF%BC.jpg?alt=media&token=893eae2b-0534-4d61-900f-df341341504e'} />
