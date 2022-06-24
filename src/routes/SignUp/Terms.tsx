@@ -141,7 +141,12 @@ class Terms extends React.Component<TermsProps, TermsState> {
 
     handleSubmit = async (event: any) => {
         event.preventDefault();
-        window.location.href="/#/signup/select"
+        if (this.state.agreed) {
+            window.location.href = "/#/signup/select"
+        }
+        else {
+            window.alert("서비스 이용 약관 및 개인정보 수집 및 활용 약관에 동의하지 않으셨습니다.")
+        }
     }
 
     handleChange = async (event: any) => {
