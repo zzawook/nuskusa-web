@@ -245,6 +245,11 @@ class SignUp extends React.Component<UserProps, UserState> {
                 enrolledYear: value
             })
         }
+        else if (event.target.name == "KTId") {
+            this.setState({
+                KTId: value
+            })
+        }
     }
 
     handleSubmit = async (event: any) => {
@@ -271,6 +276,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                         role: 'Graduated',
                         gender: this.state.gender,
                         major: this.state.major,
+                        KTId: this.state.KTId,
                     }
                     dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
                         authService.languageCode = 'kr'
@@ -473,6 +479,20 @@ class SignUp extends React.Component<UserProps, UserState> {
                                     placeholder="출생 년도 / Year of Birth"
                                     required
                                     value={this.state.yob}
+                                    onChange={this.handleChange}
+                                />
+                                <InputGuide>"2002" 처럼 4자리 숫자로 적어주세요!</InputGuide>
+                            </InputInner>
+                        </InputContainer>
+                        <InputContainer>
+                            <InputMandatoryIndicator>*</InputMandatoryIndicator>
+                            <InputInner>
+                                <Input
+                                    name="KTId"
+                                    type="string"
+                                    placeholder="카카오톡 ID / KakaoTalk ID"
+                                    required
+                                    value={this.state.KTId}
                                     onChange={this.handleChange}
                                 />
                                 <InputGuide>"2002" 처럼 4자리 숫자로 적어주세요!</InputGuide>

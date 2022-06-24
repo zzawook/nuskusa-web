@@ -219,7 +219,7 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                         <ITImages>
                             <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FKakaoTalk_20211010_113309252_02.jpg?alt=media&token=369cd448-a7d6-47c4-b03f-f32dde60a297'} />
                             <ImageBreak />
-                            <ITImg src={''} />
+                            <ITImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_2152.jpg?alt=media&token=75e7c450-9a25-4954-814c-a01c6b99dfc8'} />
                         </ITImages>
                         <Profile top={1700} bottom={-1} right={-1} left={50} name={'김재혁'} role={'Information Technology'} />
                         <Profile top={1500} bottom={-1} right={0} left={-1} name={'신진'} role={'Information Technology'} />
