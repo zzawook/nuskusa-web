@@ -145,7 +145,6 @@ class Terms extends React.Component<TermsProps, TermsState> {
     }
 
     handleChange = async (event: any) => {
-        event.preventDefault();
         this.setState({
             agreed: event.target.checked
         })
