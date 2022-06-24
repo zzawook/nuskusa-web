@@ -205,7 +205,7 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                             <ExecImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%EC%9C%A0%EB%8B%A4%ED%98%84.jpg?alt=media&token=cc922885-9b9a-448e-9c5b-397c98a2fdff'}></ExecImg>
                         </ExecImages>
                         <Profile top={390} bottom={-1} right={-1} left={50} name={'강준혁'} role={'학부생회장'} />
-                        <Profile top={190} bottom={-1} right={0} left={-1} name={'유다현'} role={'학부생부회장'} />
+                        <Profile top={190} bottom={-1} right={0} left={-1} name={'유다현'} role={'Events'} />
                         <SAHead />
                         <FinanceHead />
                         <FinanceImages>
