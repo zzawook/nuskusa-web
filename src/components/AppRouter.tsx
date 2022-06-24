@@ -11,6 +11,7 @@ import SignUpFreshmen from '../routes/SignUp/SignUpFreshmen'
 import SignUpEnrolled from '../routes/SignUp/SignUpEnrolled'
 import SignUpGraduated from '../routes/SignUp/SignUpGraduated'
 import SignUpOther from '../routes/SignUp/SignUpOther'
+import Terms from '../routes/SignUp/Terms'
 import Profile from '../routes/Profile';
 import Verification from '../routes/Verification';
 import EditPost from '../routes/EditPost.js';
@@ -19,7 +20,6 @@ import BoardHome from '../routes/BoardHome';
 import AboutUs from '../routes/AboutUs';
 import { FirebaseUser } from '../types/FirebaseUser';
 import EditProfile from '../routes/EditProfile';
-import { Thumbs } from 'react-responsive-carousel';
 import PasswordResetRequest from '../routes/PasswordResetRequest';
 
 import Admin from '../routes/Admin/Admin'
@@ -163,6 +163,10 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     history={routerProps.history}
                     location={routerProps.location}
                   />} />
+                  <Route exact path='/signup/terms' render={(routerProps) => <Terms
+                    history={routerProps.history}
+                    location={routerProps.location}
+                  />} />
                   <Route exact path='/signup' render={(routerProps) => <SignUp
                     history={routerProps.history}
                     location={routerProps.location}
@@ -221,6 +225,10 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       location={routerProps.location}
                     />} />
                     <Route exact path='/signup/select' render={(routerProps) => <SignUpSelect
+                      history={routerProps.history}
+                      location={routerProps.location}
+                    />} />
+                    <Route exact path='/signup/terms' render={(routerProps) => <Terms
                       history={routerProps.history}
                       location={routerProps.location}
                     />} />

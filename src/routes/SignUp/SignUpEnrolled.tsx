@@ -5,6 +5,7 @@ import { authService, dbService, storageService } from '../../utils/firebaseFunc
 import styled from 'styled-components'
 import { FlexColumn } from '../../components/utils/UsefulDiv';
 import { CgYoutube } from 'react-icons/cg';
+import { monitorEventLoopDelay } from 'perf_hooks';
 
 
 
@@ -239,6 +240,11 @@ class SignUp extends React.Component<UserProps, UserState> {
                 enrolledYear: value
             })
         }
+        else if (event.target.name == "KTId") {
+            this.setState({
+                KTId: value
+            })
+        }
     }
 
     handleSubmit = async (event: any) => {
@@ -271,6 +277,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                         major: this.state.major,
                         enrolledYear: this.state.enrolledYear,
                         yob: this.state.yob,
+                        KTId: this.state.KTId,
                     }
                     userObject.isVerified = true;
                     userObject.role = 'Current'
@@ -290,7 +297,6 @@ class SignUp extends React.Component<UserProps, UserState> {
                         loading: false,
                     })
                     window.alert("Sign up failed. Please try again later.")
-
                 });
         }
 
@@ -440,6 +446,20 @@ class SignUp extends React.Component<UserProps, UserState> {
                                     onChange={this.handleChange}
                                 />
                                 <InputGuide>"2002" 와 같이 4자리 숫자로 적어주세요!</InputGuide>
+                            </InputInner>
+                        </InputContainer>
+                        <InputContainer>
+                            <InputMandatoryIndicator>*</InputMandatoryIndicator>
+                            <InputInner>
+                                <Input
+                                    name="KTId"
+                                    type="string"
+                                    placeholder="카카오톡 ID / KakaoTalk ID"
+                                    required
+                                    value={this.state.KTId}
+                                    onChange={this.handleChange}
+                                />
+                                <InputGuide>본인의 카카오톡 ID를 적어주세요!</InputGuide>
                             </InputInner>
                         </InputContainer>
                         {/* Will be adding name, nickname, etc. */}

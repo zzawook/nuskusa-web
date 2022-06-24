@@ -183,7 +183,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                         </>
                         :
                         <>
-                            <SignUpButton onClick={() => window.location.href="/#/signup/select"}>
+                            <SignUpButton onClick={() => window.location.href="/#/signup/terms"}>
                                 <SignUpText>
                                     <Link to='/signup/select' style={{ color: '#0B121C', textDecoration: 'none' }}>
                                         Sign Up
