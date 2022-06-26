@@ -144,6 +144,25 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/' render={() => <Home
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
+                  <Route exact path='/admin' render={() => {
+                    if (this.state.firebaseUserData.role == "Admin") {
+                      return <Admin
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                    else {
+                      return <Home
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                  }} />
+                  <Route exact path='/admin/verification' render={() => {
+                  if (this.state.firebaseUserData.role == "Admin") {
+                      return <AdminVerification
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                  }} />
                   <Route exact path='/home' render={() => <Home
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
@@ -157,7 +176,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     location={routerProps.location}
                   />} />
                   <Route exact path='/reset' render={() => <PasswordResetRequest />}
-
                   />
                   <Route exact path='/signup/select' render={(routerProps) => <SignUpSelect
                     history={routerProps.history}
@@ -200,12 +218,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       firebaseUserData={this.state.firebaseUserData}
                       reloadFunction={this.reloadFunction}
                     />} />
-                    <Route exact path='/admin' render={() => <Admin
-                      firebaseUserData={this.state.firebaseUserData}
-                    />} />
-                    <Route exact path='/admin/verification' render={() => <AdminVerification
-                      firebaseUserData={this.state.firebaseUserData}
-                    />} />
+                    
                   </Switch>
                   <Route component={this.notFoundComponent} />
                 </Switch>
