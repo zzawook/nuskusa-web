@@ -356,12 +356,12 @@ class SignUp extends React.Component<UserProps, UserState> {
                                 <Input
                                     name="username"
                                     type="string"
-                                    placeholder="이름 (영어로, 성 먼저) / Name (Last name first)"
+                                    placeholder="한글 이름"
                                     required
                                     value={this.state.username}
                                     onChange={this.handleChange}
                                 />
-                                <InputGuide>ex) Kim Jae Hyeok</InputGuide>
+                                <InputGuide>ex) 김재혁</InputGuide>
                             </InputInner>
                         </InputContainer>
                         <InputContainer>
