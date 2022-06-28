@@ -21,7 +21,6 @@ import AboutUs from '../routes/AboutUs';
 import { FirebaseUser } from '../types/FirebaseUser';
 import EditProfile from '../routes/EditProfile';
 import PasswordResetRequest from '../routes/PasswordResetRequest';
-
 import Admin from '../routes/Admin/Admin'
 import AdminVerification from '../routes/Admin/Verification'
 
