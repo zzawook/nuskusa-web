@@ -105,7 +105,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
     render = () => {
         return (
             <>
-                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
+                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 : </LoadingText></LoadingBlocker> : <></>}
                 <Wrapper>
                     <Navbar firebaseUserData={this.props.firebaseUserData} />
                     {this.state.users.map(user => {
