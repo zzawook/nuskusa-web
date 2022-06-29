@@ -14,6 +14,7 @@ type NavBarState = {
     homeHover: boolean,
     aboutUsHover: boolean,
     boardHover: boolean,
+    searchHover: boolean,
 }
 
 class Navbar extends React.Component<NavbarProps, NavBarState> {
@@ -23,6 +24,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
             homeHover: true,
             aboutUsHover: false,
             boardHover: false,
+            searchHover: false,
         }
     }
 
@@ -112,6 +114,16 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
             margin-bottom: auto;
             box-sizing: border-box;
         `
+        const SearchText = styled.p<{ hover: boolean }>`
+        color: #FFFFFF;
+        font-size: 16px;
+        padding-left: 2%;
+        padding-right: 2%;
+        width: 100px;
+        position: relative;
+        margin-bottom: auto;
+        box-sizing: border-box;
+    `
         const SignUpButton = styled.button`
             :hover {
                 cursor: pointer;
@@ -172,6 +184,9 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                                     :
                                     <BoardText hover={this.state.boardHover}><Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
                             }
+                        </NavbarButton>
+                        <NavbarButton onMouseEnter={() => this.setState({ searchHover: true })} onMouseLeave={() => this.setState({ searchHover: false })} onClick={() => window.location.href = "#/admin/search"}>
+                            <Link to='/admin/search' style={{ color: '#FFFFFF', textDecoration: 'none' }}><SearchText hover={this.state.searchHover}>Search Profile</SearchText></Link>
                         </NavbarButton>
                     </NavbarButtonContainer>
                 </NavbarContent>

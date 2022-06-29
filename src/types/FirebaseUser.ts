@@ -11,4 +11,5 @@ export interface FirebaseUser {
     profilePictureURL?: string | undefined,
     gender?: string | undefined,
     yob: string,
+    KTId?: string | undefined,
 }

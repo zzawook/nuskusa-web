@@ -23,6 +23,7 @@ import EditProfile from '../routes/EditProfile';
 import PasswordResetRequest from '../routes/PasswordResetRequest';
 import Admin from '../routes/Admin/Admin'
 import AdminVerification from '../routes/Admin/Verification'
+import SearchProfile from '../routes/Admin/SearchProfile'
 
 type AppRouterProps = {
 
@@ -217,7 +218,9 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       firebaseUserData={this.state.firebaseUserData}
                       reloadFunction={this.reloadFunction}
                     />} />
-                    
+                    <Route exact path='/admin/search' render={() => <SearchProfile
+                      firebaseUserData={this.state.firebaseUserData}
+                    />} />
                   </Switch>
                   <Route component={this.notFoundComponent} />
                 </Switch>
