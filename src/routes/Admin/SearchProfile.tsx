@@ -12,42 +12,78 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
 `
+const SearchBar = styled.div`
+    flex-direction: row;
+    padding-top: 30px;
+    padding-bottom: 20px;
+`
 const SearchInput = styled.input`
-    
+    width: 200px;
+    height: 20px;
 `
 const SearchButton = styled.button`
-    
+    width: 70px;
+    height: 25px;
+    margin-left: 10px;
 `
 const SearchedProfileWrapper = styled.div`
+    flex-direction: row;
     
 `
 const SearchedProfile = styled.div`
-    font-size: 20px;
-    color: white;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px solid white;
 `
 const Username = styled.div`
-    
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
 `
 const Gender = styled.div`
-    
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 18px;
+    color: white;
 `
 const YearOfBirth = styled.div`
-    
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 18px;
+    color: white;
 `
 const Email = styled.div`
-    
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 18px;
+    color: white;
 `
 const Role = styled.div`
-    
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 18px;
+    color: white;
 `
 const EnrolledYear = styled.div`
-    
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 18px;
+    color: white;
 `
 const Major = styled.div`
-    
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 18px;
+    color: white;
 `
 const KTId = styled.div`
-    
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 18px;
+    color: white;
 `
 type SearchProfileProps = {
     firebaseUserData: FirebaseUser,
@@ -103,13 +139,16 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
         return (
             <Wrapper>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
-                <SearchInput
-                    onChange={
-                        (event) => this.setState({searchedName: event.target.value.toString()})
-                    } 
-                    value={this.state.searchedName} placeholder={'이름을 입력하세요'}>
-                </SearchInput>
-                <SearchButton onClick={this.searchProfile}>Submit</SearchButton>
+                <SearchBar>
+                    <SearchInput
+                        onChange={
+                            (event) => this.setState({searchedName: event.target.value.toString()})
+                        } 
+                        onKeyPress={this.searchProfile}
+                        value={this.state.searchedName} placeholder={'이름을 입력하세요'}>
+                    </SearchInput>
+                    <SearchButton onClick={this.searchProfile}>Search</SearchButton>
+                </SearchBar>
                 <SearchedProfileWrapper>
                     {this.state.searchedProfiles}
                 </SearchedProfileWrapper>
