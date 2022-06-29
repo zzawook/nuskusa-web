@@ -163,6 +163,18 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       />
                     }
                   }} />
+                  <Route exact path='/admin/search' render={() => {
+                    if (this.state.firebaseUserData.role == 'Admin') {
+                      return <SearchProfile
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                    else {
+                      return <Home
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                  }} />
                   <Route exact path='/home' render={() => <Home
                     firebaseUserData={this.state.firebaseUserData}
                   />} />
@@ -217,9 +229,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                       match={routerProps.match}
                       firebaseUserData={this.state.firebaseUserData}
                       reloadFunction={this.reloadFunction}
-                    />} />
-                    <Route exact path='/admin/search' render={() => <SearchProfile
-                      firebaseUserData={this.state.firebaseUserData}
                     />} />
                   </Switch>
                   <Route component={this.notFoundComponent} />
