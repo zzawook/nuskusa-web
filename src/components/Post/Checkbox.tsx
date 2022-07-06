@@ -1,100 +1,60 @@
-import React from "react";
-import styled, { ThemeConsumer } from 'styled-components'
+import React from 'react';
+import styled from 'styled-components'
 
-type CheckboxProps = {
-    label: string,
-    setter: Function,
-    init: boolean
-}
+const margin = 20;
 
-type CheckboxState = {
-    checked: boolean,
-    label: string,
-    mouseEntered: boolean
-}
-
-const Container = styled.div`
+const Wrapper = styled.div`
     display: flex;
-    flex: 1 1;
-    width: 50px;
-    height: 50px;
-    font-size: 11px;
+    flex-direction: row;
+    width: 70%;
+`
+const Input = styled.input`
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    margin-bottom: ${margin}px;
+    margin-right: 10px;
+    height: 45px;
+    font-family: var(--font-family-roboto);
+    font-weight: 700;
+    font-size: 18px;
+    outline: none;
+`
+const Question = styled.span`
+    line-height: ${45 + 7}px;
 `
 
-const CheckBox = styled.div`
-`
-const Label = styled.span`
-    padding-left: 5px;
-    padding-top: 2px;
-`
+type TextInputProps = {
+    question: string,
+    handleChange: Function,
+    index: number,
+}
 
-class Checkbox extends React.Component<CheckboxProps, CheckboxState> {
-    constructor(props: any) {
+type TextInputState = {
+    checked: boolean,
+}
+
+class Checkbox extends React.Component<TextInputProps, TextInputState> {
+    constructor(props: TextInputProps) {
         super(props);
         this.state = {
             checked: false,
-            label: "",
-            mouseEntered: false,
         }
     }
 
-    componentDidMount() {
-        if (this.props.init) {
-            this.setState({
-                label: this.props.label,
-                checked: true,
-            })
-        }
-        else {
-            this.setState({
-                label: this.props.label,
-                checked: false,
-            })
-        }
+    handleChange = (event: any) => {
+        this.props.handleChange(this.props.index, ! this.state.checked);
+        this.setState({
+            checked: ! this.state.checked,
+        })
     }
 
-    componentDidUpdate() {
-    }
-
-    static getDerivedStateFromProps(newProps: any, prevState: any) {
-        return {
-            checked: newProps.init,
-        }
-    }
-
-    render() {
-
-        const handleMouseEnter = (e: any) => {
-            e.preventDefault();
-            this.setState({
-                mouseEntered: true
-            })
-        }
-
-        const handleMouseLeave = (e: any) => {
-            e.preventDefault();
-            this.setState({
-                mouseEntered: false
-            })
-        }
+    render = () => {
         return (
-            <Container>
-                <CheckBox 
-                    style={{
-                        height: '12px',
-                        width: '12px',
-                        border: '1px solid white',
-                        backgroundColor: this.state.mouseEntered ? '#7d7d7d' : this.state.checked ? '#FFFFFF' : '#0B121C',
-                    }} 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        this.setState({
-                            checked: !this.state.checked,
-                        })
-                        this.props.setter()
-                }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}></CheckBox>
-                <Label>{this.state.label}</Label>
-            </Container>
+            <Wrapper>
+                <Input type="checkbox" onChange={this.handleChange} checked={this.state.checked} />
+                <Question>{this.props.question}</Question>
+            </Wrapper>
+            
         )
     }
 }

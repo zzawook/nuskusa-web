@@ -8,6 +8,7 @@ export interface FirestorePost {
     isAnonymous: boolean,
     isPinned: boolean,
     isHidden: boolean,
+    isEvent?: boolean | undefined,
     lastModified: firebase.firestore.Timestamp,
     upvoteArray: firebase.firestore.DocumentReference[],
     numComments: number,

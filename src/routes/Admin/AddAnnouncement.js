@@ -1,13 +1,13 @@
 import React from "react";
-import Navbar from "../components/Navbar";
-import { dbService, authService, storageService } from "../utils/firebaseFunctions";
+import Navbar from "../../components/Navbar";
+import { dbService, authService, storageService } from "../../utils/firebaseFunctions";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import firebase from 'firebase';
 import styled from 'styled-components'
 import Select from 'react-select'
-import '../components/Post/custom.css'
-import Checkbox from '../components/AddPost/Checkbox'
+import '../../components/Post/custom.css'
+import Checkbox from '../../components/AddPost/Checkbox'
 
 class Uploader {
     constructor(loader) {
@@ -24,6 +24,11 @@ class Uploader {
                         firebase.storage.TaskEvent.STATE_CHANGED,
                         function (snapshot) {
                             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            console.log("Upload is " + progress + "% done");
+                            switch (snapshot.state) {
+                                case firebase.storage.TaskState.PAUSED:
+                                    console.log("Upload is paused");
+                            }
                         },
                         function (error) {
                             switch (error.code) {
@@ -38,18 +43,19 @@ class Uploader {
                                     break;
                             }
                         },
-
-                        function() {
+                        function () {
+                            console.log("Upload successful")
                             // Upload completed successfully, now we can get the download URL
                             uploadTask.snapshot.ref
                                 .getDownloadURL()
-                                .then(function(downloadURL) {
-                                resolve({
-                                    urls: {
-                                        'default': downloadURL
-                                    }
-                                })}
-                            );
+                                .then(function (downloadURL) {
+                                    console.log("File available at", downloadURL);
+                                    resolve({
+                                        urls: {
+                                            'default': downloadURL
+                                        }
+                                    });
+                                });
                         }
                     );
                 })
@@ -158,7 +164,7 @@ const LoadingText = styled.span`
     font-weight: 600;
     z-index: 1000000,
 `
-class EditPost extends React.Component {
+class AddAnnouncement extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -200,11 +206,10 @@ class EditPost extends React.Component {
         }
         const boardProcessed = [];
         const boardRaw = [];
-        this.fetchPost();
         dbService.collection('boards').get().then(boards => {
             boards.forEach(board => {
                 const data = board.data();
-                if (data.editPermission.includes(this.props.firebaseUserData.role)) {
+                if (board.id == "announcement"/*data.editPermission.includes(this.props.firebaseUserData.role*/) {
                     boardProcessed.push({
                         value: board.id,
                         label: data.title,
@@ -218,8 +223,13 @@ class EditPost extends React.Component {
                 backgroundColor = boardRaw.find(elem => elem.boardId == this.props.boardId).boardColor
             }
 
+            const stateCopy = this.state.state;
+            stateCopy.author = this.props.firebaseUserData.username;
+            stateCopy.authorId = authService.currentUser.uid;
+
             this.setState(prevState => {
                 return {
+                    state: stateCopy,
                     boardDataProcessed: boardProcessed,
                     boardData: boardRaw,
                     selectedBoard: this.props.boardId,
@@ -227,52 +237,6 @@ class EditPost extends React.Component {
                 }
             })
         })
-    }
-
-    fetchPost = () => {
-        dbService // Retrieve post information
-            .collection('boards').doc(this.props.boardId)
-            .collection('posts')
-            .doc(this.props.postId)
-            .onSnapshot((querySnapshot) => {
-                if (querySnapshot.exists) {
-                    let data = querySnapshot.data();
-                    if (data == undefined) {
-                        return;
-                    }
-                    else {
-                        if (data.permissions.includes(this.props.firebaseUserData.role)/* || data.permissions.includes("User")*/) {
-                            const newState = {
-                                title: data.title,
-                                content: data.content,
-                                isAnnouncement: data.isAnnouncement,
-                                isAnonymous: data.isAnonymous,
-                                isPinned: data.isPinned,
-                                isHidden: data.isHidden,
-                                author: data.author,
-                                authorId: data.authorId,
-                                upvotes: data.upvotes,
-                                lastModified: data.lastModified,
-                                permissions: data.permissions,
-                                numComments: data.numComments, //DO NOT CHANGE
-                                parentBoardId: data.parentBoardId,
-                                upvoteArray: data.upvoteArray, //DO NOT CHANGE
-                                parentColor: data.parentColor,
-                                parentTextColor: data.parentTextColor,
-                                parentBoardTitle: data.parentBoardTitle,
-                            };
-                            this.setState({
-                                state: newState,
-                            })
-                        }
-                        else {
-                            this.setState({
-                                errorMsg: "Access denied-- you do not have permission."
-                            })
-                        }
-                    }
-                }
-            })
     }
 
     handleSubmit = async (e) => {
@@ -296,26 +260,33 @@ class EditPost extends React.Component {
         this.setState({
             loading: true,
         })
+        const boardSnapshot = await dbService.collection('boards').doc(this.state.selectedBoard).get();
+        const boardData = boardSnapshot.data();
         const stateCopy = this.state.state;
+        stateCopy.authorId = authService.currentUser.uid;
         stateCopy.content = this.content;
-        stateCopy.lastModified = firebase.firestore.Timestamp.fromDate(new Date())
+        stateCopy.parentBoardId = this.state.selectedBoard;
+        stateCopy.parentColor = boardData.boardColor;
+        stateCopy.parentTextColor = boardData.boardTextColor;
+        stateCopy.parentBoardTitle = boardData.title;
+        stateCopy.permissions = boardData.permissions
         this.setState({
             state: stateCopy
         }, () => {
             dbService
-                .collection('boards').doc(this.props.boardId)
-                .collection('posts').doc(this.props.postId)
-                .update(this.state.state)
+                .collection('boards').doc(this.state.selectedBoard)
+                .collection('posts')
+                .add(this.state.state)
                 .then((docRef) => {
                     this.setState({
                         loading: false,
                     })
-                    window.location.href = "#/boards/" + this.state.selectedBoard + '/' + this.props.postId
+                    window.location.href = "#/boards/" + this.state.selectedBoard + '/' + docRef.id
                 }).catch(err => {
                     this.setState({
                         loading: false,
                     })
-                    window.alert("게시글 수정 도중 문제가 발생하였습니다." + err.toString())
+                    window.alert("게시글 업로드 도중 문제가 발생하였습니다." + err.toString())
                 });
         })
     }
@@ -366,6 +337,7 @@ class EditPost extends React.Component {
     }
 
     componentDidUpdate() {
+        console.log(this.state.selectedBoard)
     }
 
     render = () => {
@@ -507,8 +479,7 @@ class EditPost extends React.Component {
                             options={this.state.boardDataProcessed}
                             styles={customStyle}
                             onChange={this.handleSelectChange}
-                            value={this.state.boardDataProcessed.find(data => data.value == this.state.selectedBoard)}
-                            isDisabled={true} />
+                            value={this.state.boardDataProcessed.find(data => data.value == this.state.selectedBoard)} />
                     </SelectContainer>
                     <Form>
                         <Title
@@ -521,7 +492,7 @@ class EditPost extends React.Component {
                     <Editor>
                         <CKEditor
                             editor={ClassicEditor}
-                            data={this.state.state.content}
+                            data={this.content}
                             config={custom_config}
                             onChange={(event, editor) => {
                                 this.content = editor.getData();
@@ -547,7 +518,7 @@ class EditPost extends React.Component {
                         {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.state.isPinned} /> : <div />}
                         {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.state.isHidden} /> : <div />}
                     </CheckBoxContainer>
-                    <Submit onClick={this.handleSubmit}>Edit</Submit>
+                    <Submit onClick={this.handleSubmit}>Post</Submit>
                 </Container>
             </>
         )
@@ -559,4 +530,4 @@ class EditPost extends React.Component {
 {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
 */
 
-export default EditPost;
+export default AddAnnouncement;

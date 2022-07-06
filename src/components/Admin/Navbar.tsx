@@ -15,6 +15,7 @@ type NavBarState = {
     aboutUsHover: boolean,
     boardHover: boolean,
     searchHover: boolean,
+    draftHover: boolean,
 }
 
 class Navbar extends React.Component<NavbarProps, NavBarState> {
@@ -25,6 +26,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
             aboutUsHover: false,
             boardHover: false,
             searchHover: false,
+            draftHover: false,
         }
     }
 
@@ -187,6 +189,9 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                         </NavbarButton>
                         <NavbarButton onMouseEnter={() => this.setState({ searchHover: true })} onMouseLeave={() => this.setState({ searchHover: false })} onClick={() => window.location.href = "#/admin/search"}>
                             <Link to='/admin/search' style={{ color: '#FFFFFF', textDecoration: 'none' }}><SearchText hover={this.state.searchHover}>Search Profile</SearchText></Link>
+                        </NavbarButton>
+                        <NavbarButton onMouseEnter={() => this.setState({ draftHover: true })} onMouseLeave={() => this.setState({ draftHover: false })} onClick={() => window.location.href = "#/admin/draft/select"}>
+                            <Link to='/admin/draft/select' style={{ color: '#FFFFFF', textDecoration: 'none' }}><SearchText hover={this.state.draftHover}>Draft Announcement</SearchText></Link>
                         </NavbarButton>
                     </NavbarButtonContainer>
                 </NavbarContent>
