@@ -118,7 +118,10 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
 
     addTextInput = () => {
         let inputs = this.state.inputs;
-        inputs.push(<ShortInput index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete}></ShortInput>)
+        inputs.push({
+            'deleted': false,
+            component: <ShortInput index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete}></ShortInput>
+        })
 
         let inputData = this.state.inputData;
         inputData.push({
@@ -132,7 +135,10 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
 
     addCheckbox = () => {
         let inputs = this.state.inputs;
-        inputs.push(<Checkbox index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete}></Checkbox>)
+        inputs.push({
+            deleted: false,
+            component: <Checkbox index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete}></Checkbox>
+        })
 
         let inputData = this.state.inputData;
         inputData.push({
@@ -165,10 +171,9 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
 
     handleDelete = (index: number) => {
         let inputData = this.state.inputData;
-        inputData[index].type = "deleted"
+        inputData[index].type = "deleted";
         let inputs = this.state.inputs;
-
-        inputs.splice(index, 1);
+        inputs[index].deleted = true;
 
         this.setState({
             inputs: inputs,
@@ -290,7 +295,7 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
                         <AddBar>{this.inputTypes.map(element => {
                             return <AddBox onClick={element.adderFunction}>{element.name} 추가</AddBox>
                         })}</AddBar>
-                        {this.state.inputs.map(element => element)}
+                        {this.state.inputs.map(element => element.deleted ? <></> : element.component)}
                         <SubmitButton type="submit" value="이벤트 공지 올리기" onClick={this.handleSubmit}/>
                     </Form>
                 </Wrapper>
