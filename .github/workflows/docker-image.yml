@@ -16,9 +16,8 @@ jobs:
     - name: AWS ECR
       uses: kciter/aws-ecr-action@v4
       with:
-        access_key_id: "${{ secrets.aws_access_key_id }}"
+        access_key_id: "${{ secrets.AWS_ACCESS_KEY_ID }}"
         secret_access_key: "${{ secrets.aws_secret_access_key }}"
         account_id: "${{ secrets.aws_account_id }}"
         repo: "nuskusa"
         region: "ap-southeast-1"
-        
