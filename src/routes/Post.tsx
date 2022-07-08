@@ -1,21 +1,20 @@
 import React from "react";
-import { authService, dbService } from "../utils/firebaseFunctions";
+import { dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
 import { FirestorePost } from '../types/FirestorePost'
 import { FirebaseUser } from "../types/FirebaseUser";
-import { FirestoreBoard } from "../types/FirestoreBoard";
 import firebase from "firebase";
 import styled from 'styled-components';
 import CSS from 'csstype'
 import OtherPost from '../components/Post/OtherPost'
 import Upvote from "../components/Post/Upvote";
 import { FaRegComment } from "react-icons/fa"
-import { AiOutlineComment } from "react-icons/ai";
 import { RouteComponentProps } from "react-router-dom";
 import DeletePost from '../components/Post/DeletePost';
 import EditPostButton from '../components/Post/EditPostButton'
 import Avatar from "../components/Profile/Avatar";
+import Event from "../components/Post/Event"
 
 type RouteProps = {
     boardId: string,
@@ -106,7 +105,7 @@ const Title = styled.p`
 const Content = styled.div`
     width: 70%;
     font-weight: 800;
-    font-size: 13px;
+    font-size: 15px;
     order: 2;
     left: 0%;
     word-wrap: break-word;
@@ -425,7 +424,7 @@ class Post extends React.Component<PostProps, PostState> {
                             {this.props.firebaseUserData.userId == this.state.firestorePost.authorId || this.props.firebaseUserData.role == "Admin"? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div/>}    
                         </AuthorButtons>
                     </Header>
-                    <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />
+                    {this.state.firestorePost.isEvent ? <Event data={this.state.firestorePost.content} title={this.state.firestorePost.title} firebaseUserData={this.props.firebaseUserData}/>: <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />}
                     <ETC>
                         <Upvote boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} upvoteArray={this.state.firestorePost.upvoteArray} />
                         <FaRegComment size='20px' style={{ marginLeft: '10px' }} />
@@ -434,6 +433,7 @@ class Post extends React.Component<PostProps, PostState> {
                         </CommentNum>
 
                     </ETC>
+                    
                     <Comment reset={this.fetchPost} comments={this.state.commentArray} commentIds={this.state.commentIdArray} boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} />
                     <RecentPostTitle>Other posts</RecentPostTitle>
                     <RecentPosts>{this.state.recentPosts.map((element, i) => {

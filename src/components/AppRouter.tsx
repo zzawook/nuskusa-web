@@ -14,6 +14,9 @@ import SignUpOther from '../routes/SignUp/SignUpOther'
 import Terms from '../routes/SignUp/Terms'
 import Profile from '../routes/Profile';
 import Verification from '../routes/Verification';
+import SelectAnnouncementType from '../routes/Admin/SelectAnnouncementType'
+import AddAnnouncement from '../routes/Admin/AddAnnouncement'
+import AddEvent from '../routes/Admin/AddEvent'
 import EditPost from '../routes/EditPost.js';
 import AddPost from '../routes/AddPost.js';
 import BoardHome from '../routes/BoardHome';
@@ -166,6 +169,43 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/admin/search' render={() => {
                     if (this.state.firebaseUserData.role == 'Admin') {
                       return <SearchProfile
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                    else {
+                      return <Home
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                  }} />
+                  <Route exact path='/admin/draft/select' render={() => {
+                    if (this.state.firebaseUserData.role == 'Admin') {
+                      return <SelectAnnouncementType
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                    else {
+                      return <Home
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                  }} />
+                  <Route exact path='/admin/draft/announcement' render={() => {
+                    if (this.state.firebaseUserData.role == 'Admin') {
+                      return <AddAnnouncement
+                        firebaseUserData={this.state.firebaseUserData}
+                        boardId={"announcement"}
+                      />
+                    }
+                    else {
+                      return <Home
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                  }} />
+                  <Route exact path='/admin/draft/event' render={() => {
+                    if (this.state.firebaseUserData.role == 'Admin') {
+                      return <AddEvent
                         firebaseUserData={this.state.firebaseUserData}
                       />
                     }

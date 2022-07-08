@@ -3,6 +3,7 @@ import CSS from 'csstype';
 import { authService, dbService } from '../utils/firebaseFunctions';
 import { EventEmitter } from 'stream';
 import styled from 'styled-components'
+import { FaWpforms } from "react-icons/fa";
 //const nodemailer = require('nodemailer')
 
 type ContactStates = {
@@ -197,6 +198,15 @@ class ContactUs extends React.Component {
         border: '1px solid #FFFFFF',
         boxSizing: 'border-box'
     }
+    feedbackBoxStyle: CSS.Properties = {
+        position: "absolute",
+        left: "0px",
+        top: "403px",
+        height: '136px',
+        width: (this.width * 0.25).toString() + 'px',
+        border: '1px solid #FFFFFF',
+        boxSizing: 'border-box'
+    }
     contactBoxStyle: CSS.Properties = {
         position: 'absolute',
         right: '0px',
@@ -290,12 +300,27 @@ class ContactUs extends React.Component {
         left: '100px',
         top: '30px'
     }
+    feedbackSpanStyle: CSS.Properties = {
+        fontStyle: 'normal',
+        fontWeight: 'bold',
+        fontSize: '18px',
+        color: '#FFFFFF',
+        position: 'absolute',
+        lineHeight: '29px',
+        left: '100px',
+        top: '30px'
+    }
     img1Style: CSS.Properties = {
         position: 'absolute',
         left: '30px',
         top: '40px'
     }
     img2Style: CSS.Properties = {
+        position: 'absolute',
+        left: '30px',
+        top: '50px'
+    }
+    surveyIconWrapper: CSS.Properties = {
         position: 'absolute',
         left: '30px',
         top: '50px'
@@ -312,6 +337,10 @@ class ContactUs extends React.Component {
                 <div style={this.addressBoxStyle}>
                     <img style={this.img2Style} src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus2.png?alt=media&token=093e63b1-8970-42e5-91e9-2e1d24b6e17b" />
                     <span style={this.addressSpanStyle}>Address<br />21 Lower Kent Ridge<br />Rd Singapore 119077</span>
+                </div>
+                <div style={this.feedbackBoxStyle} onClick={() => window.open("https://docs.google.com/forms/d/e/1FAIpQLSceF0yRWmNTdoPHmtN0w4z7MySsXvUHfzUdwkQhOyNO2mJn8A/viewform?usp=sf_link", "_blank")}>
+                    <div style={this.surveyIconWrapper}><FaWpforms size={45}></FaWpforms></div>
+                    <span style={this.feedbackSpanStyle}>Feedback<br />웹사이트 관련 피드백을 자유롭게 <br />들려주세요!</span>
                 </div>
                 <form style={this.contactBoxStyle} onSubmit={this.handleFormSubmit}>
                     <input style={this.nameInputStyle} value={this.state.nameInput} onChange={this.handleNameChange} onFocus={this.handleNameFocus} onBlur={this.handleNameBlur} />

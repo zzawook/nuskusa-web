@@ -7,7 +7,7 @@ import firebase from 'firebase';
 import styled from 'styled-components'
 import Select from 'react-select'
 import '../components/Post/custom.css'
-import Checkbox from '../../src/components/Post/Checkbox'
+import Checkbox from '../components/AddPost/Checkbox'
 
 class Uploader {
     constructor(loader) {
