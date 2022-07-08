@@ -31,5 +31,5 @@ jobs:
         account_id: "${{ secrets.AWS_ACCOUNT_ID }}"
         repo: "nuskusa"
         region: "ap-southeast-1"
-        tag: $TIME
+        tag: "latest"
         
