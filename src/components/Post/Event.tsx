@@ -24,14 +24,14 @@ const Form = styled.form`
     align-items: flex-start;
 `
 const Description = styled.p`
-
+    font-size: 15px;
 `
 const Submit = styled.button`
-    width: 190px;
-    height: 63px;
+    width: 120px;
+    height: 50px;
     background-color: #BDA06D;
     font-weight: 700;
-    font-size: 17px;
+    font-size: 15px;
     color: white;
 `
 const LoadingBlocker = styled.div`

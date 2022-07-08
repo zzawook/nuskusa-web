@@ -105,7 +105,7 @@ const Title = styled.p`
 const Content = styled.div`
     width: 70%;
     font-weight: 800;
-    font-size: 13px;
+    font-size: 15px;
     order: 2;
     left: 0%;
     word-wrap: break-word;

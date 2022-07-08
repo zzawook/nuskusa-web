@@ -34,7 +34,7 @@ const AddBar = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    background-color: grey;
+    background-color: white;
     width: 100%;
     margin-bottom: 10px;
 `

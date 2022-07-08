@@ -10,10 +10,10 @@ const Input = styled.input`
     padding: 10px;
     background-color: transparent;
     width: 60%;
-    height: 45px;
+    height: 30px;
     font-family: var(--font-family-roboto);
     font-weight: 700;
-    font-size: 18px;
+    font-size: 15px;
     outline: none;
     color: white;
 `

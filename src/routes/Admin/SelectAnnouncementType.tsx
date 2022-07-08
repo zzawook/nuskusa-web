@@ -29,18 +29,22 @@ const SelectBox = styled.div`
     display: flex;
     flex-direction: column;
     width: 10vw;
-    height: 10vw;
+    height: 7vw;
     background-color: white;
     justify-content: center;
     align-items: center;
     margin: 15px;
     cursor: pointer;
+   
 `
+
 const TypeText = styled.span`
     color: #18202b;
     font-size: 18px;
     font-weight: 800;
-    text-decoration: none;
+    :hover {
+        text-decoration: underline;
+    }
 
 `
 const LoadingBlocker = styled.div`
@@ -119,7 +123,7 @@ class SelectAnnouncementType extends React.Component<SelectAnnouncementTypeProps
                         {this.state.announcementTypes.map(element => {
                             return <SelectBox onClick={() => {
                                 window.location.href = "#/admin/draft/" + element.id
-                            }}><Link to={"admin/draft/" + element.id}><TypeText>{element.name}</TypeText></Link></SelectBox>
+                            }}><Link to={"admin/draft/" + element.id} style={{textDecoration: 'none'}}><TypeText>{element.name}</TypeText></Link></SelectBox>
                         })}
                     </SelectBoxContainer>
                 </Wrapper>

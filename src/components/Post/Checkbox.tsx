@@ -14,13 +14,14 @@ const Input = styled.input`
     margin-bottom: ${margin}px;
     margin-right: 10px;
     height: 45px;
-    font-family: var(--font-family-roboto);
-    font-weight: 700;
-    font-size: 18px;
-    outline: none;
+    
 `
 const Question = styled.span`
     line-height: ${45 + 7}px;
+    font-family: var(--font-family-roboto);
+    font-weight: 700;
+    font-size: 15px;
+    outline: none;
 `
 
 type TextInputProps = {
