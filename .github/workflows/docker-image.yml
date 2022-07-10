@@ -11,5 +11,5 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: npm install --force && CI=false npm run build
-    - run: docker build -t nuskusa .
-    - run: docker push nuskusa/nuskusa:latest
+    - run: docker build -t nuskusa:latest
+    - run: docker push kjaehyeok21/nuskusa:latest
