@@ -11,13 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: npm install --force && CI=false npm run build
-    - name: AWS ECR
-      uses: kciter/aws-ecr-action@v4
-      with:
-        access_key_id: "${{ secrets.AWS_ACCESS_KEY_ID }}"
-        secret_access_key: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-        account_id: "${{ secrets.AWS_ACCOUNT_ID }}"
-        repo: "nuskusa"
-        region: "ap-southeast-1"
-        tags: "latest"
-        
+    - run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/m2a7a6t4
+    - run: docker build -t nuskusa .
+    - run: docker tag nuskusa:latest public.ecr.aws/m2a7a6t4/nuskusa:latest
+    - run: docker push public.ecr.aws/m2a7a6t4/nuskusa:latest      
