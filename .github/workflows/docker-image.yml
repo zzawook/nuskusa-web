@@ -11,10 +11,5 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: npm install --force && CI=false npm run build
-    - name: Amazon ECR "Login" Action for GitHub Actions
-      uses: aws-actions/amazon-ecr-login@v1
-      with:
-        registry-type: 'public'
     - run: docker build -t nuskusa .
-    - run: docker tag nuskusa:latest public.ecr.aws/m2a7a6t4/nuskusa:latest
-    - run: docker push public.ecr.aws/m2a7a6t4/nuskusa:latest      
+    - run: docker push nuskusa/nuskusa:latest
