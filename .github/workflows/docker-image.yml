@@ -13,16 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: npm install --force && CI=false npm run build
-    - name: Get Current Time
-      uses: josStorer/get-current-time@v2
-      id: current-time
-      with:
-        format: YYYYMMDD-HH
-        utcOffset: "+08:00"
-    - name: Use current time
-      env:
-        TIME: "${{ steps.current-time.outputs.time }}"
-      run: echo $TIME $R_TIME $F_TIME $YEAR $DAY
     - name: AWS ECR
       uses: kciter/aws-ecr-action@v4
       with:
