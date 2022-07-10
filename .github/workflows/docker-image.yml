@@ -13,4 +13,5 @@ jobs:
     - run: npm install --force && CI=false npm run build
     - run: docker build -t nuskusa .
     - run: docker tag nuskusa:latest nuskusa/nuskusa:latest
+    - run: docker login --username=nuskusa --password=gksdlsghl22!
     - run: docker push nuskusa/nuskusa:latest
