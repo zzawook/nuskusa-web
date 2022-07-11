@@ -1,0 +1,33 @@
+version: 0.0
+os: linux
+files:
+  - source: /codedeploy
+    destination: /home/ubuntu/codedeploy
+    overwrite: yes
+permission:
+  - object: /home/ubuntu
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+hooks:
+  ApplicationStop:
+    - location: codedeploy/kill_process.sh
+      timeout: 100
+      runas: ubuntu
+  ApplicationStart:
+    - location: codedeploy/run_process.sh
+      timeout: 600
+      runas: ubuntu
+
+branch_config:
+    wip\/.*: ~
+    main:
+        deploymentGroupName: backend
+        deploymentGroupConfig:
+            serviceRoleArn: arn:aws:iam::790298725222:role/nuskusa_codedeploy
+            ec2TagFilters:
+                - { Type: KEY_AND_VALUE, Key: Name, Value: nuskusa_app_asg }
+        deploymentConfig:
+            autoRollbackConfiguration:
+                enabled: true
+                events: ["DEPLOYMENT_FAILURE"]
