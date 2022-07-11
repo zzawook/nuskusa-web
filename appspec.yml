@@ -22,7 +22,7 @@ hooks:
 branch_config:
     wip\/.*: ~
     main:
-        deploymentGroupName: backend
+        deploymentGroupName: nuskusa
         deploymentGroupConfig:
             serviceRoleArn: arn:aws:iam::790298725222:role/nuskusa_codedeploy
             ec2TagFilters:
