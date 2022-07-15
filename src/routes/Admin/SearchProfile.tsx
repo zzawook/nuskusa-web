@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
 import { FirebaseUser } from '../../types/FirebaseUser';
 import { dbService } from '../../utils/firebaseFunctions';
+import SearchedProfile from '../../components/Admin/SearchedProfile';
 
 const Wrapper = styled.div`
     display: flex;
@@ -30,61 +31,7 @@ const SearchedProfileWrapper = styled.div`
     flex-direction: row;
     
 `
-const SearchedProfile = styled.div`
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    border: 1px solid white;
-`
-const Username = styled.div`
-    margin-top: 2px;
-    margin-bottom: 2px;
-    font-size: 18px;
-    color: white;
-    font-weight: bold;
-`
-const Gender = styled.div`
-    margin-top: 2px;
-    margin-bottom: 2px;
-    font-size: 18px;
-    color: white;
-`
-const YearOfBirth = styled.div`
-    margin-top: 2px;
-    margin-bottom: 2px;
-    font-size: 18px;
-    color: white;
-`
-const Email = styled.div`
-    margin-top: 2px;
-    margin-bottom: 2px;
-    font-size: 18px;
-    color: white;
-`
-const Role = styled.div`
-    margin-top: 2px;
-    margin-bottom: 2px;
-    font-size: 18px;
-    color: white;
-`
-const EnrolledYear = styled.div`
-    margin-top: 2px;
-    margin-bottom: 2px;
-    font-size: 18px;
-    color: white;
-`
-const Major = styled.div`
-    margin-top: 2px;
-    margin-bottom: 2px;
-    font-size: 18px;
-    color: white;
-`
-const KTId = styled.div`
-    margin-top: 2px;
-    margin-bottom: 2px;
-    font-size: 18px;
-    color: white;
-`
+
 type SearchProfileProps = {
     firebaseUserData: FirebaseUser,
 }
@@ -115,16 +62,17 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
                 const data = doc.data();
                 userArray.push(data)
                 const component = (
-                    <SearchedProfile>
-                        <Username>Name: {data.username}</Username>
-                        <Gender>Gender: {data.gender}</Gender>
-                        <YearOfBirth>Year of birth: {data.yob}</YearOfBirth>
-                        <Email>Email: {data.email}</Email>
-                        <Role>Role: {data.role}</Role>
-                        <EnrolledYear>Enrolled Year: {data.enrolledYear}</EnrolledYear>
-                        <Major>Major: {data.major}</Major>
-                        <KTId>KakaoTalk ID: {data.KTId}</KTId>
-                    </SearchedProfile>
+                    <SearchedProfile 
+                        firebaseUserData={this.props.firebaseUserData}
+                        username={data.username} 
+                        gender={data.gender} 
+                        yob={data.yob} 
+                        email={data.email} 
+                        role={data.role} 
+                        enrolledYear={data.enrolledYear}
+                        major={data.major}
+                        KTId={data.KTId}
+                    />
                 )
                 componentArray.push(component)
             })

@@ -121,7 +121,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
         font-size: 16px;
         padding-left: 2%;
         padding-right: 2%;
-        width: 100px;
+            
         position: relative;
         margin-bottom: auto;
         box-sizing: border-box;
@@ -188,7 +188,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                             }
                         </NavbarButton>
                         <NavbarButton onMouseEnter={() => this.setState({ searchHover: true })} onMouseLeave={() => this.setState({ searchHover: false })} onClick={() => window.location.href = "#/admin/search"}>
-                            <Link to='/admin/search' style={{ color: '#FFFFFF', textDecoration: 'none' }}><SearchText hover={this.state.searchHover}>Search Profile</SearchText></Link>
+                            <Link to='/admin/search' style={{ color: '#FFFFFF', textDecoration: 'none' }}><SearchText hover={this.state.searchHover}>Search Profile / Resend Verification</SearchText></Link>
                         </NavbarButton>
                         <NavbarButton onMouseEnter={() => this.setState({ draftHover: true })} onMouseLeave={() => this.setState({ draftHover: false })} onClick={() => window.location.href = "#/admin/draft/select"}>
                             <Link to='/admin/draft/select' style={{ color: '#FFFFFF', textDecoration: 'none' }}><SearchText hover={this.state.draftHover}>Draft Announcement</SearchText></Link>
