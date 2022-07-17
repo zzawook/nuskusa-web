@@ -101,8 +101,6 @@ type PasswordResetRequestState = {
     email: string,
     name: string,
     yob: string,
-    yoa: string,
-    major: string,
 }
 
 class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState> {
@@ -112,8 +110,6 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
             email: "",
             name: "",
             yob: "",
-            yoa: "",
-            major: "",
         }
     }
 
@@ -126,7 +122,7 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
         } else {
             userDocs.forEach(doc => {
                 let data = doc.data();
-                if (data.username === this.state.name && data.yob === this.state.yob && data.major === this.state.major && data.enrolledYear === this.state.yoa) {
+                if (data.username === this.state.name && data.yob === this.state.yob) {
                     authService.sendPasswordResetEmail(data.email)
                         .then(function () {
                             alert('비밀번호 재설정 메일을 보내드렸습니다. Password Reset Email has been sent.')
@@ -151,19 +147,9 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
                 name: event.target.value
             })
         }
-        if (event.target.name === "major") {
-            this.setState({
-                major: event.target.value
-            })
-        }
         if (event.target.name === "yob") {
             this.setState({
                 yob: event.target.value
-            })
-        }
-        if (event.target.name === "yoa") {
-            this.setState({
-                yoa: event.target.value
             })
         }
     }
@@ -218,22 +204,6 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
                         placeholder="한글 이름 / Name in Korean"
                         required
                         value={this.state.name}
-                        onChange={this.handleChange}
-                    ></Input>
-                    <Input
-                        name="yoa"
-                        type="text"
-                        placeholder="입학연도 / Enrolled Year (ex. 2021/2022)"
-                        required
-                        value={this.state.yoa}
-                        onChange={this.handleChange}
-                    ></Input>
-                    <Input
-                        name="major"
-                        type="text"
-                        placeholder="전공 / Major (가입 시 입력한대로)"
-                        required
-                        value={this.state.major}
                         onChange={this.handleChange}
                     ></Input>
                     <Input
