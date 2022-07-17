@@ -1,13 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
-import { StringLiteralLike } from 'typescript';
-import Navbar from '../../components/Admin/Navbar';
 import { FirebaseUser } from '../../types/FirebaseUser';
 import { dbService, authService } from '../../utils/firebaseFunctions';
-import { initializeApp } from 'firebase-admin'
-import { getAuth } from 'firebase-admin/auth'
-import { applicationDefault } from 'firebase-admin/app';
-import { getAutoHeightDuration } from '@mui/material/styles/createTransitions';
 
 const Wrapper = styled.div`
     padding: 10px;
