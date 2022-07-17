@@ -7,6 +7,21 @@ import { getTypeMessage } from '../../utils/NotificationParser'
 import { DisplaySmall, Headline, SubHeadline } from '../../utils/ThemeText'
 import firebase from 'firebase';
 
+const ContentDiv = styled.div`
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 700;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    text-align: left;
+    color: ${props => props.color};
+    height: 150px;
+    padding-bottom: 10px;
+    overflow: scroll;
+`
+
 type NotificationComponentProps = {
     data: FirestoreNotification
 }
@@ -91,7 +106,7 @@ class NotificationComponent extends React.Component<NotificationComponentProps, 
                                 <>
                                     {/* This is a post related notification */}
                                     <DisplaySmall color='black' style={{ marginTop: '0px', marginBottom: '0px' }}>{title}</DisplaySmall>
-                                    <Headline color='black'>{content}</Headline>
+                                    <ContentDiv color='black' dangerouslySetInnerHTML={{ __html: content }} />
                                 </>
                             :
                             // This is a comment related notification

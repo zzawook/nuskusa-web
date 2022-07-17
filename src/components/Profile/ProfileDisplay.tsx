@@ -141,7 +141,12 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             display: flex;
             flex-direction: row;
         `
+        const ProfileWrapper = styled.div`
+            display: flex;
+            flex-direction: row;
+        `
         const LogOut = styled.button`
+            margin-top: 45px;
             border: none;
             background-color: transparent;
             color: white;
@@ -157,7 +162,6 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             }
         `
         const LogOutText = styled.span`
-            line-height: 50px;
             font-weight: 700;
             font-size: 15px;
         `
@@ -175,7 +179,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
 
             line-height: 50px;
             color: white;
-            margin-top: 30px;
+            margin-top: 45px;
             margin-left: 4.5vh;
             text-decoration: none;
             cursor: pointer;
@@ -185,7 +189,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
         `
         const BottomBanner = styled.div`
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
         `
 
         const handleMouseEnter = (e: any) => {
@@ -222,25 +226,26 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                             <AiOutlineClose onClick={this.props.onExitClick} style={{
                                 border: 'none', width: '20px', height: '20px', marginTop: '3vh', marginLeft: '85%', cursor: 'pointer'
                             }} />
-                            <ProfileDisplayWrapper>
-                                <Avatar firebaseUserData={this.props.firebaseUserData} dimension={40} isOnNavbar={false} />
-                                <NameEmailWrapper>
-                                    <Name>{this.props.firebaseUserData.username}</Name>
-                                    <Email>{this.props.firebaseUserData.email}</Email>
-                                </NameEmailWrapper>
-                            </ProfileDisplayWrapper>
+                            <ProfileWrapper>
+                                <ProfileDisplayWrapper>
+                                    <Avatar firebaseUserData={this.props.firebaseUserData} dimension={40} isOnNavbar={false} />
+                                    <NameEmailWrapper>
+                                        <Name>{this.props.firebaseUserData.username}</Name>
+                                        <Email>{this.props.firebaseUserData.email}</Email>
+                                    </NameEmailWrapper>
+                                </ProfileDisplayWrapper>
+                                <BottomBanner>
+                                    <ProfileEdit onClick={handleEditProfile}>Edit Profile</ProfileEdit>
+                                    <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
+                                        <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
+                                        <LogOutText>Log Out</LogOutText>
+                                    </LogOut>
+                                    <EmptyDiv />
+                                </BottomBanner>
+                            </ProfileWrapper>
                             <NotificationWrapper>
                                 {this.state.notificationArray}
                             </NotificationWrapper>
-                            <BottomBanner>
-                                <ProfileEdit onClick={handleEditProfile}>Edit Profile</ProfileEdit>
-                                <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
-                                    <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
-                                    <LogOutText>Log Out</LogOutText>
-                                </LogOut>
-                                <EmptyDiv />
-
-                            </BottomBanner>
 
                         </Wrapper>
                         :
