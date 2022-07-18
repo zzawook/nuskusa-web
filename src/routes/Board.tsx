@@ -15,6 +15,137 @@ import { FirebaseUser } from '../types/FirebaseUser';
 import Select from 'react-select';
 import { ActionMeta } from 'react-select';
 
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #0B121C;
+    height: 100%;
+    width: 100vw;
+`
+const TextContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 70vw;
+`
+const PostContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    width: 70vw;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    //margin: auto;
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        max-width: 1px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb {
+        width: 10px;
+        height: 30px;
+        background: white;
+        border-radius: 5px;
+    }
+    margin-bottom: 10vh;
+`
+const BoardNavbarContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    width: 70vw;
+`
+const SearchContainer = styled.div`
+    height: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+`
+const SearchBoard = styled.div`
+    width: 40%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+`
+const SearchBar = styled.input`
+    width: 70%;
+    height: 40px;
+    background-color: transparent;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 1px solid white;
+    color: white;
+`
+const SearchButton = styled.div`
+    margin-left: 10px;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 1px solid white;
+    cursor: pointer;
+    :hover {
+        background-color: white;
+        color: black;
+    }
+`
+const customStyle = {
+    valueContainer: (provided: any, state: any) => ({
+        ...provided,
+        backgroundColor: '#0B121C',
+    }),
+    option: (provided: any, state: any) => ({
+        ...provided,
+        backgroundColor: '#18202B',
+        color: 'white',
+    }),
+    control: (provided: any, state: any) => ({
+        ...provided,
+        width: 'inherit',
+        fontSize: '10px',
+        backgroundColor: '#0B121C',
+        color: 'white',
+        borderRadius: '0px',
+        border: '1px solid white'
+    }),
+    singleValue: (provided: any, state: any) => {
+        return {
+            ...provided,
+            fontSize: '10px',
+            backgroundColor: '#0B121C',
+            color: 'white'
+        };
+    },
+    menu: (provided: any, state: any) => {
+        return {
+            ...provided,
+            backgroundColor: '#18202B',
+            color: 'white',
+            width: 'inherit'
+        };
+    },
+    menuList: (provided: any, state: any) => {
+        return {
+            ...provided,
+            backgroundCcolor: '#18202B',
+            color: 'white'
+        };
+    },
+    indicatorSeparator: (provided: any, state: any) => {
+        return {
+            ...provided,
+            backgroundColor: '#0B121C',
+            border: 'none'
+        }
+    }
+}
 type SelectOption = {
     value: string,
     label: string
@@ -25,11 +156,19 @@ type BoardProps = {
     boardId: string,
 }
 
+type PostData = {
+    data: FirestorePost,
+    id: string,
+}
+
 type BoardState = {
     firestoreBoard: FirestoreBoard,
-    postArray: FirestorePost[],
+    postArray: PostData[],
     postComponentArray: any[],
-    postOrder: SelectOption
+    postOrder: SelectOption,
+    searched: boolean,
+    searchString: string,
+    searchedPostArray: FirestorePost[],
 }
 
 let prevBoardURL = ""
@@ -47,7 +186,10 @@ class Board extends React.Component<BoardProps, BoardState> {
         },
         postArray: [],
         postComponentArray: [],
-        postOrder: { value: 'lastModified', label: 'Latest' }
+        postOrder: { value: 'lastModified', label: 'Latest' },
+        searched: false,
+        searchString: "",
+        searchedPostArray: [],
     }
 
     componentDidMount = () => {
@@ -81,7 +223,10 @@ class Board extends React.Component<BoardProps, BoardState> {
                         boardColor: data.boardColor,
                         boardTextColor: data.boardTextColor,
                         editPermission: data.editPermission,
-                    }
+                    },
+                    searchString: "",
+                    searchedPostArray: [],
+                    searched: false,
                 })
             })
     }
@@ -91,37 +236,53 @@ class Board extends React.Component<BoardProps, BoardState> {
             .collection('boards').doc(this.props.boardId)
             .collection('posts').orderBy("isPinned", 'desc').orderBy(this.state.postOrder.value, 'desc')
             .onSnapshot((querySnapshot) => {
-                const arr: FirestorePost[] = [];
+                const arr: PostData[] = [];
                 const componentArray: any[] = [];
                 let key = 0
                 querySnapshot.docs.forEach((doc) => {
                     key++
                     const data = doc.data() as FirestorePost;
-                    const component = (
-                        <div key={key}>
-                            <PostThumbnail
-                                firestorePost={data}
-                                firebaseUser={this.props.firebaseUserData}
-                                to={`/boards/${this.props.boardId}/${doc.id}`}
-                            />
-                            {/* Allow to edit all posts in the list */}
-                        </div>
-                    )
-                    arr.push(data);
                     if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User')) {
                         if (data.isPinned) {
-                            componentArray.unshift(component)
+                            arr.unshift({
+                                data: data,
+                                id: doc.id,
+                            })
                         }
                         else {
-                            componentArray.push(component)
+                            arr.push({
+                                data: data,
+                                id: doc.id,
+                            })
                         }
                     }
                 })
+                const components = this.generateComponent(arr)
                 this.setState({
                     postArray: arr,
-                    postComponentArray: componentArray
+                    postComponentArray: components
                 })
             })
+    }
+
+    generateComponent = (postArray: PostData[]) => {
+        const components = [];
+        for (let i = 0; i < postArray.length; i++) {
+            let data = postArray[i].data;
+            let id = postArray[i].id
+            let component = (
+                <div key={i}>
+                    <PostThumbnail
+                        firestorePost={data}
+                        firebaseUser={this.props.firebaseUserData}
+                        to={`/boards/${this.props.boardId}/${id}`}
+                    />
+                    {/* Allow to edit all posts in the list */}
+                </div>
+            )
+            components.push(component)
+        }
+        return components;
     }
 
     handleSelectChange = (option: SelectOption | null, actionMeta: ActionMeta<SelectOption>) => {
@@ -130,101 +291,39 @@ class Board extends React.Component<BoardProps, BoardState> {
         })
     }
 
-    render = () => {
-        const Container = styled.div`
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #0B121C;
-            height: 100%;
-            width: 100vw;
-        `
-        const TextContainer = styled.div`
-            display: flex;
-            flex-direction: column;
-            width: 70vw;
-        `
-        const PostContainer = styled.div`
-            display: flex;
-            flex-wrap: wrap;
-            width: 70vw;
-            height: 100vh;
-            box-sizing: border-box;
-            overflow-x: hidden;
-            overflow-y: scroll;
-            //margin: auto;
-            ::-webkit-scrollbar {
-                width: 10px;
-            }
-            ::-webkit-scrollbar-track {
-                max-width: 1px;
-                background: rgba(255, 255, 255, 0.2);
-                border-radius: 5px;
-            }
-            ::-webkit-scrollbar-thumb {
-                width: 10px;
-                height: 30px;
-                background: white;
-                border-radius: 5px;
-            }
-            margin-bottom: 10vh;
-        `
-        const BoardNavbarContainer = styled.div`
-            display: flex;
-            flex-direction: row;
-            width: 70vw;
-        `
-        const customStyle = {
-            valueContainer: (provided: any, state: any) => ({
-                ...provided,
-                backgroundColor: '#0B121C',
-            }),
-            option: (provided: any, state: any) => ({
-                ...provided,
-                backgroundColor: '#18202B',
-                color: 'white',
-            }),
-            control: (provided: any, state: any) => ({
-                ...provided,
-                width: 'inherit',
-                fontSize: '10px',
-                backgroundColor: '#0B121C',
-                color: 'white',
-                borderRadius: '0px',
-                border: '1px solid white'
-            }),
-            singleValue: (provided: any, state: any) => {
-                return {
-                    ...provided,
-                    fontSize: '10px',
-                    backgroundColor: '#0B121C',
-                    color: 'white'
-                };
-            },
-            menu: (provided: any, state: any) => {
-                return {
-                    ...provided,
-                    backgroundColor: '#18202B',
-                    color: 'white',
-                    width: 'inherit'
-                };
-            },
-            menuList: (provided: any, state: any) => {
-                return {
-                    ...provided,
-                    backgroundCcolor: '#18202B',
-                    color: 'white'
-                };
-            },
-            indicatorSeparator: (provided: any, state: any) => {
-                return {
-                    ...provided,
-                    backgroundColor: '#0B121C',
-                    border: 'none'
-                }
-            }
+    handleSearchInputChange = (event: any) => {
+        event.preventDefault();
+        this.setState({
+            searchString: event.target.value,
+        })
+    }
+
+    handleSearchClick = (event: any) => {
+        if (this.state.searchString.trim() === "") {
+            const components = this.generateComponent(this.state.postArray)
+            this.setState({
+                postComponentArray: components
+            })
+            return;
         }
 
+        const searchedPostArray = [];
+        const postArray = this.state.postArray;
+        for (let i = 0; i < postArray.length; i++) {
+            if (postArray[i].data.content.includes(this.state.searchString)) {
+                searchedPostArray.push(postArray[i])
+            }
+            else if (postArray[i].data.title.includes(this.state.searchString)) {
+                searchedPostArray.push(postArray[i])
+            }
+        }
+        const searchedPostComponents = this.generateComponent(searchedPostArray);
+        this.setState({
+            postComponentArray: searchedPostComponents
+        })
+    }
+
+    render = () => {
         return (
             <Container>
                 <Navbar firebaseUserData={this.props.firebaseUserData} />
@@ -275,32 +374,12 @@ class Board extends React.Component<BoardProps, BoardState> {
                         {this.state.postComponentArray}
                     </PostContainer>
                 }
-
-                {/* {this.props.firebaseUserData.role === "Admin" ?
-                    <>
-                        <button onClick={() => generateSamplePost(
-                            dbService.collection("boards").doc(this.props.boardId).collection("posts").doc().id,
-                            false,
-                            this.props.boardId,
-                            this.state.firestoreBoard.title,
-                            this.state.firestoreBoard.boardColor,
-                            this.state.firestoreBoard.boardTextColor)}>
-                            Add Random Post (unpinned)
-                        </button>
-                        <button onClick={() => generateSamplePost(
-                            dbService.collection("boards").doc(this.props.boardId).collection("posts").doc().id,
-                            true,
-                            this.props.boardId,
-                            this.state.firestoreBoard.title,
-                            this.state.firestoreBoard.boardColor,
-                            this.state.firestoreBoard.boardTextColor)}>
-                            Add Random Post (pinned)
-                        </button>
-                    </>
-                    :
-                    <></>
-                } */}
-
+                <SearchContainer>
+                    <SearchBoard>
+                        <SearchBar value={this.state.searchString} placeholder={"게시글 검색어를 입력해주세요"} onChange={this.handleSearchInputChange}/>
+                        <SearchButton onClick={this.handleSearchClick}>검색</SearchButton>
+                    </SearchBoard>
+                </SearchContainer>
                 <ContactUs />
             </Container>
         )
