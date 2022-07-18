@@ -5,10 +5,6 @@ import { FirebaseUser } from '../../types/FirebaseUser';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { dbService } from '../../utils/firebaseFunctions';
 import UserSlip from '../../components/Admin/UserSlip'
-import { AiOutlineConsoleSql } from 'react-icons/ai';
-
-const width = window.innerWidth;
-const height = window.innerHeight;
 
 const Wrapper = styled.div`
     display: flex;

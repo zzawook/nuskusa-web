@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import CSS from 'csstype';
 import styled from 'styled-components'
 import { FlexColumn } from '../../components/utils/UsefulDiv';

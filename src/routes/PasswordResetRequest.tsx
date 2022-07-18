@@ -4,8 +4,6 @@ import { authService, dbService } from '../utils/firebaseFunctions';
 import CSS from 'csstype';
 
 const height = window.innerHeight;
-const width = window.innerWidth;
-const margin = 15;
 
 const Container = styled.div`
         position: absolute;

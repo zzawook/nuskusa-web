@@ -14,7 +14,6 @@ import VerificationRequest from '../components/Verification/VerificationRequest'
 import { FirebaseUser } from '../types/FirebaseUser';
 import Select from 'react-select';
 import { ActionMeta } from 'react-select';
-import { generateSamplePost } from '../utils/SamplePost';
 
 type SelectOption = {
     value: string,

@@ -4,7 +4,6 @@ import { FirebaseUser } from '../types/FirebaseUser';
 import styled from 'styled-components';
 import { authService, dbService, storageService } from '../utils/firebaseFunctions'
 import firebase from 'firebase';
-import VerificationRequest from '../components/Verification/VerificationRequest';
 
 type EditProfileProps = {
     firebaseUserData: FirebaseUser,
@@ -587,6 +586,5 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         )
     }
 }
-
 
 export default EditProfile;
