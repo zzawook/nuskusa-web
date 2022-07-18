@@ -1,20 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { authService, dbService } from '../utils/firebaseFunctions';
 import ContactUs from '../components/ContactUs'
-import Post from './Post'
 import styled from 'styled-components'
 import ActivityList from '../components/Home/ActivityList'
 import Navbar from '../components/Navbar';
-import { DisplayMedium, DisplayLarge } from '../utils/ThemeText';
-import { GoldenButton } from '../components/GoldenButton';
+import { DisplayLarge } from '../utils/ThemeText';
 import { FirebaseUser } from '../types/FirebaseUser';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import CSS from 'csstype'
-import PostPreview from '../components/Home/PostPreview';
 import AnnouncementList from '../components/Home/AnnouncementList';
-
 
 type HomeProps = {
     firebaseUserData: FirebaseUser
@@ -24,11 +18,9 @@ type HomeState = {
 
 }
 
-const width = window.innerWidth;
 const height = window.innerHeight;
 
-
-/**
+/*
  * Main page that the users will visit
  */
 class Home extends React.Component<HomeProps, HomeState> {

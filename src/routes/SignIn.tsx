@@ -5,7 +5,6 @@ import firebase from 'firebase';
 import styled from 'styled-components';
 import CSS from 'csstype';
 import { FlexColumn } from '../components/utils/UsefulDiv';
-import { FirebaseUser } from '../types/FirebaseUser'
 
 type UserProps = {
     history: any,
@@ -20,8 +19,6 @@ type UserObject = {
     loading: boolean,
 }
 
-const height = window.innerHeight;
-const width = window.innerWidth;
 const margin = 20;
 let linkMouseEnter = false;
 

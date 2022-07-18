@@ -4,7 +4,6 @@ import { authService, dbService } from '../utils/firebaseFunctions';
 import { EventEmitter } from 'stream';
 import styled from 'styled-components'
 import { FaWpforms } from "react-icons/fa";
-//const nodemailer = require('nodemailer')
 
 type ContactStates = {
     nameInput: string,
@@ -74,34 +73,8 @@ class ContactUs extends React.Component {
             emailInput: 'Email',
             messageInput: '',
         })
-        /*
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: 'kjaehyeok21@gmail.com',
-              pass: 'airbusa380861'
-            }
-        });
-          
-        const mailOptions = {
-            from: 'kjaehyeok21@gmail.com',
-            to: 'e0893439@u.nus.edu',
-            subject: 'NUS 한인회 웹사이트에서 Contact Us Form이 작성되었습니다.',
-            text: 'Name: ' + name + "\n Email: " + email + "\n \n Message: " + message,
-        };
-          
-        transporter.sendMail(mailOptions, function(error: string, info: any){
-            if (error) {
-                console.log("ANGKIMO")
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
-        */
 
     }
-    //Input Change Handlers
     handleNameChange = (event: any) => {
         event.preventDefault();
         const target = event.target;

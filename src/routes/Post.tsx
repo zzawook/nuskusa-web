@@ -40,8 +40,6 @@ type PostState = {
     boardData: any[],
 }
 
-const height = window.innerHeight;
-const width = window.innerWidth;
 const Container = styled.div`
     width: 70%;
     position: absolute;

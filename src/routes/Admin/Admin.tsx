@@ -1,17 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { authService, dbService } from '../../utils/firebaseFunctions';
-import ContactUs from '../../components/ContactUs'
-import Post from '../Post'
 import styled from 'styled-components'
-import ActivityList from '../../components/Home/ActivityList'
 import Navbar from '../../components/Admin/Navbar';
-import { DisplayMedium, DisplayLarge } from '../../utils/ThemeText';
-import { GoldenButton } from '../../components/GoldenButton';
+import { DisplayLarge } from '../../utils/ThemeText';
 import { FirebaseUser } from '../../types/FirebaseUser';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from 'react-responsive-carousel';
-import CSS from 'csstype'
 
 const width = window.innerWidth;
 const height = window.innerHeight;

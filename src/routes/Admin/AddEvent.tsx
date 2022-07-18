@@ -7,7 +7,6 @@ import { authService, dbService } from "../../utils/firebaseFunctions";
 import firebase from 'firebase';
 import ShortInput from '../../components/Admin/AddEvent/ShortInput';
 import Checkbox from "../../components/Admin/AddEvent/Checkbox"
-import { textChangeRangeIsUnchanged } from 'typescript';
 
 const width = window.innerWidth;
 const height = window.innerHeight;

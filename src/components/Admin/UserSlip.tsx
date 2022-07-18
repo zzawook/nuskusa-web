@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
-import Navbar from '../../components/Admin/Navbar';
-import { FirebaseUser } from '../../types/FirebaseUser';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { dbService, authService } from '../../utils/firebaseFunctions';
+import { dbService } from '../../utils/firebaseFunctions';
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -130,23 +128,6 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
             }).then(async () => {
                 this.props.unsetLoading();
                 window.alert("정상적으로 승인되었습니다.")
-                /*const transporter = nodemailer.createTransport({
-                    host: "u.nus.edu",
-                    port: 587,
-                    secure: false,
-                    auth: {
-                        user: process.env.MAIL_USERNAME,
-                        pass: process.env.MAIL_PASSWORD,
-                    },
-                });
-                transporter.sendMail({
-                    from: 'NUS 한인회',
-                    to: this.props.email,
-                    subject: "[NUS 한인회] 귀하의 계정이 인증되었습니다.",
-                    text: "안녕하세요, NUS 한인회 IT 팀장 김재혁입니다. \n\n귀하의 계정의 인증이 완료되어 안내드립니다. \n\n일전에 본 이메일 주소로 보내드린 본인 인증 링크를 클릭해 이메일 주소 인증을 완료하신 후, 한인회 웹사이트를 이용해주시면 감사하겠습니다. \n\n NUS 한인회 드림.",
-                }).then(() => {
-                    console.log('정상적으로 승인되었습니다.')
-                })*/
             })
         })
     }
@@ -160,23 +141,6 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         dbService.collection('toVerify').doc(this.props.userId).delete().then(async () => {
             this.props.unsetLoading();
             window.alert("정상적으로 반려되었습니다. 해당 유저에게 고지하는 것 잊지 말아주세요! 이메일 주소: " + this.props.email)
-            /*const transporter = nodemailer.createTransport({
-                host: "u.nus.edu",
-                port: 587,
-                secure: false,
-                auth: {
-                    user: process.env.MAIL_USERNAME,
-                    pass: process.env.MAIL_PASSWORD,
-                },
-            });
-            transporter.sendMail({
-                from: 'NUS 한인회',
-                to: this.props.email,
-                subject: "[NUS 한인회] 귀하의 계정 인증이 반려되었습니다.",
-                text: "안녕하세요, NUS 한인회 IT 팀장 김재혁입니다. \n\n유감스럽게도 귀하의 계정의 인증이 반려되어 안내드립니다. \n\n 반려 사유를 아래와 같이 안내드리오니, 반려 사유를 참고하시어 nuskusa@gmail.com로 재가입 문의 부탁드립니다. \n\n 반려사유: " + reason + "\n\n감사합니다. \nNUS 한인회 드림.",
-            }).then(() => {
-                console.log('정상적으로 반려되었습니다.')
-            })*/
         })
     }
 
