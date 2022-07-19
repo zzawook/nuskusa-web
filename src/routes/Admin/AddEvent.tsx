@@ -59,6 +59,18 @@ const Input = styled.input`
     font-size: 18px;
     outline: none;
 `
+const Description = styled.textarea`
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    margin-bottom: ${margin}px;
+    width: 60%;
+    min-height: 45px;
+    resize: none;
+    font-family: var(--font-family-roboto);
+    font-weight: 700;
+    font-size: 18px;
+    outline: none;
+`
 const SubmitButton = styled.input`
     width: 60%;
     height: 63px;
@@ -282,15 +294,14 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
                             onChange={(event: any) => this.setState({ title: event.target.value })}
                         >
                         </Input>
-                        <Input
-                            name="username"
-                            type="string"
+                        <Description
+                            name="description"
                             placeholder="이벤트 공지 설명"
                             required
                             value={this.state.description}
                             onChange={(event: any) => this.setState({ description: event.target.value })}
                         >
-                        </Input>
+                        </Description>
                         <AddBar>{this.inputTypes.map(element => {
                             return <AddBox onClick={element.adderFunction}>{element.name} 추가</AddBox>
                         })}</AddBar>
