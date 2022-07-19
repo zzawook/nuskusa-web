@@ -33,6 +33,7 @@ const Submit = styled.button`
     font-weight: 700;
     font-size: 15px;
     color: white;
+    margin-top: 30px;
 `
 const LoadingBlocker = styled.div`
     opacity: 0.5;

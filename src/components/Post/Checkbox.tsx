@@ -6,7 +6,7 @@ const margin = 20;
 const Wrapper = styled.div`
     display: flex;
     flex-direction: row;
-    width: 70%;
+    width: 100%;
 `
 const Input = styled.input`
     border: none;
@@ -17,11 +17,12 @@ const Input = styled.input`
     
 `
 const Question = styled.span`
-    line-height: ${45 + 7}px;
+    margin-top: ${11}px;
     font-family: var(--font-family-roboto);
     font-weight: 700;
     font-size: 15px;
     outline: none;
+    word-break: keep-all;
 `
 
 type TextInputProps = {
@@ -43,9 +44,9 @@ class Checkbox extends React.Component<TextInputProps, TextInputState> {
     }
 
     handleChange = (event: any) => {
-        this.props.handleChange(this.props.index, ! this.state.checked);
+        this.props.handleChange(this.props.index, !this.state.checked);
         this.setState({
-            checked: ! this.state.checked,
+            checked: !this.state.checked,
         })
     }
 
@@ -55,7 +56,7 @@ class Checkbox extends React.Component<TextInputProps, TextInputState> {
                 <Input type="checkbox" onChange={this.handleChange} checked={this.state.checked} />
                 <Question>{this.props.question}</Question>
             </Wrapper>
-            
+
         )
     }
 }
