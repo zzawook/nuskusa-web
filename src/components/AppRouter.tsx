@@ -27,6 +27,7 @@ import PasswordResetRequest from '../routes/PasswordResetRequest';
 import Admin from '../routes/Admin/Admin'
 import AdminVerification from '../routes/Admin/Verification'
 import SearchProfile from '../routes/Admin/SearchProfile'
+import SelectEvent from '../routes/Admin/SelectEvent'
 
 type AppRouterProps = {
 
@@ -206,6 +207,18 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/admin/draft/event' render={() => {
                     if (this.state.firebaseUserData.role == 'Admin') {
                       return <AddEvent
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                    else {
+                      return <Home
+                        firebaseUserData={this.state.firebaseUserData}
+                      />
+                    }
+                  }} />
+                  <Route exact path='/admin/event' render={() => {
+                    if (this.state.firebaseUserData.role == 'Admin') {
+                      return <SelectEvent
                         firebaseUserData={this.state.firebaseUserData}
                       />
                     }
