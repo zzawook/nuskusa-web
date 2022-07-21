@@ -351,15 +351,15 @@ class Post extends React.Component<PostProps, PostState> {
                         let postIdArray: any[] = [];
                         let tempArray: any[] = [];
                         for (let i = 0; i < boardArray.length; i++) {
-                            const doc = await dbService
+                            const docs = await dbService
                                 .collection('boards').doc(boardArray[i])
                                 .collection('posts').orderBy('lastModified', 'desc').limit(10).get();
-
-                            const postObjs = doc.docs;
-
-                            for (let j = 0; j < postObjs.length; j++) {
-                                tempArray.push([postObjs[j].data(), postObjs[j].id]);
-                            }
+                            docs.forEach(doc => {
+                                const data = doc.data();
+                                if (! data.isHidden) {
+                                    tempArray.push([data, doc.id]);
+                                }
+                            })
                             tempArray = this.sortByLastModified(tempArray)
                         }
                         postArray = tempArray.map(element => element[0]);
