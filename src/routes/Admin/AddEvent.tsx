@@ -7,6 +7,7 @@ import { authService, dbService } from "../../utils/firebaseFunctions";
 import firebase from 'firebase';
 import ShortInput from '../../components/Admin/AddEvent/ShortInput';
 import Checkbox from "../../components/Admin/AddEvent/Checkbox"
+import crypto from "crypto-js"
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -258,15 +259,16 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
             permissions: ["Admin", "Current"],
             author: this.props.firebaseUserData.username,
             authorId: authService.currentUser ? authService.currentUser.uid : null,
-
             parentBoardId: "announcement",
             parentBoardTitle: "공지게시판",
             parentColor: "#fc6565",
             parentTextColor: "#845858",
         }
-        console.log(eventObject)
+        const hashedTitle = crypto.SHA256(this.state.title).toString().substring(0, 20);
         dbService.collection('boards').doc('announcement').collection('posts').add(eventObject).then(docRef => {
-            console.log("Added")
+            dbService.collection('events').doc(hashedTitle).set({
+                title: this.state.title,
+            })
             this.setState({
                 loading: false,
             }, () => {

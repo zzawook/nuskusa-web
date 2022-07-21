@@ -1,10 +1,10 @@
 import React from 'react';
-import { handleInputChange } from 'react-select/dist/declarations/src/utils';
 import styled from 'styled-components'
 import TextInput from "./TextInput"
 import Checkbox from './Checkbox'
 import { FirebaseUser } from '../../types/FirebaseUser'
 import { dbService } from '../../utils/firebaseFunctions';
+import crypto from 'crypto-js'
 
 const margin = 20;
 
@@ -119,9 +119,8 @@ class Event extends React.Component<EventProps, EventState> {
         event.preventDefault();
         let already = false;
         window.confirm("이벤트 지원은 인당 1회만 가능하며 추후 수정은 개별 연락을 통해서만 가능하오니 지원 내용을 잘 확인해주세요. 입력하신 내용으로 지원하시겠습니까?")
-        console.log(this.props.firebaseUserData.userId)
-        const parsedTitle = this.props.title.replaceAll("/", "");
-        dbService.collection("event").doc(parsedTitle).collection("registrations").doc(this.props.firebaseUserData.userId).get().then(doc => {
+        const hashedTitle = crypto.SHA256(this.props.title).toString().substring(0,20);
+        dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.firebaseUserData.userId).get().then(doc => {
             this.setState({
                 loading: true,
             })
@@ -132,7 +131,6 @@ class Event extends React.Component<EventProps, EventState> {
                 })
                 already = true;
             }
-            
         }).then(() => {
             if (! already) {
                 const responseData: any = {}
@@ -144,7 +142,7 @@ class Event extends React.Component<EventProps, EventState> {
                     userData: JSON.stringify(this.props.firebaseUserData),
                     responseData: JSON.stringify(responseData),
                 }
-                dbService.collection("event").doc(parsedTitle).collection("registrations").doc(this.props.firebaseUserData.userId).set(finalData).then(() => {
+                dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.firebaseUserData.userId).set(finalData).then(() => {
                     window.alert("이벤트 지원이 성공적으로 처리되었습니다. 지원해주셔서 감사합니다.")
                     this.setState({
                         loading: false,
