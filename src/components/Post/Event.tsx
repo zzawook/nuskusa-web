@@ -26,6 +26,7 @@ const Form = styled.form`
 const Description = styled.p`
     font-size: 15px;
     word-break: keep-all;
+    white-space: pre-wrap;
 `
 const Submit = styled.button`
     width: 120px;
