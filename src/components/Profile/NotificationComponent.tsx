@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { FirestoreNotification } from '../../types/FirestoreNotification'
 import { authService, dbService } from '../../utils/firebaseFunctions'
 import { getTypeMessage } from '../../utils/NotificationParser'
-import { DisplaySmall, Headline, SubHeadline } from '../../utils/ThemeText'
+import { DisplaySmall, Headline } from '../../utils/ThemeText'
 import firebase from 'firebase';
 
 const ContentDiv = styled.div`

@@ -2,8 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { FirestorePost } from '../../types/FirestorePost'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import { dbService } from '../../utils/firebaseFunctions'
-import { FirestoreBoard } from '../../types/FirestoreBoard'
 
 type OtherPostProps = RouteComponentProps & {
     data: FirestorePost,

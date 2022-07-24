@@ -3,7 +3,6 @@ import React from 'react'
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import styled from 'styled-components'
 import { authService, dbService } from '../../utils/firebaseFunctions'
-import { Headline } from '../../utils/ThemeText'
 
 type UpvoteProps = {
     boardId: string,

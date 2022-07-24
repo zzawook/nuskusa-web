@@ -6,11 +6,8 @@ import { Headline, DisplaySmall, DisplayMedium } from '../../utils/ThemeText'
 import BoardTag from './BoardTag';
 import CSS from 'csstype';
 import { FirebaseUser } from '../../types/FirebaseUser'
-import PostApprover from '../Grove/PostApprover'
 import { parse } from 'node-html-parser'
 import { BsFillPinAngleFill } from 'react-icons/bs'
-import { FaBlackberry } from 'react-icons/fa'
-
 
 type PostThumbnailProps = {
     to: string,

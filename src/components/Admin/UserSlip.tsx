@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
-import Navbar from '../../components/Admin/Navbar';
-import { FirebaseUser } from '../../types/FirebaseUser';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { dbService, authService } from '../../utils/firebaseFunctions';
+import { dbService } from '../../utils/firebaseFunctions';
 
 const width = window.innerWidth;
 const height = window.innerHeight;

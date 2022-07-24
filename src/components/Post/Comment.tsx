@@ -1,6 +1,5 @@
 import React from "react";
 import styled from 'styled-components';
-import CSS from 'csstype'
 import Primary from '../Post/PrimaryComment';
 import { dbService } from '../../utils/firebaseFunctions'
 import { FirebaseUser } from "../../types/FirebaseUser";

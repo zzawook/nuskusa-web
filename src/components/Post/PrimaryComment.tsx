@@ -6,9 +6,7 @@ import { dbService } from '../../utils/firebaseFunctions'
 import { FirebaseUser } from "../../types/FirebaseUser";
 import firebase from 'firebase';
 import CommentUpvote from "./CommentUpvote";
-import { throws } from "assert";
 import { timestampToCommentDateString } from "../../utils/TimeHelper";
-import { Headline } from "../../utils/ThemeText";
 
 type PrimaryProps = {
     data: any,

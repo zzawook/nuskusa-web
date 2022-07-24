@@ -4,7 +4,6 @@ import { FirebaseUser } from '../../types/FirebaseUser';
 import { FirestorePost } from '../../types/FirestorePost';
 import { authService, dbService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components';
-import { Headline } from '../../utils/ThemeText';
 import { AiFillCheckSquare, AiFillCloseSquare } from 'react-icons/ai';
 import { FirestoreNotification } from '../../types/FirestoreNotification';
 

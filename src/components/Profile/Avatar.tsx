@@ -1,8 +1,7 @@
 import React from 'react'
-import styled, { CSSProperties } from 'styled-components'
+import styled from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser'
 import { CgProfile } from 'react-icons/cg'
-import { authService } from '../../utils/firebaseFunctions'
 type AvatarProps = {
     firebaseUserData: FirebaseUser | undefined,
     dimension: number,

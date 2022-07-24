@@ -1,5 +1,4 @@
 import React from 'react';
-import { handleInputChange } from 'react-select/dist/declarations/src/utils';
 import styled from 'styled-components'
 import TextInput from "./TextInput"
 import Checkbox from './Checkbox'
