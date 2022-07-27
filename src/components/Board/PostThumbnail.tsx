@@ -9,7 +9,6 @@ import { FirebaseUser } from '../../types/FirebaseUser'
 import { parse } from 'node-html-parser'
 import { BsFillPinAngleFill } from 'react-icons/bs'
 
-
 type PostThumbnailProps = {
     to: string,
     firestorePost: FirestorePost,

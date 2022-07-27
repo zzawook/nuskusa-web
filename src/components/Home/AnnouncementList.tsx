@@ -2,9 +2,6 @@ import React from 'react';
 import styled from 'styled-components'
 import { dbService } from '../../utils/firebaseFunctions';
 import { FirestorePost } from '../../types/FirestorePost';
-import { format } from 'path/posix';
-import { BsFillPinAngleFill } from 'react-icons/bs'
-import { transform } from 'typescript';
 
 type PostState = {
     postArray: FirestorePost[],

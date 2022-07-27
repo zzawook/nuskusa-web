@@ -1,7 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser'
-import { Link } from 'react-router-dom';
 
 type EditProps = {
     boardId: string,

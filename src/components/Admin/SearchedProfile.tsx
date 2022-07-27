@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser';
-import { dbService, authService } from '../../utils/firebaseFunctions';
+import { authService } from '../../utils/firebaseFunctions';
 
 const Wrapper = styled.div`
     padding: 10px;

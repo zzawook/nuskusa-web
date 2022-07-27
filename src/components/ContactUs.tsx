@@ -1,7 +1,6 @@
 import React from 'react';
 import CSS from 'csstype';
-import { authService, dbService } from '../utils/firebaseFunctions';
-import { EventEmitter } from 'stream';
+import { dbService } from '../utils/firebaseFunctions';
 import styled from 'styled-components'
 import { FaWpforms } from "react-icons/fa";
 
@@ -18,11 +17,182 @@ const Container =  styled.div`
     display: flex;
     order: 3;
     position: relative;
-    width: ${(width * 0.7)}px;
-    height: 685px;
-    left: 0px;
+    width: 100vw;
+    height: 900px;
     background-color: transparent;
     font-family: var(--font-family-roboto);
+    flex-direction: column;
+    justify-content: center;
+`
+
+const ElementContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+`
+
+const ContactUsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 30vw;
+    flex-grow: 2;
+    align-items: flex-end;
+    margin-right: 40px;
+`
+
+const FormContainer = styled.div`
+    width: 30vw;
+    flex-grow: 3;
+`
+
+const Title = styled.span`
+    position: relative;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 40px;
+    line-height: 48px;
+    color: white;
+    margin-bottom: 40px;
+    margin-left: 15vw;
+`
+
+const EmailBox = styled.div`
+    position: relative;
+    height: 120px;
+    width: 30vw;
+    border-width: 1px;
+    border-color: white;
+    border-style: solid;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+`
+
+const AddressBox = styled.div`
+    position: relative;
+    height: 120px;
+    width: 30vw;
+    border-width: 1px;
+    border-color: white;
+    border-style: solid;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+`
+
+const FeedbackBox = styled.div`
+    position: relative;
+    height: 120px;
+    width: 30vw;
+    border-width: 1px;
+    border-color: white;
+    border-style: solid;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+`
+
+const ContactBox = styled.form`
+    position: relative;
+    height: 550px;
+    width: 40vw;
+    background-color: white;
+`
+
+const FeatureBox = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+`
+
+const FeatureTitle = styled.span`
+    position: relative;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    color: #FFFFFF;
+    margin-bottom: 10px;
+    margin-left: 40px;
+    margin-top: 20px;
+`
+
+const FeatureExplanation = styled.span`
+    position: relative;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    color: #FFFFFF;
+    margin-left: 40px;
+    margin-right: 10px;
+    word-break: keep-all;
+`
+
+const NameInput = styled.input`
+    position: relative;
+    width: 30vw;
+    height: 50px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    margin-left: 5vw;
+    margin-top: 20px;
+    border-bottom: 1px solid rgba(11, 18, 28, 0.3);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    color: rgba(11, 18, 28, 0.4);
+`
+
+const EmailInput = styled.input`
+    position: relative;
+    width: 30vw;
+    height: 50px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    margin-left: 5vw;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid rgba(11, 18, 28, 0.3);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    color: rgba(11, 18, 28, 0.4);
+`
+
+const Message = styled.span`
+    position: relative;
+    color: rgba(11, 18, 28, 0.4);
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    margin-left: 5vw;
+`
+
+const MessageInput = styled.input`
+    position: relative;
+    width: 30vw;
+    height: 200px;
+    border: 1px solid rgba(11, 18, 28, 0.4);
+    box-sizing: border-box;
+    resize: none;
+    padding: 10px;
+    font-size: 12px;
+    margin-left: 5vw;
+    margin-top: 10px;
+`
+
+const Submit = styled.button`
+    position: relative;
+    width: 30vw;
+    height: 60px;
+    background: #BDA06D;
+    border: none;
+    color: white;
+    font-size: 22px;
+    font-weight: 600;
+    margin-left: 5vw;
 `
 
 class ContactUs extends React.Component {
@@ -137,191 +307,52 @@ class ContactUs extends React.Component {
         }
     }
 
-    //Browser Size Short-cut
-    width = window.innerWidth;
-    height = window.innerHeight;
-
-    //CSS Styles
-    
-    titleStyle: CSS.Properties = {
-        position: "absolute",
-        left: "0px",
-        top: "10px",
-        fontStyle: "normal",
-        fontWeight: "bold",
-        fontSize: "40px",
-        lineHeight: "48px",
-        color: 'white'
-    }
-    emailBoxStyle: CSS.Properties = {
-        position: "absolute",
-        left: "0px",
-        top: "100px",
-        height: '113px',
-        width: (this.width * 0.25).toString() + 'px',
-        border: '1px solid #FFFFFF',
-        boxSizing: 'border-box'
-    }
-    addressBoxStyle: CSS.Properties = {
-        position: "absolute",
-        left: "0px",
-        top: "240px",
-        height: '136px',
-        width: (this.width * 0.25).toString() + 'px',
-        border: '1px solid #FFFFFF',
-        boxSizing: 'border-box'
-    }
-    feedbackBoxStyle: CSS.Properties = {
-        position: "absolute",
-        left: "0px",
-        top: "403px",
-        height: '136px',
-        width: (this.width * 0.25).toString() + 'px',
-        border: '1px solid #FFFFFF',
-        boxSizing: 'border-box'
-    }
-    contactBoxStyle: CSS.Properties = {
-        position: 'absolute',
-        right: '0px',
-        top: '0px',
-        height: '671px',
-        width: (this.width * 0.4).toString() + 'px',
-        backgroundColor: 'white',
-    }
-    nameInputStyle: CSS.Properties = {
-        position: 'absolute',
-        top: '60px',
-        left: '80px',
-        width: ((this.width * 0.4) - 160).toString() + 'px',
-        height: '50px',
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '20px',
-        paddingLeft: '0px',
-        borderBottom: '1px solid rgba(11, 18, 28, 0.3)',
-        borderTop: 'none',
-        borderLeft: 'none',
-        borderRight: 'none',
-        color: this.state.nameInput === "Name" ? 'rgba(11, 18, 28, 0.4)' : 'black'
-    }
-    emailInputStyle: CSS.Properties = {
-        position: 'absolute',
-        top: '170px',
-        left: '80px',
-        width: ((this.width * 0.4) - 160).toString() + 'px',
-        height: '50px',
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '20px',
-        paddingLeft: '0px',
-        borderBottom: '1px solid rgba(11, 18, 28, 0.3)',
-        borderTop: 'none',
-        borderLeft: 'none',
-        borderRight: 'none',
-        color: this.state.emailInput === "Email" ? 'rgba(11, 18, 28, 0.4)' : 'black'
-    }
-    messageTextStyle: CSS.Properties = {
-        position: 'absolute',
-        left: '80px',
-        top: '280px',
-        color: 'rgba(11, 18, 28, 0.4)',
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '20px',
-    }
-    messageInputStyle: CSS.Properties = {
-        position: 'absolute',
-        left: '80px',
-        top: '320px',
-        width: ((this.width * 0.4) - 160).toString() + 'px',
-        height: '200px',
-        border: '1px solid rgba(11, 18, 28, 0.4)',
-        boxSizing: 'border-box',
-        resize: 'none',
-        padding: '10px',
-        fontSize: '12px',
-    }
-    submitStyle: CSS.Properties = {
-        position: 'absolute',
-        left: '80px',
-        bottom: '60px',
-        width: ((this.width * 0.4) - 160).toString() + 'px',
-        height: '62.75px',
-        background: '#BDA06D',
-        border: 'none',
-        color: 'white',
-        fontSize: '22px',
-        fontWeight: 600
-    }
-    emailSpanStyle: CSS.Properties = {
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '18px',
-        color: '#FFFFFF',
-        position: 'absolute',
-        lineHeight: '29px',
-        left: '100px',
-        top: '20px'
-    }
-    addressSpanStyle: CSS.Properties = {
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '18px',
-        color: '#FFFFFF',
-        position: 'absolute',
-        lineHeight: '29px',
-        left: '100px',
-        top: '30px'
-    }
-    feedbackSpanStyle: CSS.Properties = {
-        fontStyle: 'normal',
-        fontWeight: 'bold',
-        fontSize: '18px',
-        color: '#FFFFFF',
-        position: 'absolute',
-        lineHeight: '29px',
-        left: '100px',
-        top: '30px'
-    }
-    img1Style: CSS.Properties = {
-        position: 'absolute',
-        left: '30px',
-        top: '40px'
-    }
-    img2Style: CSS.Properties = {
-        position: 'absolute',
-        left: '30px',
-        top: '50px'
-    }
-    surveyIconWrapper: CSS.Properties = {
-        position: 'absolute',
-        left: '30px',
-        top: '50px'
+    imgStyle: CSS.Properties = {
+        position: 'relative',
+        height: '40px',
+        width: '40px',
+        top: '35px',
+        left: '20px'
     }
 
     render = () => {
         return (
             <Container>
-                <span style={this.titleStyle}>Contact Us</span>
-                <div style={this.emailBoxStyle}>
-                    <img style={this.img1Style} src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus1.png?alt=media&token=ff7ace54-f07b-4435-bf59-0ee845f147cf" />
-                    <span style={this.emailSpanStyle}>Email<br />nuskusa@gmail.com</span>
-                </div>
-                <div style={this.addressBoxStyle}>
-                    <img style={this.img2Style} src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus2.png?alt=media&token=093e63b1-8970-42e5-91e9-2e1d24b6e17b" />
-                    <span style={this.addressSpanStyle}>Address<br />21 Lower Kent Ridge<br />Rd Singapore 119077</span>
-                </div>
-                <div style={this.feedbackBoxStyle} onClick={() => window.open("https://docs.google.com/forms/d/e/1FAIpQLSceF0yRWmNTdoPHmtN0w4z7MySsXvUHfzUdwkQhOyNO2mJn8A/viewform?usp=sf_link", "_blank")}>
-                    <div style={this.surveyIconWrapper}><FaWpforms size={45}></FaWpforms></div>
-                    <span style={this.feedbackSpanStyle}>Feedback<br />웹사이트 관련 피드백을 자유롭게 <br />들려주세요!</span>
-                </div>
-                <form style={this.contactBoxStyle} onSubmit={this.handleFormSubmit}>
-                    <input style={this.nameInputStyle} value={this.state.nameInput} onChange={this.handleNameChange} onFocus={this.handleNameFocus} onBlur={this.handleNameBlur} />
-                    <input style={this.emailInputStyle} value={this.state.emailInput} onChange={this.handleEmailChange} onFocus={this.handleEmailFocus} onBlur={this.handleEmailBlur} />
-                    <span style={this.messageTextStyle}>Message</span>
-                    <textarea style={this.messageInputStyle} value={this.state.messageInput} onChange={this.handleMessageChange} />
-                    <button style={this.submitStyle} onClick={this.handleFormSubmit}>Submit</button>
-                </form>
+                <Title>Contact Us</Title>
+                <ElementContainer>
+                    <ContactUsContainer>
+                        <EmailBox>
+                            <img style={this.imgStyle} src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus1.png?alt=media&token=ff7ace54-f07b-4435-bf59-0ee845f147cf" />
+                            <FeatureBox>
+                                <FeatureTitle>Email</FeatureTitle>
+                                <FeatureExplanation>nuskusa@gmail.com</FeatureExplanation>
+                            </FeatureBox>
+                        </EmailBox>
+                        <AddressBox>
+                            <img style={this.imgStyle} src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus2.png?alt=media&token=093e63b1-8970-42e5-91e9-2e1d24b6e17b" />
+                            <FeatureBox>
+                                <FeatureTitle>Address</FeatureTitle>
+                                <FeatureExplanation>21 Lower Kent Ridge Rd Singapore 119077</FeatureExplanation>
+                            </FeatureBox>
+                        </AddressBox>
+                        <FeedbackBox onClick={() => window.open("https://docs.google.com/forms/d/e/1FAIpQLSceF0yRWmNTdoPHmtN0w4z7MySsXvUHfzUdwkQhOyNO2mJn8A/viewform?usp=sf_link", "_blank")}>
+                            <div style={this.imgStyle}><FaWpforms size={45}></FaWpforms></div>
+                            <FeatureBox>
+                                <FeatureTitle>Feedback</FeatureTitle>
+                                <FeatureExplanation>웹사이트 관련 피드백을 자유롭게 들려주세요!</FeatureExplanation>
+                            </FeatureBox>
+                        </FeedbackBox>
+                    </ContactUsContainer>
+                    <FormContainer>
+                        <ContactBox onSubmit={this.handleFormSubmit}>
+                            <NameInput value={this.state.nameInput} onChange={this.handleNameChange} onFocus={this.handleNameFocus} onBlur={this.handleNameBlur} />
+                            <EmailInput value={this.state.emailInput} onChange={this.handleEmailChange} onFocus={this.handleEmailFocus} onBlur={this.handleEmailBlur} />
+                            <Message>Message</Message>
+                            <MessageInput value={this.state.messageInput} onChange={this.handleMessageChange} />
+                            <Submit onClick={this.handleFormSubmit}>Submit</Submit>
+                        </ContactBox>
+                    </FormContainer>
+                </ElementContainer>
             </Container>
 
         )
