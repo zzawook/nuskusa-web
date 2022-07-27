@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ContactUs from '../components/ContactUs';
 import Navbar from '../components/Navbar';
@@ -7,7 +6,6 @@ import BoardThumbnail from '../components/BoardHome/BoardThumbnail';
 import { dbService } from '../utils/firebaseFunctions';
 import { DisplayLarge, Headline } from '../utils/ThemeText';
 import { FirestoreBoard } from '../types/FirestoreBoard';
-import VerificationRequest from '../components/Verification/VerificationRequest';
 import { FirebaseUser } from '../types/FirebaseUser';
 
 type BoardHomeProps = {

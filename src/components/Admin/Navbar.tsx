@@ -193,6 +193,9 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                         <NavbarButton onMouseEnter={() => this.setState({ draftHover: true })} onMouseLeave={() => this.setState({ draftHover: false })} onClick={() => window.location.href = "#/admin/draft/select"}>
                             <Link to='/admin/draft/select' style={{ color: '#FFFFFF', textDecoration: 'none' }}><SearchText hover={this.state.draftHover}>Draft Announcement</SearchText></Link>
                         </NavbarButton>
+                        <NavbarButton onMouseEnter={() => this.setState({ draftHover: true })} onMouseLeave={() => this.setState({ draftHover: false })} onClick={() => window.location.href = "#/admin/event"}>
+                            <Link to='/admin/event' style={{ color: '#FFFFFF', textDecoration: 'none' }}><SearchText hover={this.state.draftHover}>Events</SearchText></Link>
+                        </NavbarButton>
                     </NavbarButtonContainer>
                 </NavbarContent>
                 {

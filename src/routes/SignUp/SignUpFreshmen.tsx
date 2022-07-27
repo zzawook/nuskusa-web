@@ -5,10 +5,6 @@ import { authService, dbService, storageService } from '../../utils/firebaseFunc
 import styled from 'styled-components'
 import { FlexColumn } from '../../components/utils/UsefulDiv';
 
-
-
-const height = window.innerHeight;
-const width = window.innerWidth;
 const margin = 40;
 let linkMouseEnter = false;
 

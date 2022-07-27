@@ -7,7 +7,7 @@ import { authService, dbService } from "../../utils/firebaseFunctions";
 import firebase from 'firebase';
 import ShortInput from '../../components/Admin/AddEvent/ShortInput';
 import Checkbox from "../../components/Admin/AddEvent/Checkbox"
-import { textChangeRangeIsUnchanged } from 'typescript';
+import crypto from "crypto-js"
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -55,6 +55,18 @@ const Input = styled.input`
     margin-bottom: ${margin}px;
     width: 60%;
     height: 45px;
+    font-family: var(--font-family-roboto);
+    font-weight: 700;
+    font-size: 18px;
+    outline: none;
+`
+const Description = styled.textarea`
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    margin-bottom: ${margin}px;
+    width: 60%;
+    min-height: 45px;
+    resize: none;
     font-family: var(--font-family-roboto);
     font-weight: 700;
     font-size: 18px;
@@ -247,15 +259,16 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
             permissions: ["Admin", "Current"],
             author: this.props.firebaseUserData.username,
             authorId: authService.currentUser ? authService.currentUser.uid : null,
-
             parentBoardId: "announcement",
             parentBoardTitle: "공지게시판",
             parentColor: "#fc6565",
             parentTextColor: "#845858",
         }
-        console.log(eventObject)
+        const hashedTitle = crypto.SHA256(this.state.title).toString().substring(0, 20);
         dbService.collection('boards').doc('announcement').collection('posts').add(eventObject).then(docRef => {
-            console.log("Added")
+            dbService.collection('events').doc(hashedTitle).set({
+                title: this.state.title,
+            })
             this.setState({
                 loading: false,
             }, () => {
@@ -283,15 +296,14 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
                             onChange={(event: any) => this.setState({ title: event.target.value })}
                         >
                         </Input>
-                        <Input
-                            name="username"
-                            type="string"
+                        <Description
+                            name="description"
                             placeholder="이벤트 공지 설명"
                             required
                             value={this.state.description}
                             onChange={(event: any) => this.setState({ description: event.target.value })}
                         >
-                        </Input>
+                        </Description>
                         <AddBar>{this.inputTypes.map(element => {
                             return <AddBox onClick={element.adderFunction}>{element.name} 추가</AddBox>
                         })}</AddBar>

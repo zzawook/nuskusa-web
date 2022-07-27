@@ -105,7 +105,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
                                             boxcolor={this.props.firestorePost.parentColor}
                                             textcolor={this.props.firestorePost.parentTextColor}
                                         />
-                                        <DisplaySmall color='black' style={contentStyle}>{this.props.firestorePost.isEvent ? JSON.parse(this.props.firestorePost.content).description : this.convertPost(this.props.firestorePost.content)}</DisplaySmall>
+                                        <DisplaySmall color='black' style={contentStyle}>{this.props.firestorePost.isEvent ? JSON.parse(this.props.firestorePost.content).description.substring(0, 30) : this.convertPost(this.props.firestorePost.content)}</DisplaySmall>
                                         {this.props.firestorePost.parentBoardId === 'grove' ?
                                             <Headline color='black' style={tempStyle}>익명/Anonymous</Headline>
                                             :
@@ -131,7 +131,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
                                         boxcolor={this.props.firestorePost.parentColor}
                                         textcolor={this.props.firestorePost.parentTextColor}
                                     />
-                                    <DisplaySmall color='black' style={contentStyle}>{this.props.firestorePost.isEvent ? JSON.parse(this.props.firestorePost.content).description : this.convertPost(this.props.firestorePost.content)}</DisplaySmall>
+                                    <DisplaySmall color='black' style={contentStyle}>{this.props.firestorePost.isEvent ? JSON.parse(this.props.firestorePost.content).description.substring(0, 30) : this.convertPost(this.props.firestorePost.content)}</DisplaySmall>
                                     {this.props.firestorePost.parentBoardId === 'grove' ?
                                         <Headline color='black' style={tempStyle}>익명/Anonymous</Headline>
                                         :

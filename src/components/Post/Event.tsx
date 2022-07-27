@@ -4,6 +4,7 @@ import TextInput from "./TextInput"
 import Checkbox from './Checkbox'
 import { FirebaseUser } from '../../types/FirebaseUser'
 import { dbService } from '../../utils/firebaseFunctions';
+import crypto from 'crypto-js'
 
 const margin = 20;
 
@@ -24,6 +25,8 @@ const Form = styled.form`
 `
 const Description = styled.p`
     font-size: 15px;
+    word-break: keep-all;
+    white-space: pre-wrap;
 `
 const Submit = styled.button`
     width: 120px;
@@ -32,6 +35,7 @@ const Submit = styled.button`
     font-weight: 700;
     font-size: 15px;
     color: white;
+    margin-top: 30px;
 `
 const LoadingBlocker = styled.div`
     opacity: 0.5;
@@ -116,21 +120,21 @@ class Event extends React.Component<EventProps, EventState> {
         event.preventDefault();
         let already = false;
         window.confirm("이벤트 지원은 인당 1회만 가능하며 추후 수정은 개별 연락을 통해서만 가능하오니 지원 내용을 잘 확인해주세요. 입력하신 내용으로 지원하시겠습니까?")
-        dbService.collection("event").doc(this.props.title).collection("registrations").doc(this.props.firebaseUserData.userId).get().then(doc => {
+        const hashedTitle = crypto.SHA256(this.props.title).toString().substring(0,20);
+        dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.firebaseUserData.userId).get().then(doc => {
             this.setState({
                 loading: true,
             })
             if (doc.exists) {
                 window.alert("이미 지원하신 이벤트입니다.")
-                already = true;
                 this.setState({
                     loading: false
                 })
+                already = true;
             }
         }).then(() => {
             if (! already) {
                 const responseData: any = {}
-                console.log(this.state.inputs.length)
                 for (let i = 0; i < this.state.inputs.length; i++) {
                     const question = this.state.data.questions[i].question
                     responseData[question] = this.state.inputs[i]
@@ -139,7 +143,7 @@ class Event extends React.Component<EventProps, EventState> {
                     userData: JSON.stringify(this.props.firebaseUserData),
                     responseData: JSON.stringify(responseData),
                 }
-                dbService.collection("event").doc(this.props.title).collection("registrations").doc(this.props.firebaseUserData.userId).set(finalData).then(() => {
+                dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.firebaseUserData.userId).set(finalData).then(() => {
                     window.alert("이벤트 지원이 성공적으로 처리되었습니다. 지원해주셔서 감사합니다.")
                     this.setState({
                         loading: false,
@@ -152,7 +156,6 @@ class Event extends React.Component<EventProps, EventState> {
                     })
                 })
             }
-            
         })
     }
 

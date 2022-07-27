@@ -3,7 +3,6 @@ import Navbar from '../components/Navbar';
 import { FirebaseUser } from '../types/FirebaseUser';
 import styled from 'styled-components';
 import Profile from '../components/AboutUs/Profile';
-import ContactUs from '../components/ContactUs'
 
 type AboutUsProps = {
     firebaseUserData: FirebaseUser
@@ -12,9 +11,6 @@ type AboutUsProps = {
 type AboutUsState = {
 
 }
-
-const width = window.innerWidth;
-const height = window.innerHeight;
 
 const Container = styled.div`
     font-family: var(--font-family-roboto);

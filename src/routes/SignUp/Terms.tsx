@@ -1,14 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CSS from 'csstype';
-import { authService, dbService, storageService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components'
 import { FlexColumn } from '../../components/utils/UsefulDiv';
 
-
-
-const height = window.innerHeight;
-const width = window.innerWidth;
 const margin = 40;
 let linkMouseEnter = false;
 
