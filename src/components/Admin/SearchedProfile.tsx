@@ -16,6 +16,12 @@ const Username = styled.div`
     color: white;
     font-weight: bold;
 `
+const UserId = styled.div`
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 18px;
+    color: white;
+`
 const Gender = styled.div`
     margin-top: 2px;
     margin-bottom: 2px;
@@ -35,6 +41,12 @@ const Email = styled.div`
     color: white;
 `
 const Role = styled.div`
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 18px;
+    color: white;
+`
+const IsVerified = styled.div`
     margin-top: 2px;
     margin-bottom: 2px;
     font-size: 18px;
@@ -70,10 +82,12 @@ const ResendEmailVerification = styled.span`
 type SearchedProfileProps = {
     firebaseUserData: FirebaseUser,
     username: string,
+    userId: string,
     gender: string,
     yob: string,
     email: string,
     role: string,
+    isVerified: boolean,
     enrolledYear: string,
     major: string,
     KTId: string,
@@ -138,10 +152,12 @@ class SearchedProfile extends React.Component<SearchedProfileProps, SearchedProf
         return (
             <Wrapper>
                 <Username>Name: {this.props.username}</Username>
+                <UserId>UserId: {this.props.userId}</UserId>
                 <Gender>Gender: {this.props.gender}</Gender>
                 <YearOfBirth>Year of birth: {this.props.yob}</YearOfBirth>
                 <Email>Email: {this.props.email}</Email>
                 <Role>Role: {this.props.role}</Role>
+                <IsVerified>IsVerified: {this.props.isVerified.toString()}</IsVerified>
                 <EnrolledYear>Enrolled Year: {this.props.enrolledYear}</EnrolledYear>
                 <Major>Major: {this.props.major}</Major>
                 <KTId>KakaoTalk ID: {this.props.KTId}</KTId>
