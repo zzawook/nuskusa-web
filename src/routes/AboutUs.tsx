@@ -207,7 +207,7 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
                         <SAHead />
                         <FinanceHead />
                         <FinanceImages>
-                            <FinanceImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FIMG_9916.JPG?alt=media&token=e4d3f7f7-c3a8-41a5-a182-b49fb93aa5c1'} />
+                            <FinanceImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FAyeonProfile.jpeg?alt=media&token=c5f9b2c2-184d-4fb0-aeff-469669b621c9'} />
                             <ImageBreak />
                             <FinanceImg src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2FKakaoTalk_Photo_2022-02-18-22-20-17.jpeg?alt=media&token=9879e58a-e7c8-4705-aa65-0663648a13cb'} />
                         </FinanceImages>
