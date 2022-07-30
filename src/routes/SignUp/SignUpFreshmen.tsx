@@ -285,7 +285,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                                                 this.setState({
                                                     loading: false,
                                                 })
-                                                this.props.history.push("/")
+                                                this.props.history.push("/");
                                             })
                                         })
                                     })

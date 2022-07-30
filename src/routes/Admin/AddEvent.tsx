@@ -6,8 +6,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { authService, dbService } from "../../utils/firebaseFunctions";
 import firebase from 'firebase';
 import ShortInput from '../../components/Admin/AddEvent/ShortInput';
-import Checkbox from "../../components/Admin/AddEvent/Checkbox"
+import Checkbox from "../../components/Admin/AddEvent/Checkbox";
+import AttachmentInput from "../../components/Admin/AddEvent/AttachmentInput";
 import crypto from "crypto-js"
+import { FaAssistiveListeningSystems } from 'react-icons/fa';
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -162,6 +164,23 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
         })
     }
 
+    addAttachmentInput = () => {
+        let inputs = this.state.inputs;
+        inputs.push({
+            deleted: false,
+            component: <AttachmentInput index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete}></AttachmentInput>
+        })
+
+        let inputData = this.state.inputData;
+        inputData.push({
+            "type": "file",
+            "question": ""
+        })
+        this.setState({
+            inputs: inputs,
+        })
+    }
+
     inputTypes = [
         {
             "name": "단답형 질문",
@@ -170,6 +189,10 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
         {
             "name": "체크박스",
             "adderFunction": this.addCheckbox,
+        }, 
+        {
+            "name": "첨부파일",
+            "adderFunction": this.addAttachmentInput,
         }
     ]
 

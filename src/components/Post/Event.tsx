@@ -5,8 +5,7 @@ import Checkbox from './Checkbox'
 import { FirebaseUser } from '../../types/FirebaseUser'
 import { dbService } from '../../utils/firebaseFunctions';
 import crypto from 'crypto-js'
-
-const margin = 20;
+import AttachmentInput from './AttachmentInput';
 
 const Wrapper = styled.div`
     width: 70%;
@@ -43,11 +42,12 @@ const LoadingBlocker = styled.div`
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 100000;
 `
 const LoadingText = styled.span`
     background-color: black;
@@ -113,13 +113,27 @@ class Event extends React.Component<EventProps, EventState> {
         temp[index] = content;
         this.setState({
             inputs: temp,
-        }, () => console.log(this.state.inputs))
+        })
+    }
+
+    setLoading = () => {
+        this.setState({
+            loading: true
+        })
+    }
+
+    unsetLoading = () => {
+        this.setState({
+            loading: false
+        })
     }
 
     handleSubmit = (event: any) => {
         event.preventDefault();
         let already = false;
-        window.confirm("이벤트 지원은 인당 1회만 가능하며 추후 수정은 개별 연락을 통해서만 가능하오니 지원 내용을 잘 확인해주세요. 입력하신 내용으로 지원하시겠습니까?")
+        if (! window.confirm("이벤트 지원은 인당 1회만 가능하며 추후 수정은 개별 연락을 통해서만 가능하오니 지원 내용을 잘 확인해주세요. 입력하신 내용으로 지원하시겠습니까?")) {
+            return;
+        }
         const hashedTitle = crypto.SHA256(this.props.title).toString().substring(0,20);
         dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.firebaseUserData.userId).get().then(doc => {
             this.setState({
@@ -162,8 +176,8 @@ class Event extends React.Component<EventProps, EventState> {
     render = () => {
         return (
             <>
-                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 : </LoadingText></LoadingBlocker> : <></>}
                 <Wrapper>
+                    {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 : </LoadingText></LoadingBlocker> : <></>}
                     <Form>
                         <Description>{this.state.data.description}</Description>
                         {this.state.data.questions.map((element: any, index: number) => {
@@ -172,6 +186,9 @@ class Event extends React.Component<EventProps, EventState> {
                             }
                             else if (element.type == "checkbox") {
                                 return <Checkbox question={element.question} handleChange={this.handleChange} index={index} />
+                            }
+                            else if (element.type == "file") {
+                                return <AttachmentInput question={element.question} handleChange={this.handleChange} index={index} eventTitle={this.props.title} userdata={this.props.firebaseUserData} setLoading={this.setLoading} unsetLoading={this.unsetLoading}/>
                             }
                         })}
                         <Submit onClick={this.handleSubmit}>제출</Submit>
