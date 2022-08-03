@@ -63,12 +63,11 @@ const Input = styled.input`
     outline: none;
 `
 const Description = styled.textarea`
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    resize: none;
+    border: 1px solid rgba(0, 0, 0, 0.3);
     margin-bottom: ${margin}px;
     width: 60%;
-    min-height: 45px;
-    resize: none;
+    min-height: 200px;
     font-family: var(--font-family-roboto);
     font-weight: 700;
     font-size: 18px;
@@ -78,6 +77,7 @@ const SubmitButton = styled.input`
     width: 60%;
     height: 63px;
     border: none;
+    margin-top: ${margin}px;
     margin-bottom: ${margin}px;
     background-color: #BDA06D;
     color: white;
@@ -104,6 +104,20 @@ const LoadingText = styled.span`
     font-size: 16px;
     font-weight: 600;
 `
+const HorizontalDivider = styled.hr`
+    border: 1px solid grey;
+    width: 60%;
+`
+const CanApplyMultipleDiv = styled.div`
+    display: flex;
+    flex-direction: row;
+`
+const CanApplyMultiple = styled.input`
+    
+`
+const CanApplyMultipleDescription = styled.span`
+    color: black;
+`
 type AdminVerificationProps = {
     firebaseUserData: FirebaseUser,
 }
@@ -113,7 +127,9 @@ type AdminVerificationState = {
     description: string,
     loading: boolean,
     inputs: Array<any>,
-    inputData: Array<any>
+    inputData: Array<any>,
+    required: Array<any>,
+    canApplyMultiple: boolean,
 }
 
 class AddEvent extends React.Component<AdminVerificationProps, AdminVerificationState> {
@@ -125,6 +141,8 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
             loading: false,
             inputs: [],
             inputData: [],
+            required: [],
+            canApplyMultiple: false,
         }
         this.setLoading.bind(this);
         this.unsetLoading.bind(this);
@@ -134,13 +152,14 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
         let inputs = this.state.inputs;
         inputs.push({
             'deleted': false,
-            component: <ShortInput index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete}></ShortInput>
+            component: <ShortInput index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete} handleRequired={this.handleRequired}></ShortInput>
         })
 
         let inputData = this.state.inputData;
         inputData.push({
             "type": "text",
             "question": "",
+            "required": false,
         })
         this.setState({
             inputs: inputs
@@ -151,13 +170,14 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
         let inputs = this.state.inputs;
         inputs.push({
             deleted: false,
-            component: <Checkbox index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete}></Checkbox>
+            component: <Checkbox index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete} handleRequired={this.handleRequired}></Checkbox>
         })
 
         let inputData = this.state.inputData;
         inputData.push({
             "type": "checkbox",
-            "question": ""
+            "question": "",
+            "required": false,
         })
         this.setState({
             inputs: inputs
@@ -168,16 +188,23 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
         let inputs = this.state.inputs;
         inputs.push({
             deleted: false,
-            component: <AttachmentInput index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete}></AttachmentInput>
+            component: <AttachmentInput index={this.state.inputs.length} handleChange={this.handleChange} handleDelete={this.handleDelete} handleRequired={this.handleRequired}></AttachmentInput>
         })
 
         let inputData = this.state.inputData;
         inputData.push({
             "type": "file",
-            "question": ""
+            "question": "",
+            "required": false,
         })
         this.setState({
             inputs: inputs,
+        })
+    }
+
+    handleCanApplyMultipleChange = (event: any) => {
+        this.setState({
+            canApplyMultiple: ! this.state.canApplyMultiple
         })
     }
 
@@ -199,6 +226,7 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
     handleChange = (index: number, content: string) => {
         let inputData = this.state.inputData;
         inputData[index]["question"] = content;
+
         this.setState({
             inputData: inputData
         })
@@ -212,6 +240,15 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
 
         this.setState({
             inputs: inputs,
+            inputData: inputData,
+        })
+    }
+
+    handleRequired = (index: number, isRequred: boolean) => {
+        let inputData = this.state.inputData;
+        inputData[index]["required"] = isRequred;
+
+        this.setState({
             inputData: inputData,
         })
     }
@@ -267,6 +304,7 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
         const contentObject = {
             description: this.state.description,
             questions: questionObject,
+            canApplyMultiple: this.state.canApplyMultiple,
         }
         const eventObject = {
             title: this.state.title,
@@ -331,6 +369,11 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
                             return <AddBox onClick={element.adderFunction}>{element.name} 추가</AddBox>
                         })}</AddBar>
                         {this.state.inputs.map(element => element.deleted ? <></> : element.component)}
+                        <HorizontalDivider />
+                        <CanApplyMultipleDiv>
+                            <CanApplyMultiple onChange={this.handleCanApplyMultipleChange} type="checkbox" checked={this.state.canApplyMultiple}/>
+                            <CanApplyMultipleDescription>중복 신청 가능</CanApplyMultipleDescription>
+                        </CanApplyMultipleDiv>
                         <SubmitButton type="submit" value="이벤트 공지 올리기" onClick={this.handleSubmit}/>
                     </Form>
                 </Wrapper>

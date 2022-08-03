@@ -21,7 +21,7 @@ class DeletePost extends React.Component<DeleteProps, {}> {
     }
 
     onDeleteClick = async () => {
-        const ok = window.confirm("Do you really want to delete this post? This action is irreversible.")
+        const ok = window.confirm("게시물을 삭제하시면 복원할 수 없습니다. 게시물을 삭제하시겠습니까? ")
         if (ok) {
             dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).delete().then(() => {
                 window.alert('정상적으로 삭제되었습니다.');

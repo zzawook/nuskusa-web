@@ -31,6 +31,20 @@ const Input = styled.input`
     outline: none;
     color: grey;
 `
+const QuestionOptions = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 60%;
+`
+const RequiredDiv = styled.div`
+`
+const Required = styled.input`
+    
+`
+const RequiredDescription = styled.span`
+    color: black;
+`
 const Delete = styled.span`
     margin-left: auto;
     margin-right: 20%;
@@ -45,11 +59,13 @@ const Delete = styled.span`
 type ShortInputProps = {
     handleChange: Function,
     handleDelete: Function,
+    handleRequired: Function,
     index: number,
 }
 type ShortInputState = {
     title: string,
     index: number,
+    isRequired: boolean,
 }
 
 class ShortInput extends React.Component<ShortInputProps, ShortInputState> {
@@ -58,6 +74,7 @@ class ShortInput extends React.Component<ShortInputProps, ShortInputState> {
         this.state = {
             title: "",
             index: this.props.index,
+            isRequired: false,
         }
     }
 
@@ -69,8 +86,12 @@ class ShortInput extends React.Component<ShortInputProps, ShortInputState> {
         this.props.handleDelete(this.state.index);
     }
 
-    decrementIndex = () => {
-        
+    handleRequired = (event: any) => {
+        this.setState({
+            isRequired: ! this.state.isRequired
+        }, () => {
+            this.props.handleRequired(this.props.index, this.state.isRequired)
+        })
     }
 
     render = () => {
@@ -80,7 +101,14 @@ class ShortInput extends React.Component<ShortInputProps, ShortInputState> {
             <Wrapper>
                 <Question type="text" onChange={this.handleChange} placeholder={"질문을 입력해주세요"}></Question>
                 <Input type="text" disabled={true} placeholder={"단답형 텍스트 답변"}></Input>
-                <Delete onClick={this.handleDelete}>질문 삭제</Delete>
+                <QuestionOptions>
+                    <RequiredDiv>
+                        <Required type="checkbox" checked={this.state.isRequired} onChange={this.handleRequired}/>
+                        <RequiredDescription>필수 질문</RequiredDescription>
+                    </RequiredDiv>
+                    <Delete onClick={this.handleDelete}>질문 삭제</Delete>
+                </QuestionOptions>
+                
             </Wrapper>
             
         )

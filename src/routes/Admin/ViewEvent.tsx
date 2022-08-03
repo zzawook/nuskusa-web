@@ -60,14 +60,16 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
         const urls = window.location.href.split("/")
         const rows: any[] = [];
         let columns: any[] = [];
-        dbService.collection("events").doc(this.props.eventId).collection("registrations").get().then(docs => {
+        dbService.collection("events").doc(this.props.eventId).collection("registrations").orderBy('responseAt', 'desc').get().then(docs => {
             docs.forEach(registration => {
                 const data = registration.data();
                 const response = JSON.parse(data.responseData);
-                const user = JSON.parse(data.userData)
-                const userKeys = Object.keys(user)
-                const responseKeys = Object.keys(response)
+                const createdAt = new Date(data.responseAt.seconds * 1000);
+                const user = JSON.parse(data.userData);
+                const userKeys = Object.keys(user);
+                const responseKeys = Object.keys(response);
                 columns = userKeys.concat(responseKeys);
+                columns.unshift("CreatedAt");
                 const finalData = {} as any;
                 for (let i = 0; i < userKeys.length; i++) {
                     finalData[userKeys[i]] = user[userKeys[i]];
@@ -75,10 +77,9 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
                 for (let i = 0; i < responseKeys.length; i++) {
                     finalData[responseKeys[i]] = response[responseKeys[i]];
                 }
+                finalData.CreatedAt = createdAt.toString();
                 rows.push(finalData)
             })
-            console.log(rows)
-            console.log(columns)
             this.setState({
                 rows: rows,
                 columns: columns,
