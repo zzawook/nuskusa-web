@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components'
 import TextInput from "./TextInput"
 import Checkbox from './Checkbox'
-import { FirebaseUser } from '../../types/FirebaseUser'
+import { FirebaseUser } from '../../types/FirebaseUser';
+import firebase from 'firebase';
 import { dbService } from '../../utils/firebaseFunctions';
 import crypto from 'crypto-js'
-
-const margin = 20;
+import AttachmentInput from './AttachmentInput';
 
 const Wrapper = styled.div`
     width: 70%;
@@ -43,11 +43,12 @@ const LoadingBlocker = styled.div`
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 100000;
 `
 const LoadingText = styled.span`
     background-color: black;
@@ -102,7 +103,6 @@ class Event extends React.Component<EventProps, EventState> {
                 mounted: true,
             }
         }
-        
     }
 
     handleChange = (index: number, content: any) => {
@@ -113,19 +113,51 @@ class Event extends React.Component<EventProps, EventState> {
         temp[index] = content;
         this.setState({
             inputs: temp,
-        }, () => console.log(this.state.inputs))
+        })
+    }
+
+    setLoading = () => {
+        this.setState({
+            loading: true
+        })
+    }
+
+    unsetLoading = () => {
+        this.setState({
+            loading: false
+        })
+    }
+
+    checkRequired = () => {
+        for (let i = 0; i < this.state.data.questions.length; i++) {
+            if (this.state.data.questions[i].required && !this.state.inputs[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     handleSubmit = (event: any) => {
         event.preventDefault();
+        if (! this.checkRequired()) {
+            window.alert("필수 문항에 답변하지 않으셨습니다.")
+            return;
+        }
         let already = false;
-        window.confirm("이벤트 지원은 인당 1회만 가능하며 추후 수정은 개별 연락을 통해서만 가능하오니 지원 내용을 잘 확인해주세요. 입력하신 내용으로 지원하시겠습니까?")
+        if (! this.state.data.canApplyMultiple && ! window.confirm("이벤트 지원은 인당 1회만 가능하며 추후 수정은 개별 연락을 통해서만 가능하오니 지원 내용을 잘 확인해주세요. 입력하신 내용으로 지원하시겠습니까?")) {
+            return;
+        }
+        else {
+            if (! window.confirm("입력하신 내용으로 이벤트에 지원하시겠습니까?")) {
+                return;
+            }
+        }
         const hashedTitle = crypto.SHA256(this.props.title).toString().substring(0,20);
         dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.firebaseUserData.userId).get().then(doc => {
             this.setState({
                 loading: true,
             })
-            if (doc.exists) {
+            if (! this.state.data.canApplyMultiple && doc.exists) {
                 window.alert("이미 지원하신 이벤트입니다.")
                 this.setState({
                     loading: false
@@ -142,6 +174,7 @@ class Event extends React.Component<EventProps, EventState> {
                 const finalData = {
                     userData: JSON.stringify(this.props.firebaseUserData),
                     responseData: JSON.stringify(responseData),
+                    responseAt: firebase.firestore.FieldValue.serverTimestamp(),
                 }
                 dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.firebaseUserData.userId).set(finalData).then(() => {
                     window.alert("이벤트 지원이 성공적으로 처리되었습니다. 지원해주셔서 감사합니다.")
@@ -162,8 +195,8 @@ class Event extends React.Component<EventProps, EventState> {
     render = () => {
         return (
             <>
-                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 : </LoadingText></LoadingBlocker> : <></>}
                 <Wrapper>
+                    {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 : </LoadingText></LoadingBlocker> : <></>}
                     <Form>
                         <Description>{this.state.data.description}</Description>
                         {this.state.data.questions.map((element: any, index: number) => {
@@ -172,6 +205,9 @@ class Event extends React.Component<EventProps, EventState> {
                             }
                             else if (element.type == "checkbox") {
                                 return <Checkbox question={element.question} handleChange={this.handleChange} index={index} />
+                            }
+                            else if (element.type == "file") {
+                                return <AttachmentInput question={element.question} handleChange={this.handleChange} canApplyMultiple={this.state.data.canApplyMultiple} index={index} eventTitle={this.props.title} userdata={this.props.firebaseUserData} setLoading={this.setLoading} unsetLoading={this.unsetLoading}/>
                             }
                         })}
                         <Submit onClick={this.handleSubmit}>제출</Submit>

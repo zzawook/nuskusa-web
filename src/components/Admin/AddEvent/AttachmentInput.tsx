@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-
-const margin = 20;
+import { storageService } from '../../../utils/firebaseFunctions';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -21,7 +20,7 @@ const Container = styled.div`
 const Inner = styled.div`
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 `
@@ -34,15 +33,15 @@ const Question = styled.input`
 `
 const Input = styled.input`
     border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-    //margin-bottom: ${margin}px;
-    width: 5%;
     height: 45px;
     font-family: var(--font-family-roboto);
     font-weight: 700;
     font-size: 18px;
     outline: none;
-    color: grey;
+    color: #B5B5B5;
+    margin-top: 10px;
+    margin-right: auto;
+    margin-left: 10px;
 `
 const QuestionOptions = styled.div`
     display: flex;
@@ -67,34 +66,33 @@ const Delete = styled.span`
         cursor: pointer;
     }
 `
-type CheckboxProps = {
+
+type AttachmentInputProps = {
     index: number,
     handleChange: Function,
     handleDelete: Function,
     handleRequired: Function,
 }
 
-type CheckboxState = {
-    title: string,
+type AttachmentInputState = {
     index: number,
     isRequired: boolean,
 }
 
-class Checkbox extends React.Component<CheckboxProps, CheckboxState> {
-    constructor(props: CheckboxProps) {
+class AttachmentInput extends React.Component<AttachmentInputProps, AttachmentInputState> {
+    constructor(props: AttachmentInputProps) {
         super(props);
         this.state = {
-            title: "",
             index: this.props.index,
             isRequired: false,
         }
     }
 
     handleChange = (event: any) => {
-        this.props.handleChange(this.state.index, event.target.value)
+        this.props.handleChange(this.state.index, event?.target.value)
     }
 
-    handleDelete = (event: any) => {
+    handleDelete = () => {
         this.props.handleDelete(this.state.index);
     }
 
@@ -106,14 +104,14 @@ class Checkbox extends React.Component<CheckboxProps, CheckboxState> {
         })
     }
 
-
     render = () => {
+
         return (
             <Wrapper>
                 <Container>
                     <Inner>
-                        <Input type="checkbox" disabled={true} placeholder={"단답형 텍스트 답변"}></Input>
                         <Question type="text" onChange={this.handleChange} placeholder={"질문을 입력해주세요"}></Question>
+                        <Input type="file" disabled={true}></Input>
                     </Inner>
                     <QuestionOptions>
                         <RequiredDiv>
@@ -122,11 +120,11 @@ class Checkbox extends React.Component<CheckboxProps, CheckboxState> {
                         </RequiredDiv>
                         <Delete onClick={this.handleDelete}>질문 삭제</Delete>
                     </QuestionOptions>
+
                 </Container>
-                
             </Wrapper>
         )
     }
 }
 
-export default Checkbox;
+export default AttachmentInput
