@@ -55,6 +55,9 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
             columns: [],
         }
     }
+    formatDate(dt: Date) {
+        return dt.getFullYear().toString() + "." + (dt.getMonth() + 1).toString() + "." + dt.getDate().toString() + " " + dt.getHours() + ":" + dt.getMinutes();
+    }
 
     componentDidMount() {
         const urls = window.location.href.split("/")
@@ -69,7 +72,7 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
                 const userKeys = Object.keys(user);
                 const responseKeys = Object.keys(response);
                 columns = userKeys.concat(responseKeys);
-                columns.unshift("CreatedAt");
+                columns.unshift("ResponseAt");
                 const finalData = {} as any;
                 for (let i = 0; i < userKeys.length; i++) {
                     finalData[userKeys[i]] = user[userKeys[i]];
@@ -77,7 +80,7 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
                 for (let i = 0; i < responseKeys.length; i++) {
                     finalData[responseKeys[i]] = response[responseKeys[i]];
                 }
-                finalData.CreatedAt = createdAt.toString();
+                finalData.ResponseAt = this.formatDate(createdAt);
                 rows.push(finalData)
             })
             this.setState({
