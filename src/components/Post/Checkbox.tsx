@@ -14,7 +14,16 @@ const Input = styled.input`
     margin-bottom: ${margin}px;
     margin-right: 10px;
     height: 45px;
-    
+`
+const QuestionDiv = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+`
+const RequiredStar = styled.span`
+    color: red;
+    margin-left: 5px;
+    line-height: 45px;
 `
 const Question = styled.span`
     margin-top: ${11}px;
@@ -29,6 +38,7 @@ type TextInputProps = {
     question: string,
     handleChange: Function,
     index: number,
+    isRequired: boolean,
 }
 
 type TextInputState = {
@@ -55,6 +65,7 @@ class Checkbox extends React.Component<TextInputProps, TextInputState> {
             <Wrapper>
                 <Input type="checkbox" onChange={this.handleChange} checked={this.state.checked} />
                 <Question>{this.props.question}</Question>
+                <RequiredStar>{this.props.isRequired ? "*" : ""}</RequiredStar>
             </Wrapper>
 
         )

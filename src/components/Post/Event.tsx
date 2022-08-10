@@ -130,7 +130,7 @@ class Event extends React.Component<EventProps, EventState> {
 
     checkRequired = () => {
         for (let i = 0; i < this.state.data.questions.length; i++) {
-            if (this.state.data.questions[i].required && !this.state.inputs[i]) {
+            if (this.state.data.questions[i].required && ! this.state.inputs[i]) {
                 return false;
             }
         }
@@ -201,13 +201,13 @@ class Event extends React.Component<EventProps, EventState> {
                         <Description>{this.state.data.description}</Description>
                         {this.state.data.questions.map((element: any, index: number) => {
                             if (element.type == "text") {
-                                return <TextInput question={element.question} handleChange={this.handleChange} index={index} />
+                                return <TextInput question={element.question} handleChange={this.handleChange} index={index} isRequired={this.state.data.questions[index].required}/>
                             }
                             else if (element.type == "checkbox") {
-                                return <Checkbox question={element.question} handleChange={this.handleChange} index={index} />
+                                return <Checkbox question={element.question} handleChange={this.handleChange} index={index} isRequired={this.state.data.questions[index].required}/>
                             }
                             else if (element.type == "file") {
-                                return <AttachmentInput question={element.question} handleChange={this.handleChange} canApplyMultiple={this.state.data.canApplyMultiple} index={index} eventTitle={this.props.title} userdata={this.props.firebaseUserData} setLoading={this.setLoading} unsetLoading={this.unsetLoading}/>
+                                return <AttachmentInput question={element.question} handleChange={this.handleChange} canApplyMultiple={this.state.data.canApplyMultiple} index={index} eventTitle={this.props.title} userdata={this.props.firebaseUserData} setLoading={this.setLoading} unsetLoading={this.unsetLoading} isRequired={this.state.data.questions[index].required}/>
                             }
                         })}
                         <Submit onClick={this.handleSubmit}>제출</Submit>
