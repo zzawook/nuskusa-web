@@ -176,9 +176,9 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                         <NavbarButton onMouseEnter={() => this.setState({ homeHover: true })} onMouseLeave={() => this.setState({ homeHover: false })} onClick={() => window.location.href = "#/admin/verification"}>
                             <Link to='/admin/verification' style={{ color: '#FFFFFF', textDecoration: 'none' }}><HomeText hover={this.state.homeHover}>Verification</HomeText></Link>
                         </NavbarButton>
-                        <NavbarButton onMouseEnter={() => this.setState({ aboutUsHover: true })} onMouseLeave={() => this.setState({ aboutUsHover: false })} onClick={() => window.location.href = "https://console.firebase.google.com/u/0/project/nus-kusa-website/overview"}>
+                        {/* <NavbarButton onMouseEnter={() => this.setState({ aboutUsHover: true })} onMouseLeave={() => this.setState({ aboutUsHover: false })} onClick={() => window.location.href = "https://console.firebase.google.com/u/0/project/nus-kusa-website/overview"}>
                             <AboutUsText hover={this.state.aboutUsHover}><Link to='https://console.firebase.google.com/u/0/project/nus-kusa-website/overview' style={{ color: '#FFFFFF', textDecoration: 'none' }}>To Firebase Backend</Link></AboutUsText>
-                        </NavbarButton>
+                        </NavbarButton> */}
                         <NavbarButton onMouseEnter={() => this.setState({ boardHover: true })} onMouseLeave={() => this.setState({ boardHover: false })} onClick={() => window.location.href = authService.currentUser ? "#/boards" : "#/signin"}>
                             {
                                 authService.currentUser ?
