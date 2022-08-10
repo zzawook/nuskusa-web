@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { FirebaseUser } from '../../types/FirebaseUser';
 import { storageService, dbService } from '../../utils/firebaseFunctions';
 import crypto from 'crypto-js';
-import { isExternalModuleNameRelative } from 'typescript';
 
 const margin = 20;
 
@@ -19,6 +18,15 @@ const Input = styled.input`
     margin-right: 10px;
     height: 45px;
     
+`
+const QuestionDiv = styled.div`
+    display: flex;
+    flex-direction: row;
+`
+const RequiredStar = styled.span`
+    color: red;
+    line-height: 45px;
+    margin-left: 5px;
 `
 const Question = styled.span`
     margin-top: ${11}px;
@@ -37,6 +45,7 @@ type AttachmentInputProps = {
     setLoading: Function,
     unsetLoading: Function,
     canApplyMultiple: boolean,
+    isRequired: boolean,
 }
 
 type AttachmentInputState = {
@@ -64,7 +73,7 @@ class AttachmentInput extends React.Component<AttachmentInputProps, AttachmentIn
             else {
                 this.props.setLoading();
                 dbService.collection('events').doc(crypto.SHA256(this.props.eventTitle).toString().substring(0, 20)).collection("registrations").doc(this.props.userdata.userId).get().then((doc) => {
-                    if (! this.props.canApplyMultiple && doc.exists) {
+                    if (!this.props.canApplyMultiple && doc.exists) {
                         this.props.unsetLoading();
                         window.alert("이미 지원하신 이벤트입니다.")
                         return;
@@ -92,11 +101,15 @@ class AttachmentInput extends React.Component<AttachmentInputProps, AttachmentIn
     }
 
     render = () => {
-        
+
         return (
             <Wrapper>
-                <Question>{this.props.question}</Question>
-                <Input type="file" onChange={this.handleFileInput}/>
+                <QuestionDiv>
+                    <Question>{this.props.question}</Question>
+                    <RequiredStar>{this.props.isRequired ? "*" : ""}</RequiredStar>
+                </QuestionDiv>
+
+                <Input type="file" onChange={this.handleFileInput} />
             </Wrapper>
         )
     }

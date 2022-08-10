@@ -3,6 +3,15 @@ import styled from 'styled-components'
 
 const margin = 20;
 
+const QuestionDiv = styled.div`
+    display: flex;
+    flex-direction: row;
+`
+const RequiredStar = styled.span`
+    color: red;
+    margin-left: 5px;
+    line-height: 45px;
+`
 const Input = styled.input`
     border: none;
     border-bottom: 1px solid white;
@@ -22,6 +31,7 @@ type TextInputProps = {
     question: string,
     handleChange: Function,
     index: number,
+    isRequired: boolean,
 }
 
 type TextInputState = {
@@ -42,7 +52,11 @@ class TextInput extends React.Component<TextInputProps, TextInputState> {
 
     render = () => {
         return (
-            <Input type="text" onChange={this.handleChange} placeholder={this.props.question}></Input>
+            <QuestionDiv>
+                <Input type="text" onChange={this.handleChange} placeholder={this.props.question}></Input>
+                <RequiredStar>{this.props.isRequired ? "*" : ""}</RequiredStar>
+            </QuestionDiv>
+            
         )
     }
 }
