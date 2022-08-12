@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import { authService } from '../../utils/firebaseFunctions';
 
 const Wrapper = styled.div`
@@ -80,7 +80,7 @@ const ResendEmailVerification = styled.span`
 `
 
 type SearchedProfileProps = {
-    firebaseUserData: FirebaseUser,
+    userData: User,
     username: string,
     userId: string,
     gender: string,
@@ -94,12 +94,12 @@ type SearchedProfileProps = {
 }
 
 type SearchedProfileState = {
-    users: FirebaseUser[],
+    users: User[],
     searched: boolean,
     searchedName: string,
     searchedProfiles: any[]
 
-    
+
 }
 
 class SearchedProfile extends React.Component<SearchedProfileProps, SearchedProfileState> {
@@ -117,13 +117,13 @@ class SearchedProfile extends React.Component<SearchedProfileProps, SearchedProf
         if (window.confirm(this.props.username + "님에게 인증이메일을 다시 보내시겠습니까?")) {
             const userPassword = prompt(this.props.username + "님의 비밀번호를 입력해주세요")
             const adminPassword = prompt("현재 어드민 계정의 비밀번호를 입력해주세요")
-            
+
             if (userPassword && adminPassword) {
                 authService.signOut().then(() => {
                     authService.signInWithEmailAndPassword(this.props.email, userPassword).then(() => {
                         authService.currentUser?.sendEmailVerification().then(() => {
                             authService.signOut().then(() => {
-                                authService.signInWithEmailAndPassword(this.props.firebaseUserData.email, adminPassword).then(() => {
+                                authService.signInWithEmailAndPassword(this.props.userData.email, adminPassword).then(() => {
                                     window.alert("인증 이메일을 성공적으로 보냈습니다.")
                                 }).catch(err => {
                                     window.alert("어드민 계정 재로그인 중 문제가 발생했습니다. " + err.message)

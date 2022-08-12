@@ -6,10 +6,10 @@ import BoardThumbnail from '../components/BoardHome/BoardThumbnail';
 import { dbService } from '../utils/firebaseFunctions';
 import { DisplayLarge, Headline } from '../utils/ThemeText';
 import { FirestoreBoard } from '../types/FirestoreBoard';
-import { FirebaseUser } from '../types/FirebaseUser';
+import { User } from '../types/User';
 
 type BoardHomeProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type BoardHomeState = {
@@ -60,7 +60,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                         )
                         key++;
                         arr.push(data);
-                        if (data.permissions.includes(this.props.firebaseUserData.role)) {
+                        if (data.permissions.includes(this.props.userData.role)) {
                             componentArray.push(component);
                         }
                     })
@@ -126,7 +126,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
         `
         return (
             <Container>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                <Navbar userData={this.props.userData} />
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         게시판
@@ -137,7 +137,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                     <ThumbnailContainer>
                         {this.state.boardComponentArray}
                     </ThumbnailContainer>
-                    {/* {this.props.firebaseUserData.role === 'Admin' ?
+                    {/* {this.props.userData.role === 'Admin' ?
                         <form onSubmit={this.handleSubmit}>
                             <input name='title' type='string' onChange={this.handleChange} />
                             <input name='description' type='string' onChange={this.handleChange} /> <br />

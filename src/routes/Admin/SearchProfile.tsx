@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import { dbService } from '../../utils/firebaseFunctions';
 import SearchedProfile from '../../components/Admin/SearchedProfile';
 import CSS from 'csstype';
@@ -35,11 +35,11 @@ const SearchedProfileWrapper = styled.div`
 `
 
 type SearchProfileProps = {
-    firebaseUserData: FirebaseUser,
+    userData: User,
 }
 
 type SearchProfileState = {
-    users: FirebaseUser[],
+    users: User[],
     searchBy: string,
     searched: boolean,
     searchedElement: string,
@@ -59,7 +59,7 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
     }
 
     setSearchBy = (e: string) => {
-        this.setState({searchBy: e})
+        this.setState({ searchBy: e })
     }
 
     searchProfile = () => {
@@ -70,14 +70,14 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
                 const data = doc.data();
                 userArray.push(data)
                 const component = (
-                    <SearchedProfile 
-                        firebaseUserData={this.props.firebaseUserData}
-                        username={data.username} 
+                    <SearchedProfile
+                        userData={this.props.userData}
+                        username={data.username}
                         userId={data.userId}
-                        gender={data.gender} 
-                        yob={data.yob} 
-                        email={data.email} 
-                        role={data.role} 
+                        gender={data.gender}
+                        yob={data.yob}
+                        email={data.email}
+                        role={data.role}
                         enrolledYear={data.enrolledYear}
                         isVerified={data.isVerified}
                         major={data.major}
@@ -86,7 +86,7 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
                 )
                 componentArray.push(component)
             })
-            this.setState({users: userArray, searchedProfiles: componentArray})
+            this.setState({ users: userArray, searchedProfiles: componentArray })
         })
     }
 
@@ -96,7 +96,7 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
     render = () => {
         return (
             <Wrapper>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                <Navbar userData={this.props.userData} />
                 <SearchBar>
                     <DropdownButton id="dropdown-basic-button" title={this.state.searchBy} drop="up" autoClose={true}>
                         <Dropdown.Item as="button" onClick={() => this.setSearchBy("username")}>Username</Dropdown.Item>
@@ -107,8 +107,8 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
                     </DropdownButton>
                     <SearchInput
                         onChange={
-                            (event) => this.setState({searchedElement: event.target.value.toString()})
-                        } 
+                            (event) => this.setState({ searchedElement: event.target.value.toString() })
+                        }
                         onKeyPress={this.searchProfile}
                         value={this.state.searchedElement} placeholder={'이름을 입력하세요'}>
                     </SearchInput>

@@ -5,14 +5,14 @@ import { FirestorePost } from '../../types/FirestorePost'
 import { Headline, DisplaySmall, DisplayMedium } from '../../utils/ThemeText'
 import BoardTag from './BoardTag';
 import CSS from 'csstype';
-import { FirebaseUser } from '../../types/FirebaseUser'
+import { User } from '../../types/User'
 import { parse } from 'node-html-parser'
 import { BsFillPinAngleFill } from 'react-icons/bs'
 
 type PostThumbnailProps = {
     to: string,
     firestorePost: FirestorePost,
-    firebaseUser: FirebaseUser
+    User: User
 }
 
 type PostThumbnailState = {
@@ -41,7 +41,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
             return <></>
         }
         imgHtml[0].setAttribute("style", "overflow: hidden, width: 300, height: 300")
-        return <div dangerouslySetInnerHTML={{__html: imgHtml[0].innerHTML}}></div>;
+        return <div dangerouslySetInnerHTML={{ __html: imgHtml[0].innerHTML }}></div>;
     }
 
     render = () => {
@@ -92,7 +92,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
             <>
                 {
                     this.props.firestorePost.isHidden ?
-                        this.props.firebaseUser.role === "Admin" ?
+                        this.props.User.role === "Admin" ?
                             <Container>
                                 <Link to={this.props.to} style={{ textDecoration: 'none' }}>
                                     <Thumbnail style={{ height: "220px" }}>

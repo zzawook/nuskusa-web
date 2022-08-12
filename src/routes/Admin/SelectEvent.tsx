@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
 import { dbService } from '../../utils/firebaseFunctions';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 
 const Wrapper = styled.div`
     display: flex;
@@ -38,7 +38,7 @@ const EventTitle = styled.span`
 `
 
 type SelectEventProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type SelectEventState = {
@@ -74,7 +74,7 @@ class SelectEvent extends React.Component<SelectEventProps, SelectEventState> {
 
         return (
             <Wrapper>
-                <Navbar firebaseUserData={this.props.firebaseUserData}/>
+                <Navbar userData={this.props.userData} />
                 <Container>
                     {this.state.events.map(eventData => {
                         return (

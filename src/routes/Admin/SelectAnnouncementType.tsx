@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components'
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Admin/Navbar';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const Wrapper = styled.div`
@@ -60,7 +60,7 @@ const LoadingText = styled.span`
     font-weight: 600;
 `
 type SelectAnnouncementTypeProps = {
-    firebaseUserData: FirebaseUser,
+    userData: User,
 }
 
 type SelectAnnouncementTypeState = {
@@ -75,14 +75,14 @@ class SelectAnnouncementType extends React.Component<SelectAnnouncementTypeProps
             loading: false,
             announcementTypes: [
                 {
-                    "id" : "announcement",
-                    "name" : "일반 공지"
-                }, 
+                    "id": "announcement",
+                    "name": "일반 공지"
+                },
                 {
                     "id": "event",
                     "name": "이벤트 공지"
                 }
-        ],
+            ],
         }
         this.setLoading.bind(this);
         this.unsetLoading.bind(this);
@@ -111,13 +111,13 @@ class SelectAnnouncementType extends React.Component<SelectAnnouncementTypeProps
             <>
                 {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 : </LoadingText></LoadingBlocker> : <></>}
                 <Wrapper>
-                    <Navbar firebaseUserData={this.props.firebaseUserData} />
-                    
+                    <Navbar userData={this.props.userData} />
+
                     <SelectBoxContainer>
                         {this.state.announcementTypes.map(element => {
                             return <SelectBox onClick={() => {
                                 window.location.href = "#/admin/draft/" + element.id
-                            }}><Link to={"admin/draft/" + element.id} style={{textDecoration: 'none'}}><TypeText>{element.name}</TypeText></Link></SelectBox>
+                            }}><Link to={"admin/draft/" + element.id} style={{ textDecoration: 'none' }}><TypeText>{element.name}</TypeText></Link></SelectBox>
                         })}
                     </SelectBoxContainer>
                 </Wrapper>

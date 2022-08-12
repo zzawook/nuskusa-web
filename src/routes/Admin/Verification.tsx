@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { dbService } from '../../utils/firebaseFunctions';
 import UserSlip from '../../components/Admin/UserSlip'
@@ -32,7 +32,7 @@ const LoadingText = styled.span`
     font-weight: 600;
 `
 type AdminVerificationProps = {
-    firebaseUserData: FirebaseUser,
+    userData: User,
 }
 
 type AdminVerificationState = {
@@ -76,7 +76,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         })
     }
 
-    setLoading = ()  => {
+    setLoading = () => {
         this.setState({
             loading: true,
         })
@@ -94,7 +94,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
 
     static getDerivedStateFromProps(newProps: AdminVerificationProps, prevState: AdminVerificationState) {
         return {
-            dummy: ! prevState.dummy
+            dummy: !prevState.dummy
         }
     }
 
@@ -103,13 +103,13 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
             <>
                 {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 : </LoadingText></LoadingBlocker> : <></>}
                 <Wrapper>
-                    <Navbar firebaseUserData={this.props.firebaseUserData} />
+                    <Navbar userData={this.props.userData} />
                     {this.state.users.map(user => {
                         return <UserSlip setLoading={this.setLoading} unsetLoading={this.unsetLoading} graduationLetterURL={user.graduationDocumentURL} acceptanceLetterURL={user.acceptanceLetterURL} email={user.email} role={user.role} userId={user.userId} userName={user.username} gender={user.gender} major={user.major} userType={user.userType} KTId={user.KTId} />
                     })}
                 </Wrapper>
             </>
-            
+
         )
     }
 }

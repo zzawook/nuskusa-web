@@ -3,7 +3,7 @@ import { dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
 import { FirestorePost } from '../types/FirestorePost'
-import { FirebaseUser } from "../types/FirebaseUser";
+import { User } from "../types/User";
 import firebase from "firebase";
 import styled from 'styled-components';
 import CSS from 'csstype'
@@ -22,7 +22,7 @@ type RouteProps = {
 }
 
 type PostProps = RouteComponentProps<RouteProps> & {
-    firebaseUserData: FirebaseUser,
+    userData: User,
     reloadFunction: Function,
 }
 
@@ -31,7 +31,7 @@ type PostState = {
     errorMsg: string,
     commentArray: any[],
     commentIdArray: any[],
-    authorProfile: FirebaseUser,
+    authorProfile: User,
     retrieved: boolean,
     accessGranted: boolean,
     recentPosts: any[],
@@ -209,7 +209,7 @@ class Post extends React.Component<PostProps, PostState> {
     }
 
     static getDerivedStateFromProps = (nextProps: PostProps, prevState: PostState) => {
-        if (prevState.retrieved && prevState.firestorePost.permissions.includes(nextProps.firebaseUserData.role)) {
+        if (prevState.retrieved && prevState.firestorePost.permissions.includes(nextProps.userData.role)) {
             return {
                 accessGranted: true,
             }
@@ -315,20 +315,20 @@ class Post extends React.Component<PostProps, PostState> {
                     }
                     else {
                         dbService.collection('users').doc(data.authorId).get().then(doc => {
-                            const authorData = doc.data() as FirebaseUser;
+                            const authorData = doc.data() as User;
                             console.log(authorData)
                             this.setState({
                                 firestorePost: {
                                     ...data,
                                 },
                                 errorMsg: "Access denied; you do not have permission.",
-                                accessGranted: data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User') ? true : false,
+                                accessGranted: data.permissions.includes(this.props.userData.role) || data.permissions.includes('User') ? true : false,
                                 authorProfile: authorData,
                             }, () => {
                                 this.forceUpdate()
                             })
                         })
-                        
+
                         dbService // retrieve comments within the post
                             .collection('boards').doc(this.props.match.params.boardId)
                             .collection('posts').doc(this.props.match.params.postId)
@@ -356,7 +356,7 @@ class Post extends React.Component<PostProps, PostState> {
                                 .collection('posts').orderBy('lastModified', 'desc').limit(10).get();
                             docs.forEach(doc => {
                                 const data = doc.data();
-                                if (! data.isHidden) {
+                                if (!data.isHidden) {
                                     tempArray.push([data, doc.id]);
                                 }
                             })
@@ -402,27 +402,27 @@ class Post extends React.Component<PostProps, PostState> {
         let key = 0;
         return (
             <div>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                <Navbar userData={this.props.userData} />
                 <Container>
                     <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
                     <Header>
-                        <ProfileImg firebaseUserData={this.state.authorProfile} dimension={32} isOnNavbar={true} />
+                        <ProfileImg userData={this.state.authorProfile} dimension={32} isOnNavbar={true} />
                         <TitleAndDate>
                             <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
-                            <Title>{this.state.firestorePost.title}</Title>                            
+                            <Title>{this.state.firestorePost.title}</Title>
                         </TitleAndDate>
                         <AuthorButtons>
-                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId || this.props.firebaseUserData.role == "Admin" ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} userId={this.props.firebaseUserData.userId}/> : <div/>}
-                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId || this.props.firebaseUserData.role == "Admin"? <span style={{
+                            {this.props.userData.userId == this.state.firestorePost.authorId || this.props.userData.role == "Admin" ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} userData={this.props.userData} userId={this.props.userData.userId} /> : <div />}
+                            {this.props.userData.userId == this.state.firestorePost.authorId || this.props.userData.role == "Admin" ? <span style={{
                                 verticalAlign: 'bottom',
                                 lineHeight: '58px',
                                 color: 'white',
                                 opacity: '0.6',
                             }}>|</span> : ''}
-                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId || this.props.firebaseUserData.role == "Admin"? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div/>}    
+                            {this.props.userData.userId == this.state.firestorePost.authorId || this.props.userData.role == "Admin" ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div />}
                         </AuthorButtons>
                     </Header>
-                    {this.state.firestorePost.isEvent ? <Event data={this.state.firestorePost.content} title={this.state.firestorePost.title} firebaseUserData={this.props.firebaseUserData}/>: <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />}
+                    {this.state.firestorePost.isEvent ? <Event data={this.state.firestorePost.content} title={this.state.firestorePost.title} userData={this.props.userData} /> : <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />}
                     <ETC>
                         <Upvote boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} upvoteArray={this.state.firestorePost.upvoteArray} />
                         <FaRegComment size='20px' style={{ marginLeft: '10px' }} />
@@ -431,8 +431,8 @@ class Post extends React.Component<PostProps, PostState> {
                         </CommentNum>
 
                     </ETC>
-                    
-                    <Comment reset={this.fetchPost} comments={this.state.commentArray} commentIds={this.state.commentIdArray} boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} />
+
+                    <Comment reset={this.fetchPost} comments={this.state.commentArray} commentIds={this.state.commentIdArray} boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} userData={this.props.userData} />
                     <RecentPostTitle>Other posts</RecentPostTitle>
                     <RecentPosts>{this.state.recentPosts.map((element, i) => {
                         key++
@@ -445,7 +445,8 @@ class Post extends React.Component<PostProps, PostState> {
                             postId={this.state.recentPostIds[i]}
                             reloadFunction={this.props.reloadFunction}
                             boardData={this.state.boardData}
-                        /> })}
+                        />
+                    })}
                     </RecentPosts>
                     {this.state.accessGranted ?
                         <>

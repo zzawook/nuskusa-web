@@ -2,7 +2,7 @@ import React from "react";
 import styled from 'styled-components';
 import Primary from '../Post/PrimaryComment';
 import { dbService } from '../../utils/firebaseFunctions'
-import { FirebaseUser } from "../../types/FirebaseUser";
+import { User } from "../../types/User";
 import firebase from 'firebase'
 
 type CommentProps = {
@@ -10,7 +10,7 @@ type CommentProps = {
     commentIds: any[],
     boardId: string,
     postId: string,
-    firebaseUserData: FirebaseUser,
+    userData: User,
     reset: any,
 }
 
@@ -100,13 +100,13 @@ class Comment extends React.Component<CommentProps, CommentState> {
 
     componentDidMount() {
         this.setState({
-            commentArray: this.props.comments.map((element, i) => <Primary reset={this.props.reset} data={element} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData} commentId={this.props.commentIds[i]}/>).reverse()
+            commentArray: this.props.comments.map((element, i) => <Primary reset={this.props.reset} data={element} boardId={this.props.boardId} postId={this.props.postId} userData={this.props.userData} commentId={this.props.commentIds[i]} />).reverse()
         })
     }
 
     static getDerivedStateFromProps(nextProps: CommentProps, prevState: CommentState) {
         return {
-            commentArray: nextProps.comments.map((element, i) => <Primary reset={nextProps.reset} data={element} boardId={nextProps.boardId} postId={nextProps.postId} firebaseUserData={nextProps.firebaseUserData} commentId={nextProps.commentIds[i]}/>).reverse()
+            commentArray: nextProps.comments.map((element, i) => <Primary reset={nextProps.reset} data={element} boardId={nextProps.boardId} postId={nextProps.postId} userData={nextProps.userData} commentId={nextProps.commentIds[i]} />).reverse()
         }
     }
 
@@ -130,8 +130,8 @@ class Comment extends React.Component<CommentProps, CommentState> {
                 .collection('posts').doc(this.props.postId)
                 .collection('comments')
                 .add({
-                    author: this.props.firebaseUserData.username,
-                    authorId: this.props.firebaseUserData.userId,
+                    author: this.props.userData.username,
+                    authorId: this.props.userData.userId,
                     content: this.state.commentEntered,
                     isReply: false,
                     lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
@@ -150,7 +150,7 @@ class Comment extends React.Component<CommentProps, CommentState> {
             <Container>
                 <Divider />
                 <Form>
-                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered}/>
+                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered} />
                     <Cancel onClick={handleCancelClick}>Cancel</Cancel>
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form>

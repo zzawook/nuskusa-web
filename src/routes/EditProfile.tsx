@@ -1,17 +1,17 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import { FirebaseUser } from '../types/FirebaseUser';
+import { User } from '../types/User';
 import styled from 'styled-components';
 import { authService, dbService, storageService } from '../utils/firebaseFunctions'
 import firebase from 'firebase';
 
 type EditProfileProps = {
-    firebaseUserData: FirebaseUser,
+    userData: User,
     userId: string
 }
 
 type EditProfileState = {
-    userData: FirebaseUser,
+    userData: User,
     profileChanged: boolean,
     verificiationOpen: boolean,
     currentPassword: string,
@@ -292,11 +292,11 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
 
     componentDidMount = () => {
         let canChangeEmail = false;
-        if (this.props.firebaseUserData.role == "Offered" && authService.currentUser?.email?.split("@")[1] != "u.nus.edu") {
+        if (this.props.userData.role == "Offered" && authService.currentUser?.email?.split("@")[1] != "u.nus.edu") {
             canChangeEmail = true;
         }
         this.setState({
-            userData: this.props.firebaseUserData,
+            userData: this.props.userData,
             emailChange: canChangeEmail,
         })
     }
@@ -312,14 +312,14 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             window.location.href = window.location.origin + '/#/';
         }
         let canChangeEmail = false;
-        if (newProps.firebaseUserData.role == "Offered" && authService.currentUser?.email?.split("@")[1] != "u.nus.edu") {
+        if (newProps.userData.role == "Offered" && authService.currentUser?.email?.split("@")[1] != "u.nus.edu") {
             canChangeEmail = true;
         }
-        console.log(newProps.firebaseUserData.role)
-        console.log(newProps.firebaseUserData.email.split("@")[1])
+        console.log(newProps.userData.role)
+        console.log(newProps.userData.email.split("@")[1])
         console.log(canChangeEmail)
         return {
-            userData: newProps.firebaseUserData,
+            userData: newProps.userData,
             emailChange: canChangeEmail,
         }
     }
@@ -527,7 +527,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             this.setState({
                 loading: true,
             })
-            dbService.collection('users').doc(this.props.firebaseUserData.userId).update({
+            dbService.collection('users').doc(this.props.userData.userId).update({
                 major: this.state.userData.major,
             }).then(() => {
                 this.setState({
@@ -541,35 +541,35 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             <>
                 {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
                 <Container>
-                    <Navbar firebaseUserData={this.props.firebaseUserData} />
+                    <Navbar userData={this.props.userData} />
                     <ProfileContainer>
                         <ImgAndName>
-                            <Profile src={this.state.profileChanged ? this.props.firebaseUserData.profilePictureURL : this.props.firebaseUserData.profilePictureURL === 'undefined' || this.props.firebaseUserData.profilePictureURL === "" || this.props.firebaseUserData.profilePictureURL === undefined ? defaultProfile : this.props.firebaseUserData.profilePictureURL}></Profile>
+                            <Profile src={this.state.profileChanged ? this.props.userData.profilePictureURL : this.props.userData.profilePictureURL === 'undefined' || this.props.userData.profilePictureURL === "" || this.props.userData.profilePictureURL === undefined ? defaultProfile : this.props.userData.profilePictureURL}></Profile>
                             <RemoveProfile onClick={handleRemoveProfile}>Remove Profile Image</RemoveProfile>
                             <ChangeProfile htmlFor="profile-upload"><Change id={'profile-upload'} onChange={handleImageUpload} type='file' accept="image/png, image/gif, image/jpeg" />Change Profile Image</ChangeProfile>
-                            <Name>{this.props.firebaseUserData.username}</Name>
+                            <Name>{this.props.userData.username}</Name>
                         </ImgAndName>
                         <Email>
                             <EmailText>이메일 / Email</EmailText>
-                            <EmailInput value={this.props.firebaseUserData.email} onChange={handleEmailChange} disabled={!this.state.emailChange} ref={this.inputRef} />
+                            <EmailInput value={this.props.userData.email} onChange={handleEmailChange} disabled={!this.state.emailChange} ref={this.inputRef} />
                             {this.state.emailChange ? <EmailButton onClick={handleEmailChangeClick}><EmailButonText>NUS Email로 변경하기</EmailButonText></EmailButton> : <></>}
                         </Email>
                         <Major>
                             <MajorText>Major / 전공</MajorText>
-                            <MajorInput value={this.props.firebaseUserData.major === undefined ? 'N/A. Verify account to register major.' : this.props.firebaseUserData.major} onChange={handleMajorInputChange} disabled={this.props.firebaseUserData.role == 'Graduate' || this.props.firebaseUserData.role == "Registered"}></MajorInput>
+                            <MajorInput value={this.props.userData.major === undefined ? 'N/A. Verify account to register major.' : this.props.userData.major} onChange={handleMajorInputChange} disabled={this.props.userData.role == 'Graduate' || this.props.userData.role == "Registered"}></MajorInput>
                             <MajorButton onClick={handleMajorChangeSubmit}>Apply</MajorButton>
                         </Major>
                         <EnrolledYear>
                             <EnrolledYearText>Enrolled Year / 입학년도</EnrolledYearText>
-                            <EnrolledYearInput>{this.props.firebaseUserData.enrolledYear === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.firebaseUserData.enrolledYear}</EnrolledYearInput>
+                            <EnrolledYearInput>{this.props.userData.enrolledYear === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.userData.enrolledYear}</EnrolledYearInput>
                         </EnrolledYear>
                         <EnrolledYear>
                             <EnrolledYearText>Year of Birth / 출생년도</EnrolledYearText>
-                            <EnrolledYearInput>{this.props.firebaseUserData.yob === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.firebaseUserData.yob}</EnrolledYearInput>
+                            <EnrolledYearInput>{this.props.userData.yob === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.userData.yob}</EnrolledYearInput>
                         </EnrolledYear>
                         <EnrolledYear>
                             <EnrolledYearText>Gender / 성별</EnrolledYearText>
-                            <EnrolledYearInput>{this.props.firebaseUserData.gender === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.firebaseUserData.gender}</EnrolledYearInput>
+                            <EnrolledYearInput>{this.props.userData.gender === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.userData.gender}</EnrolledYearInput>
                         </EnrolledYear>
                         <Password>
                             <PasswordText>Change Password</PasswordText>

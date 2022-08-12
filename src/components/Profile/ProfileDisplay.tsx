@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser'
+import { User } from '../../types/User'
 import { FirestoreNotification } from '../../types/FirestoreNotification'
 import { authService, dbService } from '../../utils/firebaseFunctions'
 import Avatar from './Avatar'
@@ -8,7 +8,7 @@ import NotificationComponent from './NotificationComponent'
 import { AiOutlineClose } from 'react-icons/ai';
 
 type ProfileDisplayProps = {
-    firebaseUserData: FirebaseUser,
+    userData: User,
     isOpen: boolean
     onExitClick: any
 }
@@ -228,10 +228,10 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                             }} />
                             <ProfileWrapper>
                                 <ProfileDisplayWrapper>
-                                    <Avatar firebaseUserData={this.props.firebaseUserData} dimension={40} isOnNavbar={false} />
+                                    <Avatar userData={this.props.userData} dimension={40} isOnNavbar={false} />
                                     <NameEmailWrapper>
-                                        <Name>{this.props.firebaseUserData.username}</Name>
-                                        <Email>{this.props.firebaseUserData.email}</Email>
+                                        <Name>{this.props.userData.username}</Name>
+                                        <Email>{this.props.userData.email}</Email>
                                     </NameEmailWrapper>
                                 </ProfileDisplayWrapper>
                                 <BottomBanner>

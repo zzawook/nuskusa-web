@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser'
+import { User } from '../../types/User'
 import { dbService } from '../../utils/firebaseFunctions'
 
 const width = window.innerWidth
@@ -8,7 +8,7 @@ const width = window.innerWidth
 type DeleteProps = {
     boardId: string,
     postId: string,
-    firebaseUserData: FirebaseUser,
+    userData: User,
     userId: string,
 }
 

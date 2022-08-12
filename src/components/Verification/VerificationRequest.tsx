@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser'
+import { User } from '../../types/User'
 import { DisplayLarge, DisplaySmall } from '../../utils/ThemeText'
 import VerificationForm from './VerificationForm'
 
 type VerificationProps = {
     isModal: Boolean,
     onClose: Function,
-    firebaseUserData: FirebaseUser,
+    userData: User,
 }
 
 type VerificationState = {
@@ -75,7 +75,7 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
         return (
             <>
                 {
-                    !this.props.firebaseUserData.isVerified ?
+                    !this.props.userData.isVerified ?
                         !this.props.isModal ?
                             <ModalWrapper onClick={(e) => { e.stopPropagation() }}>
                                 <ModalContent>

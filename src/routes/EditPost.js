@@ -39,17 +39,18 @@ class Uploader {
                             }
                         },
 
-                        function() {
+                        function () {
                             // Upload completed successfully, now we can get the download URL
                             uploadTask.snapshot.ref
                                 .getDownloadURL()
-                                .then(function(downloadURL) {
-                                resolve({
-                                    urls: {
-                                        'default': downloadURL
-                                    }
-                                })}
-                            );
+                                .then(function (downloadURL) {
+                                    resolve({
+                                        urls: {
+                                            'default': downloadURL
+                                        }
+                                    })
+                                }
+                                );
                         }
                     );
                 })
@@ -193,7 +194,7 @@ class EditPost extends React.Component {
     content = '<p></p>'
 
     componentDidMount() {
-        if (!this.props.firebaseUserData.isVerified) {
+        if (!this.props.userData.isVerified) {
             window.alert("You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다.");
             window.history.go(-1);
             return;
@@ -204,7 +205,7 @@ class EditPost extends React.Component {
         dbService.collection('boards').get().then(boards => {
             boards.forEach(board => {
                 const data = board.data();
-                if (data.editPermission.includes(this.props.firebaseUserData.role)) {
+                if (data.editPermission.includes(this.props.userData.role)) {
                     boardProcessed.push({
                         value: board.id,
                         label: data.title,
@@ -241,7 +242,7 @@ class EditPost extends React.Component {
                         return;
                     }
                     else {
-                        if (data.permissions.includes(this.props.firebaseUserData.role)/* || data.permissions.includes("User")*/) {
+                        if (data.permissions.includes(this.props.userData.role)/* || data.permissions.includes("User")*/) {
                             const newState = {
                                 title: data.title,
                                 content: data.content,
@@ -494,7 +495,7 @@ class EditPost extends React.Component {
             <>
                 {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
                 <Container>
-                    <Navbar firebaseUserData={this.props.firebaseUserData} />
+                    <Navbar userData={this.props.userData} />
                     <Back
                         onClick={() => window.history.back()}>
                         <img
@@ -544,8 +545,8 @@ class EditPost extends React.Component {
                         />
                     </Editor>
                     <CheckBoxContainer>
-                        {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.state.isPinned} /> : <div />}
-                        {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.state.isHidden} /> : <div />}
+                        {this.props.userData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.state.isPinned} /> : <div />}
+                        {this.props.userData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.state.isHidden} /> : <div />}
                     </CheckBoxContainer>
                     <Submit onClick={this.handleSubmit}>Edit</Submit>
                 </Container>
@@ -555,8 +556,8 @@ class EditPost extends React.Component {
 }
 
 /*
-{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
-{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
+{this.props.userData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
+{this.props.userData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
 */
 
 export default EditPost;

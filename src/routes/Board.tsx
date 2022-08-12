@@ -11,7 +11,7 @@ import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
 import { FirestorePost } from '../types/FirestorePost';
 import { FirestoreBoard } from '../types/FirestoreBoard'
 import VerificationRequest from '../components/Verification/VerificationRequest';
-import { FirebaseUser } from '../types/FirebaseUser';
+import { User } from '../types/User';
 import Select from 'react-select';
 import { ActionMeta } from 'react-select';
 
@@ -152,7 +152,7 @@ type SelectOption = {
 }
 
 type BoardProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
     boardId: string,
 }
 
@@ -242,7 +242,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 querySnapshot.docs.forEach((doc) => {
                     key++
                     const data = doc.data() as FirestorePost;
-                    if (data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User')) {
+                    if (data.permissions.includes(this.props.userData.role) || data.permissions.includes('User')) {
                         if (data.isPinned) {
                             arr.unshift({
                                 data: data,
@@ -274,7 +274,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 <div key={i}>
                     <PostThumbnail
                         firestorePost={data}
-                        firebaseUser={this.props.firebaseUserData}
+                        User={this.props.userData}
                         to={`/boards/${this.props.boardId}/${id}`}
                     />
                     {/* Allow to edit all posts in the list */}
@@ -326,10 +326,10 @@ class Board extends React.Component<BoardProps, BoardState> {
     render = () => {
         return (
             <Container>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {!this.props.firebaseUserData.isVerified
+                <Navbar userData={this.props.userData} />
+                {!this.props.userData.isVerified
                     ?
-                    <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={true} onClose={() => { }} />
+                    <VerificationRequest userData={this.props.userData} isModal={true} onClose={() => { }} />
                     :
                     <></>
                 }
@@ -340,7 +340,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                     <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
                         {this.state.firestoreBoard.description}
                     </Headline>
-                    {this.state.firestoreBoard.editPermission.includes(this.props.firebaseUserData.role) ?
+                    {this.state.firestoreBoard.editPermission.includes(this.props.userData.role) ?
                         <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
                             <Headline color='white' style={{ textAlign: 'center' }}>
                                 + 게시글 올리기
@@ -351,7 +351,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                     }
                 </TextContainer>
                 <BoardNavbarContainer>
-                    <BoardNavbar currentRoute={this.props.boardId} firebaseUserData={this.props.firebaseUserData} />
+                    <BoardNavbar currentRoute={this.props.boardId} userData={this.props.userData} />
                     <div style={{ margin: 'auto', width: '150px' }}>
                         <Select
                             options={[
@@ -376,7 +376,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 }
                 <SearchContainer>
                     <SearchBoard>
-                        <SearchBar value={this.state.searchString} placeholder={"게시글 검색어를 입력해주세요"} onChange={this.handleSearchInputChange}/>
+                        <SearchBar value={this.state.searchString} placeholder={"게시글 검색어를 입력해주세요"} onChange={this.handleSearchInputChange} />
                         <SearchButton onClick={this.handleSearchClick}>검색</SearchButton>
                     </SearchBoard>
                 </SearchContainer>

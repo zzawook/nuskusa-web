@@ -1,4 +1,4 @@
-export interface FirebaseUser {
+export interface User {
     username: string,
     userId: string,
     email: string,

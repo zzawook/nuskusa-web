@@ -202,7 +202,7 @@ class AddPost extends React.Component {
   content = "<p></p>";
 
   componentDidMount() {
-    if (!this.props.firebaseUserData.isVerified) {
+    if (!this.props.userData.isVerified) {
       window.alert(
         "You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다."
       );
@@ -217,7 +217,7 @@ class AddPost extends React.Component {
       .then((boards) => {
         boards.forEach((board) => {
           const data = board.data();
-          if (data.editPermission.includes(this.props.firebaseUserData.role)) {
+          if (data.editPermission.includes(this.props.userData.role)) {
             boardProcessed.push({
               value: board.id,
               label: data.title,
@@ -237,7 +237,7 @@ class AddPost extends React.Component {
         console.log(backgroundColor);
 
         const stateCopy = this.state.state;
-        stateCopy.author = this.props.firebaseUserData.username;
+        stateCopy.author = this.props.userData.username;
         stateCopy.authorId = authService.currentUser.uid;
 
         this.setState((prevState) => {
@@ -505,7 +505,7 @@ class AddPost extends React.Component {
           <></>
         )}
         <Container>
-          <Navbar firebaseUserData={this.props.firebaseUserData} />
+          <Navbar userData={this.props.userData} />
           <Back onClick={() => window.history.back()}>
             <img
               src={
@@ -561,7 +561,7 @@ class AddPost extends React.Component {
             />
           </Editor>
           <CheckBoxContainer>
-            {this.props.firebaseUserData.role == "Admin" ? (
+            {this.props.userData.role == "Admin" ? (
               <Checkbox
                 label="Pinned"
                 setter={setPinned}
@@ -570,7 +570,7 @@ class AddPost extends React.Component {
             ) : (
               <div />
             )}
-            {this.props.firebaseUserData.role == "Admin" ? (
+            {this.props.userData.role == "Admin" ? (
               <Checkbox
                 label="Hidden"
                 setter={setHidden}
@@ -588,8 +588,8 @@ class AddPost extends React.Component {
 }
 
 /*
-{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
-{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
+{this.props.userData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
+{this.props.userData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
 */
 
 export default AddPost;

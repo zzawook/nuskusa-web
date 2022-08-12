@@ -202,7 +202,7 @@ class AddAnnouncement extends React.Component {
   content = "<p></p>";
 
   componentDidMount() {
-    if (!this.props.firebaseUserData.isVerified) {
+    if (!this.props.userData.isVerified) {
       window.alert(
         "You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다."
       );
@@ -219,7 +219,7 @@ class AddAnnouncement extends React.Component {
           const data = board.data();
           if (
             board.id ==
-            "announcement" /*data.editPermission.includes(this.props.firebaseUserData.role*/
+            "announcement" /*data.editPermission.includes(this.props.userData.role*/
           ) {
             boardProcessed.push({
               value: board.id,
@@ -238,7 +238,7 @@ class AddAnnouncement extends React.Component {
         }
 
         const stateCopy = this.state.state;
-        stateCopy.author = this.props.firebaseUserData.username;
+        stateCopy.author = this.props.userData.username;
         stateCopy.authorId = authService.currentUser.uid;
 
         this.setState((prevState) => {
@@ -506,7 +506,7 @@ class AddAnnouncement extends React.Component {
           <></>
         )}
         <Container>
-          <Navbar firebaseUserData={this.props.firebaseUserData} />
+          <Navbar userData={this.props.userData} />
           <Back onClick={() => window.history.back()}>
             <img
               src={
@@ -562,7 +562,7 @@ class AddAnnouncement extends React.Component {
             />
           </Editor>
           <CheckBoxContainer>
-            {this.props.firebaseUserData.role == "Admin" ? (
+            {this.props.userData.role == "Admin" ? (
               <Checkbox
                 label="Pinned"
                 setter={setPinned}
@@ -571,7 +571,7 @@ class AddAnnouncement extends React.Component {
             ) : (
               <div />
             )}
-            {this.props.firebaseUserData.role == "Admin" ? (
+            {this.props.userData.role == "Admin" ? (
               <Checkbox
                 label="Hidden"
                 setter={setHidden}
@@ -589,8 +589,8 @@ class AddAnnouncement extends React.Component {
 }
 
 /*
-{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
-{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
+{this.props.userData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
+{this.props.userData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
 */
 
 export default AddAnnouncement;

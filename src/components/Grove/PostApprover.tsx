@@ -1,6 +1,6 @@
 import React from 'react';
 import firebase from 'firebase';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import { FirestorePost } from '../../types/FirestorePost';
 import { authService, dbService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components';
@@ -9,7 +9,7 @@ import { FirestoreNotification } from '../../types/FirestoreNotification';
 
 type PostApproverProps = {
     firestorePost: FirestorePost,
-    firebaseUser: FirebaseUser,
+    User: User,
 }
 
 type PostApproverState = {

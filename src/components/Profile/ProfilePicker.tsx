@@ -1,12 +1,12 @@
 import React from 'react';
 import Avatar from 'react-avatar-edit'
 import styled from 'styled-components';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import { authService, dbService, storageService } from '../../utils/firebaseFunctions';
 import firebase from 'firebase';
 
 type PickerProps = {
-  firebaseUserData: FirebaseUser
+  userData: User
 }
 
 type PickerState = {
@@ -56,18 +56,18 @@ class ProfilePicker extends React.Component<PickerProps, PickerState> {
         .ref(`users/${uid}`)
         .putString(this.state.preview, 'data_url');
       uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-        (snapshot) => { 
+        (snapshot) => {
           storageService.ref('users')
-          .child(uid)
-          .getDownloadURL()
-          .then((url) => {
-            dbService.collection('users').doc(uid).update({
-              profilePictureURL: url
-            });
-            this.setState({
-              preview: null,
+            .child(uid)
+            .getDownloadURL()
+            .then((url) => {
+              dbService.collection('users').doc(uid).update({
+                profilePictureURL: url
+              });
+              this.setState({
+                preview: null,
+              })
             })
-          })
         },
       )
     }

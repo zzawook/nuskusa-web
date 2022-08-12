@@ -2,14 +2,14 @@ import React from 'react'
 import { authService, dbService, storageService } from '../utils/firebaseFunctions';
 import SignOut from '../components/SignOut'
 import Navbar from '../components/Navbar';
-import { FirebaseUser } from '../types/FirebaseUser';
+import { User } from '../types/User';
 import VerificationRequest from '../components/Verification/VerificationRequest';
 import styled from 'styled-components';
 import { darkTheme, Theme } from '../utils/ThemeColor';
 import ProfilePicker from '../components/Profile/ProfilePicker';
 
 type UserProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type UserState = {
@@ -49,23 +49,23 @@ class Profile extends React.Component<UserProps, UserState> {
 
     handleSubmit = (event: any) => {
         event.preventDefault();
-        if (this.props.firebaseUserData.verificationFile) {
+        if (this.props.userData.verificationFile) {
             const uploadTask = storageService
-                .ref(`verifications/${this.props.firebaseUserData.verificationFile.name}`)
-                .put(this.props.firebaseUserData.verificationFile);
+                .ref(`verifications/${this.props.userData.verificationFile.name}`)
+                .put(this.props.userData.verificationFile);
             uploadTask.on('state_changed',
                 (snapshot) => { },
                 () => {
-                    if (this.props.firebaseUserData.verificationFile) {
+                    if (this.props.userData.verificationFile) {
                         storageService.ref('verifications')
-                            .child(this.props.firebaseUserData.verificationFile.name)
+                            .child(this.props.userData.verificationFile.name)
                             .getDownloadURL()
                             .then((url) => {
                                 dbService.collection('verifications').add({
                                     downloadURL: url,
                                     owner: authService.currentUser?.email,
                                     ownerUID: authService.currentUser?.uid,
-                                    fullname: this.props.firebaseUserData.username,
+                                    fullname: this.props.userData.username,
                                     enrolledYear: this.state.enrolledYear,
                                     major: this.state.major,
                                     faculty: this.state.faculty
@@ -83,14 +83,14 @@ class Profile extends React.Component<UserProps, UserState> {
         `
         return (
             <Wrapper>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {/* {this.props.firebaseUserData.username} */}
-                {this.props.firebaseUserData.isVerified ?
+                <Navbar userData={this.props.userData} />
+                {/* {this.props.userData.username} */}
+                {this.props.userData.isVerified ?
                     <></>
                     :
-                    <VerificationRequest firebaseUserData={this.props.firebaseUserData} isModal={false} onClose={() => {}} />
+                    <VerificationRequest userData={this.props.userData} isModal={false} onClose={() => { }} />
                 }
-                <ProfilePicker firebaseUserData={this.props.firebaseUserData} />
+                <ProfilePicker userData={this.props.userData} />
                 <SignOut />
             </Wrapper>
         )

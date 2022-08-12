@@ -2,7 +2,7 @@ import React from 'react';
 import { Thumbs } from 'react-responsive-carousel';
 import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import { dbService } from '../../utils/firebaseFunctions';
 
 const Wrapper = styled.div`
@@ -43,7 +43,7 @@ type ViewEventState = {
 }
 
 type ViewEventProps = {
-    firebaseUserData: FirebaseUser,
+    userData: User,
     eventId: string,
 }
 
@@ -104,16 +104,16 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
     objectToArray = (object: any) => {
         const columns = Object.keys(object);
         let arr = [];
-        for (let i = 0 ; i < columns.length; i++) {
+        for (let i = 0; i < columns.length; i++) {
             arr.push(object[columns[i]]);
         }
         return arr;
-    }   
+    }
 
     render = () => {
         return (
             <Wrapper>
-                <Navbar firebaseUserData={this.props.firebaseUserData}/>
+                <Navbar userData={this.props.userData} />
                 <Container>
                     <Table>
                         <Row>
@@ -125,7 +125,7 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
                             return (<Row>
                                 {this.state.columns.map(column => {
                                     return (<Cell>
-                                        {typeof row[column] == "boolean" ? row[column] == true ? "Yes" : "No" : row[column]} 
+                                        {typeof row[column] == "boolean" ? row[column] == true ? "Yes" : "No" : row[column]}
                                     </Cell>)
                                 })}
                             </Row>)

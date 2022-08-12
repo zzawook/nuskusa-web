@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Secondary from './SecondaryComment';
 import { FirestoreComment } from '../../types/FirestoreComment'
 import { dbService } from '../../utils/firebaseFunctions'
-import { FirebaseUser } from "../../types/FirebaseUser";
+import { User } from "../../types/User";
 import firebase from 'firebase';
 import CommentUpvote from "./CommentUpvote";
 import { timestampToCommentDateString } from "../../utils/TimeHelper";
@@ -13,7 +13,7 @@ type PrimaryProps = {
     boardId: string,
     postId: string,
     commentId: string,
-    firebaseUserData: FirebaseUser,
+    userData: User,
     reset: any
 }
 
@@ -26,7 +26,7 @@ type PrimaryState = {
     secondaryIds: any[],
     replyOpen: boolean,
     reply: string,
-    authorData: FirebaseUser,
+    authorData: User,
 }
 
 const PrimaryComment = styled.div`
@@ -182,7 +182,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                 verificationFile: undefined,
                 isVerified: false,
                 role: "User", // User, Undergraduate, Graduate, Admin
-                profilePictureURL: "", 
+                profilePictureURL: "",
                 yob: "",
             },
         }
@@ -193,7 +193,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
     }
 
     async fetchComment() {
-        const authorData = (await dbService.collection("users").doc(this.props.data.authorId).get()).data() as FirebaseUser;
+        const authorData = (await dbService.collection("users").doc(this.props.data.authorId).get()).data() as User;
         this.setState({
             authorData: authorData,
         });
@@ -248,8 +248,8 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
         const handleSubmitClick = async (e: any) => {
             e.preventDefault();
             const commentObject: FirestoreComment = {
-                author: this.props.firebaseUserData.username,
-                authorId: this.props.firebaseUserData.userId,
+                author: this.props.userData.username,
+                authorId: this.props.userData.userId,
                 content: this.state.commentEntered,
                 isReply: true,
                 replyTo: dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${this.props.commentId}`),
@@ -347,7 +347,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                             {timestampToCommentDateString(this.props.data.lastModified)}
                         </LastModified>
                     </CommentInfoContainer>
-                    {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
+                    {this.props.userData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
                 </ProfileBox>
 
                 <Content>{this.props.data.content}</Content>
@@ -359,7 +359,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form> : <div />}
                 {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%204.png?alt=media&token=e83189ba-d386-4232-a473-1b1656d553b3'} /> : <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%203.png?alt=media&token=c39d0931-41d8-4ed1-bd6f-a5491da24e8a'} />}</SecondaryOpener> : <div />}
-                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData} />) : <div />}
+                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} userData={this.props.userData} />) : <div />}
 
             </PrimaryComment>
         )

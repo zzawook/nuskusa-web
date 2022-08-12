@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React from 'react';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import { FirestoreNotification } from '../../types/FirestoreNotification';
 import { FirestoreUserVerification } from '../../types/FirestoreUserVerification';
 import { dbService, storageService } from '../../utils/firebaseFunctions';
@@ -24,7 +24,7 @@ class VerificationComponent extends React.Component<VerificationProps, { reason:
         await storageService.ref(`verifications/${this.props.verificationId}`)
             .delete()
             .then(async () => {
-                const userDetail = (await dbService.collection('verifications').doc(this.props.verificationId).get()).data() as FirebaseUser
+                const userDetail = (await dbService.collection('verifications').doc(this.props.verificationId).get()).data() as User
                 dbService.collection('users').doc(this.props.firestoreVerificationData.ownerUID).update({
                     isVerified: true,
                     enrolledYear: userDetail.enrolledYear,
@@ -98,7 +98,7 @@ class VerificationComponent extends React.Component<VerificationProps, { reason:
                 <Headline>Enrolled Year: {this.props.firestoreVerificationData.enrolledYear}</Headline>
                 <Headline>School Email: {this.props.firestoreVerificationData.schoolEmail}</Headline>
                 <Headline>Accept: <button onClick={this.handleAccept}>Verify</button></Headline>
-                <Headline>Reason: 
+                <Headline>Reason:
                     <input type="text" onChange={this.handleReasonChange} />
                     <button onClick={this.handleReject}>Reject</button>
                 </Headline>

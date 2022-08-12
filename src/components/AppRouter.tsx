@@ -21,7 +21,7 @@ import EditPost from '../routes/EditPost.js';
 import AddPost from '../routes/AddPost.js';
 import BoardHome from '../routes/BoardHome';
 import AboutUs from '../routes/AboutUs';
-import { FirebaseUser } from '../types/FirebaseUser';
+import { User } from '../types/User';
 import EditProfile from '../routes/EditProfile';
 import PasswordResetRequest from '../routes/PasswordResetRequest';
 import Admin from '../routes/Admin/Admin'
@@ -37,7 +37,7 @@ type AppRouterProps = {
 type AppRouterState = {
   isLoggedIn: boolean,
   loading: Boolean,
-  firebaseUserData: FirebaseUser,
+  userData: User,
   toggle: boolean,
   userId: string,
 }
@@ -48,7 +48,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     this.state = {
       isLoggedIn: false,
       loading: true,
-      firebaseUserData: {
+      userData: {
         username: "",
         userId: "",
         verificationFile: undefined,
@@ -82,7 +82,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
           isLoggedIn: true,
           loading: false
         })
-        await this.fetchUserData()
+        await this.fetchuserData()
       } else {
         this.setState({
           loading: false
@@ -91,17 +91,17 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     })
   }
 
-  fetchUserData = async () => {
+  fetchuserData = async () => {
     const user = authService.currentUser
     if (user) {
       dbService
         .collection('users').doc(user.uid)
         .onSnapshot((querySnapshot) => {
           if (querySnapshot.exists) {
-            const data = querySnapshot.data() as FirebaseUser;
+            const data = querySnapshot.data() as User;
             if (data) {
               this.setState({
-                firebaseUserData: {
+                userData: {
                   username: data.username,
                   userId: user.uid,
                   email: data.email,
@@ -147,108 +147,108 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
               {this.state.isLoggedIn ? (
                 <Switch>
                   <Route exact path='/' render={() => <Home
-                    firebaseUserData={this.state.firebaseUserData}
+                    userData={this.state.userData}
                   />} />
                   <Route exact path='/admin' render={() => {
-                    if (this.state.firebaseUserData.role == "Admin") {
+                    if (this.state.userData.role == "Admin") {
                       return <Admin
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                     else {
                       return <Home
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                   }} />
                   <Route exact path='/admin/verification' render={() => {
-                  if (this.state.firebaseUserData.role == "Admin") {
+                    if (this.state.userData.role == "Admin") {
                       return <AdminVerification
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                   }} />
                   <Route exact path='/admin/search' render={() => {
-                    if (this.state.firebaseUserData.role == 'Admin') {
+                    if (this.state.userData.role == 'Admin') {
                       return <SearchProfile
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                     else {
                       return <Home
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                   }} />
                   <Route exact path='/admin/draft/select' render={() => {
-                    if (this.state.firebaseUserData.role == 'Admin') {
+                    if (this.state.userData.role == 'Admin') {
                       return <SelectAnnouncementType
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                     else {
                       return <Home
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                   }} />
                   <Route exact path='/admin/draft/announcement' render={() => {
-                    if (this.state.firebaseUserData.role == 'Admin') {
+                    if (this.state.userData.role == 'Admin') {
                       return <AddAnnouncement
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                         boardId={"announcement"}
                       />
                     }
                     else {
                       return <Home
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                   }} />
                   <Route exact path='/admin/draft/event' render={() => {
-                    if (this.state.firebaseUserData.role == 'Admin') {
+                    if (this.state.userData.role == 'Admin') {
                       return <AddEvent
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                     else {
                       return <Home
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                   }} />
                   <Route exact path='/admin/event' render={() => {
-                    if (this.state.firebaseUserData.role == 'Admin') {
+                    if (this.state.userData.role == 'Admin') {
                       return <SelectEvent
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                     else {
                       return <Home
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                   }} />
                   <Route exact path='/admin/event/:eventId' render={(routerProps) => {
-                    if (this.state.firebaseUserData.role == 'Admin') {
+                    if (this.state.userData.role == 'Admin') {
                       return <ViewEvent
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                         eventId={routerProps.match.params.eventId}
                       />
                     }
                     else {
                       return <Home
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />
                     }
                   }} />
                   <Route exact path='/home' render={() => <Home
-                    firebaseUserData={this.state.firebaseUserData}
+                    userData={this.state.userData}
                   />} />
                   <Route exact path='/profile' render={() => <Profile
-                    firebaseUserData={this.state.firebaseUserData}
+                    userData={this.state.userData}
                   />} />
-                  <Route exact path='/verification' render={() => <Verification firebaseUserData={this.state.firebaseUserData} />} />
+                  <Route exact path='/verification' render={() => <Verification userData={this.state.userData} />} />
                   <Route exact path='/signin' render={(routerProps) => <SignIn
                     match={routerProps.match}
                     history={routerProps.history}
@@ -268,33 +268,33 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     history={routerProps.history}
                     location={routerProps.location}
                   />} />
-                  <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData} />} />
+                  <Route exact path='/about-us' render={() => <AboutUs userData={this.state.userData} />} />
                   <Route exact path='/editProfile' render={() => <EditProfile
-                    firebaseUserData={this.state.firebaseUserData}
+                    userData={this.state.userData}
                     userId={this.state.userId}
                   />} />
                   <Route exact path='/boards' render={() => <BoardHome
-                    firebaseUserData={this.state.firebaseUserData}
+                    userData={this.state.userData}
                   />} />
                   <Route exact path='/boards/:boardId' sensitive render={(routerProps) => <Board
                     boardId={routerProps.match.params.boardId}
-                    firebaseUserData={this.state.firebaseUserData}
+                    userData={this.state.userData}
                   />} />
                   <Route exact path='/boards/:boardId/:postId/edit' sensitive render={(routerProps) => <EditPost
                     boardId={routerProps.match.params.boardId}
                     postId={routerProps.match.params.postId}
-                    firebaseUserData={this.state.firebaseUserData}
+                    userData={this.state.userData}
                   />} />
                   <Switch>
                     <Route exact path='/boards/:boardId/new' sensitive render={(routerProps) => <AddPost
                       boardId={routerProps.match.params.boardId}
-                      firebaseUserData={this.state.firebaseUserData}
+                      userData={this.state.userData}
                     />} />
                     <Route exact path='/boards/:boardId/:postId' sensitive render={(routerProps) => <Post
                       history={routerProps.history}
                       location={routerProps.location}
                       match={routerProps.match}
-                      firebaseUserData={this.state.firebaseUserData}
+                      userData={this.state.userData}
                       reloadFunction={this.reloadFunction}
                     />} />
                   </Switch>
@@ -305,10 +305,10 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                 (
                   <Switch>
                     <Route exact path='/' render={() => <Home
-                      firebaseUserData={this.state.firebaseUserData}
+                      userData={this.state.userData}
                     />} />
                     <Route exact path='/home' render={() => <Home
-                      firebaseUserData={this.state.firebaseUserData}
+                      userData={this.state.userData}
                     />} />
                     <Route exact path='/signin' render={(routerProps) => <SignIn
                       match={routerProps.match}
@@ -343,30 +343,30 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
 
                     />
                     <Route exact path='/profile' render={() => <Redirect to='/signin' />} />
-                    <Route exact path='/about-us' render={() => <AboutUs firebaseUserData={this.state.firebaseUserData} />} />
+                    <Route exact path='/about-us' render={() => <AboutUs userData={this.state.userData} />} />
                     <Route component={this.notFoundComponent} />
                     <Route exact path='/editProfile' render={() => <EditProfile
-                      firebaseUserData={this.state.firebaseUserData}
+                      userData={this.state.userData}
                       userId={this.state.userId}
                     />} />
 
                     <Route exact path='/boards' render={() => <BoardHome
-                      firebaseUserData={this.state.firebaseUserData}
+                      userData={this.state.userData}
                     />} />
                     <Route exact path='/boards/:boardId' sensitive render={(routerProps) => <Board
                       boardId={routerProps.match.params.boardId}
-                      firebaseUserData={this.state.firebaseUserData}
+                      userData={this.state.userData}
                     />} />
                     <Switch>
                       <Route exact path='/boards/:boardId/new' sensitive render={(routerProps) => <AddPost
                         boardId={routerProps.match.params.boardId}
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                       />} />
                       <Route exact path='/boards/:boardId/:postId' sensitive render={(routerProps) => <Post
                         history={routerProps.history}
                         location={routerProps.location}
                         match={routerProps.match}
-                        firebaseUserData={this.state.firebaseUserData}
+                        userData={this.state.userData}
                         reloadFunction={this.reloadFunction}
                       />} />
                     </Switch>

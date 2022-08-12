@@ -1,14 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser'
+import { User } from '../../types/User'
 import { FirestoreBoard } from '../../types/FirestoreBoard'
 import { dbService } from '../../utils/firebaseFunctions'
 import { Headline } from '../../utils/ThemeText'
 
 type BoardNavbarProps = {
     currentRoute: string,
-    firebaseUserData: FirebaseUser,
+    userData: User,
 }
 
 type BoardNavbarState = {
@@ -48,7 +48,7 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
             querySnapshot.docs.forEach((doc) => {
                 key++
                 const data = doc.data() as FirestoreBoard
-                if (data.permissions.includes(this.props.firebaseUserData.role)) {
+                if (data.permissions.includes(this.props.userData.role)) {
                     if (data.boardId !== this.props.currentRoute) {
                         componentArray.push(
                             <LinkContainer key={key}>

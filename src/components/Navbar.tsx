@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../logo.png'
-import { FirebaseUser } from '../types/FirebaseUser';
+import { User } from '../types/User';
 import { authService } from '../utils/firebaseFunctions';
 import ProfileBadge from './Profile/ProfileBadge';
 
 type NavbarProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type NavBarState = {
@@ -178,19 +178,19 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                 {
                     authService.currentUser ?
                         <>
-                            <ProfileBadge firebaseUserData={this.props.firebaseUserData} />
+                            <ProfileBadge userData={this.props.userData} />
                             {/* <SignOut>Sign Out</SignOut> */}
                         </>
                         :
                         <>
-                            <SignUpButton onClick={() => window.location.href="/#/signup/terms"}>
+                            <SignUpButton onClick={() => window.location.href = "/#/signup/terms"}>
                                 <SignUpText>
                                     <Link to='/signup/select' style={{ color: '#0B121C', textDecoration: 'none' }}>
                                         Sign Up
                                     </Link>
                                 </SignUpText>
                             </SignUpButton>
-                            <SignInButton onClick={() => window.location.href="/#/signin"}>
+                            <SignInButton onClick={() => window.location.href = "/#/signin"}>
                                 <Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                     <SignInText>
                                         Sign In
