@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar';
 import BoardThumbnail from '../components/BoardHome/BoardThumbnail';
 import { dbService } from '../utils/firebaseFunctions';
 import { DisplayLarge, Headline } from '../utils/ThemeText';
-import { FirestoreBoard } from '../types/FirestoreBoard';
+import { Board } from '../types/Board';
 import { User } from '../types/User';
 
 type BoardHomeProps = {
@@ -13,7 +13,7 @@ type BoardHomeProps = {
 }
 
 type BoardHomeState = {
-    boardArray: FirestoreBoard[],
+    boardArray: Board[],
     boardComponentArray: any[],
     title: string,
     description: string,
@@ -41,11 +41,11 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
             .collection('boards')
             .onSnapshot((querySnapshot) => {
                 if (!querySnapshot.empty) {
-                    const arr: FirestoreBoard[] = [];
+                    const arr: Board[] = [];
                     const componentArray: any[] = [];
                     let key = 0;
                     querySnapshot.docs.forEach((doc) => {
-                        const data = doc.data() as FirestoreBoard;
+                        const data = doc.data() as Board;
                         const component = (
                             <BoardThumbnail
                                 key={key}

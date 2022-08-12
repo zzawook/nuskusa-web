@@ -8,8 +8,8 @@ import Navbar from '../components/Navbar';
 import PostThumbnail from '../components/Board/PostThumbnail';
 import { dbService } from '../utils/firebaseFunctions';
 import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
-import { FirestorePost } from '../types/FirestorePost';
-import { FirestoreBoard } from '../types/FirestoreBoard'
+import { Post } from '../types/Post';
+import { Board } from '../types/Board'
 import VerificationRequest from '../components/Verification/VerificationRequest';
 import { User } from '../types/User';
 import Select from 'react-select';
@@ -157,25 +157,25 @@ type BoardProps = {
 }
 
 type PostData = {
-    data: FirestorePost,
+    data: Post,
     id: string,
 }
 
 type BoardState = {
-    firestoreBoard: FirestoreBoard,
+    Board: Board,
     postArray: PostData[],
     postComponentArray: any[],
     postOrder: SelectOption,
     searched: boolean,
     searchString: string,
-    searchedPostArray: FirestorePost[],
+    searchedPostArray: Post[],
 }
 
 let prevBoardURL = ""
 
 class Board extends React.Component<BoardProps, BoardState> {
     state: BoardState = {
-        firestoreBoard: {
+        Board: {
             title: "",
             boardId: "",
             description: "",
@@ -213,9 +213,9 @@ class Board extends React.Component<BoardProps, BoardState> {
     fetchBoard = () => {
         dbService.collection('boards').doc(this.props.boardId)
             .onSnapshot((doc) => {
-                const data = doc.data() as FirestoreBoard
+                const data = doc.data() as Board
                 this.setState({
-                    firestoreBoard: {
+                    Board: {
                         title: data.title,
                         boardId: data.boardId,
                         description: data.description,
@@ -241,7 +241,7 @@ class Board extends React.Component<BoardProps, BoardState> {
                 let key = 0
                 querySnapshot.docs.forEach((doc) => {
                     key++
-                    const data = doc.data() as FirestorePost;
+                    const data = doc.data() as Post;
                     if (data.permissions.includes(this.props.userData.role) || data.permissions.includes('User')) {
                         if (data.isPinned) {
                             arr.unshift({
@@ -273,7 +273,7 @@ class Board extends React.Component<BoardProps, BoardState> {
             let component = (
                 <div key={i}>
                     <PostThumbnail
-                        firestorePost={data}
+                        Post={data}
                         User={this.props.userData}
                         to={`/boards/${this.props.boardId}/${id}`}
                     />
@@ -335,12 +335,12 @@ class Board extends React.Component<BoardProps, BoardState> {
                 }
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
-                        {this.state.firestoreBoard.title}
+                        {this.state.Board.title}
                     </DisplayLarge>
                     <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
-                        {this.state.firestoreBoard.description}
+                        {this.state.Board.description}
                     </Headline>
-                    {this.state.firestoreBoard.editPermission.includes(this.props.userData.role) ?
+                    {this.state.Board.editPermission.includes(this.props.userData.role) ?
                         <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
                             <Headline color='white' style={{ textAlign: 'center' }}>
                                 + 게시글 올리기

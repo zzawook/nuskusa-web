@@ -1,6 +1,6 @@
 import firebase from 'firebase'
 
-export interface FirestorePost {
+export interface Post {
     postId: string,
     title: string,
     content: string,

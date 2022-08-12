@@ -1,6 +1,6 @@
 import React from "react";
 import styled from 'styled-components';
-import { FirestoreComment } from '../../types/FirestoreComment'
+import { Comment } from '../../types/Comment'
 import { User } from "../../types/User";
 import { dbService } from '../../utils/firebaseFunctions'
 import firebase from 'firebase';
@@ -203,12 +203,12 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             authorData: authorData,
         });
         if (this.props.data.replies) {
-            const replyArray: FirestoreComment[] = [];
+            const replyArray: Comment[] = [];
             const replyIdArray: any[] = [];
             for (let i = 0; i < this.props.data.replies.length; i = i + 1) {
                 this.props.data.replies[i].onSnapshot((querySnapshot: any) => {
                     if (querySnapshot.exists) {
-                        let data = querySnapshot.data() as FirestoreComment;
+                        let data = querySnapshot.data() as Comment;
                         replyArray[i] = data;
                         replyIdArray[i] = querySnapshot.id;
                         this.setState({
@@ -246,7 +246,7 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
         }
         const handleSubmitClick = async (e: any) => {
             e.preventDefault();
-            const commentObject: FirestoreComment = {
+            const commentObject: Comment = {
                 author: this.props.userData.username,
                 authorId: this.props.userData.userId,
                 content: this.state.commentEntered,

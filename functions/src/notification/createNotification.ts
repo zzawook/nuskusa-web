@@ -1,19 +1,19 @@
 import * as functions from "firebase-functions";
-import {FirestorePost} from "../../../src/types/FirestorePost";
-import {FirestoreBoard} from "../../../src/types/FirestoreBoard";
-import {FirestoreComment} from "../../../src/types/FirestoreComment";
-import {FirestoreNotification} from "../../../src/types/FirestoreNotification";
-import {db} from "../index";
+import { Post } from "../../../src/types/Post";
+import { Board } from "../../../src/types/Board";
+import { Comment } from "../../../src/types/Comment";
+import { FirestoreNotification } from "../../../src/types/FirestoreNotification";
+import { db } from "../index";
 
 import * as admin from "firebase-admin";
-import {firestore} from "firebase-admin";
+import { firestore } from "firebase-admin";
 
 
 export const createNotificationOnPostLike = functions.firestore
     .document("/boards/{boardId}/posts/{postId}")
     .onUpdate(async (change: any, context: any) => {
-        const previous = change.before.data() as FirestorePost;
-        const after = change.after.data() as FirestorePost;
+        const previous = change.before.data() as Post;
+        const after = change.after.data() as Post;
         const boardId = context.params.boardId;
         const postId = context.params.postId;
         if (previous.upvoteArray.length < after.upvoteArray.length) {
@@ -46,7 +46,7 @@ export const createNotificationOnPostLike = functions.firestore
 export const createNotificationForBoard = functions.firestore
     .document("/boards/{boardId}")
     .onCreate(async (change: any, context: any) => {
-        const data = change.data() as FirestoreBoard;
+        const data = change.data() as Board;
         const boardId = context.params.boardId;
         const title = data.title;
         const description = data.description;
@@ -84,7 +84,7 @@ export const createNotificationForBoard = functions.firestore
 export const createNotificationOnPostComment = functions.firestore
     .document("/boards/{boardId}/posts/{postId}/comments/{commentId}")
     .onCreate(async (change: any, context: any) => {
-        const data = change.data() as FirestoreComment;
+        const data = change.data() as Comment;
         const boardId = context.params.boardId;
         const postId = context.params.postId;
         const commentId = context.params.commentId;
@@ -104,7 +104,7 @@ export const createNotificationOnPostComment = functions.firestore
             };
             db.runTransaction(async (transaction: any) => {
                 const postRef = db.collection("boards").doc(boardId).collection("posts").doc(postId);
-                const postData = (await transaction.get(postRef)).data() as FirestoreComment;
+                const postData = (await transaction.get(postRef)).data() as Comment;
                 if (data.authorId !== postData.authorId) {
                     component.message = `${data.author} posted a comment on your post!`;
                     db.doc(`/users/${postData.authorId}`).update({
@@ -129,7 +129,7 @@ export const createNotificationOnPostComment = functions.firestore
             await db.runTransaction(async (transaction: any) => {
                 if (data.replyTo) {
                     const replyReference = db.doc(data.replyTo.path);
-                    const replyTargetData = (await transaction.get(replyReference)).data() as FirestoreComment;
+                    const replyTargetData = (await transaction.get(replyReference)).data() as Comment;
                     const targetId = replyTargetData.authorId;
                     if (replyTargetData.authorId !== data.authorId) {
                         db.doc(`/users/${targetId}`).update({

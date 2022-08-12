@@ -2,7 +2,7 @@ import React from "react";
 import { dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
-import { FirestorePost } from '../types/FirestorePost'
+import { Post } from '../types/Post'
 import { User } from "../types/User";
 import firebase from "firebase";
 import styled from 'styled-components';
@@ -27,7 +27,7 @@ type PostProps = RouteComponentProps<RouteProps> & {
 }
 
 type PostState = {
-    firestorePost: FirestorePost,
+    Post: Post,
     errorMsg: string,
     commentArray: any[],
     commentIdArray: any[],
@@ -153,7 +153,7 @@ class Post extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
         super(props);
         this.state = {
-            firestorePost: {
+            Post: {
                 postId: "",
                 title: "Title",
                 content: "Content",
@@ -209,7 +209,7 @@ class Post extends React.Component<PostProps, PostState> {
     }
 
     static getDerivedStateFromProps = (nextProps: PostProps, prevState: PostState) => {
-        if (prevState.retrieved && prevState.firestorePost.permissions.includes(nextProps.userData.role)) {
+        if (prevState.retrieved && prevState.Post.permissions.includes(nextProps.userData.role)) {
             return {
                 accessGranted: true,
             }
@@ -296,9 +296,9 @@ class Post extends React.Component<PostProps, PostState> {
         }
     }
 
-    setPostState = (data: FirestorePost) => {
+    setPostState = (data: Post) => {
         this.setState({
-            firestorePost: data
+            Post: data
         })
     }
 
@@ -309,7 +309,7 @@ class Post extends React.Component<PostProps, PostState> {
             .doc(this.props.match.params.postId)
             .onSnapshot(async (querySnapshot) => {
                 if (querySnapshot.exists) {
-                    const data = querySnapshot.data() as FirestorePost;
+                    const data = querySnapshot.data() as Post;
                     if (data === undefined) {
                         return;
                     }
@@ -318,7 +318,7 @@ class Post extends React.Component<PostProps, PostState> {
                             const authorData = doc.data() as User;
                             console.log(authorData)
                             this.setState({
-                                firestorePost: {
+                                Post: {
                                     ...data,
                                 },
                                 errorMsg: "Access denied; you do not have permission.",
@@ -408,23 +408,23 @@ class Post extends React.Component<PostProps, PostState> {
                     <Header>
                         <ProfileImg userData={this.state.authorProfile} dimension={32} isOnNavbar={true} />
                         <TitleAndDate>
-                            <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
-                            <Title>{this.state.firestorePost.title}</Title>
+                            <DateWritten>{this.getLastUpdated(this.state.Post.lastModified)}</DateWritten>
+                            <Title>{this.state.Post.title}</Title>
                         </TitleAndDate>
                         <AuthorButtons>
-                            {this.props.userData.userId == this.state.firestorePost.authorId || this.props.userData.role == "Admin" ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} userData={this.props.userData} userId={this.props.userData.userId} /> : <div />}
-                            {this.props.userData.userId == this.state.firestorePost.authorId || this.props.userData.role == "Admin" ? <span style={{
+                            {this.props.userData.userId == this.state.Post.authorId || this.props.userData.role == "Admin" ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} userData={this.props.userData} userId={this.props.userData.userId} /> : <div />}
+                            {this.props.userData.userId == this.state.Post.authorId || this.props.userData.role == "Admin" ? <span style={{
                                 verticalAlign: 'bottom',
                                 lineHeight: '58px',
                                 color: 'white',
                                 opacity: '0.6',
                             }}>|</span> : ''}
-                            {this.props.userData.userId == this.state.firestorePost.authorId || this.props.userData.role == "Admin" ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div />}
+                            {this.props.userData.userId == this.state.Post.authorId || this.props.userData.role == "Admin" ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div />}
                         </AuthorButtons>
                     </Header>
-                    {this.state.firestorePost.isEvent ? <Event data={this.state.firestorePost.content} title={this.state.firestorePost.title} userData={this.props.userData} /> : <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />}
+                    {this.state.Post.isEvent ? <Event data={this.state.Post.content} title={this.state.Post.title} userData={this.props.userData} /> : <Content dangerouslySetInnerHTML={{ __html: this.state.Post.content }} />}
                     <ETC>
-                        <Upvote boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} upvoteArray={this.state.firestorePost.upvoteArray} />
+                        <Upvote boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} upvoteArray={this.state.Post.upvoteArray} />
                         <FaRegComment size='20px' style={{ marginLeft: '10px' }} />
                         <CommentNum style={{ margin: '0px 5px' }}>
                             {this.state.commentArray.length}

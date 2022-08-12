@@ -1,14 +1,14 @@
 import React from 'react';
 import firebase from 'firebase';
 import { User } from '../../types/User';
-import { FirestorePost } from '../../types/FirestorePost';
+import { Post } from '../../types/Post';
 import { authService, dbService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components';
 import { AiFillCheckSquare, AiFillCloseSquare } from 'react-icons/ai';
 import { FirestoreNotification } from '../../types/FirestoreNotification';
 
 type PostApproverProps = {
-    firestorePost: FirestorePost,
+    Post: Post,
     User: User,
 }
 
@@ -37,8 +37,8 @@ class PostApprover extends React.Component<PostApproverProps, PostApproverState>
     // Approves the post to be posted. Makes isHidden false in Post object.
     approvePost = async () => {
         const postRef = dbService
-            .collection("boards").doc(this.props.firestorePost.parentBoardId)
-            .collection("posts").doc(this.props.firestorePost.postId);
+            .collection("boards").doc(this.props.Post.parentBoardId)
+            .collection("posts").doc(this.props.Post.postId);
 
         const userRef = dbService
             .collection("users").doc(authService.currentUser?.uid);
@@ -52,8 +52,8 @@ class PostApprover extends React.Component<PostApproverProps, PostApproverState>
                 contentType: "approve",
                 source: postRef,
                 message: "Your post has been approved!",
-                link: `/boards/${this.props.firestorePost.parentBoardId}/${this.props.firestorePost.postId}`,
-                data: this.props.firestorePost,
+                link: `/boards/${this.props.Post.parentBoardId}/${this.props.Post.postId}`,
+                data: this.props.Post,
                 timestamp: firebase.firestore.Timestamp.now(),
             };
             transaction.update(userRef, {
@@ -72,8 +72,8 @@ class PostApprover extends React.Component<PostApproverProps, PostApproverState>
 
     rejectPost = async () => {
         const postRef = dbService
-            .collection("boards").doc(this.props.firestorePost.parentBoardId)
-            .collection("posts").doc(this.props.firestorePost.postId);
+            .collection("boards").doc(this.props.Post.parentBoardId)
+            .collection("posts").doc(this.props.Post.postId);
 
         const userRef = dbService
             .collection("users").doc(authService.currentUser?.uid);
@@ -85,8 +85,8 @@ class PostApprover extends React.Component<PostApproverProps, PostApproverState>
                 contentType: "reject",
                 source: null,
                 message: "Your post has been rejected. Reason: " + this.state.reason,
-                link: `/boards/${this.props.firestorePost.parentBoardId}/${this.props.firestorePost.postId}`,
-                data: this.props.firestorePost,
+                link: `/boards/${this.props.Post.parentBoardId}/${this.props.Post.postId}`,
+                data: this.props.Post,
                 timestamp: firebase.firestore.Timestamp.now(),
             };
             transaction.update(userRef, {

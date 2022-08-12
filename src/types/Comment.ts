@@ -1,6 +1,6 @@
 import firebase from 'firebase'
 
-export interface FirestoreComment {
+export interface Comment {
     content: string,
     lastModified: firebase.firestore.Timestamp,
     upvoteArray: firebase.firestore.DocumentReference[],

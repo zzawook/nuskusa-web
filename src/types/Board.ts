@@ -1,4 +1,4 @@
-export interface FirestoreBoard {
+export interface Board {
     title: string,
     description: string,
     permissions: string[],

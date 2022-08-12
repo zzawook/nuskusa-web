@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { FirestoreBoard } from '../../types/FirestoreBoard'
+import { Board } from '../../types/Board'
 import { DisplaySmall, Headline } from '../../utils/ThemeText'
 
-type BoardProps = FirestoreBoard
+type BoardProps = Board
 
 type BoardState = {
     color: string
@@ -52,7 +52,7 @@ class BoardThumbnail extends React.Component<BoardProps, BoardState> {
                     <DisplaySmall color={this.state.color} >
                         {this.props.title}
                     </DisplaySmall>
-                    <Headline color={this.state.color} style={{ opacity: '0.5', textOverflow:'ellipsis', marginLeft:'10%', marginRight:'10%'}}>
+                    <Headline color={this.state.color} style={{ opacity: '0.5', textOverflow: 'ellipsis', marginLeft: '10%', marginRight: '10%' }}>
                         {this.props.description}
                     </Headline>
                 </Link>
