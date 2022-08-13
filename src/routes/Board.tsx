@@ -173,7 +173,7 @@ type BoardState = {
 
 let prevBoardURL = ""
 
-class Board extends React.Component<BoardProps, BoardState> {
+class BoardPage extends React.Component<BoardProps, BoardState> {
     state: BoardState = {
         Board: {
             title: "",
@@ -327,7 +327,7 @@ class Board extends React.Component<BoardProps, BoardState> {
         return (
             <Container>
                 <Navbar userData={this.props.userData} />
-                {!this.props.userData.isVerified
+                {!this.props.userData.verified
                     ?
                     <VerificationRequest userData={this.props.userData} isModal={true} onClose={() => { }} />
                     :
@@ -386,4 +386,4 @@ class Board extends React.Component<BoardProps, BoardState> {
     }
 }
 
-export default Board;
+export default BoardPage;

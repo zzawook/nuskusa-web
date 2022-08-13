@@ -62,7 +62,7 @@ class ProfilePicker extends React.Component<PickerProps, PickerState> {
             .getDownloadURL()
             .then((url) => {
               dbService.collection('users').doc(uid).update({
-                profilePictureURL: url
+                profileImageUrl: url
               });
               this.setState({
                 preview: null,

@@ -123,27 +123,24 @@ class Comment extends React.Component<CommentProps, CommentState> {
                 commentEntered: e.target.value,
             })
         }
-        const handleSubmitClick = (e: any) => {
+        const handleSubmitClick = async (e: any) => {
             e.preventDefault();
-            dbService
-                .collection('boards').doc(this.props.boardId)
-                .collection('posts').doc(this.props.postId)
-                .collection('comments')
-                .add({
-                    author: this.props.userData.username,
-                    authorId: this.props.userData.userId,
-                    content: this.state.commentEntered,
-                    isReply: false,
-                    lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                    upvoteArray: [],
-                    replies: [],
-                    postId: this.props.postId,
-                    boardId: this.props.boardId,
-                    replyTo: null,
+            const url = process.env.REACT_APP_HOST + "/api/post/addComment/" + this.props.postId
+            const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify({
+                    content: this.state.commentEntered
                 })
-            this.setState({
-                commentEntered: ""
             })
+            if (response.status == 200) {
+                this.setState({
+                    commentEntered: ""
+                })
+                window.alert("댓글을 작성했습니다.")
+            }
+            else {
+                window.alert("댓글 작성에 실패했습니다.")
+            }
         }
 
         return (

@@ -105,7 +105,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                 <Wrapper>
                     <Navbar userData={this.props.userData} />
                     {this.state.users.map(user => {
-                        return <UserSlip setLoading={this.setLoading} unsetLoading={this.unsetLoading} graduationLetterURL={user.graduationDocumentURL} acceptanceLetterURL={user.acceptanceLetterURL} email={user.email} role={user.role} userId={user.userId} userName={user.username} gender={user.gender} major={user.major} userType={user.userType} KTId={user.KTId} />
+                        return <UserSlip setLoading={this.setLoading} unsetLoading={this.unsetLoading} graduationLetterURL={user.graduationDocumentURL} acceptanceLetterURL={user.acceptanceLetterURL} email={user.email} role={user.role} userId={user.userId} name={user.name} gender={user.gender} major={user.major} userType={user.userType} kakaoTalkId={user.kakaoTalkId} />
                     })}
                 </Wrapper>
             </>

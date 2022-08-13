@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     margin-bottom: 20px;
     border: 1px solid white;
 `
-const Username = styled.div`
+const Name = styled.div`
     margin-top: 2px;
     margin-bottom: 2px;
     font-size: 18px;
@@ -46,7 +46,7 @@ const Role = styled.div`
     font-size: 18px;
     color: white;
 `
-const IsVerified = styled.div`
+const Verified = styled.div`
     margin-top: 2px;
     margin-bottom: 2px;
     font-size: 18px;
@@ -64,7 +64,7 @@ const Major = styled.div`
     font-size: 18px;
     color: white;
 `
-const KTId = styled.div`
+const KakaoTalkId = styled.div`
     margin-top: 2px;
     margin-bottom: 2px;
     font-size: 18px;
@@ -81,16 +81,16 @@ const ResendEmailVerification = styled.span`
 
 type SearchedProfileProps = {
     userData: User,
-    username: string,
+    name: string,
     userId: string,
     gender: string,
-    yob: string,
+    yearOfBirth: string,
     email: string,
     role: string,
-    isVerified: boolean,
+    verified: boolean,
     enrolledYear: string,
     major: string,
-    KTId: string,
+    kakaoTalkId: string,
 }
 
 type SearchedProfileState = {
@@ -114,8 +114,8 @@ class SearchedProfile extends React.Component<SearchedProfileProps, SearchedProf
     }
 
     handleSendEmailVeriication = (event: any) => {
-        if (window.confirm(this.props.username + "님에게 인증이메일을 다시 보내시겠습니까?")) {
-            const userPassword = prompt(this.props.username + "님의 비밀번호를 입력해주세요")
+        if (window.confirm(this.props.name + "님에게 인증이메일을 다시 보내시겠습니까?")) {
+            const userPassword = prompt(this.props.name + "님의 비밀번호를 입력해주세요")
             const adminPassword = prompt("현재 어드민 계정의 비밀번호를 입력해주세요")
 
             if (userPassword && adminPassword) {
@@ -151,16 +151,16 @@ class SearchedProfile extends React.Component<SearchedProfileProps, SearchedProf
     render = () => {
         return (
             <Wrapper>
-                <Username>Name: {this.props.username}</Username>
+                <Name>Name: {this.props.name}</Name>
                 <UserId>UserId: {this.props.userId}</UserId>
                 <Gender>Gender: {this.props.gender}</Gender>
-                <YearOfBirth>Year of birth: {this.props.yob}</YearOfBirth>
+                <YearOfBirth>Year of birth: {this.props.yearOfBirth}</YearOfBirth>
                 <Email>Email: {this.props.email}</Email>
                 <Role>Role: {this.props.role}</Role>
-                <IsVerified>IsVerified: {this.props.isVerified.toString()}</IsVerified>
+                <Verified>verified: {this.props.verified.toString()}</Verified>
                 <EnrolledYear>Enrolled Year: {this.props.enrolledYear}</EnrolledYear>
                 <Major>Major: {this.props.major}</Major>
-                <KTId>KakaoTalk ID: {this.props.KTId}</KTId>
+                <KakaoTalkId>KakaoTalk ID: {this.props.kakaoTalkId}</KakaoTalkId>
                 <ResendEmailVerification onClick={this.handleSendEmailVeriication}>인증 이메일 재전송</ResendEmailVerification>
             </Wrapper>
         )

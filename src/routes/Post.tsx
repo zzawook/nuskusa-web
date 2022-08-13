@@ -149,7 +149,7 @@ const RecentPostTitle = styled.span`
 const AuthorButtons = styled.div`
     margin-left: auto;
 `
-class Post extends React.Component<PostProps, PostState> {
+class PostPage extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
         super(props);
         this.state = {
@@ -166,7 +166,6 @@ class Post extends React.Component<PostProps, PostState> {
                 numComments: 0,
                 permissions: [],
                 author: "TempAuthor",
-                authorId: "",
                 parentBoardId: "",
                 parentBoardTitle: "",
                 parentColor: "",
@@ -181,17 +180,15 @@ class Post extends React.Component<PostProps, PostState> {
             recentPosts: [],
             recentPostIds: [],
             authorProfile: {
-                username: 'unknown user',
-                userId: 'unknown userid',
+                name: 'unknown user',
                 email: 'temp@email.com',
-                verificationFile: undefined,
-                isVerified: false,
+                verified: false,
                 role: 'User',
                 enrolledYear: "2022/2023",
                 major: "Major",
                 faculty: "Faculty",
-                profilePictureURL: "profilePicutreUrl",
-                yob: "",
+                profileImageUrl: "profilePicutreUrl",
+                yearOfBirth: "",
             },
             boardData: [],
         }
@@ -314,7 +311,7 @@ class Post extends React.Component<PostProps, PostState> {
                         return;
                     }
                     else {
-                        dbService.collection('users').doc(data.authorId).get().then(doc => {
+                        dbService.collection('users').doc(data.author).get().then(doc => {
                             const authorData = doc.data() as User;
                             console.log(authorData)
                             this.setState({
@@ -412,14 +409,14 @@ class Post extends React.Component<PostProps, PostState> {
                             <Title>{this.state.Post.title}</Title>
                         </TitleAndDate>
                         <AuthorButtons>
-                            {this.props.userData.userId == this.state.Post.authorId || this.props.userData.role == "Admin" ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} userData={this.props.userData} userId={this.props.userData.userId} /> : <div />}
-                            {this.props.userData.userId == this.state.Post.authorId || this.props.userData.role == "Admin" ? <span style={{
+                            {this.props.userData.email == this.state.Post.author || this.props.userData.role == "Admin" ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} userData={this.props.userData} userId={this.props.userData.email} /> : <div />}
+                            {this.props.userData.email == this.state.Post.author || this.props.userData.role == "Admin" ? <span style={{
                                 verticalAlign: 'bottom',
                                 lineHeight: '58px',
                                 color: 'white',
                                 opacity: '0.6',
                             }}>|</span> : ''}
-                            {this.props.userData.userId == this.state.Post.authorId || this.props.userData.role == "Admin" ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div />}
+                            {this.props.userData.email == this.state.Post.author || this.props.userData.role == "Admin" ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div />}
                         </AuthorButtons>
                     </Header>
                     {this.state.Post.isEvent ? <Event data={this.state.Post.content} title={this.state.Post.title} userData={this.props.userData} /> : <Content dangerouslySetInnerHTML={{ __html: this.state.Post.content }} />}
@@ -464,4 +461,4 @@ class Post extends React.Component<PostProps, PostState> {
     }
 }
 
-export default Post;
+export default PostPage;

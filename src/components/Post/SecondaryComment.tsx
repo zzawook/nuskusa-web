@@ -181,14 +181,12 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             replyOpen: false,
             reply: "",
             authorData: {
-                username: "",
-                userId: "",
+                name: "",
                 email: "",
-                verificationFile: undefined,
-                isVerified: false,
+                verified: false,
                 role: "User", // User, Undergraduate, Graduate, Admin
-                profilePictureURL: "",
-                yob: "",
+                profileImageUrl: "",
+                yearOfBirth: "",
             },
         }
     }
@@ -247,8 +245,8 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
         const handleSubmitClick = async (e: any) => {
             e.preventDefault();
             const commentObject: Comment = {
-                author: this.props.userData.username,
-                authorId: this.props.userData.userId,
+                author: this.props.userData.name,
+                authorId: this.props.userData.email,
                 content: this.state.commentEntered,
                 isReply: true,
                 lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
@@ -331,14 +329,14 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             <Container>
                 <LeftBar />
                 <ProfileBox>
-                    <ProfileImg src={this.state.authorData.profilePictureURL} />
+                    <ProfileImg src={this.state.authorData.profileImageUrl} />
                     <CommentInfoContainer>
                         <Name > {this.props.data.author} </Name>
                         <LastModified>
                             {timestampToCommentDateString(this.props.data.lastModified)}
                         </LastModified>
                     </CommentInfoContainer>
-                    {this.props.userData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
+                    {this.props.userData.email == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
                 </ProfileBox>
 
                 <Content>{this.props.data.content}</Content>

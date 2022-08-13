@@ -202,7 +202,7 @@ class AddAnnouncement extends React.Component {
   content = "<p></p>";
 
   componentDidMount() {
-    if (!this.props.userData.isVerified) {
+    if (!this.props.userData.verified) {
       window.alert(
         "You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다."
       );
@@ -238,7 +238,7 @@ class AddAnnouncement extends React.Component {
         }
 
         const stateCopy = this.state.state;
-        stateCopy.author = this.props.userData.username;
+        stateCopy.author = this.props.userData.name;
         stateCopy.authorId = authService.currentUser.uid;
 
         this.setState((prevState) => {

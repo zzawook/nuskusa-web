@@ -176,14 +176,12 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             replyOpen: false,
             reply: "",
             authorData: {
-                username: "",
-                userId: "",
+                name: "",
                 email: "",
-                verificationFile: undefined,
-                isVerified: false,
+                verified: false,
                 role: "User", // User, Undergraduate, Graduate, Admin
-                profilePictureURL: "",
-                yob: "",
+                profileImageUrl: "",
+                yearOfBirth: "",
             },
         }
     }
@@ -248,8 +246,8 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
         const handleSubmitClick = async (e: any) => {
             e.preventDefault();
             const commentObject: Comment = {
-                author: this.props.userData.username,
-                authorId: this.props.userData.userId,
+                author: this.props.userData.name,
+                authorId: this.props.userData.email,
                 content: this.state.commentEntered,
                 isReply: true,
                 replyTo: dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${this.props.commentId}`),
@@ -340,14 +338,14 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             <PrimaryComment>
                 <CommentArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FcommentArrow.png?alt=media&token=e484a87e-cff6-4111-b36c-e82cedbe2584'} />
                 <ProfileBox>
-                    <ProfileImg src={this.state.authorData.profilePictureURL} />
+                    <ProfileImg src={this.state.authorData.profileImageUrl} />
                     <CommentInfoContainer>
                         <Name > {this.props.data.author} </Name>
                         <LastModified>
                             {timestampToCommentDateString(this.props.data.lastModified)}
                         </LastModified>
                     </CommentInfoContainer>
-                    {this.props.userData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
+                    {this.props.userData.email == this.props.data.author ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
                 </ProfileBox>
 
                 <Content>{this.props.data.content}</Content>

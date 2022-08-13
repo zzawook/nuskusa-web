@@ -72,16 +72,16 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
                 const component = (
                     <SearchedProfile
                         userData={this.props.userData}
-                        username={data.username}
+                        name={data.name}
                         userId={data.userId}
                         gender={data.gender}
-                        yob={data.yob}
+                        yearOfBirth={data.yearOfBirth}
                         email={data.email}
                         role={data.role}
                         enrolledYear={data.enrolledYear}
-                        isVerified={data.isVerified}
+                        verified={data.verified}
                         major={data.major}
-                        KTId={data.KTId}
+                        kakaoTalkId={data.kakaoTalkId}
                     />
                 )
                 componentArray.push(component)
@@ -99,8 +99,8 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
                 <Navbar userData={this.props.userData} />
                 <SearchBar>
                     <DropdownButton id="dropdown-basic-button" title={this.state.searchBy} drop="up" autoClose={true}>
-                        <Dropdown.Item as="button" onClick={() => this.setSearchBy("username")}>Username</Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={() => this.setSearchBy("yob")}>Year of birth</Dropdown.Item>
+                        <Dropdown.Item as="button" onClick={() => this.setSearchBy("name")}>name</Dropdown.Item>
+                        <Dropdown.Item as="button" onClick={() => this.setSearchBy("yearOfBirth")}>Year of birth</Dropdown.Item>
                         <Dropdown.Item as="button" onClick={() => this.setSearchBy("role")}>Role</Dropdown.Item>
                         <Dropdown.Item as="button" onClick={() => this.setSearchBy("enrolledYear")}>Enrolled Year</Dropdown.Item>
                         <Dropdown.Item as="button" onClick={() => this.setSearchBy("major")}>Major</Dropdown.Item>

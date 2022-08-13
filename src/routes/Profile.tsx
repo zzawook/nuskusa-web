@@ -13,9 +13,9 @@ type UserProps = {
 }
 
 type UserState = {
-    username: '',
+    name: '',
     verificationFile: undefined,
-    isVerified: false,
+    verified: false,
     role: '', // User, Undergraduate, Graduate, Admin
     enrolledYear: '',
     major: '',
@@ -27,9 +27,9 @@ class Profile extends React.Component<UserProps, UserState> {
     constructor(props: UserProps) {
         super(props);
         this.state = {
-            username: '',
+            name: '',
             verificationFile: undefined,
-            isVerified: false,
+            verified: false,
             role: '', // User, Undergraduate, Graduate, Admin
             enrolledYear: '',
             major: '',
@@ -47,35 +47,6 @@ class Profile extends React.Component<UserProps, UserState> {
         }
     }
 
-    handleSubmit = (event: any) => {
-        event.preventDefault();
-        if (this.props.userData.verificationFile) {
-            const uploadTask = storageService
-                .ref(`verifications/${this.props.userData.verificationFile.name}`)
-                .put(this.props.userData.verificationFile);
-            uploadTask.on('state_changed',
-                (snapshot) => { },
-                () => {
-                    if (this.props.userData.verificationFile) {
-                        storageService.ref('verifications')
-                            .child(this.props.userData.verificationFile.name)
-                            .getDownloadURL()
-                            .then((url) => {
-                                dbService.collection('verifications').add({
-                                    downloadURL: url,
-                                    owner: authService.currentUser?.email,
-                                    ownerUID: authService.currentUser?.uid,
-                                    fullname: this.props.userData.username,
-                                    enrolledYear: this.state.enrolledYear,
-                                    major: this.state.major,
-                                    faculty: this.state.faculty
-                                });
-                            })
-                    }
-                }
-            )
-        }
-    }
     render = () => {
         const Wrapper = styled.div`
             background: ${this.state.theme.background};
@@ -84,8 +55,8 @@ class Profile extends React.Component<UserProps, UserState> {
         return (
             <Wrapper>
                 <Navbar userData={this.props.userData} />
-                {/* {this.props.userData.username} */}
-                {this.props.userData.isVerified ?
+                {/* {this.props.userData.name} */}
+                {this.props.userData.verified ?
                     <></>
                     :
                     <VerificationRequest userData={this.props.userData} isModal={false} onClose={() => { }} />

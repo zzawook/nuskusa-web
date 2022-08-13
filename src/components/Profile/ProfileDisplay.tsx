@@ -230,7 +230,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                                 <ProfileDisplayWrapper>
                                     <Avatar userData={this.props.userData} dimension={40} isOnNavbar={false} />
                                     <NameEmailWrapper>
-                                        <Name>{this.props.userData.username}</Name>
+                                        <Name>{this.props.userData.name}</Name>
                                         <Email>{this.props.userData.email}</Email>
                                     </NameEmailWrapper>
                                 </ProfileDisplayWrapper>

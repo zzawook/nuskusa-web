@@ -1,7 +1,7 @@
 import { authService, dbService } from '../utils/firebaseFunctions';
 import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import React from 'react';
-import Board from '../routes/Board';
+import BoardPage from '../routes/Board';
 import Home from '../routes/Home';
 import Post from '../routes/Post';
 import SignIn from '../routes/SignIn';
@@ -49,17 +49,15 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
       isLoggedIn: false,
       loading: true,
       userData: {
-        username: "",
-        userId: "",
-        verificationFile: undefined,
+        name: "",
         email: "",
-        isVerified: false,
+        verified: false,
         role: "User", // User, Undergraduate, Graduate, Admin
         enrolledYear: "",
         major: "",
         faculty: "",
-        profilePictureURL: "",
-        yob: "",
+        profileImageUrl: "",
+        yearOfBirth: "",
       },
       toggle: false,
       userId: "",
@@ -102,17 +100,15 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
             if (data) {
               this.setState({
                 userData: {
-                  username: data.username,
-                  userId: user.uid,
+                  name: data.name,
                   email: data.email,
-                  verificationFile: data.verificationFile,
-                  isVerified: data.isVerified,
+                  verified: data.verified,
                   role: data.role,
                   enrolledYear: data.enrolledYear,
                   major: data.major,
                   faculty: data.faculty,
-                  profilePictureURL: data.profilePictureURL,
-                  yob: data.yob,
+                  profileImageUrl: data.profileImageUrl,
+                  yearOfBirth: data.yearOfBirth,
                   gender: data.gender,
                 },
                 userId: user.uid,
@@ -276,7 +272,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   <Route exact path='/boards' render={() => <BoardHome
                     userData={this.state.userData}
                   />} />
-                  <Route exact path='/boards/:boardId' sensitive render={(routerProps) => <Board
+                  <Route exact path='/boards/:boardId' sensitive render={(routerProps) => <BoardPage
                     boardId={routerProps.match.params.boardId}
                     userData={this.state.userData}
                   />} />
@@ -353,7 +349,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                     <Route exact path='/boards' render={() => <BoardHome
                       userData={this.state.userData}
                     />} />
-                    <Route exact path='/boards/:boardId' sensitive render={(routerProps) => <Board
+                    <Route exact path='/boards/:boardId' sensitive render={(routerProps) => <BoardPage
                       boardId={routerProps.match.params.boardId}
                       userData={this.state.userData}
                     />} />

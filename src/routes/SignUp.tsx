@@ -13,7 +13,7 @@ type UserProps = {
 type UserState = {
     email: string,
     password: string,
-    username: string
+    name: string
 }
 
 const height = window.innerHeight;
@@ -111,7 +111,7 @@ class SignUp extends React.Component<UserProps, UserState> {
         this.state = {
             email: '',
             password: '',
-            username: '',
+            name: '',
         }
     }
     handleChange = (event: any) => {
@@ -126,9 +126,9 @@ class SignUp extends React.Component<UserProps, UserState> {
                 password: value
             })
         }
-        else if (event.target.name === 'username') {
+        else if (event.target.name === 'name') {
             this.setState({
-                username: value
+                name: value
             })
         }
     }
@@ -139,16 +139,16 @@ class SignUp extends React.Component<UserProps, UserState> {
             .then(async (userCredential) => {
                 const userObject = {
                     email: this.state.email,
-                    username: this.state.username,
+                    name: this.state.name,
                     userId: userCredential.user?.uid,
-                    isVerified: false,
+                    verified: false,
                     role: 'User'
                 }
                 if (this.state.email.split("@")[1] === "u.nus.edu") {
-                    userObject.isVerified = true;
+                    userObject.verified = true;
                     userObject.role = 'Current'
                     dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
-                        
+
                         window.alert("프로필 생성이 완료되었습니다. NUS 계정으로 가입해 재학생으로 가입되셨으며, 이메일 인증 단계를 건너뛰었습니다.")
                     });
                 }
@@ -161,7 +161,7 @@ class SignUp extends React.Component<UserProps, UserState> {
                                 window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.")
                             })
                         })
-                        
+
                     });
                 }
                 this.props.history.push("/")
@@ -175,7 +175,7 @@ class SignUp extends React.Component<UserProps, UserState> {
         event.preventDefault();
         window.history.back();
     }
-    
+
     handleMouseEnter = (e: any) => {
         e.preventDefault();
         e.target.style.textDecoration = 'underline';
@@ -219,11 +219,11 @@ class SignUp extends React.Component<UserProps, UserState> {
                     </FlexColumn>
                     <Form onSubmit={this.handleSubmit}>
                         <Input
-                            name="username"
+                            name="name"
                             type="string"
                             placeholder="이름 (영어로, 성 먼저) / Name (Last name first)"
                             required
-                            value={this.state.username}
+                            value={this.state.name}
                             onChange={this.handleChange}
                         >
                         </Input>

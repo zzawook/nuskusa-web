@@ -153,7 +153,7 @@ class Event extends React.Component<EventProps, EventState> {
             }
         }
         const hashedTitle = crypto.SHA256(this.props.title).toString().substring(0, 20);
-        dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.userData.userId).get().then(doc => {
+        dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.userData.email).get().then(doc => {
             this.setState({
                 loading: true,
             })
@@ -176,7 +176,7 @@ class Event extends React.Component<EventProps, EventState> {
                     responseData: JSON.stringify(responseData),
                     responseAt: firebase.firestore.FieldValue.serverTimestamp(),
                 }
-                dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.userData.userId).set(finalData).then(() => {
+                dbService.collection("events").doc(hashedTitle).collection("registrations").doc(this.props.userData.email).set(finalData).then(() => {
                     window.alert("이벤트 지원이 성공적으로 처리되었습니다. 지원해주셔서 감사합니다.")
                     this.setState({
                         loading: false,

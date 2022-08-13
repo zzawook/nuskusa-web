@@ -48,7 +48,7 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         `
         return (
             <AvatarWrapper>
-                {this.props.userData ? this.props.userData.profilePictureURL ? <ProfileImg src={this.props.userData.profilePictureURL} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile> : <></>}
+                {this.props.userData ? this.props.userData.profileImageUrl ? <ProfileImg src={this.props.userData.profileImageUrl} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile> : <></>}
             </AvatarWrapper>
         )
     }

@@ -211,7 +211,7 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                                         faculty: this.state.faculty
                                     });
                                     batch.update(userRef, {
-                                        isVerified: true
+                                        verified: true
                                     });
                                     await batch.commit().then(() => {
                                         this.setState({
@@ -291,12 +291,12 @@ class VerificationForm extends React.Component<FormProps, FormState> {
                             >
                             </FileUploader>
                             {this.state.success !== "" ?
-                                <Headline color="green" style={{ }}>{this.state.success}</Headline>
+                                <Headline color="green" style={{}}>{this.state.success}</Headline>
                                 :
                                 <></>
                             }
                             {this.state.error !== "" ?
-                                <Headline color="red" style={{ }}>{this.state.error}</Headline>
+                                <Headline color="red" style={{}}>{this.state.error}</Headline>
                                 :
                                 <></>
                             }

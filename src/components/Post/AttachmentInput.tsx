@@ -72,13 +72,13 @@ class AttachmentInput extends React.Component<AttachmentInputProps, AttachmentIn
             }
             else {
                 this.props.setLoading();
-                dbService.collection('events').doc(crypto.SHA256(this.props.eventTitle).toString().substring(0, 20)).collection("registrations").doc(this.props.userData.userId).get().then((doc) => {
+                dbService.collection('events').doc(crypto.SHA256(this.props.eventTitle).toString().substring(0, 20)).collection("registrations").doc(this.props.userData.email).get().then((doc) => {
                     if (!this.props.canApplyMultiple && doc.exists) {
                         this.props.unsetLoading();
                         window.alert("이미 지원하신 이벤트입니다.")
                         return;
                     }
-                    let ref = "event/" + this.props.eventTitle.substring(0, 20) + "/" + this.props.userData.userId + "/Q" + this.props.index
+                    let ref = "event/" + this.props.eventTitle.substring(0, 20) + "/" + this.props.userData.email + "/Q" + this.props.index
                     if (this.props.canApplyMultiple) {
                         const tempNowDate = new Date();
                         ref += crypto.MD5(tempNowDate.toString())

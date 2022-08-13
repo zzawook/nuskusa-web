@@ -14,8 +14,6 @@ export interface Post {
     numComments: number,
     permissions: string[],
     author: string,
-    authorId: string,
-
     parentBoardId: string,
     parentBoardTitle: string,
     parentColor: string,

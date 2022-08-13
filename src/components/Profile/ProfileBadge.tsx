@@ -51,7 +51,7 @@ class ProfileBadge extends React.Component<BadgeProps, BadgeState> {
             <Wrapper>
                 <ClickableDiv onClick={this.openProfileDisplay}>
                     <Headline color="white" style={{ margin: 'auto' }}>
-                        {this.props.userData.username}
+                        {this.props.userData.name}
                     </Headline>
                     <Avatar userData={this.props.userData} dimension={32} isOnNavbar={true} />
                 </ClickableDiv>

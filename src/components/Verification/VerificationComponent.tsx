@@ -26,7 +26,7 @@ class VerificationComponent extends React.Component<VerificationProps, { reason:
             .then(async () => {
                 const userDetail = (await dbService.collection('verifications').doc(this.props.verificationId).get()).data() as User
                 dbService.collection('users').doc(this.props.firestoreVerificationData.ownerUID).update({
-                    isVerified: true,
+                    verified: true,
                     enrolledYear: userDetail.enrolledYear,
                     major: userDetail.major,
                     faculty: userDetail.faculty,
@@ -67,7 +67,7 @@ class VerificationComponent extends React.Component<VerificationProps, { reason:
                     };
                     batch.delete(verificationsRef)
                     batch.update(userRef, {
-                        isVerified: false,
+                        verified: false,
                         notificationArray: firebase.firestore.FieldValue.arrayUnion(notification),
                     })
                     await batch.commit()

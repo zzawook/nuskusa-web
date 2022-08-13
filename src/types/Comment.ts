@@ -11,7 +11,4 @@ export interface Comment {
     authorId: string,
     postId: string,
     boardId: string,
-    // boardTitle: string,
-    // boardColor: string,
-    // boardTextColor: string
 }

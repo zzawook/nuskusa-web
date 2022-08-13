@@ -86,10 +86,10 @@ type AdminVerificationProps = {
     role: string,
     userId: string,
     userType: string,
-    userName: string,
+    name: string,
     gender: string,
     major: string,
-    KTId: string,
+    kakaoTalkId: string,
     setLoading: Function,
     unsetLoading: Function,
 }
@@ -108,7 +108,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         this.handleDecline = this.handleDecline.bind(this);
     }
 
-    userTypeMap: {[name: string]: string} = {
+    userTypeMap: { [name: string]: string } = {
         'Offered': '신입생',
         'Graduated': '졸업생'
     }
@@ -118,13 +118,13 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
     }
 
     handleAccept(event: any) {
-        if (! window.confirm(this.props.userName + "님을 승인하시겠습니까?")) {
+        if (!window.confirm(this.props.name + "님을 승인하시겠습니까?")) {
             return;
         }
         this.props.setLoading()
         dbService.collection('toVerify').doc(this.props.userId).delete().then(() => {
             dbService.collection('users').doc(this.props.userId).update({
-                isVerified: true,
+                verified: true,
             }).then(async () => {
                 this.props.unsetLoading();
                 window.alert("정상적으로 승인되었습니다.")
@@ -134,7 +134,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
 
     handleDecline(event: any) {
         event.preventDefault();
-        if (!window.confirm(this.props.userName + "님의 인증요청을 거부하시겠습니까?")) {
+        if (!window.confirm(this.props.name + "님의 인증요청을 거부하시겠습니까?")) {
             return;
         }
         this.props.setLoading();
@@ -148,7 +148,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         return (
             <Wrapper>
                 <TopBlock>
-                    <Name>{this.props.userName}</Name>
+                    <Name>{this.props.name}</Name>
                     <UserType>{this.userTypeMap[this.props.userType]}</UserType>
                 </TopBlock>
                 <BottomBlock>
@@ -156,8 +156,8 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                         <InfoSlip>- 이메일: {this.props.email}</InfoSlip>
                         <InfoSlip>- 성별: {this.props.gender}</InfoSlip>
                         <InfoSlip>- 학과: {this.props.major}</InfoSlip>
-                        <InfoSlip>- 카카오톡 ID: {this.props.KTId}</InfoSlip>
-                        {this.props.acceptanceLetterURL ? <DocLink href={this.props.acceptanceLetterURL} target="blank" rel="noreferrer noopener">입학증명서 링크</DocLink>: <></>}
+                        <InfoSlip>- 카카오톡 ID: {this.props.kakaoTalkId}</InfoSlip>
+                        {this.props.acceptanceLetterURL ? <DocLink href={this.props.acceptanceLetterURL} target="blank" rel="noreferrer noopener">입학증명서 링크</DocLink> : <></>}
                         {this.props.graduationLetterURL ? <DocLink href={this.props.graduationLetterURL} target="blank" rel="noreferrer noopener">졸업증명서 링크</DocLink> : <></>}
                     </Profile>
                     <ButtonDiv>

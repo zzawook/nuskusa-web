@@ -5,6 +5,8 @@ import firebase from 'firebase';
 import styled from 'styled-components';
 import CSS from 'csstype';
 import { FlexColumn } from '../components/utils/UsefulDiv';
+import crypto from 'crypto-js'
+import { responsivePropType } from 'react-bootstrap/esm/createUtilityClasses';
 
 type UserProps = {
     history: any,
@@ -164,54 +166,97 @@ class SignIn extends React.Component<UserProps, UserObject> {
         this.setState({
             loading: true,
         })
-        authService.setPersistence(firebase.auth.Auth.Persistence.SESSION)
-            .then(async () => {
-                return await authService.signInWithEmailAndPassword(this.state.email, this.state.password)
-                    .then(() => {
-                        dbService.collection('users').doc(authService.currentUser?.uid).get().then((doc) => {
-                            if (! doc.exists) {
-                                this.setState({
-                                    failed: true,
-                                    loading: false,
-                                })
-                                return
-                            }
-                            const data = doc.data()
-                            if (!authService.currentUser?.emailVerified) {
-                                window.alert("이메일이 인증되지 않았습니다. 보내드린 인증 메일의 링크를 눌러 본인 인증을 완료해주세요.")
-                                this.setState({
-                                    loading: false,
-                                })
-                                authService.signOut();
-                            }
-                            else if (!data?.isVerified) {
-                                window.alert("제출해주신 문서를 검증하고 있습니다. 1~2일 내로 완료될 예정입니다. 조금만 기다려주세요!")
-                                this.setState({
-                                    loading: false,
-                                })
-                                authService.signOut();
-                            }
-                            else {
-                                this.setState({
-                                    loading: false,
-                                })
-                                this.props.history.push("/")
-                            }
-                        })
+        const url = process.env.REACT_APP_HOST + "/api/auth/signin";
+        const hashedPassword = crypto.SHA512(this.state.password).toString();
+        const credentialObject = {
+            email: this.state.email,
+            password: hashedPassword
+        }
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(credentialObject),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            //SIGN IN SUCCES
+            if (response.status == 200) {
+                this.setState({
+                    loading: false,
+                })
+                this.props.history.push("/");
+            }
+            //IF USER PASSWORD IS NOT IN AWS SERVER
+            else if (response.status == 501) {
+                authService.signInWithEmailAndPassword(this.state.email, this.state.password).then(async () => {
+                    const pwUrl = process.env.REACT_APP_HOST + "/api/auth/updateAuthPassword";
+                    const tempResponse = await fetch(pwUrl, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            email: this.state.email,
+                            password: hashedPassword,
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
                     })
-                    .catch((error) => {
+                    authService.signOut()
+                    if (tempResponse.status == 200) {
+                        this.setState({
+                            loading: false,
+                        })
+                        this.props.history.push("/");
+                    }
+                    else {
                         this.setState({
                             failed: true,
                             loading: false,
                         })
-                    });
-            })
-            .catch((error) => {
+                    }
+                }).catch(err => {
+                    this.setState({
+                        failed: true,
+                        loading: false,
+                    })
+                })
+            }
+            //SIGN IN FAILED DUE TO KNOWN REASON
+            else if (response.status == 400) {
+                const body = await response.text()
+                if (body == "Email Not Verified") {
+                    window.alert("이메일이 인증되지 않았습니다. 보내드린 인증 메일의 링크를 눌러 본인 인증을 완료해주세요.")
+                    this.setState({
+                        loading: false,
+                    })
+                    authService.signOut();
+                }
+                else if (body == "Account Not Verified") {
+                    window.alert("제출해주신 문서를 검증하고 있습니다. 1~2일 내로 완료될 예정입니다. 조금만 기다려주세요!")
+                    this.setState({
+                        loading: false,
+                    })
+                    authService.signOut();
+                }
+                else {
+                    window.alert("알 수 없는 오류가 발생했습니다. 홈페이지 하단의 Contact Us를 통해 문의해주세요.")
+                }
+            }
+            //SIGN IN FAILED DUE TO INVALID CREDENTIAL
+            else {
                 this.setState({
                     failed: true,
                     loading: false,
                 })
-            });
+            }
+        }
+        catch (error) {
+            this.setState({
+                failed: true,
+                loading: false,
+            })
+            console.log(error)
+        }
     }
 
     handleMouseEnter = (e: any) => {

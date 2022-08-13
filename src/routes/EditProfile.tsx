@@ -267,17 +267,15 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         this.inputRef = React.createRef();
         this.state = {
             userData: {
-                username: "username",
-                userId: "",
+                name: "name",
                 email: "tempEmail@u.nus.edu",
-                verificationFile: undefined,
-                isVerified: false,
+                verified: false,
                 role: 'User',
                 enrolledYear: undefined,
                 major: undefined,
                 faculty: undefined,
-                profilePictureURL: undefined,
-                yob: "",
+                profileImageUrl: undefined,
+                yearOfBirth: "",
                 gender: "",
             },
             profileChanged: false,
@@ -335,9 +333,9 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                     loading: true,
                 })
                 const currentProfile = this.state.userData;
-                currentProfile.profilePictureURL = 'undefined';
+                currentProfile.profileImageUrl = 'undefined';
 
-                dbService.collection('users').doc(this.props.userId).update({ profilePictureURL: 'undefined' }).then(() => {
+                dbService.collection('users').doc(this.props.userId).update({ profileImageUrl: 'undefined' }).then(() => {
                     this.setState({
                         userData: currentProfile,
                         profileChanged: false,
@@ -406,7 +404,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             const profile = this.state.userData;
 
             const file = target.files[0];
-            profile.profilePictureURL = file;
+            profile.profileImageUrl = file;
             let type = null;
 
             if (file.type === 'image/png') {
@@ -422,7 +420,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             storageService.ref('users/' + this.props.userId + type).put(file).then(snapshot => {
                 snapshot.ref.getDownloadURL().then(url => {
                     dbService.collection('users').doc(this.props.userId).update({
-                        profilePictureURL: url
+                        profileImageUrl: url
                     }).then(snapshot => {
                         this.setState({
                             profileChanged: true,
@@ -527,7 +525,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             this.setState({
                 loading: true,
             })
-            dbService.collection('users').doc(this.props.userData.userId).update({
+            dbService.collection('users').doc(this.props.userData.email).update({
                 major: this.state.userData.major,
             }).then(() => {
                 this.setState({
@@ -544,10 +542,10 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                     <Navbar userData={this.props.userData} />
                     <ProfileContainer>
                         <ImgAndName>
-                            <Profile src={this.state.profileChanged ? this.props.userData.profilePictureURL : this.props.userData.profilePictureURL === 'undefined' || this.props.userData.profilePictureURL === "" || this.props.userData.profilePictureURL === undefined ? defaultProfile : this.props.userData.profilePictureURL}></Profile>
+                            <Profile src={this.state.profileChanged ? this.props.userData.profileImageUrl : this.props.userData.profileImageUrl === 'undefined' || this.props.userData.profileImageUrl === "" || this.props.userData.profileImageUrl === undefined ? defaultProfile : this.props.userData.profileImageUrl}></Profile>
                             <RemoveProfile onClick={handleRemoveProfile}>Remove Profile Image</RemoveProfile>
                             <ChangeProfile htmlFor="profile-upload"><Change id={'profile-upload'} onChange={handleImageUpload} type='file' accept="image/png, image/gif, image/jpeg" />Change Profile Image</ChangeProfile>
-                            <Name>{this.props.userData.username}</Name>
+                            <Name>{this.props.userData.name}</Name>
                         </ImgAndName>
                         <Email>
                             <EmailText>이메일 / Email</EmailText>
@@ -565,7 +563,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                         </EnrolledYear>
                         <EnrolledYear>
                             <EnrolledYearText>Year of Birth / 출생년도</EnrolledYearText>
-                            <EnrolledYearInput>{this.props.userData.yob === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.userData.yob}</EnrolledYearInput>
+                            <EnrolledYearInput>{this.props.userData.yearOfBirth === undefined ? 'N/A. Verify account to register enrolled year.' : this.props.userData.yearOfBirth}</EnrolledYearInput>
                         </EnrolledYear>
                         <EnrolledYear>
                             <EnrolledYearText>Gender / 성별</EnrolledYearText>

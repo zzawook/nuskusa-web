@@ -98,7 +98,7 @@ const Explanation = styled.span`
 type PasswordResetRequestState = {
     email: string,
     name: string,
-    yob: string,
+    yearOfBirth: string,
 }
 
 class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState> {
@@ -107,7 +107,7 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
         this.state = {
             email: "",
             name: "",
-            yob: "",
+            yearOfBirth: "",
         }
     }
 
@@ -120,7 +120,7 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
         } else {
             userDocs.forEach(doc => {
                 let data = doc.data();
-                if (data.username === this.state.name && data.yob === this.state.yob) {
+                if (data.name === this.state.name && data.yearOfBirth === this.state.yearOfBirth) {
                     authService.sendPasswordResetEmail(data.email)
                         .then(function () {
                             alert('비밀번호 재설정 메일을 보내드렸습니다. Password Reset Email has been sent.')
@@ -145,9 +145,9 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
                 name: event.target.value
             })
         }
-        if (event.target.name === "yob") {
+        if (event.target.name === "yearOfBirth") {
             this.setState({
-                yob: event.target.value
+                yearOfBirth: event.target.value
             })
         }
     }
@@ -178,7 +178,7 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
         window.history.back();
     }
     render = () => {
-        
+
         return (
             <>
                 <Container>
@@ -205,11 +205,11 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
                         onChange={this.handleChange}
                     ></Input>
                     <Input
-                        name="yob"
+                        name="yearOfBirth"
                         type="text"
                         placeholder="출생 연도 / Year of Birth (ex. 2002)"
                         required
-                        value={this.state.yob}
+                        value={this.state.yearOfBirth}
                         onChange={this.handleChange}
                     ></Input>
                     <ToSignUp href="/#/signup" onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>Don't have an account? Click here to create an account!</ToSignUp>

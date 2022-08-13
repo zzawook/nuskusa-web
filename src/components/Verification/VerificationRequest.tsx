@@ -75,7 +75,7 @@ class VerificationRequest extends React.Component<VerificationProps, Verificatio
         return (
             <>
                 {
-                    !this.props.userData.isVerified ?
+                    !this.props.userData.verified ?
                         !this.props.isModal ?
                             <ModalWrapper onClick={(e) => { e.stopPropagation() }}>
                                 <ModalContent>

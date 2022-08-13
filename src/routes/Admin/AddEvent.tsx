@@ -318,7 +318,7 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
             upvoteArray: [],
             numComments: 0,
             permissions: ["Admin", "Current"],
-            author: this.props.userData.username,
+            author: this.props.userData.name,
             authorId: authService.currentUser ? authService.currentUser.uid : null,
             parentBoardId: "announcement",
             parentBoardTitle: "공지게시판",
@@ -349,7 +349,7 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
                     <Navbar userData={this.props.userData} />
                     <Form>
                         <Input
-                            name="username"
+                            name="name"
                             type="string"
                             placeholder="이벤트 공지 제목"
                             required
