@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { User } from '../../types/User'
 import { CgProfile } from 'react-icons/cg'
 type AvatarProps = {
-    userData: User | undefined,
+    src: string | undefined,
     dimension: number,
     isOnNavbar: boolean,
 }
@@ -21,7 +21,6 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
     }
 
     componentDidUpdate() {
-        console.log(this.props.userData)
     }
 
     render = () => {
@@ -48,7 +47,7 @@ class Avatar extends React.Component<AvatarProps, AvatarState> {
         `
         return (
             <AvatarWrapper>
-                {this.props.userData ? this.props.userData.profileImageUrl ? <ProfileImg src={this.props.userData.profileImageUrl} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile> : <></>}
+                {this.props.src ? <ProfileImg src={this.props.src} /> : <CgProfile size={`${this.props.dimension}px`}></CgProfile>}
             </AvatarWrapper>
         )
     }

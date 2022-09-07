@@ -12,6 +12,7 @@ type UserProps = {
     history: any,
     location: any,
     match: any,
+    onSignIn: Function,
 }
 
 type UserObject = {
@@ -185,6 +186,9 @@ class SignIn extends React.Component<UserProps, UserObject> {
                 this.setState({
                     loading: false,
                 })
+                const userdata = await response.json();
+                console.log(userdata)
+                this.props.onSignIn(userdata);
                 this.props.history.push("/");
             }
             //IF USER PASSWORD IS NOT IN AWS SERVER
@@ -203,6 +207,8 @@ class SignIn extends React.Component<UserProps, UserObject> {
                     })
                     authService.signOut()
                     if (tempResponse.status == 200) {
+                        const userdata = await tempResponse.json();
+                        this.props.onSignIn(userdata);
                         this.setState({
                             loading: false,
                         })

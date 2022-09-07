@@ -40,6 +40,10 @@ class Home extends React.Component<HomeProps, HomeState> {
         height: '30vw',
     }
 
+    componentDidMount = async () => {
+        console.log(this.props)
+    }
+
     render = () => {
         const Wrapper = styled.div`
             display: flex;

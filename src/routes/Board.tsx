@@ -10,8 +10,8 @@ import { dbService } from '../utils/firebaseFunctions';
 import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
 import { Post } from '../types/Post';
 import { Board } from '../types/Board'
-import VerificationRequest from '../components/Verification/VerificationRequest';
 import { User } from '../types/User';
+import { PostSummary } from '../types/PostSummary';
 import Select from 'react-select';
 import { ActionMeta } from 'react-select';
 
@@ -156,14 +156,9 @@ type BoardProps = {
     boardId: string,
 }
 
-type PostData = {
-    data: Post,
-    id: string,
-}
-
 type BoardState = {
     Board: Board,
-    postArray: PostData[],
+    postArray: PostSummary[],
     postComponentArray: any[],
     postOrder: SelectOption,
     searched: boolean,
@@ -179,10 +174,8 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
             title: "",
             boardId: "",
             description: "",
-            permissions: ["Admin"],
             boardColor: "",
             boardTextColor: "",
-            editPermission: [],
         },
         postArray: [],
         postComponentArray: [],
@@ -192,17 +185,17 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
         searchedPostArray: [],
     }
 
-    componentDidMount = () => {
-        this.fetchBoard();
-        this.fetchPosts();
+    componentDidMount = async () => {
+        await this.fetchBoard();
+        await this.fetchPosts();
 
     }
 
-    componentDidUpdate = () => {
+    componentDidUpdate = async () => {
         if (prevBoardURL !== this.props.boardId) {
             prevBoardURL = this.props.boardId
-            this.fetchBoard();
-            this.fetchPosts();
+            await this.fetchBoard();
+            await this.fetchPosts();
         }
     }
 
@@ -210,72 +203,71 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
         return <button><Link to={`/boards/${this.props.boardId}/new`}></Link></button>
     }
 
-    fetchBoard = () => {
-        dbService.collection('boards').doc(this.props.boardId)
-            .onSnapshot((doc) => {
-                const data = doc.data() as Board
-                this.setState({
-                    Board: {
-                        title: data.title,
-                        boardId: data.boardId,
-                        description: data.description,
-                        permissions: data.permissions,
-                        boardColor: data.boardColor,
-                        boardTextColor: data.boardTextColor,
-                        editPermission: data.editPermission,
-                    },
-                    searchString: "",
-                    searchedPostArray: [],
-                    searched: false,
-                })
+    fetchBoard = async () => {
+        const url = process.env.REACT_APP_HOST + "api/board/getBoard/" + this.props.boardId;
+        const response = await fetch(url, {
+            method: "GET",
+        })
+
+        if (response.status == 200) {
+            const board = await response.json();
+            console.log(board);
+            const boardObject = {
+                title: board.title,
+                description: board.description,
+                boardId: board.boardId,
+                boardColor: board.boardColor,
+                boardTextColor: board.boardTextColor,
+            }
+            this.setState({
+                Board: boardObject
             })
+        }
     }
 
-    fetchPosts = () => {
-        dbService
-            .collection('boards').doc(this.props.boardId)
-            .collection('posts').orderBy("isPinned", 'desc').orderBy(this.state.postOrder.value, 'desc')
-            .onSnapshot((querySnapshot) => {
-                const arr: PostData[] = [];
-                const componentArray: any[] = [];
-                let key = 0
-                querySnapshot.docs.forEach((doc) => {
-                    key++
-                    const data = doc.data() as Post;
-                    if (data.permissions.includes(this.props.userData.role) || data.permissions.includes('User')) {
-                        if (data.isPinned) {
-                            arr.unshift({
-                                data: data,
-                                id: doc.id,
-                            })
-                        }
-                        else {
-                            arr.push({
-                                data: data,
-                                id: doc.id,
-                            })
-                        }
-                    }
-                })
-                const components = this.generateComponent(arr)
-                this.setState({
-                    postArray: arr,
-                    postComponentArray: components
-                })
+    fetchPosts = async () => {
+        const url = process.env.REACT_APP_HOST + "/api/board/getPosts/" + this.props.boardId;
+        const response = await fetch(url, {
+            method: "GET"
+        })
+
+        if (response.status == 200) {
+            const posts = await response.json();
+            const postArray = [];
+            for (let i = 0; i < posts.length; i++) {
+                const post = posts[i]
+                const postObject: PostSummary = {
+                    postId: post.id,
+                    title: post.title,
+                    content: post.content,
+                    isAnnouncement: post.isAnnouncement,
+                    isHidden: post.isHidden,
+                    isAnonymous: post.isAnonymous,
+                    isPinned: post.isPinned,
+                    isEvent: post.isEvent,
+                    lastModified: new Date(post.updatedAt),
+                    author: post.author,
+                }
+                postObject.lastModified.setHours(postObject.lastModified.getHours() - 8);
+                postArray.push(postObject);
+            }
+            const components = this.generateComponent(postArray);
+            this.setState({
+                postArray: postArray,
+                postComponentArray: components,
             })
+        }
     }
 
-    generateComponent = (postArray: PostData[]) => {
+    generateComponent = (postArray: PostSummary[]) => {
         const components = [];
         for (let i = 0; i < postArray.length; i++) {
-            let data = postArray[i].data;
-            let id = postArray[i].id
             let component = (
                 <div key={i}>
                     <PostThumbnail
-                        Post={data}
-                        User={this.props.userData}
-                        to={`/boards/${this.props.boardId}/${id}`}
+                        Post={postArray[i]}
+                        Board={this.state.Board}
+                        to={`/boards/${this.props.boardId}/${postArray[i].postId}`}
                     />
                     {/* Allow to edit all posts in the list */}
                 </div>
@@ -310,10 +302,10 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
         const searchedPostArray = [];
         const postArray = this.state.postArray;
         for (let i = 0; i < postArray.length; i++) {
-            if (postArray[i].data.content.includes(this.state.searchString)) {
+            if (postArray[i].content.includes(this.state.searchString)) {
                 searchedPostArray.push(postArray[i])
             }
-            else if (postArray[i].data.title.includes(this.state.searchString)) {
+            else if (postArray[i].title.includes(this.state.searchString)) {
                 searchedPostArray.push(postArray[i])
             }
         }
@@ -327,12 +319,6 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
         return (
             <Container>
                 <Navbar userData={this.props.userData} />
-                {!this.props.userData.verified
-                    ?
-                    <VerificationRequest userData={this.props.userData} isModal={true} onClose={() => { }} />
-                    :
-                    <></>
-                }
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         {this.state.Board.title}
@@ -340,7 +326,7 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
                     <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
                         {this.state.Board.description}
                     </Headline>
-                    {this.state.Board.editPermission.includes(this.props.userData.role) ?
+                    {true ?
                         <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
                             <Headline color='white' style={{ textAlign: 'center' }}>
                                 + 게시글 올리기

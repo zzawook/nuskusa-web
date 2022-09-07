@@ -1,4 +1,6 @@
 import firebase from 'firebase'
+import { Board } from './Board'
+import { User } from './User'
 
 export interface Post {
     postId: string,
@@ -9,13 +11,11 @@ export interface Post {
     isPinned: boolean,
     isHidden: boolean,
     isEvent?: boolean | undefined,
-    lastModified: firebase.firestore.Timestamp,
-    upvoteArray: firebase.firestore.DocumentReference[],
-    numComments: number,
-    permissions: string[],
-    author: string,
-    parentBoardId: string,
-    parentBoardTitle: string,
-    parentColor: string,
-    parentTextColor: string
+    lastModified: Date,
+    upvoteCount: number,
+    upvoted: boolean,
+    commentCount: number,
+    author: User,
+    board: Board,
+    hasRoot: boolean,
 }

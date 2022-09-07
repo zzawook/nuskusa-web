@@ -6,8 +6,6 @@ import { User } from "../../types/User";
 import firebase from 'firebase'
 
 type CommentProps = {
-    comments: any[],
-    commentIds: any[],
     boardId: string,
     postId: string,
     userData: User,
@@ -99,14 +97,45 @@ class Comment extends React.Component<CommentProps, CommentState> {
     }
 
     componentDidMount() {
-        this.setState({
-            commentArray: this.props.comments.map((element, i) => <Primary reset={this.props.reset} data={element} boardId={this.props.boardId} postId={this.props.postId} userData={this.props.userData} commentId={this.props.commentIds[i]} />).reverse()
-        })
+        this.fetchComment()
     }
 
     static getDerivedStateFromProps(nextProps: CommentProps, prevState: CommentState) {
-        return {
-            commentArray: nextProps.comments.map((element, i) => <Primary reset={nextProps.reset} data={element} boardId={nextProps.boardId} postId={nextProps.postId} userData={nextProps.userData} commentId={nextProps.commentIds[i]} />).reverse()
+    }
+
+    generateComponent(elements: any[]) {
+        return elements.map((element, i) => <Primary reset={this.props.reset} data={element} boardId={this.props.boardId} postId={this.props.postId} userData={this.props.userData} commentId={element.id} />)
+    }
+
+    fetchComment = async () => {
+        const url = process.env.REACT_APP_HOST + "/api/post/getPostComments/" + this.props.postId;
+        const response = await fetch(url, {
+            method: "GET"
+        })
+
+        if (response.status == 200) {
+            const comments = await response.json()
+            const commentArray = [];
+            for (let i = 0; i < comments.length; i++) {
+                let comment = comments[i];
+                let commentObject = {
+                    id: comment.id,
+                    author: comment.author,
+                    content: comment.content,
+                    upvoteCount: comment.upvoteCount,
+                    upvoted: comment.upvoted,
+                    postId: comment.post,
+                    lastModified: new Date(comment.updatedAt),
+                    replyTo: comment.replyTo,
+                    isMine: comment.isMine,
+                }
+                commentObject.lastModified.setHours(commentObject.lastModified.getHours() - 8);
+                commentArray.push(commentObject)
+            }
+            console.log(commentArray)
+            this.setState({
+                commentArray: this.generateComponent(commentArray),
+            })
         }
     }
 
@@ -129,14 +158,19 @@ class Comment extends React.Component<CommentProps, CommentState> {
             const response = await fetch(url, {
                 method: "POST",
                 body: JSON.stringify({
-                    content: this.state.commentEntered
-                })
+                    content: this.state.commentEntered,
+                    replyTo: null,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
             })
-            if (response.status == 200) {
+            if (response.status == 201) {
                 this.setState({
                     commentEntered: ""
                 })
                 window.alert("댓글을 작성했습니다.")
+                this.props.reset();
             }
             else {
                 window.alert("댓글 작성에 실패했습니다.")

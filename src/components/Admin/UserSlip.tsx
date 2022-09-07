@@ -80,18 +80,17 @@ const DeclineButton = styled.div`
     cursor: pointer;
 `
 type AdminVerificationProps = {
-    acceptanceLetterURL: string,
-    graduationLetterURL: string,
+    fileURL: string,
     email: string,
     role: string,
-    userId: string,
-    userType: string,
     name: string,
     gender: string,
     major: string,
     kakaoTalkId: string,
     setLoading: Function,
     unsetLoading: Function,
+    verificationId: number,
+    updateFunc: Function,
 }
 
 type AdminVerificationState = {
@@ -109,7 +108,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
     }
 
     userTypeMap: { [name: string]: string } = {
-        'Offered': '신입생',
+        'Freshmen': '신입생',
         'Graduated': '졸업생'
     }
 
@@ -117,31 +116,59 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         console.log(this.props)
     }
 
-    handleAccept(event: any) {
+    async handleAccept(event: any) {
         if (!window.confirm(this.props.name + "님을 승인하시겠습니까?")) {
             return;
         }
         this.props.setLoading()
-        dbService.collection('toVerify').doc(this.props.userId).delete().then(() => {
-            dbService.collection('users').doc(this.props.userId).update({
-                verified: true,
-            }).then(async () => {
-                this.props.unsetLoading();
-                window.alert("정상적으로 승인되었습니다.")
-            })
+        const url = process.env.REACT_APP_HOST + "/api/auth/verifyUser"
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify({
+                verificationId: this.props.verificationId
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
         })
+        await this.props.updateFunc();
+        if (response.status == 200) {
+            this.props.unsetLoading();
+            window.alert("정상적으로 승인되었습니다.")
+        }
+        else {
+            this.props.unsetLoading();
+            window.alert("승인요청을 처리하지 못했습니다.")
+        }
     }
 
-    handleDecline(event: any) {
+    async handleDecline(event: any) {
         event.preventDefault();
         if (!window.confirm(this.props.name + "님의 인증요청을 거부하시겠습니까?")) {
             return;
         }
+        const message = window.prompt("반려 사유를 적어주세요.");
         this.props.setLoading();
-        dbService.collection('toVerify').doc(this.props.userId).delete().then(async () => {
-            this.props.unsetLoading();
-            window.alert("정상적으로 반려되었습니다. 해당 유저에게 고지하는 것 잊지 말아주세요! 이메일 주소: " + this.props.email)
+        const url = process.env.REACT_APP_HOST + "/api/auth/declineUser"
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify({
+                verificationId: this.props.verificationId,
+                denialMessage: message,
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
         })
+        await this.props.updateFunc();
+        if (response.status == 200) {
+            this.props.unsetLoading();
+            window.alert("정상적으로 반려되었습니다.")
+        }
+        else {
+            this.props.unsetLoading();
+            window.alert("반려요청을 정상적으로 처리하지 못했습니다.");
+        }
     }
 
     render = () => {
@@ -149,7 +176,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
             <Wrapper>
                 <TopBlock>
                     <Name>{this.props.name}</Name>
-                    <UserType>{this.userTypeMap[this.props.userType]}</UserType>
+                    <UserType>{this.userTypeMap[this.props.role]}</UserType>
                 </TopBlock>
                 <BottomBlock>
                     <Profile>
@@ -157,8 +184,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                         <InfoSlip>- 성별: {this.props.gender}</InfoSlip>
                         <InfoSlip>- 학과: {this.props.major}</InfoSlip>
                         <InfoSlip>- 카카오톡 ID: {this.props.kakaoTalkId}</InfoSlip>
-                        {this.props.acceptanceLetterURL ? <DocLink href={this.props.acceptanceLetterURL} target="blank" rel="noreferrer noopener">입학증명서 링크</DocLink> : <></>}
-                        {this.props.graduationLetterURL ? <DocLink href={this.props.graduationLetterURL} target="blank" rel="noreferrer noopener">졸업증명서 링크</DocLink> : <></>}
+                        {this.props.role == "Freshmen" ? <DocLink href={this.props.fileURL} target="blank" rel="noreferrer noopener">입학증명서 링크</DocLink> : <DocLink href={this.props.fileURL} target="blank" rel="noreferrer noopener">졸업증명서 링크</DocLink>}
                     </Profile>
                     <ButtonDiv>
                         <Buttons>

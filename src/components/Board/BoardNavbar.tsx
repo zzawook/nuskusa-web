@@ -48,32 +48,30 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
             querySnapshot.docs.forEach((doc) => {
                 key++
                 const data = doc.data() as Board
-                if (data.permissions.includes(this.props.userData.role)) {
-                    if (data.boardId !== this.props.currentRoute) {
-                        componentArray.push(
-                            <LinkContainer key={key}>
-                                <Link to={{ pathname: `/boards/${data.boardId}` }}
-                                    style={{ textDecoration: 'none' }}
-                                >
-                                    <Headline color='white' >
-                                        {data.title}
-                                    </Headline>
-                                </Link>
-                            </LinkContainer >
-                        )
-                    } else {
-                        componentArray.push(
-                            <CurrentContainer key={key}>
-                                <Link to={{ pathname: `/boards/${data.boardId}` }}
-                                    style={{ textDecoration: 'none' }}
-                                >
-                                    <Headline color='white'>
-                                        {data.title}
-                                    </Headline>
-                                </Link>
-                            </CurrentContainer>
-                        )
-                    }
+                if (data.boardId !== this.props.currentRoute) {
+                    componentArray.push(
+                        <LinkContainer key={key}>
+                            <Link to={{ pathname: `/boards/${data.boardId}` }}
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <Headline color='white' >
+                                    {data.title}
+                                </Headline>
+                            </Link>
+                        </LinkContainer >
+                    )
+                } else {
+                    componentArray.push(
+                        <CurrentContainer key={key}>
+                            <Link to={{ pathname: `/boards/${data.boardId}` }}
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <Headline color='white'>
+                                    {data.title}
+                                </Headline>
+                            </Link>
+                        </CurrentContainer>
+                    )
                 }
             })
         })

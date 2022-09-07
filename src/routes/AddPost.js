@@ -178,17 +178,7 @@ class AddPost extends React.Component {
         isAnonymous: false,
         isPinned: false,
         isHidden: false,
-        author: "",
-        authorId: "",
-        upvotes: 0,
-        lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-        permissions: ["Admin"],
-        numComments: 0, //DO NOT CHANGE
-        parentBoardId: this.props.boardId,
-        upvoteArray: [], //DO NOT CHANGE
-        parentColor: "",
-        parentTextColor: "",
-        parentBoardTitle: "",
+        lastModified: new Date(),
       },
       selectedBoard: this.props.boardId,
       boardData: [],
@@ -201,55 +191,44 @@ class AddPost extends React.Component {
 
   content = "<p></p>";
 
-  componentDidMount() {
-    if (!this.props.userData.verified) {
-      window.alert(
-        "You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다."
-      );
-      window.history.go(-1);
-      return;
-    }
+  componentDidMount = async () => {
     const boardProcessed = [];
     const boardRaw = [];
-    dbService
-      .collection("boards")
-      .get()
-      .then((boards) => {
-        boards.forEach((board) => {
-          const data = board.data();
-          if (data.editPermission.includes(this.props.userData.role)) {
-            boardProcessed.push({
-              value: board.id,
-              label: data.title,
-            });
-            boardRaw.push(data);
-          }
-        });
-      })
-      .then(() => {
-        let backgroundColor = "#FFFFFF";
-        if (boardRaw.find((elem) => elem.boardId == this.props.boardId)) {
-          backgroundColor = boardRaw.find(
-            (elem) => elem.boardId == this.props.boardId
-          ).boardColor;
-        }
+    const url = process.env.REACT_APP_HOST + "/api/board/getBoards"
+    const response = await fetch(url, {
+      method: "GET"
+    })
 
-        console.log(backgroundColor);
+    if (response.status == 200) {
+      const boards = await response.json();
 
-        const stateCopy = this.state.state;
-        stateCopy.author = this.props.userData.name;
-        stateCopy.authorId = authService.currentUser.uid;
+      for (let i = 0; i < boards.length; i++) {
+        let board = boards[i]
+        boardProcessed.push({
+          value: board.boardId,
+          label: board.title
+        })
+        boardRaw.push(board);
+      }
+      let backgroundColor = "#FFFFFF";
+      if (boardRaw.find((elem) => elem.boardId == this.props.boardId)) {
+        backgroundColor = boardRaw.find(
+          (elem) => elem.boardId == this.props.boardId
+        ).boardColor;
+      }
+      const stateCopy = this.state.state;
+      stateCopy.author = this.props.userData.name;
 
-        this.setState((prevState) => {
-          return {
-            state: stateCopy,
-            boardDataProcessed: boardProcessed,
-            boardData: boardRaw,
-            selectedBoard: this.props.boardId,
-            bc: backgroundColor,
-          };
-        });
+      this.setState((prevState) => {
+        return {
+          state: stateCopy,
+          boardDataProcessed: boardProcessed,
+          boardData: boardRaw,
+          selectedBoard: this.props.boardId,
+          bc: backgroundColor,
+        };
       });
+    }
   }
 
   handleSubmit = async (e) => {
@@ -280,46 +259,43 @@ class AddPost extends React.Component {
     this.setState({
       loading: true,
     });
-    const boardSnapshot = await dbService
-      .collection("boards")
-      .doc(this.state.selectedBoard)
-      .get();
-    const boardData = boardSnapshot.data();
-    const stateCopy = this.state.state;
-    stateCopy.authorId = authService.currentUser.uid;
-    stateCopy.content = this.content;
-    stateCopy.parentBoardId = this.state.selectedBoard;
-    stateCopy.parentColor = boardData.boardColor;
-    stateCopy.parentTextColor = boardData.boardTextColor;
-    stateCopy.parentBoardTitle = boardData.title;
-    stateCopy.permissions = boardData.permissions;
-    this.setState(
-      {
-        state: stateCopy,
-      },
-      () => {
-        dbService
-          .collection("boards")
-          .doc(this.state.selectedBoard)
-          .collection("posts")
-          .add(this.state.state)
-          .then((docRef) => {
-            this.setState({
-              loading: false,
-            });
-            window.location.href =
-              "#/boards/" + this.state.selectedBoard + "/" + docRef.id;
-          })
-          .catch((err) => {
-            this.setState({
-              loading: false,
-            });
-            window.alert(
-              "게시글 업로드 도중 문제가 발생하였습니다." + err.toString()
-            );
-          });
+    const url = process.env.REACT_APP_HOST + "/api/post/addPost/" + this.state.selectedBoard;
+    const postObject = {
+      title: this.state.state.title,
+      content: this.content,
+      isAnnouncement: this.state.state.isAnnouncement,
+      isAnonymous: this.state.state.isAnonymous,
+      isHidden: this.state.state.isHidden,
+      isPinned: this.state.state.isPinned,
+      isEvent: false,
+    }
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(postObject),
+      headers: {
+        'Content-Type': 'application/json'
       }
-    );
+    })
+
+    if (response.status == 201) {
+      const postId = await response.text();
+      this.setState({
+        loading: false,
+      });
+      window.location.href = "#/boards/" + this.state.selectedBoard + "/" + postId;
+      return;
+    }
+    else {
+      const errMsg = await response.text();
+      window.alert("게시글 업로드 도중 문제가 발생하였습니다." + errMsg);
+    }
+    const stateCopy = this.state.state;
+    stateCopy.content = this.content;
+    stateCopy.title = "Enter title...";
+    this.setState({
+      state: stateCopy,
+      loading: false,
+    });
   };
 
   handleTitleChange = (e) => {
@@ -370,7 +346,6 @@ class AddPost extends React.Component {
   };
 
   componentDidUpdate() {
-    console.log(this.state.selectedBoard);
   }
 
   render = () => {

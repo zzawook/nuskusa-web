@@ -53,27 +53,22 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         this.unsetLoading.bind(this);
     }
 
-    componentDidMount() {
-        dbService.collection('toVerify').onSnapshot(async docs => {
-            let userArray: Array<any> = [];
-            let promiseArray: Array<any> = [];
-            docs.forEach(async doc => {
-                const data = doc.data();
-                let promise = dbService.collection('users').doc(data.userId).get().then(userDoc => {
-                    const userData = userDoc.data();
-                    if (userData) {
-                        userData.userType = data.userType;
-                        userArray.push(userData)
-                    }
-                })
-                promiseArray.push(promise);
-            })
-            Promise.all(promiseArray).then(() => {
-                this.setState({
-                    users: userArray,
-                })
-            })
+    async componentDidMount() {
+        await this.getVerificationData();
+    }
+
+    getVerificationData = async () => {
+        const url = process.env.REACT_APP_HOST + "/api/auth/getToVerify";
+        const response = await fetch(url, {
+            method: "GET"
         })
+        if (response.status == 200) {
+            const data = await response.json();
+            console.log(data)
+            this.setState({
+                users: data,
+            })
+        }
     }
 
     setLoading = () => {
@@ -92,6 +87,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         console.log(this.state.users)
     }
 
+
     static getDerivedStateFromProps(newProps: AdminVerificationProps, prevState: AdminVerificationState) {
         return {
             dummy: !prevState.dummy
@@ -104,8 +100,8 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                 {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 : </LoadingText></LoadingBlocker> : <></>}
                 <Wrapper>
                     <Navbar userData={this.props.userData} />
-                    {this.state.users.map(user => {
-                        return <UserSlip setLoading={this.setLoading} unsetLoading={this.unsetLoading} graduationLetterURL={user.graduationDocumentURL} acceptanceLetterURL={user.acceptanceLetterURL} email={user.email} role={user.role} userId={user.userId} name={user.name} gender={user.gender} major={user.major} userType={user.userType} kakaoTalkId={user.kakaoTalkId} />
+                    {this.state.users.map(request => {
+                        return <UserSlip setLoading={this.setLoading} updateFunc={this.getVerificationData} verificationId={request.id} unsetLoading={this.unsetLoading} fileURL={request.user.fileURL} email={request.user.email} role={request.user.role} name={request.user.name} gender={request.user.gender} major={request.user.major} kakaoTalkId={request.user.kakaoTalkId} />
                     })}
                 </Wrapper>
             </>

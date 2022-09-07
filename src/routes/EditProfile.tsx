@@ -4,6 +4,8 @@ import { User } from '../types/User';
 import styled from 'styled-components';
 import { authService, dbService, storageService } from '../utils/firebaseFunctions'
 import firebase from 'firebase';
+import Avatar from "../components/Profile/Avatar"
+import crypto from "crypto-js"
 
 type EditProfileProps = {
     userData: User,
@@ -19,6 +21,7 @@ type EditProfileState = {
     confirmNewPassword: string,
     emailChange: boolean,
     loading: boolean,
+    newEmail: string,
 }
 
 const Container = styled.div`
@@ -43,12 +46,8 @@ const ImgAndName = styled.div`
     width: 100%;
     z-index: 10;
 `
-const Profile = styled.img`
-    width: 15vh;
-    height: 15vh;
-    margin-top: 20px;
-    margin-bottom: 5px;
-    z-index: 10;
+const ProfileMargin = styled.div`
+    height: 10px;
 `
 const RemoveProfile = styled.button`
     :hover {
@@ -269,7 +268,6 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             userData: {
                 name: "name",
                 email: "tempEmail@u.nus.edu",
-                verified: false,
                 role: 'User',
                 enrolledYear: undefined,
                 major: undefined,
@@ -285,67 +283,76 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             confirmNewPassword: '',
             emailChange: false,
             loading: false,
+            newEmail: ""
         }
     }
 
     componentDidMount = () => {
         let canChangeEmail = false;
-        if (this.props.userData.role == "Offered" && authService.currentUser?.email?.split("@")[1] != "u.nus.edu") {
+        if (this.props.userData.role == "Offered" && this.props.userData.email?.split("@")[1] != "u.nus.edu") {
             canChangeEmail = true;
         }
         this.setState({
             userData: this.props.userData,
             emailChange: canChangeEmail,
+            newEmail: this.props.userData.email,
         })
     }
 
     componentDidUpdate = () => {
-        if (!authService.currentUser) {
-            window.location.href = window.location.origin + '/#/';
-        }
     }
 
-    static getDerivedStateFromProps = (newProps: any, prevState: any) => {
-        if (!authService.currentUser) {
-            window.location.href = window.location.origin + '/#/';
-        }
+    static getDerivedStateFromProps = (newProps: EditProfileProps, prevState: EditProfileState) => {
         let canChangeEmail = false;
-        if (newProps.userData.role == "Offered" && authService.currentUser?.email?.split("@")[1] != "u.nus.edu") {
+        if (newProps.userData.role == "Offered" && newProps.userData.email.split("@")[1] != "u.nus.edu") {
             canChangeEmail = true;
         }
-        console.log(newProps.userData.role)
-        console.log(newProps.userData.email.split("@")[1])
-        console.log(canChangeEmail)
         return {
             userData: newProps.userData,
             emailChange: canChangeEmail,
+            newEmail: newProps.userData.email,
         }
     }
 
     render = () => {
-        const defaultProfile = 'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fprofile_default.png?alt=media&token=61ab872f-8f29-4d50-b22e-9342e0581fb5'
-
-        const handleRemoveProfile = (e: any) => {
+        const handleRemoveProfile = async (e: any) => {
             e.preventDefault();
 
-            if (window.confirm("This will remove your profile image and replace with default counterpart. Continue? \n 기존의 프로필 이미지를 삭제하고 기본 프로필 이미지로 대체합니다. 계속하시겠습니까?")) {
+            if (window.confirm("기존의 프로필 이미지를 삭제하고 기본 프로필 이미지로 대체합니다. 계속하시겠습니까?")) {
                 this.setState({
                     loading: true,
                 })
                 const currentProfile = this.state.userData;
                 currentProfile.profileImageUrl = 'undefined';
 
-                dbService.collection('users').doc(this.props.userId).update({ profileImageUrl: 'undefined' }).then(() => {
-                    this.setState({
-                        userData: currentProfile,
-                        profileChanged: false,
-                        loading: false,
+                const url = process.env.REACT_APP_HOST + "/api/profile/editProfile/" + this.state.userData.email;
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        profileImageUrl: "undefined"
                     })
                 })
+
+                const newUser = this.state.userData;
+                newUser.profileImageUrl = undefined;
+
+                if (response.status == 200) {
+                    this.setState({
+                        loading: false,
+                        userData: newUser,
+                    })
+                    window.alert("프로필 이미지를 삭제했습니다.")
+                }
+                else {
+                    this.setState({
+                        loading: false,
+                    })
+                    window.alert("프로필 이미지 삭제 도중 오류가 발생했습니다.")
+                }
             }
         }
 
-        const handleEmailChangeClick = (e: any) => {
+        const handleEmailChangeClick = async (e: any) => {
             if (this.state.userData.email.split("@")[1] != "u.nus.edu") {
                 window.alert("@u.nus.edu로 끝나는 NUS 이메일이 아닙니다. 다시 입력해주세요.")
                 let tempProfile = this.state.userData;
@@ -360,38 +367,46 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             this.setState({
                 loading: true,
             })
-            authService.currentUser?.updateEmail(this.state.userData.email).catch(err => {
-                window.alert("이메일 변경을 실패했습니다.");
-                console.log(err);
+            const url = process.env.REACT_APP_HOST + "/api/profile/editProfile/" + this.state.userData.email;
+            const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify({
+                    email: this.state.newEmail
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+
+            if (response.status == 200) {
+                window.alert("이메일 변경이 성공적으로 완료되었습니다. 입력하신 이메일로 인증 메일을 보내드렸습니다. 메일의 링크를 눌러 이메일 주소를 인증해주세요! 재학생으로 처리됩니다.");
                 this.setState({
                     loading: false,
                 })
-            }).then(() => {
-                authService.currentUser?.sendEmailVerification().catch(err => {
-                    window.alert("인증 이메일을 보내지 못했습니다.")
-                    console.log(err);
-                }).then(() => {
-                    dbService.collection('users').doc(authService.currentUser?.uid).update({
-                        email: this.state.userData.email,
-                        role: 'Current'
-                    }).then(() => {
-                        window.alert("이메일 변경이 성공적으로 완료되었습니다. 입력하신 이메일로 인증 메일을 보내드렸습니다. 메일의 링크를 눌러 이메일 주소를 인증해주세요! 재학생으로 처리됩니다.");
-                        this.setState({
-                            loading: false,
-                        })
-                        authService.signOut();
-                        window.location.href = "/#/"
-                    })
+                const logoutUrl = process.env.REACT_APP_HOST + "/api/auth/signout";
+                const logoutResponse = await fetch(logoutUrl, {
+                    method: "POST",
+                    redirect: 'follow',
                 })
-            })
+            }
+            else if (response.status == 400) {
+                this.setState({
+                    loading: false,
+                })
+                window.alert("인증 이메일을 보내지 못했습니다.")
+            }
+            else {
+                this.setState({
+                    loading: false,
+                })
+                window.alert("이메일 변경을 실패했습니다.");
+            }
         }
 
         const handleEmailChange = (e: any) => {
             e.preventDefault();
-            const temp = this.state.userData
-            temp.email = e.target.value;
             this.setState({
-                userData: temp,
+                newEmail: e.target.value,
             })
         }
 
@@ -418,30 +433,41 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             }
 
             storageService.ref('users/' + this.props.userId + type).put(file).then(snapshot => {
-                snapshot.ref.getDownloadURL().then(url => {
-                    dbService.collection('users').doc(this.props.userId).update({
-                        profileImageUrl: url
-                    }).then(snapshot => {
+                snapshot.ref.getDownloadURL().then(async (profileImageUrl) => {
+                    const url = process.env.REACT_APP_HOST + "/api/profile/editProfile/" + this.state.userData.email;
+                    const response = await fetch(url, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            profileImageUrl: profileImageUrl
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+
+                    if (response.status == 200) {
+                        profile.profileImageUrl = profileImageUrl
                         this.setState({
                             profileChanged: true,
                             userData: profile,
                             loading: false,
                         })
-                        window.alert("Profile image is successfully changed! 프로필 사진을 성공적으로 바꾸었어요!")
-                    }).catch(err => {
-                        window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
+                        window.alert("프로필 사진을 성공적으로 바꿨습니다")
+                    }
+                    else {
                         this.setState({
                             loading: false,
                         })
-                    })
+                        window.alert('프로필 사진을 바꾸지 못했습니다')
+                    }
                 }).catch(err => {
-                    window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
+                    window.alert('프로필 사진을 바꾸지 못했습니다. ' + err.toString())
                     this.setState({
                         loading: false,
                     })
                 });
             }).catch(err => {
-                window.alert('Profile image change was unsuccessful. Please try again later. 프로필 사진을 바꾸지 못했어요. 나중에 다시 시도해주세요.')
+                window.alert('프로필 사진을 바꾸지 못했습니다. ' + err.toString())
                 this.setState({
                     loading: false,
                 })
@@ -466,16 +492,9 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             })
         }
 
-        const handlePasswordChange = (e: any) => {
+        const handlePasswordChange = async (e: any) => {
             if (this.state.confirmNewPassword != this.state.newPassword) {
                 window.alert('New password and Confirm password does not match. Please check again. \n\n 새 비밀번호와 비밀번호 확인이 일치하지 않습니다. 확인 바랍니다.')
-                return;
-            }
-
-            const user = authService.currentUser;
-
-            if (typeof user?.email != 'string') {
-                window.alert("Please wait a few seconds and try again.")
                 return;
             }
 
@@ -483,32 +502,38 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                 loading: true,
             })
 
-            const credential = firebase.auth.EmailAuthProvider.credential(user?.email, this.state.currentPassword)
-            user?.reauthenticateWithCredential(credential).then((newCredential) => {
-                const newPassword = this.state.newPassword;
+            const url = process.env.REACT_APP_HOST + "/api/auth/updatePassword";
+            const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify({
+                    prevPassword: crypto.SHA512(this.state.currentPassword).toString(),
+                    password: crypto.SHA512(this.state.newPassword).toString()
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
 
-                user?.updatePassword(newPassword).then(() => {
-                    window.alert("Password was updated successfully")
-                    this.setState({
-                        loading: false,
-                    })
-                    return;
-                }).catch(error => {
-                    window.alert("An error occurred. Please try again")
-                    this.setState({
-                        loading: false,
-                    })
-                    return;
+            if (response.status == 200) {
+                window.alert("비밀번호를 성공적으로 변경했습니다.")
+                this.setState({
+                    loading: false,
+
                 })
-
-            }).catch(error => {
-                window.alert("An unknown error occurred during confirming current password.")
+            }
+            else if (response.status == 401) {
+                window.alert("현재 비밀번호가 틀립니다. 비밀번호를 변경하지 못했습니다.")
+                this.setState({
+                    loading: false,
+                })
+            }
+            else {
+                window.alert("비밀번호를 변경하지 못했습니다.")
                 this.setState({
                     loading: false,
                 })
                 return;
-            })
-
+            }
         }
 
         const handleMajorInputChange = (e: any) => {
@@ -520,29 +545,45 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             })
         }
 
-        const handleMajorChangeSubmit = (e: any) => {
+        const handleMajorChangeSubmit = async (e: any) => {
             e.preventDefault();
             this.setState({
                 loading: true,
             })
-            dbService.collection('users').doc(this.props.userData.email).update({
-                major: this.state.userData.major,
-            }).then(() => {
+            const url = process.env.REACT_APP_HOST + "/api/profile/editProfile/" + this.state.userData.email;
+            const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify({
+                    major: this.state.userData.major,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (response.status == 200) {
                 this.setState({
                     loading: false,
                 })
-                window.alert("학과를 변경했습니다. ")
-            })
+                window.alert("전공을 성공적으로 변경했습니다.")
+            }
+            else {
+                this.setState({
+                    loading: false,
+                })
+                window.alert("전공 변경 중 오류가 발생했습니다.")
+            }
         }
 
         return (
             <>
                 {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
-                <Container>
+                <Container> 
                     <Navbar userData={this.props.userData} />
                     <ProfileContainer>
                         <ImgAndName>
-                            <Profile src={this.state.profileChanged ? this.props.userData.profileImageUrl : this.props.userData.profileImageUrl === 'undefined' || this.props.userData.profileImageUrl === "" || this.props.userData.profileImageUrl === undefined ? defaultProfile : this.props.userData.profileImageUrl}></Profile>
+                            <Avatar src={this.state.userData.profileImageUrl} dimension={100} isOnNavbar={true}></Avatar>
+                            <ProfileMargin></ProfileMargin>
                             <RemoveProfile onClick={handleRemoveProfile}>Remove Profile Image</RemoveProfile>
                             <ChangeProfile htmlFor="profile-upload"><Change id={'profile-upload'} onChange={handleImageUpload} type='file' accept="image/png, image/gif, image/jpeg" />Change Profile Image</ChangeProfile>
                             <Name>{this.props.userData.name}</Name>

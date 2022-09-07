@@ -165,7 +165,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                         <NavbarButton onMouseEnter={() => this.setState({ aboutUsHover: true })} onMouseLeave={() => this.setState({ aboutUsHover: false })} onClick={() => window.location.href = "#/about-us"}>
                             <AboutUsText hover={this.state.aboutUsHover}><Link to='/about-us' style={{ color: '#FFFFFF', textDecoration: 'none' }}>About Us</Link></AboutUsText>
                         </NavbarButton>
-                        <NavbarButton onMouseEnter={() => this.setState({ boardHover: true })} onMouseLeave={() => this.setState({ boardHover: false })} onClick={() => window.location.href = authService.currentUser ? "#/boards" : "#/signin"}>
+                        <NavbarButton onMouseEnter={() => this.setState({ boardHover: true })} onMouseLeave={() => this.setState({ boardHover: false })} onClick={() => window.location.href = this.props.userData.name ? "#/boards" : "#/signin"}>
                             {
                                 authService.currentUser ?
                                     <BoardText hover={this.state.boardHover}><Link to='/boards' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
@@ -176,7 +176,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                     </NavbarButtonContainer>
                 </NavbarContent>
                 {
-                    authService.currentUser ?
+                    this.props.userData.name ?
                         <>
                             <ProfileBadge userData={this.props.userData} />
                             {/* <SignOut>Sign Out</SignOut> */}

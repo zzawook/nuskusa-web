@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import { Post } from "../../../src/types/Post";
 import { Board } from "../../../src/types/Board";
 import { Comment } from "../../../src/types/Comment";
-import { FirestoreNotification } from "../../../src/types/FirestoreNotification";
+import { Notification } from "../../../src/types/Notification";
 import { db } from "../index";
 
 import * as admin from "firebase-admin";
@@ -22,7 +22,7 @@ export const createNotificationOnPostLike = functions.firestore
             // because it is an O(n^2) function.
             const userLiked = after.upvoteArray.filter((user) => !previous.upvoteArray.includes(user));
             if (userLiked[0].id !== after.authorId) {
-                const component: FirestoreNotification = {
+                const component: Notification = {
                     notificationType: "new",
                     contentType: "like",
                     isRead: false,
@@ -50,7 +50,7 @@ export const createNotificationForBoard = functions.firestore
         const boardId = context.params.boardId;
         const title = data.title;
         const description = data.description;
-        const component: FirestoreNotification = {
+        const component: Notification = {
             notificationType: "new",
             contentType: "board",
             isRead: false,
@@ -89,7 +89,7 @@ export const createNotificationOnPostComment = functions.firestore
         const postId = context.params.postId;
         const commentId = context.params.commentId;
         if (!data.isReply) {
-            const component: FirestoreNotification = {
+            const component: Notification = {
                 notificationType: "new",
                 contentType: "comment",
                 isRead: false,
@@ -113,7 +113,7 @@ export const createNotificationOnPostComment = functions.firestore
                 }
             });
         } else {
-            const component: FirestoreNotification = {
+            const component: Notification = {
                 notificationType: "new",
                 contentType: "comment",
                 isRead: false,

@@ -6,13 +6,16 @@ import { Headline, DisplaySmall, DisplayMedium } from '../../utils/ThemeText'
 import BoardTag from './BoardTag';
 import CSS from 'csstype';
 import { User } from '../../types/User'
+import { Board } from '../../types/Board'
 import { parse } from 'node-html-parser'
 import { BsFillPinAngleFill } from 'react-icons/bs'
+import { PostSummary } from '../../types/PostSummary'
+import { DateToPrevString } from "../../utils/TimeHelper"
 
 type PostThumbnailProps = {
+    Post: PostSummary,
+    Board: Board,
     to: string,
-    Post: Post,
-    User: User
 }
 
 type PostThumbnailState = {
@@ -92,31 +95,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
             <>
                 {
                     this.props.Post.isHidden ?
-                        this.props.User.role === "Admin" ?
-                            <Container>
-                                <Link to={this.props.to} style={{ textDecoration: 'none' }}>
-                                    <Thumbnail style={{ height: "220px" }}>
-                                        <TitleContainer>
-                                            <DisplayMedium color='black' style={titleStyle}>{this.props.Post.title}</DisplayMedium>
-                                            {this.props.Post.isPinned ? <Pin><BsFillPinAngleFill size="20" color="black" /></Pin> : <></>}
-                                        </TitleContainer>
-                                        <BoardTag
-                                            title={this.props.Post.parentBoardTitle}
-                                            boxcolor={this.props.Post.parentColor}
-                                            textcolor={this.props.Post.parentTextColor}
-                                        />
-                                        <DisplaySmall color='black' style={contentStyle}>{this.props.Post.isEvent ? JSON.parse(this.props.Post.content).description.substring(0, 30) : this.convertPost(this.props.Post.content)}</DisplaySmall>
-                                        {this.props.Post.parentBoardId === 'grove' ?
-                                            <Headline color='black' style={tempStyle}>익명/Anonymous</Headline>
-                                            :
-                                            <Headline color='black' style={tempStyle}>{this.props.Post.author}</Headline>
-                                        }
-                                        <Headline color='black' style={tempStyle}>{this.props.Post.lastModified.toDate().toDateString()}</Headline>
-                                    </Thumbnail>
-                                </Link>
-                            </Container>
-                            :
-                            <></>
+                        <></>
                         :
                         <Container>
                             <Link to={this.props.to} style={{ textDecoration: 'none' }}>
@@ -127,17 +106,12 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
                                         {this.props.Post.isPinned ? <Pin><BsFillPinAngleFill size="20" color="black" /></Pin> : <></>}
                                     </TitleContainer>
                                     <BoardTag
-                                        title={this.props.Post.parentBoardTitle}
-                                        boxcolor={this.props.Post.parentColor}
-                                        textcolor={this.props.Post.parentTextColor}
+                                        title={this.props.Board.title}
+                                        boxcolor={this.props.Board.boardColor}
+                                        textcolor={this.props.Board.boardTextColor}
                                     />
                                     <DisplaySmall color='black' style={contentStyle}>{this.props.Post.isEvent ? JSON.parse(this.props.Post.content).description.substring(0, 30) : this.convertPost(this.props.Post.content)}</DisplaySmall>
-                                    {this.props.Post.parentBoardId === 'grove' ?
-                                        <Headline color='black' style={tempStyle}>익명/Anonymous</Headline>
-                                        :
-                                        <Headline color='black' style={tempStyle}>{this.props.Post.author}</Headline>
-                                    }
-                                    <Headline color='black' style={tempStyle}>{this.props.Post.lastModified.toDate().toDateString()}</Headline>
+                                    <Headline color='black' style={tempStyle}>{DateToPrevString(this.props.Post.lastModified)}</Headline>
                                 </Thumbnail>
                             </Link>
                         </Container>

@@ -1,16 +1,19 @@
 import firebase from 'firebase'
 import React from 'react'
 import styled from 'styled-components'
-import { authService, dbService } from '../../utils/firebaseFunctions'
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 type UpvoteProps = {
     boardId: string,
     postId: string,
-    upvoteArray: firebase.firestore.DocumentReference[] // user reference of each upvoted person
+    upvoteCount: number,
+    upvoted: boolean,
 }
 
 type UpvoteState = {
+    upvoted: boolean,
+    upvoteCount: number,
+    updating: boolean,
 }
 
 // Upvote button
@@ -18,51 +21,57 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
     constructor(props: UpvoteProps) {
         super(props)
         this.state = {
+            upvoted: this.props.upvoted,
+            upvoteCount: this.props.upvoteCount,
+            updating: false,
         }
     }
 
     componentDidMount = () => {
-        this.checkUpvoted()
+        console.log(this.props)
     }
 
-    // true if upvoted, false if did not upvote
-    checkUpvoted = () => {
-        let result = false;
-        this.props.upvoteArray.forEach((userRef) => {
-            if (!authService.currentUser) {
-                return false;
+    static getDerivedStateFromProps = (newProps: UpvoteProps, prevState: UpvoteState) => {
+        if (prevState.updating) {
+            return {
+                upvoteCount: prevState.upvoteCount,
+                upvoted: prevState.upvoted,
+                updating: false,
             }
-            else if (authService.currentUser?.uid === userRef.id) {
-                result = true;
-                return true;
+        }
+        else {
+            return {
+                upvoteCount: newProps.upvoteCount,
+                upvoted: newProps.upvoted,
+                updating: false,
             }
+        }
+    }
+
+    handleUpvoteClick = async () => {
+        const url = process.env.REACT_APP_HOST + "/api/post/pushPostUpvote/" + this.props.postId;
+        const response = await fetch(url, {
+            method: "POST",
         })
-        return result;
-    }
 
-    handleUpvoteClick = () => {
-        const hasUpvoted = this.checkUpvoted();
-        if (hasUpvoted === false) {
-            // If the user did not upvote, upvote.
-            dbService.collection('boards')
-                .doc(this.props.boardId)
-                .collection('posts')
-                .doc(this.props.postId)
-                .update({
-                    upvoteArray: firebase.firestore.FieldValue.arrayUnion(dbService.collection('users').doc(authService.currentUser?.uid))
+        if (response.status == 200) {
+            const json = await response.json()
+            const upvoteStatus = json.upvoted;
+            const temp = this.state.upvoteCount;
+            if (upvoteStatus) {
+                this.setState({
+                    upvoted: upvoteStatus,
+                    upvoteCount: temp + 1,
+                    updating: true,
                 })
-                .then(() => {
-
-                })
-        } else if (hasUpvoted === true) {
-            // If the user did upvote already, remove upvote
-            dbService.collection('boards')
-                .doc(this.props.boardId)
-                .collection('posts')
-                .doc(this.props.postId)
-                .update({
-                    upvoteArray: firebase.firestore.FieldValue.arrayRemove(dbService.collection('users').doc(authService.currentUser?.uid))
-                })
+            }
+            else {
+                this.setState({
+                    upvoted: upvoteStatus,
+                    upvoteCount: temp - 1,
+                    updating: true,
+                })    
+            }
         }
     }
 
@@ -80,12 +89,12 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
 
         return (
             <UpvoteContainer>
-                {this.checkUpvoted() ?
-                    <FaHeart color='white' style={{cursor:'pointer'}} onClick={this.handleUpvoteClick} size='20px'></FaHeart>
+                {this.state.upvoted ?
+                    <FaHeart color='white' style={{ cursor: 'pointer' }} onClick={this.handleUpvoteClick} size='20px'></FaHeart>
                     :
-                    <FaRegHeart style={{cursor:'pointer'}} onClick={this.handleUpvoteClick} size='20px'></FaRegHeart>
+                    <FaRegHeart style={{ cursor: 'pointer' }} onClick={this.handleUpvoteClick} size='20px'></FaRegHeart>
                 }
-                <UpvoteNum onClick={this.handleUpvoteClick}>{this.props.upvoteArray.length}</UpvoteNum>
+                <UpvoteNum onClick={this.handleUpvoteClick}>{this.state.upvoteCount}</UpvoteNum>
             </UpvoteContainer>
         )
     }

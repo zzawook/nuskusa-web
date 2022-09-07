@@ -72,7 +72,7 @@ class AnnouncementList extends React.Component<PostState> {
                         const component = (
                             <AnnouncementLink style={data.isPinned ? { backgroundColor: "#d9d9d9" } : {}} onClick={() => window.location.href = "/#/boards/announcement/" + doc.id}>
                                 <TitleWrapper style={data.isPinned ? { fontWeight: "bold" } : {}}>{data.title}</TitleWrapper>
-                                <DateWrapper>{this.formatDate(data.lastModified.toDate())}</DateWrapper>
+                                <DateWrapper>만들어라</DateWrapper>
                             </AnnouncementLink>
                         )
                         data.isPinned ? list.unshift(component) : list.push(component)

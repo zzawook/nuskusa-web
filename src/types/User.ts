@@ -1,7 +1,6 @@
 export interface User {
     name: string,
     email: string,
-    verified: boolean,
     role: string, // User, Registered, Offered, Current, Graduated, Admin
     enrolledYear?: string | undefined,
     major?: string | undefined,

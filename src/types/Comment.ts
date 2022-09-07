@@ -3,12 +3,9 @@ import firebase from 'firebase'
 export interface Comment {
     content: string,
     lastModified: firebase.firestore.Timestamp,
-    upvoteArray: firebase.firestore.DocumentReference[],
-    isReply: boolean,
+    upvoteCount: number,
+    upvoted: boolean,
     replyTo: firebase.firestore.DocumentReference | undefined,
-    replies: [],
-    author: string,
-    authorId: string,
-    postId: string,
-    boardId: string,
+    author: number,
+    postId: number,
 }

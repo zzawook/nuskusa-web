@@ -3,7 +3,6 @@ import { authService, dbService, storageService } from '../utils/firebaseFunctio
 import SignOut from '../components/SignOut'
 import Navbar from '../components/Navbar';
 import { User } from '../types/User';
-import VerificationRequest from '../components/Verification/VerificationRequest';
 import styled from 'styled-components';
 import { darkTheme, Theme } from '../utils/ThemeColor';
 import ProfilePicker from '../components/Profile/ProfilePicker';
@@ -55,12 +54,6 @@ class Profile extends React.Component<UserProps, UserState> {
         return (
             <Wrapper>
                 <Navbar userData={this.props.userData} />
-                {/* {this.props.userData.name} */}
-                {this.props.userData.verified ?
-                    <></>
-                    :
-                    <VerificationRequest userData={this.props.userData} isModal={false} onClose={() => { }} />
-                }
                 <ProfilePicker userData={this.props.userData} />
                 <SignOut />
             </Wrapper>
