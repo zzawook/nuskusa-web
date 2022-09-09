@@ -276,7 +276,7 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
         }
     }
 
-    handleSubmit = (event: any) => {
+    handleSubmit = async (event: any) => {
         event.preventDefault();
         if (this.state.title.trim() == "") {
             window.alert("이벤트 공지 제목을 입력해주세요");
@@ -314,31 +314,30 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
             isPinned: true,
             isHidden: true,//false,
             isEvent: true,
-            lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-            upvoteArray: [],
-            numComments: 0,
-            permissions: ["Admin", "Current"],
-            author: this.props.userData.name,
-            authorId: authService.currentUser ? authService.currentUser.uid : null,
-            parentBoardId: "announcement",
-            parentBoardTitle: "공지게시판",
-            parentColor: "#fc6565",
-            parentTextColor: "#845858",
         }
-        const hashedTitle = crypto.SHA256(this.state.title).toString().substring(0, 20);
-        dbService.collection('boards').doc('announcement').collection('posts').add(eventObject).then(docRef => {
-            dbService.collection('events').doc(hashedTitle).set({
-                title: this.state.title,
-            })
+        const url = process.env.REACT_APP_HOST + '/api/event/addEvent'
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(eventObject),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        
+        if (response.status == 201) {
+            const postId = await response.text()
             this.setState({
                 loading: false,
-            }, () => {
-                window.location.href = "#/boards/announcement/" + docRef.id
             })
-        }).catch(err => {
-            console.log(err)
-            window.alert("오류가 발생했습니다. IT 담당자에게 문의해주세요.")
-        })
+            window.alert("이벤트 등록을 완료하였습니다.")
+            window.location.href = "#/boards/announcement/" + postId;
+        }
+        else {
+            this.setState({
+                loading: false
+            })
+            window.alert("이벤트 등록 중 오류가 발생했습니다.")
+        }
     }
 
     render = () => {

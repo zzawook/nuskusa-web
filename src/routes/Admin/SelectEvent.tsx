@@ -53,20 +53,18 @@ class SelectEvent extends React.Component<SelectEventProps, SelectEventState> {
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const eventArray: any[] = [];
-        dbService.collection("events").get().then(events => {
-            events.forEach(event => {
-                const data = event.data() as any;
-                eventArray.push({
-                    title: data.title,
-                    id: event.id,
-                });
-            })
+        const url = process.env.REACT_APP_HOST + '/api/event/getEvents'
+
+        const response = await fetch(url);
+
+        if (response.status == 200) {
+            const eventData = await response.json();
             this.setState({
-                events: eventArray,
+                events: eventData
             })
-        })
+        }
     }
 
     render = () => {

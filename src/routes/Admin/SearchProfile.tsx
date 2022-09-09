@@ -85,6 +85,9 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
     }
 
     searchProfile = async () => {
+        this.setState({
+            loading: true,
+        })
         const url = process.env.REACT_APP_HOST + "/api/profile/searchProfile?" + this.state.searchBy + "=" + this.state.searchedElement;
 
         const response = await fetch(url, {
@@ -115,11 +118,14 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
                 )
             }
             this.setState({
-                searchedProfiles: componentArray
+                searchedProfiles: componentArray,
+                loading: false,
             })
         }
         else {
-            window.alert("검색에 실패했습니다.");
+            this.setState({
+                loading: false,
+            })
         }
     }
 
@@ -155,7 +161,6 @@ class SearchProfile extends React.Component<SearchProfileProps, SearchProfileSta
                         onChange={
                             (event) => this.setState({ searchedElement: event.target.value.toString() })
                         }
-                        onKeyPress={this.searchProfile}
                         value={this.state.searchedElement} placeholder={'이름을 입력하세요'}>
                     </SearchInput>
                     <SearchButton onClick={this.searchProfile}>Search</SearchButton>

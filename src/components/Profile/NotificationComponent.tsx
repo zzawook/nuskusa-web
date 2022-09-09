@@ -92,7 +92,7 @@ class NotificationComponent extends React.Component<NotificationComponentProps, 
     }
 
     onLinkClick = async () => {
-        const url = process.env.REACT_APP_HOST + "/profile/dismissNotification/" + this.props.data.id
+        const url = process.env.REACT_APP_HOST + "api/profile/dismissNotification/" + this.props.data.id
         const response = await fetch(url, {
             method: "DELETE"
         })

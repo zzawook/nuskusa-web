@@ -245,7 +245,10 @@ class SignIn extends React.Component<UserProps, UserObject> {
                     authService.signOut();
                 }
                 else {
-                    window.alert("알 수 없는 오류가 발생했습니다. 홈페이지 하단의 Contact Us를 통해 문의해주세요.")
+                    this.setState({
+                        loading: false,
+                        failed: true,
+                    })
                 }
             }
             //SIGN IN FAILED DUE TO INVALID CREDENTIAL

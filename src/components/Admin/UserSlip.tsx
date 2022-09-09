@@ -50,6 +50,8 @@ const DocLink = styled.a`
     width: 100%;
     text-decoration: underline;
     color: white;
+    cursor: pointer;
+
 `
 const ButtonDiv = styled.div`
     display: flex;
@@ -184,7 +186,7 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                         <InfoSlip>- 성별: {this.props.gender}</InfoSlip>
                         <InfoSlip>- 학과: {this.props.major}</InfoSlip>
                         <InfoSlip>- 카카오톡 ID: {this.props.kakaoTalkId}</InfoSlip>
-                        {this.props.role == "Freshmen" ? <DocLink href={this.props.fileURL} target="blank" rel="noreferrer noopener">입학증명서 링크</DocLink> : <DocLink href={this.props.fileURL} target="blank" rel="noreferrer noopener">졸업증명서 링크</DocLink>}
+                        {this.props.role == "Freshmen" ? <DocLink href={this.props.fileURL + ""} target="blank" rel="noreferrer noopener">입학증명서 링크</DocLink> : <DocLink href={this.props.fileURL} target="blank" rel="noreferrer noopener">졸업증명서 링크</DocLink>}
                     </Profile>
                     <ButtonDiv>
                         <Buttons>

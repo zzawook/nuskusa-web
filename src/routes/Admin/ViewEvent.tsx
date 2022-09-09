@@ -59,10 +59,38 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
         return dt.getFullYear().toString() + "." + (dt.getMonth() + 1).toString() + "." + dt.getDate().toString() + " " + dt.getHours() + ":" + dt.getMinutes();
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const urls = window.location.href.split("/")
         const rows: any[] = [];
         let columns: any[] = [];
+        const url = process.env.REACT_APP_HOST + "/api/event/getEventParticipants/" + this.props.eventId
+
+        const response = await fetch(url)
+        if (response.status == 200) {
+            const datas = await response.json();
+            for (let i = 0; i < datas.length; i++) {
+                const data = datas[i];
+                const response = JSON.parse(data.response);
+                const user = data.User;
+                const userKeys = Object.keys(user);
+                const responseKeys = Object.keys(response);
+                columns = userKeys.concat(responseKeys);
+                columns.unshift("ResponseAt");
+                const finalData = {} as any;
+                for (let i = 0; i < userKeys.length; i++) {
+                    finalData[userKeys[i]] = user[userKeys[i]];
+                }
+                for (let i = 0; i < responseKeys.length; i++) {
+                    finalData[responseKeys[i]] = response[responseKeys[i]];
+                }
+                finalData.ResponseAt = data.updatedAt
+                rows.push(finalData)
+            }
+            this.setState({
+                rows: rows,
+                columns: columns,
+            })
+        }
         dbService.collection("events").doc(this.props.eventId).collection("registrations").orderBy('responseAt', 'desc').get().then(docs => {
             docs.forEach(registration => {
                 const data = registration.data();

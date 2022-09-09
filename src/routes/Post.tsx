@@ -326,7 +326,7 @@ class PostPage extends React.Component<PostProps, PostState> {
                             {this.state.Post.hasRoot ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div />}
                         </AuthorButtons>
                     </Header>
-                    {this.state.Post.isEvent ? <Event data={this.state.Post.content} title={this.state.Post.title} userData={this.props.userData} /> : <Content dangerouslySetInnerHTML={{ __html: this.state.Post.content }} />}
+                    {this.state.Post.isEvent ? <Event data={this.state.Post.content} title={this.state.Post.title} userData={this.props.userData} postId={this.props.match.params.postId}/> : <Content dangerouslySetInnerHTML={{ __html: this.state.Post.content }} />}
                     <ETC>
                         <Upvote boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} upvoteCount={this.state.Post.upvoteCount} upvoted={this.state.Post.upvoted}/>
                         <FaRegComment size='20px' style={{ marginLeft: '10px' }} />

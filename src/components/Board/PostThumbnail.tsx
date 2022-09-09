@@ -30,6 +30,10 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
         }
     }
 
+    componentDidMount() {
+        console.log(this.props.Post.content)
+    }
+
     convertPost = (input: String) => {
         const anyInput = input as any;
         const htmlObject = document.createElement("div") as any;
@@ -90,6 +94,14 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
             position: 'relative',
             top: '-50px'
         }
+        const substring = (content: string) => {
+            if (content == undefined) {
+                return undefined
+            }
+            else {
+                return content.substring(0,30)
+            }
+        }
 
         return (
             <>
@@ -110,7 +122,7 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
                                         boxcolor={this.props.Board.boardColor}
                                         textcolor={this.props.Board.boardTextColor}
                                     />
-                                    <DisplaySmall color='black' style={contentStyle}>{this.props.Post.isEvent ? JSON.parse(this.props.Post.content).description.substring(0, 30) : this.convertPost(this.props.Post.content)}</DisplaySmall>
+                                    <DisplaySmall color='black' style={contentStyle}>{this.props.Post.isEvent ? this.props.Post.content.substring(0,30) : this.convertPost(this.props.Post.content)}</DisplaySmall>
                                     <Headline color='black' style={tempStyle}>{DateToPrevString(this.props.Post.lastModified)}</Headline>
                                 </Thumbnail>
                             </Link>
