@@ -61,5 +61,5 @@
     "@types/react-router-dom": "^5.3.2",
     "eslint-config-google": "^0.14.0"
   },
-  "proxy": "http://localhost:3000/"
+  "proxy": "http://54.254.193.244"
 }
