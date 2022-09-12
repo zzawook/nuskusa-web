@@ -168,9 +168,10 @@ class Comment extends React.Component<CommentProps, CommentState> {
             if (response.status == 201) {
                 this.setState({
                     commentEntered: ""
+                }, () => {
+                    this.fetchComment();
                 })
-                window.alert("댓글을 작성했습니다.")
-                this.props.reset();
+                
             }
             else {
                 window.alert("댓글 작성에 실패했습니다.")
