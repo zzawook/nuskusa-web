@@ -165,7 +165,7 @@ class EditPost extends React.Component {
         this.state = {
             state: {
                 title: "Enter title...",
-                content: `<p></p>`,
+                content: '<p></p>',
                 isAnnouncement: false,
                 isAnonymous: false,
                 isPinned: false,

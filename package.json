@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts --max_old_space_size=8000 build",
+    "build": "react-scripts --max_old_space_size=4000 build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -60,6 +60,5 @@
     "@types/nodemailer": "^6.4.4",
     "@types/react-router-dom": "^5.3.2",
     "eslint-config-google": "^0.14.0"
-  },
-  "proxy": "http://54.254.193.244"
+  }
 }
