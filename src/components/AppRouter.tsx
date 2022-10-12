@@ -68,7 +68,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
   }
 
   componentDidMount = async () => {
-    const url = process.env.REACT_APP_HOST + "api/profile/getProfile";
+    const url = process.env.REACT_APP_HOST + "/api/profile/getProfile";
     const response = await fetch(url, {
       method: "GET",
     })

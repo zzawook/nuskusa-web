@@ -135,10 +135,10 @@ class NotificationComponent extends React.Component<NotificationComponentProps, 
                     </Headline>
                 </TagWrapper>
                 <Content>
-                    {this.props.data.type.includes("CommentOn") ? <CommentArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Farrow-coolicon.png?alt=media&token=54613c97-2d4d-40bc-b87f-8b783e809204'} /> : <></> }
+                    {this.props.data.type.includes("CommentOn") ? <CommentArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Farrow-coolicon.png?alt=media&token=54613c97-2d4d-40bc-b87f-8b783e809204'} /> : <></>}
                     <ContentDiv color={"#0B121C"}>{this.props.data.type.includes("CommentOn") ? this.props.data.to.content : ""}</ContentDiv>
                 </Content>
-                
+
             </Wrapper>
         </Link>
     }
