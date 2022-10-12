@@ -1,15 +1,12 @@
-export interface FirebaseUser {
-    username: string,
-    userId: string,
+export interface User {
+    name: string,
     email: string,
-    verificationFile?: File | undefined,
-    isVerified: boolean,
     role: string, // User, Registered, Offered, Current, Graduated, Admin
     enrolledYear?: string | undefined,
     major?: string | undefined,
     faculty?: string | undefined,
-    profilePictureURL?: string | undefined,
+    profileImageUrl?: string | undefined,
     gender?: string | undefined,
-    yob: string,
-    KTId?: string | undefined,
+    yearOfBirth: string,
+    kakaoTalkId?: string | undefined,
 }

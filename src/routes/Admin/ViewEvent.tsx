@@ -2,7 +2,7 @@ import React from 'react';
 import { Thumbs } from 'react-responsive-carousel';
 import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import { dbService } from '../../utils/firebaseFunctions';
 
 const Wrapper = styled.div`
@@ -43,7 +43,7 @@ type ViewEventState = {
 }
 
 type ViewEventProps = {
-    firebaseUserData: FirebaseUser,
+    userData: User,
     eventId: string,
 }
 
@@ -59,10 +59,38 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
         return dt.getFullYear().toString() + "." + (dt.getMonth() + 1).toString() + "." + dt.getDate().toString() + " " + dt.getHours() + ":" + dt.getMinutes();
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const urls = window.location.href.split("/")
         const rows: any[] = [];
         let columns: any[] = [];
+        const url = process.env.REACT_APP_HOST + "/api/event/getEventParticipants/" + this.props.eventId
+
+        const response = await fetch(url)
+        if (response.status == 200) {
+            const datas = await response.json();
+            for (let i = 0; i < datas.length; i++) {
+                const data = datas[i];
+                const response = JSON.parse(data.response);
+                const user = data.User;
+                const userKeys = Object.keys(user);
+                const responseKeys = Object.keys(response);
+                columns = userKeys.concat(responseKeys);
+                columns.unshift("ResponseAt");
+                const finalData = {} as any;
+                for (let i = 0; i < userKeys.length; i++) {
+                    finalData[userKeys[i]] = user[userKeys[i]];
+                }
+                for (let i = 0; i < responseKeys.length; i++) {
+                    finalData[responseKeys[i]] = response[responseKeys[i]];
+                }
+                finalData.ResponseAt = data.updatedAt
+                rows.push(finalData)
+            }
+            this.setState({
+                rows: rows,
+                columns: columns,
+            })
+        }
         dbService.collection("events").doc(this.props.eventId).collection("registrations").orderBy('responseAt', 'desc').get().then(docs => {
             docs.forEach(registration => {
                 const data = registration.data();
@@ -104,16 +132,16 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
     objectToArray = (object: any) => {
         const columns = Object.keys(object);
         let arr = [];
-        for (let i = 0 ; i < columns.length; i++) {
+        for (let i = 0; i < columns.length; i++) {
             arr.push(object[columns[i]]);
         }
         return arr;
-    }   
+    }
 
     render = () => {
         return (
             <Wrapper>
-                <Navbar firebaseUserData={this.props.firebaseUserData}/>
+                <Navbar userData={this.props.userData} />
                 <Container>
                     <Table>
                         <Row>
@@ -125,7 +153,7 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
                             return (<Row>
                                 {this.state.columns.map(column => {
                                     return (<Cell>
-                                        {typeof row[column] == "boolean" ? row[column] == true ? "Yes" : "No" : row[column]} 
+                                        {typeof row[column] == "boolean" ? row[column] == true ? "Yes" : "No" : row[column]}
                                     </Cell>)
                                 })}
                             </Row>)

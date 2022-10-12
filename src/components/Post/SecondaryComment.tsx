@@ -1,20 +1,21 @@
 import React from "react";
 import styled from 'styled-components';
-import { FirestoreComment } from '../../types/FirestoreComment'
-import { FirebaseUser } from "../../types/FirebaseUser";
+import { Comment } from '../../types/Comment'
+import { User } from "../../types/User";
 import { dbService } from '../../utils/firebaseFunctions'
 import firebase from 'firebase';
 import CommentUpvote from "./CommentUpvote";
-import { timestampToCommentDateString } from "../../utils/TimeHelper";
+import { DateToPrevString } from "../../utils/TimeHelper";
+import Avatar from "../Profile/Avatar"
 
 type SecondaryProps = {
     data: any,
     boardId: string,
     postId: string,
-    commentId: string,
-    firebaseUserData: FirebaseUser,
+    userData: User,
     delete: any,
     index: number,
+    reset: Function,
 }
 
 type SecondaryState = {
@@ -25,22 +26,19 @@ type SecondaryState = {
     lastModified: number,
     replyOpen: boolean,
     reply: string,
-    authorData: FirebaseUser,
+    authorData: User,
 }
 const Container = styled.div`
     position: relative;
-    top: 20px;
     width: ${(window.innerWidth * 0.4) - 20}px;
     background-color: transparent;
     color: white;
     font-size: 13px;
     font-weight: 800;
     line-height: 17px;
-    padding-bottom: 30px;
 `
 const LeftBar = styled.div`
     position: absolute;
-    top: -10px;
     left: 90px;
     height: 100%;
     padding-bottom: 10px;
@@ -48,14 +46,15 @@ const LeftBar = styled.div`
     border: none;
     border-left: 1px solid #a8a8a8;
 `
-const ProfileImg = styled.img`
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
+const ProfileImg = styled(Avatar)`
+    width: 20px;
+    height: 20px;
+    border-radius: 25px;
     border: 1px solid white;
     background-color: #0B121C;
     position: absolute;
-    left: 105px;
+    left: 0%;
+    bottom: 30px;
 `
 const LastModified = styled.span`
     font-weight: 700;
@@ -66,25 +65,11 @@ const LastModified = styled.span`
 const Content = styled.div`
     position: relative;
     left: 160px;
-    top: 3px;
+    top: 10px;
     font-size: 13px;
     font-weight: 800;
     line-height: 17px;
     width: 90%;
-`
-const Like = styled.img`
-    position: relative;
-    left: 160px;
-    top: 15px;
-    cursor: pointer;
-`
-const LikeNum = styled.span`
-    position: relative;
-    left: 170px;
-    top: 12px;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
 `
 const ReplyButton = styled.button`
     &:hover {
@@ -161,12 +146,15 @@ const Delete = styled.span`
     cursor: pointer;
     font-weight: 600;
     font-size: 12px;
-    margin-left: 20px;
+    margin-left: auto;
     top: 4px;
 
     :hover {
         opacity: 1;
     }
+`
+const Spacer = styled.div`
+    height: 30px;
 `
 
 class Secondary extends React.Component<SecondaryProps, SecondaryState> {
@@ -181,14 +169,11 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             replyOpen: false,
             reply: "",
             authorData: {
-                username: "",
-                userId: "",
+                name: "",
                 email: "",
-                verificationFile: undefined,
-                isVerified: false,
                 role: "User", // User, Undergraduate, Graduate, Admin
-                profilePictureURL: "", 
-                yob: "",
+                profileImageUrl: "",
+                yearOfBirth: "",
             },
         }
     }
@@ -198,30 +183,22 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
     }
 
     async fetchComment() {
-        const authorData = (await dbService.collection("users").doc(this.props.data.authorId).get()).data() as FirebaseUser;
-        this.setState({
-            authorData: authorData,
-        });
-        if (this.props.data.replies) {
-            const replyArray: FirestoreComment[] = [];
-            const replyIdArray: any[] = [];
-            for (let i = 0; i < this.props.data.replies.length; i = i + 1) {
-                this.props.data.replies[i].onSnapshot((querySnapshot: any) => {
-                    if (querySnapshot.exists) {
-                        let data = querySnapshot.data() as FirestoreComment;
-                        replyArray[i] = data;
-                        replyIdArray[i] = querySnapshot.id;
-                        this.setState({
-                            secondary: replyArray,
-                            secondaryIds: replyIdArray,
-                        })
-                    }
-                })
-            }
-        }
-        this.setState({
-            lastModified: this.props.data.lastModified + (2.88 * Math.pow(10, 7))
+        const url = process.env.REACT_APP_HOST + "/api/post/getComments/" + this.props.data.id;
+
+        const response = await fetch(url, {
+            method: "GET",
         })
+
+        if (response.status == 200) {
+            const data = await response.json();
+            for (let i = 0; i < data.length; i++) {
+                data[i].lastModified = new Date(data[i].updatedAt)
+            }
+            this.setState({
+                secondary: data,
+            }, () => {
+            })
+        }
     }
 
     render() {
@@ -246,52 +223,41 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
         }
         const handleSubmitClick = async (e: any) => {
             e.preventDefault();
-            const commentObject: FirestoreComment = {
-                author: this.props.firebaseUserData.username,
-                authorId: this.props.firebaseUserData.userId,
-                content: this.state.commentEntered,
-                isReply: true,
-                lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                upvoteArray: [],
-                replies: [],
-                replyTo: dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${this.props.commentId}`),
-                postId: this.props.postId,
-                boardId: this.props.boardId,
-            }
-            const addedCommentId = await dbService
-                .collection('boards').doc(this.props.boardId)
-                .collection('posts').doc(this.props.postId)
-                .collection('comments')
-                .add(commentObject)
-            await dbService
-                .collection('boards').doc(this.props.boardId)
-                .collection('posts').doc(this.props.postId)
-                .collection('comments').doc(this.props.commentId)
-                .update({
-                    replies: firebase.firestore.FieldValue.arrayUnion(dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${addedCommentId.id}`)),
-                })
-            await dbService
-                .collection('boards').doc(this.props.boardId)
-                .collection('posts').doc(this.props.postId)
-                .collection('comments').doc(addedCommentId.id)
-                .update({
-                    replyTo: dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${this.props.commentId}`),
-                })
-            this.setState({
-                commentEntered: "",
-                replyOpen: false,
+            const url = process.env.REACT_APP_HOST + "/api/post/addComment/" + this.props.data.id;
+            const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify({
+                    content: this.state.commentEntered,
+                    replyTo: this.props.data.id,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             })
-            this.fetchComment()
+            if (response.status == 201) {
+                this.setState({
+                    commentEntered: "",
+                    replyOpen: false,
+                })
+                this.fetchComment()
+            }
+            else {
+                window.alert("댓글 작성에 실패했습니다. 오류가 계속되면 하단의 Contact Us 양식을 통해 문의해주세요.")
+            }
         }
-        
-        const handleDeleteClick = () => {
-            const confirmed = window.confirm("정말 삭제하시겠습니까?");
-            if (confirmed) {
-                this.props.data.replyTo.update({
-                    replies: firebase.firestore.FieldValue.arrayRemove(dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId))   
-                });
-                dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId).delete();
-                this.props.delete(this.props.index);
+
+        const handleDeleteClick = async () => {
+            if (window.confirm("정말 삭제하시겠습니까?")) {
+                const url = process.env.REACT_APP_HOST + "/api/post/deleteComment/" + this.props.data.id;
+                const response = await fetch(url, {
+                    method: "POST"
+                })
+                if (response.status == 200) {
+                    this.props.reset();
+                }
+                else {
+                    window.alert("댓글을 삭제하지 못했습니다. 삭제 권한이 없을 수도 있습니다. 오류가 계속되면 하단의 Contact Us 양식을 통해 문의해주세요.")
+                }
             }
         }
 
@@ -307,16 +273,15 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             position: relative;
             display: flex;
             flex-direction: row;
-            top: -10px;
+            left: 95px;
             align-items: flex-center;
-            ;
         `
 
         const CommentInfoContainer = styled.div`
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            margin-left: 160px;
+            margin-left: 20px;
         `
         const Name = styled.span`
             font-size: 14px;
@@ -331,26 +296,27 @@ class Secondary extends React.Component<SecondaryProps, SecondaryState> {
             <Container>
                 <LeftBar />
                 <ProfileBox>
-                    <ProfileImg src={this.state.authorData.profilePictureURL} /> 
+                    <ProfileImg src={this.props.data.author.profileImageUrl} dimension={32} isOnNavbar={true} />
                     <CommentInfoContainer>
-                        <Name > {this.props.data.author} </Name>    
+                        <Name > {this.props.data.author.name} </Name>
                         <LastModified>
-                            {timestampToCommentDateString(this.props.data.lastModified)}
+                            {DateToPrevString(this.props.data.lastModified)}
                         </LastModified>
                     </CommentInfoContainer>
-                    {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
+                    {this.props.data.isMine ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
                 </ProfileBox>
-                
+
                 <Content>{this.props.data.content}</Content>
 
-                <CommentUpvote style={{ position: 'relative', left: '160px', top: '34px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
+                <CommentUpvote style={{ position: 'relative', left: '160px', top: '34px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.data.id} upvoteCount={this.props.data.upvoteCount} upvoted={this.props.data.upvoted} />
                 <ReplyButton onClick={handleReplyClick}>Reply</ReplyButton>
                 {this.state.replyOpen ? <Form>
                     <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered} />
                     <Cancel onClick={handleCancelClick}>Cancel</Cancel>
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form> : <div />}
-                {this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData} />)}
+                <Spacer />
+                {this.state.secondary.map((element, i) => <Secondary reset={this.props.reset} delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} userData={this.props.userData} />)}
             </Container>
         )
     }

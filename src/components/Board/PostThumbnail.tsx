@@ -1,18 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { FirestorePost } from '../../types/FirestorePost'
+import { Post } from '../../types/Post'
 import { Headline, DisplaySmall, DisplayMedium } from '../../utils/ThemeText'
 import BoardTag from './BoardTag';
 import CSS from 'csstype';
-import { FirebaseUser } from '../../types/FirebaseUser'
+import { User } from '../../types/User'
+import { Board } from '../../types/Board'
 import { parse } from 'node-html-parser'
 import { BsFillPinAngleFill } from 'react-icons/bs'
+import { PostSummary } from '../../types/PostSummary'
+import { DateToPrevString } from "../../utils/TimeHelper"
 
 type PostThumbnailProps = {
+    Post: PostSummary,
+    Board: Board,
     to: string,
-    firestorePost: FirestorePost,
-    firebaseUser: FirebaseUser
 }
 
 type PostThumbnailState = {
@@ -23,8 +26,12 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
     constructor(props: PostThumbnailProps) {
         super(props)
         this.state = {
-            opacity: this.props.firestorePost.isHidden ? 0.7 : 1,
+            opacity: this.props.Post.isHidden ? 0.7 : 1,
         }
+    }
+
+    componentDidMount() {
+        console.log(this.props.Post.content)
     }
 
     convertPost = (input: String) => {
@@ -35,13 +42,13 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
     }
 
     parseHtmlToThumbnailImage = () => {
-        const root = parse(this.props.firestorePost.content);
+        const root = parse(this.props.Post.content);
         const imgHtml = root.getElementsByTagName("figure");
         if (imgHtml.length === 0) {
             return <></>
         }
         imgHtml[0].setAttribute("style", "overflow: hidden, width: 300, height: 300")
-        return <div dangerouslySetInnerHTML={{__html: imgHtml[0].innerHTML}}></div>;
+        return <div dangerouslySetInnerHTML={{ __html: imgHtml[0].innerHTML }}></div>;
     }
 
     render = () => {
@@ -87,57 +94,36 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
             position: 'relative',
             top: '-50px'
         }
+        const substring = (content: string) => {
+            if (content == undefined) {
+                return undefined
+            }
+            else {
+                return content.substring(0,30)
+            }
+        }
 
         return (
             <>
                 {
-                    this.props.firestorePost.isHidden ?
-                        this.props.firebaseUser.role === "Admin" ?
-                            <Container>
-                                <Link to={this.props.to} style={{ textDecoration: 'none' }}>
-                                    <Thumbnail style={{ height: "220px" }}>
-                                        <TitleContainer>
-                                            <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
-                                            {this.props.firestorePost.isPinned ? <Pin><BsFillPinAngleFill size="20" color="black" /></Pin> : <></>}
-                                        </TitleContainer>
-                                        <BoardTag
-                                            title={this.props.firestorePost.parentBoardTitle}
-                                            boxcolor={this.props.firestorePost.parentColor}
-                                            textcolor={this.props.firestorePost.parentTextColor}
-                                        />
-                                        <DisplaySmall color='black' style={contentStyle}>{this.props.firestorePost.isEvent ? JSON.parse(this.props.firestorePost.content).description.substring(0, 30) : this.convertPost(this.props.firestorePost.content)}</DisplaySmall>
-                                        {this.props.firestorePost.parentBoardId === 'grove' ?
-                                            <Headline color='black' style={tempStyle}>익명/Anonymous</Headline>
-                                            :
-                                            <Headline color='black' style={tempStyle}>{this.props.firestorePost.author}</Headline>
-                                        }
-                                        <Headline color='black' style={tempStyle}>{this.props.firestorePost.lastModified.toDate().toDateString()}</Headline>
-                                    </Thumbnail>
-                                </Link>
-                            </Container>
-                            :
-                            <></>
+                    this.props.Post.isHidden ?
+                        <></>
                         :
                         <Container>
                             <Link to={this.props.to} style={{ textDecoration: 'none' }}>
                                 <Thumbnail>
                                     {/* {this.parseHtmlToThumbnailImage()} */}
                                     <TitleContainer>
-                                        <DisplayMedium color='black' style={titleStyle}>{this.props.firestorePost.title}</DisplayMedium>
-                                        {this.props.firestorePost.isPinned ? <Pin><BsFillPinAngleFill size="20" color="black" /></Pin> : <></>}
+                                        <DisplayMedium color='black' style={titleStyle}>{this.props.Post.title}</DisplayMedium>
+                                        {this.props.Post.isPinned ? <Pin><BsFillPinAngleFill size="20" color="black" /></Pin> : <></>}
                                     </TitleContainer>
                                     <BoardTag
-                                        title={this.props.firestorePost.parentBoardTitle}
-                                        boxcolor={this.props.firestorePost.parentColor}
-                                        textcolor={this.props.firestorePost.parentTextColor}
+                                        title={this.props.Board.title}
+                                        boxcolor={this.props.Board.boardColor}
+                                        textcolor={this.props.Board.boardTextColor}
                                     />
-                                    <DisplaySmall color='black' style={contentStyle}>{this.props.firestorePost.isEvent ? JSON.parse(this.props.firestorePost.content).description.substring(0, 30) : this.convertPost(this.props.firestorePost.content)}</DisplaySmall>
-                                    {this.props.firestorePost.parentBoardId === 'grove' ?
-                                        <Headline color='black' style={tempStyle}>익명/Anonymous</Headline>
-                                        :
-                                        <Headline color='black' style={tempStyle}>{this.props.firestorePost.author}</Headline>
-                                    }
-                                    <Headline color='black' style={tempStyle}>{this.props.firestorePost.lastModified.toDate().toDateString()}</Headline>
+                                    <DisplaySmall color='black' style={contentStyle}>{this.props.Post.isEvent ? this.props.Post.content.substring(0,30) : this.convertPost(this.props.Post.content)}</DisplaySmall>
+                                    <Headline color='black' style={tempStyle}>{DateToPrevString(this.props.Post.lastModified)}</Headline>
                                 </Thumbnail>
                             </Link>
                         </Container>

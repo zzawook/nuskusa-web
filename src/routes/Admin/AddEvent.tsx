@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { authService, dbService } from "../../utils/firebaseFunctions";
 import firebase from 'firebase';
@@ -119,7 +119,7 @@ const CanApplyMultipleDescription = styled.span`
     color: black;
 `
 type AdminVerificationProps = {
-    firebaseUserData: FirebaseUser,
+    userData: User,
 }
 
 type AdminVerificationState = {
@@ -204,7 +204,7 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
 
     handleCanApplyMultipleChange = (event: any) => {
         this.setState({
-            canApplyMultiple: ! this.state.canApplyMultiple
+            canApplyMultiple: !this.state.canApplyMultiple
         })
     }
 
@@ -216,7 +216,7 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
         {
             "name": "체크박스",
             "adderFunction": this.addCheckbox,
-        }, 
+        },
         {
             "name": "첨부파일",
             "adderFunction": this.addAttachmentInput,
@@ -276,7 +276,7 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
         }
     }
 
-    handleSubmit = (event: any) => {
+    handleSubmit = async (event: any) => {
         event.preventDefault();
         if (this.state.title.trim() == "") {
             window.alert("이벤트 공지 제목을 입력해주세요");
@@ -300,7 +300,7 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
         this.setState({
             loading: true,
         })
-        
+
         const contentObject = {
             description: this.state.description,
             questions: questionObject,
@@ -314,31 +314,30 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
             isPinned: true,
             isHidden: true,//false,
             isEvent: true,
-            lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-            upvoteArray: [],
-            numComments: 0,
-            permissions: ["Admin", "Current"],
-            author: this.props.firebaseUserData.username,
-            authorId: authService.currentUser ? authService.currentUser.uid : null,
-            parentBoardId: "announcement",
-            parentBoardTitle: "공지게시판",
-            parentColor: "#fc6565",
-            parentTextColor: "#845858",
         }
-        const hashedTitle = crypto.SHA256(this.state.title).toString().substring(0, 20);
-        dbService.collection('boards').doc('announcement').collection('posts').add(eventObject).then(docRef => {
-            dbService.collection('events').doc(hashedTitle).set({
-                title: this.state.title,
-            })
+        const url = process.env.REACT_APP_HOST + '/api/event/addEvent'
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(eventObject),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        
+        if (response.status == 201) {
+            const postId = await response.text()
             this.setState({
                 loading: false,
-            }, () => {
-                window.location.href = "#/boards/announcement/" + docRef.id
             })
-        }).catch(err => {
-            console.log(err)
-            window.alert("오류가 발생했습니다. IT 담당자에게 문의해주세요.")
-        })
+            window.alert("이벤트 등록을 완료하였습니다.")
+            window.location.href = "#/boards/announcement/" + postId;
+        }
+        else {
+            this.setState({
+                loading: false
+            })
+            window.alert("이벤트 등록 중 오류가 발생했습니다.")
+        }
     }
 
     render = () => {
@@ -346,10 +345,10 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
             <>
                 {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 : </LoadingText></LoadingBlocker> : <></>}
                 <Wrapper>
-                    <Navbar firebaseUserData={this.props.firebaseUserData} />
+                    <Navbar userData={this.props.userData} />
                     <Form>
                         <Input
-                            name="username"
+                            name="name"
                             type="string"
                             placeholder="이벤트 공지 제목"
                             required
@@ -371,10 +370,10 @@ class AddEvent extends React.Component<AdminVerificationProps, AdminVerification
                         {this.state.inputs.map(element => element.deleted ? <></> : element.component)}
                         <HorizontalDivider />
                         <CanApplyMultipleDiv>
-                            <CanApplyMultiple onChange={this.handleCanApplyMultipleChange} type="checkbox" checked={this.state.canApplyMultiple}/>
+                            <CanApplyMultiple onChange={this.handleCanApplyMultipleChange} type="checkbox" checked={this.state.canApplyMultiple} />
                             <CanApplyMultipleDescription>중복 신청 가능</CanApplyMultipleDescription>
                         </CanApplyMultipleDiv>
-                        <SubmitButton type="submit" value="이벤트 공지 올리기" onClick={this.handleSubmit}/>
+                        <SubmitButton type="submit" value="이벤트 공지 올리기" onClick={this.handleSubmit} />
                     </Form>
                 </Wrapper>
             </>

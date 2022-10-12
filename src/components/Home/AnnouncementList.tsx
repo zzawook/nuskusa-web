@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components'
 import { dbService } from '../../utils/firebaseFunctions';
-import { FirestorePost } from '../../types/FirestorePost';
+import { Post } from '../../types/Post';
 
 type PostState = {
-    postArray: FirestorePost[],
+    postArray: Post[],
     postListArray: any[]
 }
 
@@ -56,23 +56,23 @@ class AnnouncementList extends React.Component<PostState> {
     }
 
     fetchAnnouncement = () => {
-        const rawData: FirestorePost[] = [];
+        const rawData: Post[] = [];
         const list: any[] = [];
         dbService
             .collection('boards')
             .doc('announcement')
             .collection('posts')
-            .orderBy('lastModified',  'desc')
+            .orderBy('lastModified', 'desc')
             .limit(10)
             .onSnapshot((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    const data = doc.data() as FirestorePost;
+                    const data = doc.data() as Post;
                     rawData.push(data);
-                    if(!data.isHidden) {
+                    if (!data.isHidden) {
                         const component = (
-                            <AnnouncementLink style={data.isPinned ? {backgroundColor: "#d9d9d9"} : {}} onClick={() => window.location.href="/#/boards/announcement/" + doc.id}>
-                                <TitleWrapper style={data.isPinned ? {fontWeight: "bold"} : {}}>{data.title}</TitleWrapper>
-                                <DateWrapper>{this.formatDate(data.lastModified.toDate())}</DateWrapper>
+                            <AnnouncementLink style={data.isPinned ? { backgroundColor: "#d9d9d9" } : {}} onClick={() => window.location.href = "/#/boards/announcement/" + doc.id}>
+                                <TitleWrapper style={data.isPinned ? { fontWeight: "bold" } : {}}>{data.title}</TitleWrapper>
+                                <DateWrapper>만들어라</DateWrapper>
                             </AnnouncementLink>
                         )
                         data.isPinned ? list.unshift(component) : list.push(component)
@@ -85,7 +85,7 @@ class AnnouncementList extends React.Component<PostState> {
             })
 
     }
-    
+
     componentDidMount() {
         this.fetchAnnouncement();
     }

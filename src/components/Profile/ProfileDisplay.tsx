@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser'
-import { FirestoreNotification } from '../../types/FirestoreNotification'
+import { User } from '../../types/User'
+import { Notification } from '../../types/Notification'
 import { authService, dbService } from '../../utils/firebaseFunctions'
 import Avatar from './Avatar'
 import NotificationComponent from './NotificationComponent'
 import { AiOutlineClose } from 'react-icons/ai';
 
 type ProfileDisplayProps = {
-    firebaseUserData: FirebaseUser,
+    userData: User,
     isOpen: boolean
     onExitClick: any
 }
@@ -44,50 +44,24 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             width: 42vh;
             text-align: center;
         `
-        await dbService
-            .collection("users").doc(authService.currentUser?.uid)
-            .get()
-            .then((doc) => {
-                const data = doc.data();
-                let notifications = data?.notificationArray as FirestoreNotification[];
-                let notificationComponents: any[] = [];
-                if (notifications) {
-                    notifications = notifications.sort((a: FirestoreNotification, b: FirestoreNotification) => {
-                        if (a.isRead && !b.isRead) {
-                            return 1;
-                        } else if (a.isRead && b.isRead) {
-                            if (a.timestamp > b.timestamp) {
-                                return 1;
-                            } else if (a.timestamp.isEqual(b.timestamp)) {
-                                return 0;
-                            } else {
-                                return -1;
-                            }
-                        } else if (!a.isRead && b.isRead) {
-                            return -1;
-                        } else {
-                            return 0;
-                        }
-                    })
-                    let key = 0;
-                    notificationComponents = notifications
-                        .map((element: any) => {
-                            key++;
-                            return <>
-                                <NotificationComponent data={element} key={key} ></NotificationComponent>
-                            </>
-                        }).reverse();
-                }
+        const url = process.env.REACT_APP_HOST + "/api/profile/getNotifications"
 
-                if (notificationComponents.length === 0) {
-                    this.setState({
-                        notificationArray: [<NoNewsAlert>There is nothing new!</NoNewsAlert>]
-                    })
-                }
+        const response = await fetch(url);
+        if (response.status == 200) {
+            const data: Notification[] = await response.json();
+            if (data.length == 0) {
                 this.setState({
-                    notificationArray: notificationComponents
+                    notificationArray: [<NoNewsAlert>There is nothing new!</NoNewsAlert>]
                 })
-            })
+            }
+            else {
+                this.setState({
+                    notificationArray: data.map(notif => {
+                        return <NotificationComponent data={notif} />
+                    })
+                })
+            }
+        }
     }
 
     render = () => {
@@ -206,12 +180,17 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
             })
         }
 
-        const handleLogout = (e: any) => {
-            authService.signOut().then(() => {
+        const handleLogout = async (e: any) => {
+            const url = process.env.REACT_APP_HOST + "/api/auth/signout";
+            const response = await fetch(url, {
+                method: "POST"
+            })
+            if (response.status == 200) {
                 window.location.reload();
-            }).catch(error => {
-                window.location.reload();
-            });
+            }
+            else {
+                window.alert("로그아웃 중 오류가 발생했습니다: " + response.body)
+            }
         }
 
         const handleEditProfile = () => {
@@ -228,10 +207,10 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                             }} />
                             <ProfileWrapper>
                                 <ProfileDisplayWrapper>
-                                    <Avatar firebaseUserData={this.props.firebaseUserData} dimension={40} isOnNavbar={false} />
+                                    <Avatar src={this.props.userData.profileImageUrl} dimension={40} isOnNavbar={false} />
                                     <NameEmailWrapper>
-                                        <Name>{this.props.firebaseUserData.username}</Name>
-                                        <Email>{this.props.firebaseUserData.email}</Email>
+                                        <Name>{this.props.userData.name}</Name>
+                                        <Email>{this.props.userData.email}</Email>
                                     </NameEmailWrapper>
                                 </ProfileDisplayWrapper>
                                 <BottomBanner>

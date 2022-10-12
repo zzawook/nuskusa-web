@@ -1,7 +1,6 @@
 import firebase from 'firebase';
 import React from 'react';
-import { FirebaseUser } from '../../types/FirebaseUser';
-import { FirestoreNotification } from '../../types/FirestoreNotification';
+import { User } from '../../types/User';
 import { FirestoreUserVerification } from '../../types/FirestoreUserVerification';
 import { dbService, storageService } from '../../utils/firebaseFunctions';
 import { Headline } from '../../utils/ThemeText';
@@ -21,24 +20,22 @@ class VerificationComponent extends React.Component<VerificationProps, { reason:
     }
 
     handleAccept = async () => {
-        await storageService.ref(`verifications/${this.props.verificationId}`)
-            .delete()
-            .then(async () => {
-                const userDetail = (await dbService.collection('verifications').doc(this.props.verificationId).get()).data() as FirebaseUser
-                dbService.collection('users').doc(this.props.firestoreVerificationData.ownerUID).update({
-                    isVerified: true,
-                    enrolledYear: userDetail.enrolledYear,
-                    major: userDetail.major,
-                    faculty: userDetail.faculty,
-                    role: "Undergraduate",
-                })
-            })
-            .then(async () => {
-                await dbService.collection('verifications').doc(this.props.verificationId).delete()
-            })
-            .catch((error: any) => {
-                console.error(error);
-            });
+        if (! window.confirm(this.props.firestoreVerificationData.fullname)) {
+
+        }
+        const url = process.env.REACT_APP_HOST + "/api/auth/verifyUser";
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify({
+                verificationId: this.props.verificationId
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if (response.status == 200) {
+
+        }
     }
 
     handleReject = async () => {
@@ -55,22 +52,6 @@ class VerificationComponent extends React.Component<VerificationProps, { reason:
                     const batch = dbService.batch()
                     const verificationsRef = dbService.collection('verifications').doc(this.props.verificationId)
                     const userRef = dbService.collection('users').doc(this.props.verificationId)
-                    const notification: FirestoreNotification = {
-                        isRead: false,
-                        notificationType: "verification",
-                        contentType: "reject",
-                        source: "verification",
-                        message: `Your verification was rejected. Reason: ${this.state.reason}`,
-                        link: `/boards`,
-                        data: this.state.reason,
-                        timestamp: firebase.firestore.Timestamp.now(),
-                    };
-                    batch.delete(verificationsRef)
-                    batch.update(userRef, {
-                        isVerified: false,
-                        notificationArray: firebase.firestore.FieldValue.arrayUnion(notification),
-                    })
-                    await batch.commit()
                 } catch (e) {
                     console.error(e)
                 }
@@ -98,7 +79,7 @@ class VerificationComponent extends React.Component<VerificationProps, { reason:
                 <Headline>Enrolled Year: {this.props.firestoreVerificationData.enrolledYear}</Headline>
                 <Headline>School Email: {this.props.firestoreVerificationData.schoolEmail}</Headline>
                 <Headline>Accept: <button onClick={this.handleAccept}>Verify</button></Headline>
-                <Headline>Reason: 
+                <Headline>Reason:
                     <input type="text" onChange={this.handleReasonChange} />
                     <button onClick={this.handleReject}>Reject</button>
                 </Headline>

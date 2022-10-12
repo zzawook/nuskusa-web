@@ -1,19 +1,20 @@
 import React from "react";
 import styled from 'styled-components';
 import Secondary from './SecondaryComment';
-import { FirestoreComment } from '../../types/FirestoreComment'
+import { Comment } from '../../types/Comment'
 import { dbService } from '../../utils/firebaseFunctions'
-import { FirebaseUser } from "../../types/FirebaseUser";
+import { User } from "../../types/User";
 import firebase from 'firebase';
 import CommentUpvote from "./CommentUpvote";
-import { timestampToCommentDateString } from "../../utils/TimeHelper";
+import { DateToPrevString } from "../../utils/TimeHelper";
+import Avatar from "../Profile/Avatar"
 
 type PrimaryProps = {
     data: any,
     boardId: string,
     postId: string,
     commentId: string,
-    firebaseUserData: FirebaseUser,
+    userData: User,
     reset: any
 }
 
@@ -26,7 +27,7 @@ type PrimaryState = {
     secondaryIds: any[],
     replyOpen: boolean,
     reply: string,
-    authorData: FirebaseUser,
+    authorData: User,
 }
 
 const PrimaryComment = styled.div`
@@ -37,14 +38,15 @@ const PrimaryComment = styled.div`
 const CommentArrow = styled.img`
 
 `
-const ProfileImg = styled.img`
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
+const ProfileImg = styled(Avatar)`
+    width: 20px;
+    height: 20px;
+    border-radius: 25px;
     border: 1px solid white;
     background-color: #0B121C;
     position: absolute;
-    left: 30px;
+    left: 0%;
+    bottom: 30px;
 `
 const LastModified = styled.span`
     font-weight: 700;
@@ -156,7 +158,8 @@ const Delete = styled.span`
     cursor: pointer;
     font-weight: 600;
     font-size: 12px;
-    margin-left: 20px;
+    margin-left: auto;
+    margin-right: 30px;
     top: 5px;
     :hover {
         opacity: 1;
@@ -176,47 +179,37 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             replyOpen: false,
             reply: "",
             authorData: {
-                username: "",
-                userId: "",
+                name: "",
                 email: "",
-                verificationFile: undefined,
-                isVerified: false,
                 role: "User", // User, Undergraduate, Graduate, Admin
-                profilePictureURL: "", 
-                yob: "",
+                profileImageUrl: "",
+                yearOfBirth: "",
             },
         }
     }
 
     componentDidMount() {
         this.fetchComment();
+        console.log(this.props.data)
     }
 
     async fetchComment() {
-        const authorData = (await dbService.collection("users").doc(this.props.data.authorId).get()).data() as FirebaseUser;
-        this.setState({
-            authorData: authorData,
-        });
-        if (this.props.data.replies) {
-            const replyArray: FirestoreComment[] = [];
-            const replyIdArray: any[] = [];
-            for (let i = 0; i < this.props.data.replies.length; i = i + 1) {
-                this.props.data.replies[i].onSnapshot((querySnapshot: any) => {
-                    if (querySnapshot.exists) {
-                        let data = querySnapshot.data() as FirestoreComment;
-                        replyArray[i] = data;
-                        replyIdArray[i] = querySnapshot.id;
-                        this.setState({
-                            secondary: replyArray,
-                            secondaryIds: replyIdArray,
-                        })
-                    }
-                })
-            }
-        }
-        this.setState({
-            lastModified: this.props.data.lastModified + (2.88 * Math.pow(10, 7))
+        const url = process.env.REACT_APP_HOST + "/api/post/getComments/" + this.props.commentId;
+
+        const response = await fetch(url, {
+            method: "GET",
         })
+
+        if (response.status == 200) {
+            const data = await response.json();
+            for (let i = 0; i < data.length; i++) {
+                data[i].lastModified = new Date(data[i].updatedAt)
+            }
+            this.setState({
+                secondary: data,
+            }, () => {
+            })
+        }
     }
 
     componentDidUpdate() {
@@ -247,42 +240,27 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
         }
         const handleSubmitClick = async (e: any) => {
             e.preventDefault();
-            const commentObject: FirestoreComment = {
-                author: this.props.firebaseUserData.username,
-                authorId: this.props.firebaseUserData.userId,
-                content: this.state.commentEntered,
-                isReply: true,
-                replyTo: dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${this.props.commentId}`),
-                lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                upvoteArray: [],
-                replies: [],
-                postId: this.props.postId,
-                boardId: this.props.boardId,
-            }
-            const addedCommentId = await dbService
-                .collection('boards').doc(this.props.boardId)
-                .collection('posts').doc(this.props.postId)
-                .collection('comments')
-                .add(commentObject)
-            await dbService
-                .collection('boards').doc(this.props.boardId)
-                .collection('posts').doc(this.props.postId)
-                .collection('comments').doc(this.props.commentId)
-                .update({
-                    replies: firebase.firestore.FieldValue.arrayUnion(dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${addedCommentId.id}`)),
-                })
-            await dbService
-                .collection('boards').doc(this.props.boardId)
-                .collection('posts').doc(this.props.postId)
-                .collection('comments').doc(addedCommentId.id)
-                .update({
-                    replyTo: dbService.doc(`/boards/${this.props.boardId}/posts/${this.props.postId}/comments/${this.props.commentId}`)
-                })
-            this.setState({
-                commentEntered: "",
-                replyOpen: false,
+            const url = process.env.REACT_APP_HOST + "/api/post/addComment/" + this.props.postId;
+            const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify({
+                    content: this.state.commentEntered,
+                    replyTo: this.props.commentId,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             })
-            this.fetchComment()
+            if (response.status == 201) {
+                this.setState({
+                    commentEntered: "",
+                    replyOpen: false,
+                })
+                this.fetchComment()
+            }
+            else {
+                window.alert("댓글 작성에 실패했습니다. 오류가 계속되면 하단의 Contact Us 양식을 통해 문의해주세요.")
+            }
         }
 
         const handleReplyClick = (e: any) => {
@@ -292,10 +270,18 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             })
         }
 
-        const handleDeleteClick = () => {
+        const handleDeleteClick = async () => {
             if (window.confirm("정말 삭제하시겠습니까?")) {
-                dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).collection('comments').doc(this.props.commentId).delete();
-                this.props.reset();
+                const url = process.env.REACT_APP_HOST + "/api/post/deleteComment/" + this.props.data.id;
+                const response = await fetch(url, {
+                    method: "POST"
+                })
+                if (response.status == 200) {
+                    this.props.reset();
+                }
+                else {
+                    window.alert("댓글을 삭제하지 못했습니다. 삭제 권한이 없을 수도 있습니다. 오류가 계속되면 하단의 Contact Us 양식을 통해 문의해주세요.")
+                }
             }
         }
 
@@ -316,16 +302,15 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             position: relative;
             display: flex;
             flex-direction: row;
-            top: -10px;
+            top: -20px;
+            left: 25px;
             align-items: flex-center;
-            ;
         `
-
         const CommentInfoContainer = styled.div`
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            margin-left: 90px;
+            margin-left: 20px;
         `
         const Name = styled.span`
             font-size: 14px;
@@ -340,18 +325,18 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
             <PrimaryComment>
                 <CommentArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FcommentArrow.png?alt=media&token=e484a87e-cff6-4111-b36c-e82cedbe2584'} />
                 <ProfileBox>
-                    <ProfileImg src={this.state.authorData.profilePictureURL} />
+                    <ProfileImg src={this.props.data.author.profileImageUrl} dimension={32} isOnNavbar={true}/>
                     <CommentInfoContainer>
-                        <Name > {this.props.data.author} </Name>
+                        <Name > {this.props.data.author.name} </Name>
                         <LastModified>
-                            {timestampToCommentDateString(this.props.data.lastModified)}
+                            {DateToPrevString(this.props.data.lastModified)}
                         </LastModified>
                     </CommentInfoContainer>
-                    {this.props.firebaseUserData.userId == this.props.data.authorId ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
+                    {this.props.data.isMine ? <Delete onClick={handleDeleteClick}>Delete</Delete> : <div />}
                 </ProfileBox>
 
                 <Content>{this.props.data.content}</Content>
-                <CommentUpvote style={{ position: 'relative', left: '90px', top: '5px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteArray={this.props.data.upvoteArray} />
+                <CommentUpvote style={{ position: 'relative', left: '90px', top: '5px' }} boardId={this.props.boardId} postId={this.props.postId} commentId={this.props.commentId} upvoteCount={this.props.data.upvoteCount} upvoted={this.props.data.upvoted} />
                 <ReplyButton onClick={handleReplyClick}>Reply</ReplyButton>
                 {this.state.replyOpen ? <Form>
                     <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered} />
@@ -359,7 +344,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form> : <div />}
                 {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%204.png?alt=media&token=e83189ba-d386-4232-a473-1b1656d553b3'} /> : <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%203.png?alt=media&token=c39d0931-41d8-4ed1-bd6f-a5491da24e8a'} />}</SecondaryOpener> : <div />}
-                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} commentId={this.state.secondaryIds[i]} firebaseUserData={this.props.firebaseUserData} />) : <div />}
+                {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} userData={this.props.userData} reset={this.props.reset}/>) : <div />}
 
             </PrimaryComment>
         )

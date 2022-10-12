@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser'
+import { User } from '../../types/User'
 import { dbService } from '../../utils/firebaseFunctions'
 
 const width = window.innerWidth
@@ -8,7 +8,7 @@ const width = window.innerWidth
 type DeleteProps = {
     boardId: string,
     postId: string,
-    firebaseUserData: FirebaseUser,
+    userData: User,
     userId: string,
 }
 
@@ -23,10 +23,17 @@ class DeletePost extends React.Component<DeleteProps, {}> {
     onDeleteClick = async () => {
         const ok = window.confirm("게시물을 삭제하시면 복원할 수 없습니다. 게시물을 삭제하시겠습니까? ")
         if (ok) {
-            dbService.collection('boards').doc(this.props.boardId).collection('posts').doc(this.props.postId).delete().then(() => {
-                window.alert('정상적으로 삭제되었습니다.');
-                window.location.href = `#/boards/${this.props.boardId}`;
+            const url = process.env.REACT_APP_HOST + "/api/post/deletePost/" + this.props.postId;
+            const response = await fetch(url, {
+                method: "DELETE"
             })
+            if (response.status == 200) {
+                window.alert("정상적으로 삭제되었습니다.")
+                window.location.href = `#/boards/${this.props.boardId}`;
+            }
+            else {
+                window.alert("삭제 요처을 처리하는 도중 문제가 발생했습니다. 오류가 계속되면 하단의 Contact Us 양식을 통해 한인회 IT에 문의해주세요.");
+            }
         }
     }
 

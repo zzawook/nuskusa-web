@@ -2,15 +2,13 @@ import React from "react";
 import styled from 'styled-components';
 import Primary from '../Post/PrimaryComment';
 import { dbService } from '../../utils/firebaseFunctions'
-import { FirebaseUser } from "../../types/FirebaseUser";
+import { User } from "../../types/User";
 import firebase from 'firebase'
 
 type CommentProps = {
-    comments: any[],
-    commentIds: any[],
     boardId: string,
     postId: string,
-    firebaseUserData: FirebaseUser,
+    userData: User,
     reset: any,
 }
 
@@ -99,14 +97,45 @@ class Comment extends React.Component<CommentProps, CommentState> {
     }
 
     componentDidMount() {
-        this.setState({
-            commentArray: this.props.comments.map((element, i) => <Primary reset={this.props.reset} data={element} boardId={this.props.boardId} postId={this.props.postId} firebaseUserData={this.props.firebaseUserData} commentId={this.props.commentIds[i]}/>).reverse()
-        })
+        this.fetchComment()
     }
 
     static getDerivedStateFromProps(nextProps: CommentProps, prevState: CommentState) {
-        return {
-            commentArray: nextProps.comments.map((element, i) => <Primary reset={nextProps.reset} data={element} boardId={nextProps.boardId} postId={nextProps.postId} firebaseUserData={nextProps.firebaseUserData} commentId={nextProps.commentIds[i]}/>).reverse()
+    }
+
+    generateComponent(elements: any[]) {
+        return elements.map((element, i) => <Primary reset={this.props.reset} data={element} boardId={this.props.boardId} postId={this.props.postId} userData={this.props.userData} commentId={element.id} />)
+    }
+
+    fetchComment = async () => {
+        const url = process.env.REACT_APP_HOST + "/api/post/getPostComments/" + this.props.postId;
+        const response = await fetch(url, {
+            method: "GET"
+        })
+
+        if (response.status == 200) {
+            const comments = await response.json()
+            const commentArray = [];
+            for (let i = 0; i < comments.length; i++) {
+                let comment = comments[i];
+                let commentObject = {
+                    id: comment.id,
+                    author: comment.author,
+                    content: comment.content,
+                    upvoteCount: comment.upvoteCount,
+                    upvoted: comment.upvoted,
+                    postId: comment.post,
+                    lastModified: new Date(comment.updatedAt),
+                    replyTo: comment.replyTo,
+                    isMine: comment.isMine,
+                }
+                commentObject.lastModified.setHours(commentObject.lastModified.getHours() - 8);
+                commentArray.push(commentObject)
+            }
+            console.log(commentArray)
+            this.setState({
+                commentArray: this.generateComponent(commentArray),
+            })
         }
     }
 
@@ -123,34 +152,37 @@ class Comment extends React.Component<CommentProps, CommentState> {
                 commentEntered: e.target.value,
             })
         }
-        const handleSubmitClick = (e: any) => {
+        const handleSubmitClick = async (e: any) => {
             e.preventDefault();
-            dbService
-                .collection('boards').doc(this.props.boardId)
-                .collection('posts').doc(this.props.postId)
-                .collection('comments')
-                .add({
-                    author: this.props.firebaseUserData.username,
-                    authorId: this.props.firebaseUserData.userId,
+            const url = process.env.REACT_APP_HOST + "/api/post/addComment/" + this.props.postId
+            const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify({
                     content: this.state.commentEntered,
-                    isReply: false,
-                    lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                    upvoteArray: [],
-                    replies: [],
-                    postId: this.props.postId,
-                    boardId: this.props.boardId,
                     replyTo: null,
-                })
-            this.setState({
-                commentEntered: ""
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
             })
+            if (response.status == 201) {
+                this.setState({
+                    commentEntered: ""
+                }, () => {
+                    this.fetchComment();
+                })
+                
+            }
+            else {
+                window.alert("댓글 작성에 실패했습니다.")
+            }
         }
 
         return (
             <Container>
                 <Divider />
                 <Form>
-                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered}/>
+                    <Input placeholder={'Reply...'} onChange={handleInputChange} value={this.state.commentEntered} />
                     <Cancel onClick={handleCancelClick}>Cancel</Cancel>
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form>

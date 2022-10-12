@@ -4,14 +4,14 @@ import styled from 'styled-components'
 import ActivityList from '../components/Home/ActivityList'
 import Navbar from '../components/Navbar';
 import { DisplayLarge } from '../utils/ThemeText';
-import { FirebaseUser } from '../types/FirebaseUser';
+import { User } from '../types/User';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import CSS from 'csstype'
 import AnnouncementList from '../components/Home/AnnouncementList';
 
 type HomeProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type HomeState = {
@@ -38,6 +38,10 @@ class Home extends React.Component<HomeProps, HomeState> {
         width: '30vw',
         //left: '20%',
         height: '30vw',
+    }
+
+    componentDidMount = async () => {
+        console.log(this.props)
     }
 
     render = () => {
@@ -117,31 +121,31 @@ class Home extends React.Component<HomeProps, HomeState> {
 
         return (
             <Wrapper>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />   
+                <Navbar userData={this.props.userData} />
                 <div style={this.carouselStyle}>
-                    <Carousel 
-                        dynamicHeight={false} 
-                        autoPlay={true} 
-                        infiniteLoop={true} 
-                        showArrows={false} 
-                        showIndicators={true} 
-                        showStatus={false} 
+                    <Carousel
+                        dynamicHeight={false}
+                        autoPlay={true}
+                        infiniteLoop={true}
+                        showArrows={false}
+                        showIndicators={true}
+                        showStatus={false}
                         showThumbs={false}
                     >
                         <div style={carouselDivStyle} onClick={() => window.open('https://www.instagram.com/p/Cfq-wfjLEKH/')}>
-                        <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%E1%84%89%E1%85%B5%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%89%E1%85%A2%E1%86%BC%20%E1%84%83%E1%85%A1%E1%86%AB%E1%84%90%E1%85%A9%E1%86%A8%2022%3A23.jpeg?alt=media&token=7f316dcf-1452-40eb-9e1d-9e34bddf222b" />
+                            <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%E1%84%89%E1%85%B5%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%89%E1%85%A2%E1%86%BC%20%E1%84%83%E1%85%A1%E1%86%AB%E1%84%90%E1%85%A9%E1%86%A8%2022%3A23.jpeg?alt=media&token=7f316dcf-1452-40eb-9e1d-9e34bddf222b" />
                         </div>
                         <div style={carouselDivStyle} onClick={() => window.open('https://www.instagram.com/p/Cfq-wfjLEKH/')}>
                             <img src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/images%2F%E1%84%89%E1%85%B5%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%89%E1%85%A2%E1%86%BC%20%E1%84%83%E1%85%A1%E1%86%AB%E1%84%90%E1%85%A9%E1%86%A8%2022%3A23%20%E1%84%89%E1%85%A5%E1%86%AF%E1%84%86%E1%85%A7%E1%86%BC.jpeg?alt=media&token=2fa74a06-be8f-4dfe-a0cd-e696716b8c1a" />
                         </div>
-                    </Carousel>  
-                </div>    
+                    </Carousel>
+                </div>
                 <HomeBackground>
                     <AnnouncementDisplay>
-                        <p style={{ margin: '25px', color: '#000000', fontSize: '26px', fontWeight: 'bold'}}>공지사항</p>
+                        <p style={{ margin: '25px', color: '#000000', fontSize: '26px', fontWeight: 'bold' }}>공지사항</p>
                         <AnnouncementList postArray={[]} postListArray={[]}></AnnouncementList>
                     </AnnouncementDisplay>
-                    
+
                     {/* <MainBanner>
                         <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>
                             Welcome to
@@ -161,8 +165,8 @@ class Home extends React.Component<HomeProps, HomeState> {
                     <DisplayLarge color='#FFFFFF' style={{ marginLeft: '10px' }}>Our Activities</DisplayLarge>
                     <ActivityWrapper>
                         <ActivityList title='교류활동' content='신입생 환영회, 문화교류, 캠퍼스 투어' image={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome1.png?alt=media&token=61ac81ed-3dff-4f66-a523-2600c4b35203'} />
-                        <ActivityList title='이벤트' content='여러가지 이벤트!' image={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome2.png?alt=media&token=58c16a07-4595-4a92-af32-ba519fdf4380'}/>
-                        <ActivityList title='취업활동 정보' content='인턴, 취업 관련 웨비나, 멘토 초청 강연' image={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome3.png?alt=media&token=3a7f0efb-dd6d-452d-91e0-3c08adca9c4e'}/>
+                        <ActivityList title='이벤트' content='여러가지 이벤트!' image={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome2.png?alt=media&token=58c16a07-4595-4a92-af32-ba519fdf4380'} />
+                        <ActivityList title='취업활동 정보' content='인턴, 취업 관련 웨비나, 멘토 초청 강연' image={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome3.png?alt=media&token=3a7f0efb-dd6d-452d-91e0-3c08adca9c4e'} />
                     </ActivityWrapper>
                 </Activity>
                 <ContactUs />

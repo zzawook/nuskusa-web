@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CSS from 'csstype';
-import { authService, dbService} from '../../utils/firebaseFunctions';
+import { authService, dbService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components'
 import { FlexColumn } from '../../components/utils/UsefulDiv';
+import crypto from "crypto-js"
 
 const margin = 40;
 let linkMouseEnter = false;
@@ -173,13 +174,13 @@ type UserProps = {
 type UserState = {
     email: string,
     password: string,
-    username: string,
+    name: string,
     major: string,
     gender: string,
-    KTId: string,
+    kakaoTalkId: string,
     loading: boolean,
     enrolledYear: string,
-    yob: string,
+    yearOfBirth: string,
 }
 
 class SignUp extends React.Component<UserProps, UserState> {
@@ -188,13 +189,13 @@ class SignUp extends React.Component<UserProps, UserState> {
         this.state = {
             email: '',
             password: '',
-            username: '',
+            name: '',
             major: "",
             gender: "",
-            KTId: "",
+            kakaoTalkId: "",
             loading: false,
             enrolledYear: "",
-            yob: "",
+            yearOfBirth: "",
         }
     }
     handleChange = (event: any) => {
@@ -209,9 +210,9 @@ class SignUp extends React.Component<UserProps, UserState> {
                 password: value
             })
         }
-        else if (event.target.name === 'username') {
+        else if (event.target.name === 'name') {
             this.setState({
-                username: value
+                name: value
             })
         }
         else if (event.target.name == "major") {
@@ -224,9 +225,9 @@ class SignUp extends React.Component<UserProps, UserState> {
                 gender: value
             })
         }
-        else if (event.target.name == "yob") {
+        else if (event.target.name == "yearOfBirth") {
             this.setState({
-                yob: value
+                yearOfBirth: value
             })
         }
         else if (event.target.name == "enrolledYear") {
@@ -234,9 +235,9 @@ class SignUp extends React.Component<UserProps, UserState> {
                 enrolledYear: value
             })
         }
-        else if (event.target.name == "KTId") {
+        else if (event.target.name == "kakaoTalkId") {
             this.setState({
-                KTId: value
+                kakaoTalkId: value
             })
         }
     }
@@ -247,7 +248,7 @@ class SignUp extends React.Component<UserProps, UserState> {
             window.alert("입학년도 입력형식이 잘못되었습니다. 수정 후 다시 제출해주세요!")
             return;
         }
-        if (this.state.yob.length != 4 && ! /^\d+$/.test(this.state.yob)) {
+        if (this.state.yearOfBirth.length != 4 && ! /^\d+$/.test(this.state.yearOfBirth)) {
             window.alert("출생년도 입력형식이 잘못되었습니다. 수정 후 다시 제출해주세요!")
             return;
         }
@@ -259,39 +260,40 @@ class SignUp extends React.Component<UserProps, UserState> {
             this.setState({
                 loading: true
             })
-            await authService.createUserWithEmailAndPassword(this.state.email, this.state.password)
-                .then(async (userCredential) => {
-                    const userObject = {
-                        email: this.state.email,
-                        username: this.state.username,
-                        userId: userCredential.user?.uid,
-                        isVerified: true,
-                        role: 'Current',
-                        gender: this.state.gender,
-                        major: this.state.major,
-                        enrolledYear: this.state.enrolledYear,
-                        yob: this.state.yob,
-                        KTId: this.state.KTId,
-                    }
-                    userObject.isVerified = true;
-                    userObject.role = 'Current'
-                    dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
-                        authService.currentUser?.sendEmailVerification().then(() => {
-                            window.alert("프로필 생성이 완료되었습니다. 입력하신 NUS 이메일로 보내드린 메일의 링크를 클릭하셔서 이메일 인증을 완료해주세요! \n\n 이메일이 오지 않는다면 Junk 폴더를 확인해주세요!")
-                            authService.signOut()
-                            this.setState({
-                                loading: false,
-                            })
-                            this.props.history.push("/")
-                        })
-                    });
+            const userObject = {
+                email: this.state.email,
+                name: this.state.name,
+                verified: true,
+                role: 'Current',
+                gender: this.state.gender,
+                major: this.state.major,
+                enrolledYear: this.state.enrolledYear,
+                yearOfBirth: this.state.yearOfBirth,
+                kakaoTalkId: this.state.kakaoTalkId,
+                password: crypto.SHA512(this.state.password).toString(),
+            }
+            const url = process.env.REACT_APP_HOST + "/api/auth/signup"
+            const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(userObject),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            if (response.status === 200) {
+                window.alert("프로필 생성이 완료되었습니다. 입력하신 NUS 이메일로 보내드린 메일의 링크를 클릭하셔서 이메일 인증을 완료해주세요! \n\n 이메일이 오지 않는다면 Junk 폴더를 확인해주세요!")
+                authService.signOut()
+                this.setState({
+                    loading: false,
                 })
-                .catch((error) => {
-                    this.setState({
-                        loading: false,
-                    })
-                    window.alert("Sign up failed. Please try again later.")
-                });
+                this.props.history.push("/")
+            }
+            else {
+                this.setState({
+                    loading: false,
+                })
+                window.alert("프로필 생성에 실패했습니다: " + response.body)
+            }
         }
 
     }
@@ -348,11 +350,11 @@ class SignUp extends React.Component<UserProps, UserState> {
                             <InputMandatoryIndicator>*</InputMandatoryIndicator>
                             <InputInner>
                                 <Input
-                                    name="username"
+                                    name="name"
                                     type="string"
                                     placeholder="한글 이름"
                                     required
-                                    value={this.state.username}
+                                    value={this.state.name}
                                     onChange={this.handleChange}
                                 />
                                 <InputGuide>ex) 김재혁</InputGuide>
@@ -432,11 +434,11 @@ class SignUp extends React.Component<UserProps, UserState> {
                             <InputMandatoryIndicator>*</InputMandatoryIndicator>
                             <InputInner>
                                 <Input
-                                    name="yob"
+                                    name="yearOfBirth"
                                     type="string"
                                     placeholder="출생년도 / Year of Birth"
                                     required
-                                    value={this.state.yob}
+                                    value={this.state.yearOfBirth}
                                     onChange={this.handleChange}
                                 />
                                 <InputGuide>"2002" 와 같이 4자리 숫자로 적어주세요!</InputGuide>
@@ -446,11 +448,11 @@ class SignUp extends React.Component<UserProps, UserState> {
                             <InputMandatoryIndicator>*</InputMandatoryIndicator>
                             <InputInner>
                                 <Input
-                                    name="KTId"
+                                    name="kakaoTalkId"
                                     type="string"
                                     placeholder="카카오톡 ID / KakaoTalk ID"
                                     required
-                                    value={this.state.KTId}
+                                    value={this.state.kakaoTalkId}
                                     onChange={this.handleChange}
                                 />
                                 <InputGuide>본인의 카카오톡 ID를 적어주세요!</InputGuide>

@@ -1,20 +1,20 @@
 import React from "react";
-import { dbService } from "../utils/firebaseFunctions";
 import Comment from '../components/Post/Comment';
 import Navbar from "../components/Navbar";
-import { FirestorePost } from '../types/FirestorePost'
-import { FirebaseUser } from "../types/FirebaseUser";
+import { Post } from '../types/Post'
+import { User } from "../types/User";
 import firebase from "firebase";
 import styled from 'styled-components';
 import CSS from 'csstype'
 import OtherPost from '../components/Post/OtherPost'
 import Upvote from "../components/Post/Upvote";
-import { FaRegComment } from "react-icons/fa"
+import { FaCommentAlt, FaRegComment } from "react-icons/fa"
 import { RouteComponentProps } from "react-router-dom";
 import DeletePost from '../components/Post/DeletePost';
 import EditPostButton from '../components/Post/EditPostButton'
 import Avatar from "../components/Profile/Avatar";
 import Event from "../components/Post/Event"
+import { DateToPrevString } from "../utils/TimeHelper";
 
 type RouteProps = {
     boardId: string,
@@ -22,18 +22,17 @@ type RouteProps = {
 }
 
 type PostProps = RouteComponentProps<RouteProps> & {
-    firebaseUserData: FirebaseUser,
+    userData: User,
     reloadFunction: Function,
 }
 
 type PostState = {
-    firestorePost: FirestorePost,
+    Post: Post,
     errorMsg: string,
     commentArray: any[],
     commentIdArray: any[],
-    authorProfile: FirebaseUser,
+    authorProfile: User,
     retrieved: boolean,
-    accessGranted: boolean,
     recentPosts: any[],
     recentPostIds: any[],
     toggle: boolean,
@@ -149,11 +148,11 @@ const RecentPostTitle = styled.span`
 const AuthorButtons = styled.div`
     margin-left: auto;
 `
-class Post extends React.Component<PostProps, PostState> {
+class PostPage extends React.Component<PostProps, PostState> {
     constructor(props: PostProps) {
         super(props);
         this.state = {
-            firestorePost: {
+            Post: {
                 postId: "",
                 title: "Title",
                 content: "Content",
@@ -161,37 +160,41 @@ class Post extends React.Component<PostProps, PostState> {
                 isAnonymous: true,
                 isPinned: false,
                 isHidden: false,
-                lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                upvoteArray: [],
-                numComments: 0,
-                permissions: [],
-                author: "TempAuthor",
-                authorId: "",
-                parentBoardId: "",
-                parentBoardTitle: "",
-                parentColor: "",
-                parentTextColor: ""
+                lastModified: new Date(),
+                upvoteCount: 0,
+                upvoted: false,
+                commentCount: 0,
+                author: {
+                    name: "",
+                    email: "",
+                    role: "",
+                    yearOfBirth: "",
+                },
+                board: {
+                    title: "",
+                    description: "",
+                    boardId: "",
+                    boardColor: "",
+                    boardTextColor: "",
+                },
+                hasRoot: false,
             },
             toggle: false,
             errorMsg: "",
             commentArray: [],
             commentIdArray: [],
             retrieved: false,
-            accessGranted: false,
             recentPosts: [],
             recentPostIds: [],
             authorProfile: {
-                username: 'unknown user',
-                userId: 'unknown userid',
+                name: 'unknown user',
                 email: 'temp@email.com',
-                verificationFile: undefined,
-                isVerified: false,
                 role: 'User',
                 enrolledYear: "2022/2023",
                 major: "Major",
                 faculty: "Faculty",
-                profilePictureURL: "profilePicutreUrl",
-                yob: "",
+                profileImageUrl: "profileImageUrl",
+                yearOfBirth: "",
             },
             boardData: [],
         }
@@ -200,6 +203,7 @@ class Post extends React.Component<PostProps, PostState> {
     componentDidMount = () => {
         this.fetchPost()
         this.fetchBoard()
+        this.fetchRecentPost()
     }
 
     componentDidUpdate(prevProps: PostProps) {
@@ -209,170 +213,70 @@ class Post extends React.Component<PostProps, PostState> {
     }
 
     static getDerivedStateFromProps = (nextProps: PostProps, prevState: PostState) => {
-        if (prevState.retrieved && prevState.firestorePost.permissions.includes(nextProps.firebaseUserData.role)) {
-            return {
-                accessGranted: true,
-            }
-        } else {
-            return null;
-        }
+        
     }
 
     reset = () => {
         this.fetchPost()
         this.fetchBoard()
+        this.fetchRecentPost()
     }
 
-    fetchBoard = () => {
-        const arr: any[] = [];
-        dbService.collection('boards').get().then(boards => {
-            boards.forEach(board => {
-                const data = board.data();
-                arr.push(data);
-                this.setState({
-                    boardData: arr,
-                })
-            })
+    fetchBoard = async () => {
+        const url = process.env.REACT_APP_HOST + "/api/board/getBoards";
+        const response = await fetch(url, {
+            method: "GET",
         })
-    }
 
-    getLastUpdated = (time: any) => {
-        const timeFromNow = (Date.now() - (time.seconds * 1000)) / 1000;
-        const minutesFromNow = Math.floor(timeFromNow / 60)
-        const hoursFromNow = Math.floor(timeFromNow / (60 * 60))
-        if (hoursFromNow >= 1 && hoursFromNow < 24) {
-            return hoursFromNow.toString() + " hours ago"
-        }
-        else if (minutesFromNow >= 1 && minutesFromNow < 60) {
-            return minutesFromNow.toString() + " minutes ago"
-        }
-        else if (minutesFromNow <= 1) {
-            return 'Just now'
-        }
-        else {
-            return this.monthToString(time.toDate().getMonth() + 1) + " " + time.toDate().getDate().toString() + " " + time.toDate().getFullYear().toString();
+        if (response.status == 200) {
+            const boards = await response.json();
+            this.setState({
+                boardData: boards
+            })
         }
     }
 
-    monthToString = (month: number) => {
-        if (month == 1) {
-            return "January";
-        }
-        else if (month === 2) {
-            return "February";
-        }
-        else if (month === 3) {
-            return "March";
-        }
-        else if (month === 4) {
-            return "April";
-        }
-        else if (month === 5) {
-            return "May";
-        }
-        else if (month === 6) {
-            return "June"
-        }
-        else if (month === 7) {
-            return 'July'
-        }
-        else if (month === 8) {
-            return 'August';
-        }
-        else if (month === 9) {
-            return 'September'
-        }
-        else if (month === 10) {
-            return 'October'
-        }
-        else if (month === 11) {
-            return 'November'
-        }
-        else if (month === 12) {
-            return "December"
-        }
-        else {
-            return 'Invalid Month'
+    fetchRecentPost = async () => {
+        const url = process.env.REACT_APP_HOST + "/api/post/getRecentPosts";
+        const response = await fetch(url, {
+            method: "GET"
+        })
+
+        if (response.status == 200) {
+            const recentPosts = await response.json()
+            for (let i = 0; i < recentPosts.length; i++) {
+                recentPosts[i].postId = recentPosts[i].id
+            }
+            this.setState({
+                recentPosts: recentPosts
+            })
         }
     }
 
-    setPostState = (data: FirestorePost) => {
+    setPostState = (data: Post) => {
         this.setState({
-            firestorePost: data
+            Post: data
         })
     }
 
     fetchPost = async () => {
-        dbService // Retrieve post information
-            .collection('boards').doc(this.props.match.params.boardId)
-            .collection('posts')
-            .doc(this.props.match.params.postId)
-            .onSnapshot(async (querySnapshot) => {
-                if (querySnapshot.exists) {
-                    const data = querySnapshot.data() as FirestorePost;
-                    if (data === undefined) {
-                        return;
-                    }
-                    else {
-                        dbService.collection('users').doc(data.authorId).get().then(doc => {
-                            const authorData = doc.data() as FirebaseUser;
-                            console.log(authorData)
-                            this.setState({
-                                firestorePost: {
-                                    ...data,
-                                },
-                                errorMsg: "Access denied; you do not have permission.",
-                                accessGranted: data.permissions.includes(this.props.firebaseUserData.role) || data.permissions.includes('User') ? true : false,
-                                authorProfile: authorData,
-                            }, () => {
-                                this.forceUpdate()
-                            })
-                        })
-                        
-                        dbService // retrieve comments within the post
-                            .collection('boards').doc(this.props.match.params.boardId)
-                            .collection('posts').doc(this.props.match.params.postId)
-                            .collection('comments').where('isReply', '==', false).orderBy('lastModified').onSnapshot((querySnapshot1) => {
-                                const commentObjs = querySnapshot1.docs;
-                                const commentArray = [];
-                                const commentIdArray = [];
-                                for (let i = 0; i < commentObjs.length; i++) {
-                                    commentArray.push(commentObjs[i].data());
-                                    commentIdArray.push(commentObjs[i].id);
-                                }
-                                this.setState({
-                                    commentArray: commentArray,
-                                    commentIdArray: commentIdArray,
-                                    retrieved: true,
-                                })
-                            })
-                        const boardArray = ['announcement', 'event', 'general', 'grove', 'jobs'];
-                        let postArray: any[] = [];
-                        let postIdArray: any[] = [];
-                        let tempArray: any[] = [];
-                        for (let i = 0; i < boardArray.length; i++) {
-                            const docs = await dbService
-                                .collection('boards').doc(boardArray[i])
-                                .collection('posts').orderBy('lastModified', 'desc').limit(10).get();
-                            docs.forEach(doc => {
-                                const data = doc.data();
-                                if (! data.isHidden) {
-                                    tempArray.push([data, doc.id]);
-                                }
-                            })
-                            tempArray = this.sortByLastModified(tempArray)
-                        }
-                        postArray = tempArray.map(element => element[0]);
-                        postIdArray = tempArray.map(element => element[1]);
-                        this.setState({
-                            recentPosts: postArray,
-                            recentPostIds: postIdArray,
-                        })
-                    }
-                }
-            })
+        const url = process.env.REACT_APP_HOST + "/api/post/getPost/" + this.props.match.params.postId;
+        const response = await fetch(url, {
+            method: "GET"
+        })
 
+        if (response.status == 200) {
+            const post = await response.json();
+            post.lastModified = new Date(post.updatedAt);
+            post.lastModified.setHours(post.lastModified.getHours() - 8);
+            console.log(post);
+            this.setState({
+                Post: post,
+            })
+        }
     }
+
+    
 
     sortByLastModified(posts: any[]) {
         return posts.sort((a: any, b: any) => {
@@ -402,37 +306,37 @@ class Post extends React.Component<PostProps, PostState> {
         let key = 0;
         return (
             <div>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                <Navbar userData={this.props.userData} />
                 <Container>
                     <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
                     <Header>
-                        <ProfileImg firebaseUserData={this.state.authorProfile} dimension={32} isOnNavbar={true} />
+                        <ProfileImg src={this.state.Post.author.profileImageUrl} dimension={32} isOnNavbar={true} />
                         <TitleAndDate>
-                            <DateWritten>{this.getLastUpdated(this.state.firestorePost.lastModified)}</DateWritten>
-                            <Title>{this.state.firestorePost.title}</Title>                            
+                            <DateWritten>{DateToPrevString(this.state.Post.lastModified)}</DateWritten>
+                            <Title>{this.state.Post.title}</Title>
                         </TitleAndDate>
                         <AuthorButtons>
-                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId || this.props.firebaseUserData.role == "Admin" ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} userId={this.props.firebaseUserData.userId}/> : <div/>}
-                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId || this.props.firebaseUserData.role == "Admin"? <span style={{
+                            {this.state.Post.hasRoot ? <DeletePost boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} userData={this.props.userData} userId={this.props.userData.email} /> : <div />}
+                            {this.state.Post.hasRoot ? <span style={{
                                 verticalAlign: 'bottom',
                                 lineHeight: '58px',
                                 color: 'white',
                                 opacity: '0.6',
                             }}>|</span> : ''}
-                            {this.props.firebaseUserData.userId == this.state.firestorePost.authorId || this.props.firebaseUserData.role == "Admin"? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div/>}    
+                            {this.state.Post.hasRoot ? <EditPostButton boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} /> : <div />}
                         </AuthorButtons>
                     </Header>
-                    {this.state.firestorePost.isEvent ? <Event data={this.state.firestorePost.content} title={this.state.firestorePost.title} firebaseUserData={this.props.firebaseUserData}/>: <Content dangerouslySetInnerHTML={{ __html: this.state.firestorePost.content }} />}
+                    {this.state.Post.isEvent ? <Event data={this.state.Post.content} title={this.state.Post.title} userData={this.props.userData} postId={this.props.match.params.postId}/> : <Content dangerouslySetInnerHTML={{ __html: this.state.Post.content }} />}
                     <ETC>
-                        <Upvote boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} upvoteArray={this.state.firestorePost.upvoteArray} />
+                        <Upvote boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} upvoteCount={this.state.Post.upvoteCount} upvoted={this.state.Post.upvoted}/>
                         <FaRegComment size='20px' style={{ marginLeft: '10px' }} />
                         <CommentNum style={{ margin: '0px 5px' }}>
-                            {this.state.commentArray.length}
+                            {this.state.Post.commentCount}
                         </CommentNum>
 
                     </ETC>
-                    
-                    <Comment reset={this.fetchPost} comments={this.state.commentArray} commentIds={this.state.commentIdArray} boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} firebaseUserData={this.props.firebaseUserData} />
+
+                    <Comment reset={this.fetchPost} boardId={this.props.match.params.boardId} postId={this.props.match.params.postId} userData={this.props.userData} />
                     <RecentPostTitle>Other posts</RecentPostTitle>
                     <RecentPosts>{this.state.recentPosts.map((element, i) => {
                         key++
@@ -442,20 +346,10 @@ class Post extends React.Component<PostProps, PostState> {
                             match={this.props.match}
                             key={key}
                             data={element}
-                            postId={this.state.recentPostIds[i]}
                             reloadFunction={this.props.reloadFunction}
-                            boardData={this.state.boardData}
-                        /> })}
+                        />
+                    })}
                     </RecentPosts>
-                    {this.state.accessGranted ?
-                        <>
-
-                        </>
-                        :
-                        <>
-                            You cannot view this page: {this.state.errorMsg}
-                        </>
-                    }
                 </Container>
 
             </div>
@@ -463,4 +357,4 @@ class Post extends React.Component<PostProps, PostState> {
     }
 }
 
-export default Post;
+export default PostPage;

@@ -4,6 +4,7 @@ import CSS from 'csstype';
 import { authService, dbService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components'
 import { FlexColumn } from '../../components/utils/UsefulDiv';
+import crypto from "crypto-js"
 
 const margin = 40;
 let linkMouseEnter = false;
@@ -173,10 +174,10 @@ type UserProps = {
 type UserState = {
     email: string,
     password: string,
-    username: string,
+    name: string,
     major: string,
     gender: string,
-    KTId: string,
+    kakaoTalkId: string,
     fileSelected: File | undefined,
     loading: boolean
 }
@@ -187,10 +188,10 @@ class SignUp extends React.Component<UserProps, UserState> {
         this.state = {
             email: '',
             password: '',
-            username: '',
+            name: '',
             major: "",
             gender: "",
-            KTId: "",
+            kakaoTalkId: "",
             fileSelected: undefined,
             loading: false,
         }
@@ -207,9 +208,9 @@ class SignUp extends React.Component<UserProps, UserState> {
                 password: value
             })
         }
-        else if (event.target.name === 'username') {
+        else if (event.target.name === 'name') {
             this.setState({
-                username: value
+                name: value
             })
         }
         else if (event.target.name == "major") {
@@ -222,9 +223,9 @@ class SignUp extends React.Component<UserProps, UserState> {
                 gender: value
             })
         }
-        else if (event.target.name == "KTId") {
+        else if (event.target.name == "kakaoTalkId") {
             this.setState({
-                KTId: value
+                kakaoTalkId: value
             })
         }
     }
@@ -239,36 +240,34 @@ class SignUp extends React.Component<UserProps, UserState> {
             this.setState({
                 loading: true
             })
-            await authService.createUserWithEmailAndPassword(this.state.email, this.state.password)
-                .then(async (userCredential) => {
-                    const userObject = {
-                        email: this.state.email,
-                        username: this.state.username,
-                        userId: userCredential.user?.uid,
-                        isVerified: true,
-                        role: 'Registered'
-                    }
-                    dbService.collection('users').doc(userCredential.user?.uid).set(userObject).then(() => {
-                        authService.languageCode = 'kr'
-                        authService.signInWithEmailAndPassword(this.state.email, this.state.password).then(() => {
-                            authService.currentUser?.sendEmailVerification().then(() => {
-                                authService.signOut();
-                                window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.\n\n 이메일이 오지 않는다면 스팸함을 확인해주세요!")
-                                this.setState({
-                                    loading: false,
-                                })
-                                this.props.history.push("/")
-                            })
-                        })
-                    });
+            const userObject = {
+                email: this.state.email,
+                name: this.state.name,
+                verified: true,
+                role: 'Registered',
+                password: crypto.SHA512(this.state.password).toString(),
+            }
+            const url = process.env.REACT_APP_HOST + "/api/auth/signup"
+            const response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(userObject),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            if (response.status == 200) {
+                window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.\n\n 이메일이 오지 않는다면 스팸함을 확인해주세요!")
+                this.setState({
+                    loading: false,
                 })
-                .catch((error) => {
-                    this.setState({
-                        loading: false,
-                    })
-                    window.alert("Sign up failed. Please try again later.")
-                    console.log(error)
-                });
+                this.props.history.push("/")
+            }
+            else {
+                this.setState({
+                    loading: false,
+                })
+                window.alert("프로필 생성에 실패했습니다: " + response.body)
+            }
         }
 
     }
@@ -325,11 +324,11 @@ class SignUp extends React.Component<UserProps, UserState> {
                             <InputMandatoryIndicator>*</InputMandatoryIndicator>
                             <InputInner>
                                 <Input
-                                    name="username"
+                                    name="name"
                                     type="string"
                                     placeholder="한글 이름"
                                     required
-                                    value={this.state.username}
+                                    value={this.state.name}
                                     onChange={this.handleChange}
                                 />
                                 <InputGuide>ex) 김재혁</InputGuide>

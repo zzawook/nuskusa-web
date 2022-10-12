@@ -1,12 +1,12 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import VerificationComponent from '../components/Verification/VerificationComponent'
-import { FirebaseUser } from '../types/FirebaseUser'
+import { User } from '../types/User'
 import { FirestoreUserVerification } from '../types/FirestoreUserVerification'
 import { authService, dbService } from '../utils/firebaseFunctions'
 
 type VerificationProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type VerificationState = {
@@ -54,8 +54,8 @@ class Verification extends React.Component<VerificationProps, VerificationState>
     render = () => {
         return (
             <>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
-                {this.props.firebaseUserData.role.toLowerCase() === 'admin' ?
+                <Navbar userData={this.props.userData} />
+                {this.props.userData.role.toLowerCase() === 'admin' ?
                     <div>
                         You are an administrator. <br />
                         1. 신청인 이름 확인, 입학연도, 과 확인 <br />

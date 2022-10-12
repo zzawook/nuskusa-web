@@ -1,13 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FirestorePost } from '../../types/FirestorePost'
+import { Post } from '../../types/Post'
+import { Board } from '../../types/Board'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 type OtherPostProps = RouteComponentProps & {
-    data: FirestorePost,
-    postId: string,
+    data: Post,
     reloadFunction: any,
-    boardData: any[],
 }
 
 type OtherPostState = {
@@ -78,7 +77,7 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
         this.state = {
             mouseEntered: false,
             title: '',
-            boardColor: ""
+            boardColor: this.props.data.board.boardColor
         }
     }
 
@@ -88,27 +87,16 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
     }
 
     goTo = () => {
-        this.props.history.push(`/boards/${this.props.data.parentBoardId}/${this.props.postId}`)
+        this.props.history.push(`/boards/${this.props.data.board.boardId}/${this.props.data.postId}`)
     }
+
 
     componentDidMount() {
-        let bc = ""
-        if (! this.props.boardData.find(elem => elem.boardId == this.props.data.parentBoardId) == undefined) {
-            bc = this.props.boardData.find(elem => elem.boardId == this.props.data.parentBoardId).boardColor
-        }
-        this.setState({
-            boardColor: bc,
-        })
+        
     }
 
-    static getDerivedStateFromProps(newProps: any, prevState: any) {        
-        let bc = ""
-        if (newProps.boardData.find((elem: any) => elem.boardId == newProps.data.parentBoardId) != undefined) {
-            bc = newProps.boardData.find((elem: any) => elem.boardId == newProps.data.parentBoardId).boardColor
-        }
-        return {
-            boardColor: bc,
-        }
+    static getDerivedStateFromProps(newProps: any, prevState: any) {
+        
     }
 
     render() {
@@ -126,11 +114,11 @@ class OtherPost extends React.Component<OtherPostProps, OtherPostState> {
         }
 
         return (
-            <Link to={{ pathname: `/boards/${this.props.data.parentBoardId}/${this.props.postId}` }} style={{ textDecoration: 'none' }}>
-                <Container 
+            <Link to={{ pathname: `/boards/${this.props.data.board.boardId}/${this.props.data.postId}` }} style={{ textDecoration: 'none' }}>
+                <Container
                     boardColor={this.state.boardColor} changeBorder={this.state.mouseEntered} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     <Title changeBorder={this.state.mouseEntered}>{this.props.data.title.substring(0, 50)}{this.props.data.title.length > 50 ? "..." : ""}</Title>
-                    <BoardType boardColor={this.state.boardColor} changeBorder={this.state.mouseEntered}>{this.props.data.parentBoardTitle}</BoardType>
+                    <BoardType boardColor={this.state.boardColor} changeBorder={this.state.mouseEntered}>{this.props.data.board.title}</BoardType>
                 </Container>
             </Link>
         )

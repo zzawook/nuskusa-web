@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
 import { dbService } from '../../utils/firebaseFunctions';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 
 const Wrapper = styled.div`
     display: flex;
@@ -38,7 +38,7 @@ const EventTitle = styled.span`
 `
 
 type SelectEventProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type SelectEventState = {
@@ -53,20 +53,18 @@ class SelectEvent extends React.Component<SelectEventProps, SelectEventState> {
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const eventArray: any[] = [];
-        dbService.collection("events").get().then(events => {
-            events.forEach(event => {
-                const data = event.data() as any;
-                eventArray.push({
-                    title: data.title,
-                    id: event.id,
-                });
-            })
+        const url = process.env.REACT_APP_HOST + '/api/event/getEvents'
+
+        const response = await fetch(url);
+
+        if (response.status == 200) {
+            const eventData = await response.json();
             this.setState({
-                events: eventArray,
+                events: eventData
             })
-        })
+        }
     }
 
     render = () => {
@@ -74,7 +72,7 @@ class SelectEvent extends React.Component<SelectEventProps, SelectEventState> {
 
         return (
             <Wrapper>
-                <Navbar firebaseUserData={this.props.firebaseUserData}/>
+                <Navbar userData={this.props.userData} />
                 <Container>
                     {this.state.events.map(eventData => {
                         return (

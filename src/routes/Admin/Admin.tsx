@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
 import { DisplayLarge } from '../../utils/ThemeText';
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const width = window.innerWidth;
@@ -39,7 +39,7 @@ const MainBanner = styled.div`
     padding: 25px 50px;
 `
 type AdminProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type AdminState = {
@@ -54,13 +54,13 @@ class Admin extends React.Component<AdminProps, AdminState> {
         }
     }
 
-    
+
 
     render = () => {
-        
+
         return (
             <Wrapper>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                <Navbar userData={this.props.userData} />
                 <HomeBackground>
                     <MainBanner>
                         <p style={{ margin: '0', color: '#0B121C', opacity: '0.8', fontSize: '19px', fontWeight: 'bold' }}>

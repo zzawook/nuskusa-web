@@ -1,11 +1,11 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import { FirebaseUser } from '../types/FirebaseUser';
+import { User } from '../types/User';
 import styled from 'styled-components';
 import Profile from '../components/AboutUs/Profile';
 
 type AboutUsProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type AboutUsState = {
@@ -181,7 +181,7 @@ class AboutUs extends React.Component<AboutUsProps, AboutUsState> {
 
         return (
             <Container>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                <Navbar userData={this.props.userData} />
                 <Intro>
                     <WhoAreWe>Who are we?</WhoAreWe>
                     <Title>한인회 소개</Title>

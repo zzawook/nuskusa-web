@@ -5,15 +5,15 @@ import Navbar from '../components/Navbar';
 import BoardThumbnail from '../components/BoardHome/BoardThumbnail';
 import { dbService } from '../utils/firebaseFunctions';
 import { DisplayLarge, Headline } from '../utils/ThemeText';
-import { FirestoreBoard } from '../types/FirestoreBoard';
-import { FirebaseUser } from '../types/FirebaseUser';
+import { Board } from '../types/Board';
+import { User } from '../types/User';
 
 type BoardHomeProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type BoardHomeState = {
-    boardArray: FirestoreBoard[],
+    boardArray: Board[],
     boardComponentArray: any[],
     title: string,
     description: string,
@@ -36,40 +36,33 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
         this.fetchBoards();
     }
 
-    fetchBoards = () => {
-        dbService
-            .collection('boards')
-            .onSnapshot((querySnapshot) => {
-                if (!querySnapshot.empty) {
-                    const arr: FirestoreBoard[] = [];
-                    const componentArray: any[] = [];
-                    let key = 0;
-                    querySnapshot.docs.forEach((doc) => {
-                        const data = doc.data() as FirestoreBoard;
-                        const component = (
-                            <BoardThumbnail
-                                key={key}
-                                title={data.title}
-                                boardId={data.boardId}
-                                description={data.description}
-                                permissions={data.permissions}
-                                boardColor={data.boardColor}
-                                boardTextColor={data.boardTextColor}
-                                editPermission={data.editPermission}
-                            />
-                        )
-                        key++;
-                        arr.push(data);
-                        if (data.permissions.includes(this.props.firebaseUserData.role)) {
-                            componentArray.push(component);
-                        }
-                    })
-                    this.setState({
-                        boardArray: arr,
-                        boardComponentArray: componentArray
-                    })
-                }
+    fetchBoards = async () => {
+        const url = process.env.REACT_APP_HOST + "/api/board/getBoards"
+        const response = await fetch(url, {
+            method: "GET"
+        })
+
+        if (response.status == 200) {
+            const boards = await response.json();
+            console.log(boards);
+            const boardComponentArray = [];
+
+            for (let i = 0; i < boards.length; i++) {
+                boardComponentArray.push(
+                    <BoardThumbnail
+                        title={boards[i].title}
+                        description={boards[i].description}
+                        boardId={boards[i].boardId}
+                        boardColor={boards[i].boardColor}
+                        boardTextColor={boards[i].boardTextColor}
+                    ></BoardThumbnail>
+                )
+            }
+
+            this.setState({
+                boardComponentArray: boardComponentArray
             })
+        }
     }
 
     handleChange = (event: any) => {
@@ -126,7 +119,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
         `
         return (
             <Container>
-                <Navbar firebaseUserData={this.props.firebaseUserData} />
+                <Navbar userData={this.props.userData} />
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
                         게시판
@@ -137,7 +130,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                     <ThumbnailContainer>
                         {this.state.boardComponentArray}
                     </ThumbnailContainer>
-                    {/* {this.props.firebaseUserData.role === 'Admin' ?
+                    {/* {this.props.userData.role === 'Admin' ?
                         <form onSubmit={this.handleSubmit}>
                             <input name='title' type='string' onChange={this.handleChange} />
                             <input name='description' type='string' onChange={this.handleChange} /> <br />

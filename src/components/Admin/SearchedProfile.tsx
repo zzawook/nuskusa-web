@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import { authService } from '../../utils/firebaseFunctions';
 
 const Wrapper = styled.div`
@@ -9,7 +9,7 @@ const Wrapper = styled.div`
     margin-bottom: 20px;
     border: 1px solid white;
 `
-const Username = styled.div`
+const Name = styled.div`
     margin-top: 2px;
     margin-bottom: 2px;
     font-size: 18px;
@@ -46,7 +46,7 @@ const Role = styled.div`
     font-size: 18px;
     color: white;
 `
-const IsVerified = styled.div`
+const Verified = styled.div`
     margin-top: 2px;
     margin-bottom: 2px;
     font-size: 18px;
@@ -64,7 +64,7 @@ const Major = styled.div`
     font-size: 18px;
     color: white;
 `
-const KTId = styled.div`
+const KakaoTalkId = styled.div`
     margin-top: 2px;
     margin-bottom: 2px;
     font-size: 18px;
@@ -80,26 +80,25 @@ const ResendEmailVerification = styled.span`
 `
 
 type SearchedProfileProps = {
-    firebaseUserData: FirebaseUser,
-    username: string,
-    userId: string,
+    userData: User,
+    name: string,
     gender: string,
-    yob: string,
+    yearOfBirth: string,
     email: string,
     role: string,
-    isVerified: boolean,
+    verified: boolean,
     enrolledYear: string,
     major: string,
-    KTId: string,
+    kakaoTalkId: string,
+    setLoading: Function,
+    unsetLoading: Function,
 }
 
 type SearchedProfileState = {
-    users: FirebaseUser[],
+    users: User[],
     searched: boolean,
     searchedName: string,
     searchedProfiles: any[]
-
-    
 }
 
 class SearchedProfile extends React.Component<SearchedProfileProps, SearchedProfileState> {
@@ -113,54 +112,36 @@ class SearchedProfile extends React.Component<SearchedProfileProps, SearchedProf
         }
     }
 
-    handleSendEmailVeriication = (event: any) => {
-        if (window.confirm(this.props.username + "님에게 인증이메일을 다시 보내시겠습니까?")) {
-            const userPassword = prompt(this.props.username + "님의 비밀번호를 입력해주세요")
-            const adminPassword = prompt("현재 어드민 계정의 비밀번호를 입력해주세요")
-            
-            if (userPassword && adminPassword) {
-                authService.signOut().then(() => {
-                    authService.signInWithEmailAndPassword(this.props.email, userPassword).then(() => {
-                        authService.currentUser?.sendEmailVerification().then(() => {
-                            authService.signOut().then(() => {
-                                authService.signInWithEmailAndPassword(this.props.firebaseUserData.email, adminPassword).then(() => {
-                                    window.alert("인증 이메일을 성공적으로 보냈습니다.")
-                                }).catch(err => {
-                                    window.alert("어드민 계정 재로그인 중 문제가 발생했습니다. " + err.message)
-                                })
-                            }).catch(err => {
-                                window.alert("유저 계정 로그아웃 도중 문제가 발생했습니다. " + err.message)
-                            });
-                        }).catch(err => {
-                            window.alert("인증 이메일을 보내는 도중 문제가 발생했습니다. " + err.message)
-                        })
-                    }).catch(err => {
-                        window.alert("유저 계정으로 로그인 중 문제가 발생했습니다. " + err.message)
-                    })
-                }).catch(err => {
-                    window.alert("어드민 계정 로그아웃 중 문제가 발생했습니다. " + err.message)
-                });
+    handleSendEmailVeriication = async (event: any) => {
+        if (window.confirm(this.props.name + "님에게 인증이메일을 다시 보내시겠습니까?")) {
+            this.props.setLoading()
+            const url = process.env.REACT_APP_HOST + "/api/auth/sendVerificationEmail/" + this.props.email
+            const response = await fetch(url, {
+                method: "GET",
+            })
+            if (response.status == 200) {
+                window.alert("인증 이메일을 재전송 했습니다.")
+                this.props.unsetLoading()
             }
             else {
-                window.alert("모든 값을 입력하지 않았습니다. 다시 모든 항목을 입력해주세요.")
+                window.alert("인증 이메일 전송에 실패했습니다.")
+                this.props.unsetLoading()
             }
         }
-        return;
     }
 
     render = () => {
         return (
             <Wrapper>
-                <Username>Name: {this.props.username}</Username>
-                <UserId>UserId: {this.props.userId}</UserId>
+                <Name>Name: {this.props.name}</Name>
                 <Gender>Gender: {this.props.gender}</Gender>
-                <YearOfBirth>Year of birth: {this.props.yob}</YearOfBirth>
+                <YearOfBirth>Year of birth: {this.props.yearOfBirth}</YearOfBirth>
                 <Email>Email: {this.props.email}</Email>
                 <Role>Role: {this.props.role}</Role>
-                <IsVerified>IsVerified: {this.props.isVerified.toString()}</IsVerified>
+                <Verified>verified: {this.props.verified.toString()}</Verified>
                 <EnrolledYear>Enrolled Year: {this.props.enrolledYear}</EnrolledYear>
                 <Major>Major: {this.props.major}</Major>
-                <KTId>KakaoTalk ID: {this.props.KTId}</KTId>
+                <KakaoTalkId>KakaoTalk ID: {this.props.kakaoTalkId}</KakaoTalkId>
                 <ResendEmailVerification onClick={this.handleSendEmailVeriication}>인증 이메일 재전송</ResendEmailVerification>
             </Wrapper>
         )

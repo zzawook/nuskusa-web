@@ -1,36 +1,63 @@
-import firebase from "firebase"
+const DateToPrevString = (time: Date) => {
+    const timeFromNow = (Date.now() - time.getTime()) / 1000;
+    const minutesFromNow = Math.floor(timeFromNow / 60)
+    const hoursFromNow = Math.floor(timeFromNow / (60 * 60))
+    if (hoursFromNow >= 1 && hoursFromNow < 24) {
+        return hoursFromNow.toString() + " hours ago"
+    }
+    else if (minutesFromNow >= 1 && minutesFromNow < 60) {
+        return minutesFromNow.toString() + " minutes ago"
+    }
+    else if (minutesFromNow <= 1) {
+        return 'Just now'
+    }
+    else {
+        return monthToString(time.getMonth() + 1) + " " + time.getDate().toString() + " " + time.getFullYear().toString();
+    }
+}
 
-const timestampToCommentDateString = (timestamp: firebase.firestore.Timestamp) => {
-    const date = timestamp.toDate();
-    const currentDate = new Date();
-    const diffHour = (currentDate.getTime() - date.getTime()) / (1000 * 60 * 60);
-    if (diffHour * 60 < 1) {
-        return "Just now";
-    } else if (diffHour < 1) { // minutes(s) ago
-        return Math.ceil((currentDate.getTime() - date.getTime()) / (1000 * 60)) + " minutes ago";
-    } else if (diffHour < 2) { // hour(s) ago
-        return "1 hour ago";
-    } else if (diffHour < 24) {
-        return Math.floor(diffHour) + " hours ago";
-    } else if (diffHour < 48) { // day(s) ago
-        return "1 day ago";
-    } else if (diffHour < 168) {
-        return Math.floor(diffHour / 24) + " days ago";
-    } else if (diffHour < 336) { // week(s) ago
-        return "1 week ago";
-    } else if (diffHour < 720) { // maximum 4 weeks
-        return Math.floor(diffHour / 24 / 7) + " weeks ago";
-    } else if (diffHour < 1440) { // month(s) ago
-        return "1 month ago";
-    } else if (diffHour < 8640) {
-        return Math.floor(diffHour / 24 / 7 / 4.28) + " months ago";
-    } else if (diffHour < 17520) { // assume 30 days a month
-        return "1 year ago";
-    } else {
-        return Math.floor(diffHour / 24 / 30 / 12) + " years ago";
+const monthToString = (month: number) => {
+    if (month == 1) {
+        return "Jan";
+    }
+    else if (month === 2) {
+        return "Feb";
+    }
+    else if (month === 3) {
+        return "Mar";
+    }
+    else if (month === 4) {
+        return "Apr";
+    }
+    else if (month === 5) {
+        return "May";
+    }
+    else if (month === 6) {
+        return "Jun"
+    }
+    else if (month === 7) {
+        return 'Jul'
+    }
+    else if (month === 8) {
+        return 'Aug';
+    }
+    else if (month === 9) {
+        return 'Sep'
+    }
+    else if (month === 10) {
+        return 'Oct'
+    }
+    else if (month === 11) {
+        return 'Nov'
+    }
+    else if (month === 12) {
+        return "Dec"
+    }
+    else {
+        return 'Invalid Month'
     }
 }
 
 export {
-    timestampToCommentDateString,
+    DateToPrevString,
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser';
+import { User } from '../../types/User';
 import { storageService, dbService } from '../../utils/firebaseFunctions';
 import crypto from 'crypto-js';
 
@@ -41,7 +41,7 @@ type AttachmentInputProps = {
     handleChange: Function,
     index: number,
     eventTitle: string,
-    userdata: FirebaseUser,
+    userData: User,
     setLoading: Function,
     unsetLoading: Function,
     canApplyMultiple: boolean,
@@ -72,13 +72,13 @@ class AttachmentInput extends React.Component<AttachmentInputProps, AttachmentIn
             }
             else {
                 this.props.setLoading();
-                dbService.collection('events').doc(crypto.SHA256(this.props.eventTitle).toString().substring(0, 20)).collection("registrations").doc(this.props.userdata.userId).get().then((doc) => {
+                dbService.collection('events').doc(crypto.SHA256(this.props.eventTitle).toString().substring(0, 20)).collection("registrations").doc(this.props.userData.email).get().then((doc) => {
                     if (!this.props.canApplyMultiple && doc.exists) {
                         this.props.unsetLoading();
                         window.alert("이미 지원하신 이벤트입니다.")
                         return;
                     }
-                    let ref = "event/" + this.props.eventTitle.substring(0, 20) + "/" + this.props.userdata.userId + "/Q" + this.props.index
+                    let ref = "event/" + this.props.eventTitle.substring(0, 20) + "/" + this.props.userData.email + "/Q" + this.props.index
                     if (this.props.canApplyMultiple) {
                         const tempNowDate = new Date();
                         ref += crypto.MD5(tempNowDate.toString())

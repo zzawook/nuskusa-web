@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FirebaseUser } from '../../types/FirebaseUser'
+import { User } from '../../types/User'
 import { Headline } from '../../utils/ThemeText'
 import Avatar from './Avatar'
 import ProfileDisplay from './ProfileDisplay'
 
 type BadgeProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type BadgeState = {
@@ -51,11 +51,11 @@ class ProfileBadge extends React.Component<BadgeProps, BadgeState> {
             <Wrapper>
                 <ClickableDiv onClick={this.openProfileDisplay}>
                     <Headline color="white" style={{ margin: 'auto' }}>
-                        {this.props.firebaseUserData.username}
+                        {this.props.userData.name}
                     </Headline>
-                    <Avatar firebaseUserData={this.props.firebaseUserData} dimension={32} isOnNavbar={true}/>
+                    <Avatar src={this.props.userData.profileImageUrl} dimension={32} isOnNavbar={true} />
                 </ClickableDiv>
-                <ProfileDisplay firebaseUserData={this.props.firebaseUserData} onExitClick={this.closeProfileDisplay} isOpen={this.state.isOpen}></ProfileDisplay>
+                <ProfileDisplay userData={this.props.userData} onExitClick={this.closeProfileDisplay} isOpen={this.state.isOpen}></ProfileDisplay>
             </Wrapper>
         )
     }

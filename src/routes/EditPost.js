@@ -39,17 +39,18 @@ class Uploader {
                             }
                         },
 
-                        function() {
+                        function () {
                             // Upload completed successfully, now we can get the download URL
                             uploadTask.snapshot.ref
                                 .getDownloadURL()
-                                .then(function(downloadURL) {
-                                resolve({
-                                    urls: {
-                                        'default': downloadURL
-                                    }
-                                })}
-                            );
+                                .then(function (downloadURL) {
+                                    resolve({
+                                        urls: {
+                                            'default': downloadURL
+                                        }
+                                    })
+                                }
+                                );
                         }
                     );
                 })
@@ -163,23 +164,13 @@ class EditPost extends React.Component {
         super(props);
         this.state = {
             state: {
-                title: 'Enter title...',
-                content: "<p></p>",
+                title: "Enter title...",
+                content: '<p></p>',
                 isAnnouncement: false,
                 isAnonymous: false,
                 isPinned: false,
                 isHidden: false,
-                author: '',
-                authorId: "",
-                upvotes: 0,
-                lastModified: firebase.firestore.Timestamp.fromDate(new Date()),
-                permissions: ["Admin"],
-                numComments: 0, //DO NOT CHANGE
-                parentBoardId: this.props.boardId,
-                upvoteArray: [], //DO NOT CHANGE
-                parentColor: "",
-                parentTextColor: "",
-                parentBoardTitle: "",
+                lastModified: new Date(),
             },
             selectedBoard: this.props.boardId,
             boardData: [],
@@ -192,87 +183,59 @@ class EditPost extends React.Component {
 
     content = '<p></p>'
 
-    componentDidMount() {
-        if (!this.props.firebaseUserData.isVerified) {
-            window.alert("You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다.");
-            window.history.go(-1);
-            return;
-        }
+    componentDidMount = async () => {
         const boardProcessed = [];
         const boardRaw = [];
         this.fetchPost();
-        dbService.collection('boards').get().then(boards => {
-            boards.forEach(board => {
-                const data = board.data();
-                if (data.editPermission.includes(this.props.firebaseUserData.role)) {
-                    boardProcessed.push({
-                        value: board.id,
-                        label: data.title,
-                    })
-                    boardRaw.push(data);
-                }
-            })
-        }).then(() => {
-            let backgroundColor = "#FFFFFF"
-            if (boardRaw.find(elem => elem.boardId == this.props.boardId)) {
-                backgroundColor = boardRaw.find(elem => elem.boardId == this.props.boardId).boardColor
-            }
+        const url = process.env.REACT_APP_HOST + "/api/board/getBoards"
+        const response = await fetch(url, {
+            method: "GET"
+        })
 
-            this.setState(prevState => {
+        if (response.status == 200) {
+            const boards = await response.json();
+
+            for (let i = 0; i < boards.length; i++) {
+                let board = boards[i]
+                boardProcessed.push({
+                    value: board.boardId,
+                    label: board.title
+                })
+                boardRaw.push(board);
+            }
+            let backgroundColor = "#FFFFFF";
+            if (boardRaw.find((elem) => elem.boardId == this.props.boardId)) {
+                backgroundColor = boardRaw.find(
+                    (elem) => elem.boardId == this.props.boardId
+                ).boardColor;
+            }
+            const stateCopy = this.state.state;
+            stateCopy.author = this.props.userData.name;
+
+            this.setState((prevState) => {
                 return {
+                    state: stateCopy,
                     boardDataProcessed: boardProcessed,
                     boardData: boardRaw,
                     selectedBoard: this.props.boardId,
                     bc: backgroundColor,
-                }
-            })
-        })
+                };
+            });
+        }
     }
 
-    fetchPost = () => {
-        dbService // Retrieve post information
-            .collection('boards').doc(this.props.boardId)
-            .collection('posts')
-            .doc(this.props.postId)
-            .onSnapshot((querySnapshot) => {
-                if (querySnapshot.exists) {
-                    let data = querySnapshot.data();
-                    if (data == undefined) {
-                        return;
-                    }
-                    else {
-                        if (data.permissions.includes(this.props.firebaseUserData.role)/* || data.permissions.includes("User")*/) {
-                            const newState = {
-                                title: data.title,
-                                content: data.content,
-                                isAnnouncement: data.isAnnouncement,
-                                isAnonymous: data.isAnonymous,
-                                isPinned: data.isPinned,
-                                isHidden: data.isHidden,
-                                author: data.author,
-                                authorId: data.authorId,
-                                upvotes: data.upvotes,
-                                lastModified: data.lastModified,
-                                permissions: data.permissions,
-                                numComments: data.numComments, //DO NOT CHANGE
-                                parentBoardId: data.parentBoardId,
-                                upvoteArray: data.upvoteArray, //DO NOT CHANGE
-                                parentColor: data.parentColor,
-                                parentTextColor: data.parentTextColor,
-                                parentBoardTitle: data.parentBoardTitle,
-                            };
-                            this.setState({
-                                state: newState,
-                            })
-                        }
-                        else {
-                            this.setState({
-                                errorMsg: "Access denied-- you do not have permission."
-                            })
-                        }
-                    }
-                }
+    fetchPost = async () => {
+        const url = process.env.REACT_APP_HOST + "/api/post/getPost/" + this.props.postId;
+
+        const response = await fetch(url, {
+            method: "GET"
+        })
+        if (response.status == 200) {
+            const data = await response.json();
+            this.setState({
+                state: data,
             })
+        }
     }
 
     handleSubmit = async (e) => {
@@ -296,27 +259,43 @@ class EditPost extends React.Component {
         this.setState({
             loading: true,
         })
+        const url = process.env.REACT_APP_HOST + "/api/post/editPost/" + this.props.postId;
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify({
+                title: this.state.state.title,
+                content: this.content,
+                isAnnouncement: this.state.state.isAnnouncement,
+                isAnonymous: this.state.state.isAnonymous,
+                isHidden: this.state.state.isHidden,
+                isPinned: this.state.state.isPinned,
+                isEvent: false,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+
+        if (response.status == 201) {
+            const postId = await response.text();
+            this.setState({
+                loading: false,
+            })
+            window.location.href = "#/boards/" + this.state.selectedBoard + "/" + postId;
+        }
+        else {
+            this.setState({
+                loading: false,
+            });
+            const errMsg = await response.text();
+            window.alert("게시글 업로드 도중 문제가 발생하였습니다." + errMsg);
+        }
         const stateCopy = this.state.state;
         stateCopy.content = this.content;
         stateCopy.lastModified = firebase.firestore.Timestamp.fromDate(new Date())
         this.setState({
-            state: stateCopy
-        }, () => {
-            dbService
-                .collection('boards').doc(this.props.boardId)
-                .collection('posts').doc(this.props.postId)
-                .update(this.state.state)
-                .then((docRef) => {
-                    this.setState({
-                        loading: false,
-                    })
-                    window.location.href = "#/boards/" + this.state.selectedBoard + '/' + this.props.postId
-                }).catch(err => {
-                    this.setState({
-                        loading: false,
-                    })
-                    window.alert("게시글 수정 도중 문제가 발생하였습니다." + err.toString())
-                });
+            state: stateCopy,
+            loading: false,
         })
     }
 
@@ -494,7 +473,7 @@ class EditPost extends React.Component {
             <>
                 {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
                 <Container>
-                    <Navbar firebaseUserData={this.props.firebaseUserData} />
+                    <Navbar userData={this.props.userData} />
                     <Back
                         onClick={() => window.history.back()}>
                         <img
@@ -544,8 +523,8 @@ class EditPost extends React.Component {
                         />
                     </Editor>
                     <CheckBoxContainer>
-                        {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.state.isPinned} /> : <div />}
-                        {this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.state.isHidden} /> : <div />}
+                        {this.props.userData.role == 'Admin' ? <Checkbox label='Pinned' setter={setPinned} init={this.state.state.isPinned} /> : <div />}
+                        {this.props.userData.role == 'Admin' ? <Checkbox label='Hidden' setter={setHidden} init={this.state.state.isHidden} /> : <div />}
                     </CheckBoxContainer>
                     <Submit onClick={this.handleSubmit}>Edit</Submit>
                 </Container>
@@ -555,8 +534,8 @@ class EditPost extends React.Component {
 }
 
 /*
-{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
-{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
+{this.props.userData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
+{this.props.userData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
 */
 
 export default EditPost;

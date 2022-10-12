@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../logo.png'
-import { FirebaseUser } from '../types/FirebaseUser';
+import { User } from '../types/User';
 import { authService } from '../utils/firebaseFunctions';
 import ProfileBadge from './Profile/ProfileBadge';
 
 type NavbarProps = {
-    firebaseUserData: FirebaseUser
+    userData: User
 }
 
 type NavBarState = {
@@ -165,7 +165,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                         <NavbarButton onMouseEnter={() => this.setState({ aboutUsHover: true })} onMouseLeave={() => this.setState({ aboutUsHover: false })} onClick={() => window.location.href = "#/about-us"}>
                             <AboutUsText hover={this.state.aboutUsHover}><Link to='/about-us' style={{ color: '#FFFFFF', textDecoration: 'none' }}>About Us</Link></AboutUsText>
                         </NavbarButton>
-                        <NavbarButton onMouseEnter={() => this.setState({ boardHover: true })} onMouseLeave={() => this.setState({ boardHover: false })} onClick={() => window.location.href = authService.currentUser ? "#/boards" : "#/signin"}>
+                        <NavbarButton onMouseEnter={() => this.setState({ boardHover: true })} onMouseLeave={() => this.setState({ boardHover: false })} onClick={() => window.location.href = this.props.userData.name ? "#/boards" : "#/signin"}>
                             {
                                 authService.currentUser ?
                                     <BoardText hover={this.state.boardHover}><Link to='/boards' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
@@ -176,21 +176,21 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                     </NavbarButtonContainer>
                 </NavbarContent>
                 {
-                    authService.currentUser ?
+                    this.props.userData.name ?
                         <>
-                            <ProfileBadge firebaseUserData={this.props.firebaseUserData} />
+                            <ProfileBadge userData={this.props.userData} />
                             {/* <SignOut>Sign Out</SignOut> */}
                         </>
                         :
                         <>
-                            <SignUpButton onClick={() => window.location.href="/#/signup/terms"}>
+                            <SignUpButton onClick={() => window.location.href = "/#/signup/terms"}>
                                 <SignUpText>
                                     <Link to='/signup/select' style={{ color: '#0B121C', textDecoration: 'none' }}>
                                         Sign Up
                                     </Link>
                                 </SignUpText>
                             </SignUpButton>
-                            <SignInButton onClick={() => window.location.href="/#/signin"}>
+                            <SignInButton onClick={() => window.location.href = "/#/signin"}>
                                 <Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                     <SignInText>
                                         Sign In

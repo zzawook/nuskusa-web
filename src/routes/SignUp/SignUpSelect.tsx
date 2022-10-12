@@ -12,7 +12,7 @@ type UserProps = {
 type UserState = {
     email: string,
     password: string,
-    username: string
+    name: string
 }
 
 const margin = 20;
@@ -81,7 +81,7 @@ class SignUpSelect extends React.Component<UserProps, UserState> {
         this.state = {
             email: '',
             password: '',
-            username: '',
+            name: '',
         }
     }
 
@@ -123,17 +123,17 @@ class SignUpSelect extends React.Component<UserProps, UserState> {
                     </FlexColumn>
                     <Form>
                         <ButtonRow>
-                            <Button title="신입생" description="1학년 분들은 여기로 오세요!" color="#FFDE00" linkTo="freshmen"/>
-                            <Button title="재학생" description="NUS가 익숙하신 2학년 이상 분들은 여기로!" color="#4287F5" linkTo='enrolled'/>
+                            <Button title="신입생" description="1학년 분들은 여기로 오세요!" color="#FFDE00" linkTo="freshmen" />
+                            <Button title="재학생" description="NUS가 익숙하신 2학년 이상 분들은 여기로!" color="#4287F5" linkTo='enrolled' />
                         </ButtonRow>
                         <ButtonRow>
-                            <Button title="졸업생" description="NUS를 졸업하신 분들을 환영합니다!" color="#4CC76C" linkTo='graduated'/>
-                            <Button title="일반회원" description="기타 가입은 이쪽입니다!" color="#b66bd6" linkTo='other'/>
+                            <Button title="졸업생" description="NUS를 졸업하신 분들을 환영합니다!" color="#4CC76C" linkTo='graduated' />
+                            <Button title="일반회원" description="기타 가입은 이쪽입니다!" color="#b66bd6" linkTo='other' />
                         </ButtonRow>
                     </Form>
                 </Container>
             </>
-            
+
         )
     }
 }

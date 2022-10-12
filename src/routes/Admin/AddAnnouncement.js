@@ -201,56 +201,42 @@ class AddAnnouncement extends React.Component {
 
   content = "<p></p>";
 
-  componentDidMount() {
-    if (!this.props.firebaseUserData.isVerified) {
-      window.alert(
-        "You are not a verified user. Returning to previous page. \n \n 인증된 계정이 아닙니다. 이전 화면으로 돌아갑니다."
-      );
-      window.history.go(-1);
-      return;
-    }
+  async componentDidMount() {
     const boardProcessed = [];
     const boardRaw = [];
-    dbService
-      .collection("boards")
-      .get()
-      .then((boards) => {
-        boards.forEach((board) => {
-          const data = board.data();
-          if (
-            board.id ==
-            "announcement" /*data.editPermission.includes(this.props.firebaseUserData.role*/
-          ) {
-            boardProcessed.push({
-              value: board.id,
-              label: data.title,
-            });
-            boardRaw.push(data);
-          }
-        });
+    const url = process.env.REACT_APP_HOST + "/api/board/getBoard/announcement"
+
+    const response = await fetch(url, {
+      method: "GET"
+    })
+
+    if (response.status == 200) {
+      const board = await response.json();
+      console.log(board)
+      boardProcessed.push({
+        value: board.boardId,
+        label: board.title
       })
-      .then(() => {
-        let backgroundColor = "#FFFFFF";
-        if (boardRaw.find((elem) => elem.boardId == this.props.boardId)) {
-          backgroundColor = boardRaw.find(
-            (elem) => elem.boardId == this.props.boardId
-          ).boardColor;
-        }
+      boardRaw.push(board);
+      let backgroundColor = "#FFFFFF";
+      if (boardRaw.find((elem) => elem.boardId == this.props.boardId)) {
+        backgroundColor = boardRaw.find(
+          (elem) => elem.boardId == this.props.boardId
+        ).boardColor;
+      }
+      const stateCopy = this.state.state;
+      stateCopy.author = this.props.userData.name;
 
-        const stateCopy = this.state.state;
-        stateCopy.author = this.props.firebaseUserData.username;
-        stateCopy.authorId = authService.currentUser.uid;
-
-        this.setState((prevState) => {
-          return {
-            state: stateCopy,
-            boardDataProcessed: boardProcessed,
-            boardData: boardRaw,
-            selectedBoard: this.props.boardId,
-            bc: backgroundColor,
-          };
-        });
+      this.setState((prevState) => {
+        return {
+          state: stateCopy,
+          boardDataProcessed: boardProcessed,
+          boardData: boardRaw,
+          selectedBoard: this.props.boardId,
+          bc: backgroundColor,
+        };
       });
+    }
   }
 
   handleSubmit = async (e) => {
@@ -281,46 +267,43 @@ class AddAnnouncement extends React.Component {
     this.setState({
       loading: true,
     });
-    const boardSnapshot = await dbService
-      .collection("boards")
-      .doc(this.state.selectedBoard)
-      .get();
-    const boardData = boardSnapshot.data();
-    const stateCopy = this.state.state;
-    stateCopy.authorId = authService.currentUser.uid;
-    stateCopy.content = this.content;
-    stateCopy.parentBoardId = this.state.selectedBoard;
-    stateCopy.parentColor = boardData.boardColor;
-    stateCopy.parentTextColor = boardData.boardTextColor;
-    stateCopy.parentBoardTitle = boardData.title;
-    stateCopy.permissions = boardData.permissions;
-    this.setState(
-      {
-        state: stateCopy,
-      },
-      () => {
-        dbService
-          .collection("boards")
-          .doc(this.state.selectedBoard)
-          .collection("posts")
-          .add(this.state.state)
-          .then((docRef) => {
-            this.setState({
-              loading: false,
-            });
-            window.location.href =
-              "#/boards/" + this.state.selectedBoard + "/" + docRef.id;
-          })
-          .catch((err) => {
-            this.setState({
-              loading: false,
-            });
-            window.alert(
-              "게시글 업로드 도중 문제가 발생하였습니다." + err.toString()
-            );
-          });
+    const url = process.env.REACT_APP_HOST + "/api/post/addPost/" + this.state.selectedBoard;
+    const postObject = {
+      title: this.state.state.title,
+      content: this.content,
+      isAnnouncement: this.state.state.isAnnouncement,
+      isAnonymous: this.state.state.isAnonymous,
+      isHidden: this.state.state.isHidden,
+      isPinned: this.state.state.isPinned,
+      isEvent: false,
+    }
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(postObject),
+      headers: {
+        'Content-Type': 'application/json'
       }
-    );
+    })
+
+    if (response.status == 201) {
+      const postId = await response.text();
+      this.setState({
+        loading: false,
+      });
+      window.location.href = "#/boards/" + this.state.selectedBoard + "/" + postId;
+      return;
+    }
+    else {
+      const errMsg = await response.text();
+      window.alert("게시글 업로드 도중 문제가 발생하였습니다." + errMsg);
+    }
+    const stateCopy = this.state.state;
+    stateCopy.content = this.content;
+    stateCopy.title = "Enter title...";
+    this.setState({
+      state: stateCopy,
+      loading: false,
+    });
   };
 
   handleTitleChange = (e) => {
@@ -506,7 +489,7 @@ class AddAnnouncement extends React.Component {
           <></>
         )}
         <Container>
-          <Navbar firebaseUserData={this.props.firebaseUserData} />
+          <Navbar userData={this.props.userData} />
           <Back onClick={() => window.history.back()}>
             <img
               src={
@@ -562,7 +545,7 @@ class AddAnnouncement extends React.Component {
             />
           </Editor>
           <CheckBoxContainer>
-            {this.props.firebaseUserData.role == "Admin" ? (
+            {this.props.userData.role == "Admin" ? (
               <Checkbox
                 label="Pinned"
                 setter={setPinned}
@@ -571,7 +554,7 @@ class AddAnnouncement extends React.Component {
             ) : (
               <div />
             )}
-            {this.props.firebaseUserData.role == "Admin" ? (
+            {this.props.userData.role == "Admin" ? (
               <Checkbox
                 label="Hidden"
                 setter={setHidden}
@@ -589,8 +572,8 @@ class AddAnnouncement extends React.Component {
 }
 
 /*
-{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
-{this.props.firebaseUserData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
+{this.props.userData.role == 'Admin' ? <Checkbox label="Anonymous" setter={setAnnonymous} init={false} /> : this.state.selectedBoard == 'grove' ? <Checkbox label='Anonymous' setter={setAnnonymous} init={true} /> : <div />}
+{this.props.userData.role == 'Admin' ? <Checkbox label='Announcement' setter={setAnnouncement} init={false}/> : <div />}
 */
 
 export default AddAnnouncement;
