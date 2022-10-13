@@ -204,7 +204,7 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
     }
 
     fetchBoard = async () => {
-        const url = process.env.REACT_APP_HOST + "api/board/getBoard/" + this.props.boardId;
+        const url = process.env.REACT_APP_HOST + "/api/board/getBoard/" + this.props.boardId;
         const response = await fetch(url, {
             method: "GET",
         })
