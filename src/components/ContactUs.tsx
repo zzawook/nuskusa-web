@@ -228,7 +228,10 @@ class ContactUs extends React.Component {
         }
         const response = await fetch(url, {
             method: "POST",
-            body: JSON.stringify(body)
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         })
         if (response.status == 200) {
             alert("Thanks for contacting us. Your message has been successfully delivered. \n \n 메시지가 전달되었습니다. 감사합니다.")
