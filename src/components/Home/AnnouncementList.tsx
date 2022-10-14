@@ -57,7 +57,7 @@ class AnnouncementList extends React.Component<PostState> {
     fetchAnnouncement = async () => {
         const rawData: Post[] = [];
         const list: any[] = [];
-        const url = process.env.REACT_APP_HOST + "/api/post/getAnnouncement"
+        const url = process.env.REACT_APP_HOST + "/api/board/getAnnouncement"
         const response = await fetch(url)
         if (response.status == 200) {
             const announcements = await response.json()
@@ -65,10 +65,12 @@ class AnnouncementList extends React.Component<PostState> {
                 const data = announcements[i]
                 rawData.push(data);
                 if (!data.isHidden) {
+                    const lastModified = new Date(data.updatedAt)
+                    lastModified.setHours(lastModified.getHours() - 8)
                     const component = (
                         <AnnouncementLink style={data.isPinned ? { backgroundColor: "#d9d9d9" } : {}} onClick={() => window.location.href = "/#/boards/announcement/" + data.id}>
                             <TitleWrapper style={data.isPinned ? { fontWeight: "bold" } : {}}>{data.title}</TitleWrapper>
-                            <DateWrapper>{this.formatDate(data.updatedAt)}</DateWrapper>
+                            <DateWrapper>{this.formatDate(lastModified)}</DateWrapper>
                         </AnnouncementLink>
                     )
                     data.isPinned ? list.unshift(component) : list.push(component)

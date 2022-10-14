@@ -269,7 +269,6 @@ class PostPage extends React.Component<PostProps, PostState> {
             const post = await response.json();
             post.lastModified = new Date(post.updatedAt);
             post.lastModified.setHours(post.lastModified.getHours() - 8);
-            console.log(post);
             this.setState({
                 Post: post,
             })

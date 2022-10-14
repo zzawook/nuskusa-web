@@ -34,7 +34,7 @@ pipeline {
 
         stage('Finish') {
             steps{
-                sh 'sudo docker images -qf dangling=true | xargs -I{} sudo docker rmi {}'
+                sh 'sudo docker images -qf dangling=true | xargs -I{} sudo docker rmi -f {}'
             }
         }
     }
