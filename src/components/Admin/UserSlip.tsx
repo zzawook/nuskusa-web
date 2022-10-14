@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { dbService } from '../../utils/firebaseFunctions';
 
 const width = window.innerWidth;
 const height = window.innerHeight;

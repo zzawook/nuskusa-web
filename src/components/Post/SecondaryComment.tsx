@@ -1,9 +1,6 @@
 import React from "react";
 import styled from 'styled-components';
-import { Comment } from '../../types/Comment'
 import { User } from "../../types/User";
-import { dbService } from '../../utils/firebaseFunctions'
-import firebase from 'firebase';
 import CommentUpvote from "./CommentUpvote";
 import { DateToPrevString } from "../../utils/TimeHelper";
 import Avatar from "../Profile/Avatar"

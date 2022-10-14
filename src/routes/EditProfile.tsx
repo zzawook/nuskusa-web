@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import { User } from '../types/User';
 import styled from 'styled-components';
-import { authService, dbService, storageService } from '../utils/firebaseFunctions'
+import { authService, storageService } from '../utils/firebaseFunctions'
 import firebase from 'firebase';
 import Avatar from "../components/Profile/Avatar"
 import crypto from "crypto-js"

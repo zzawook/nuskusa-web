@@ -6,7 +6,6 @@ import ContactUs from '../components/ContactUs';
 import { GoldenButton } from '../components/GoldenButton';
 import Navbar from '../components/Navbar';
 import PostThumbnail from '../components/Board/PostThumbnail';
-import { dbService } from '../utils/firebaseFunctions';
 import { DisplayMedium, DisplayLarge, Headline } from '../utils/ThemeText';
 import { Post } from '../types/Post';
 import { Board } from '../types/Board'

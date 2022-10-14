@@ -3,13 +3,9 @@ import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
 import { User } from '../../types/User';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { authService, dbService } from "../../utils/firebaseFunctions";
-import firebase from 'firebase';
 import ShortInput from '../../components/Admin/AddEvent/ShortInput';
 import Checkbox from "../../components/Admin/AddEvent/Checkbox";
 import AttachmentInput from "../../components/Admin/AddEvent/AttachmentInput";
-import crypto from "crypto-js"
-import { FaAssistiveListeningSystems } from 'react-icons/fa';
 
 const width = window.innerWidth;
 const height = window.innerHeight;

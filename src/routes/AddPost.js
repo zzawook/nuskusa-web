@@ -1,8 +1,6 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import {
-  dbService,
-  authService,
   storageService,
 } from "../utils/firebaseFunctions";
 import { CKEditor } from "@ckeditor/ckeditor5-react";

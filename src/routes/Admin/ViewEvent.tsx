@@ -3,7 +3,6 @@ import { Thumbs } from 'react-responsive-carousel';
 import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
 import { User } from '../../types/User';
-import { dbService } from '../../utils/firebaseFunctions';
 
 const Wrapper = styled.div`
     display: flex;
@@ -91,31 +90,6 @@ class ViewEvent extends React.Component<ViewEventProps, ViewEventState> {
                 columns: columns,
             })
         }
-        dbService.collection("events").doc(this.props.eventId).collection("registrations").orderBy('responseAt', 'desc').get().then(docs => {
-            docs.forEach(registration => {
-                const data = registration.data();
-                const response = JSON.parse(data.responseData);
-                const createdAt = new Date(data.responseAt.seconds * 1000);
-                const user = JSON.parse(data.userData);
-                const userKeys = Object.keys(user);
-                const responseKeys = Object.keys(response);
-                columns = userKeys.concat(responseKeys);
-                columns.unshift("ResponseAt");
-                const finalData = {} as any;
-                for (let i = 0; i < userKeys.length; i++) {
-                    finalData[userKeys[i]] = user[userKeys[i]];
-                }
-                for (let i = 0; i < responseKeys.length; i++) {
-                    finalData[responseKeys[i]] = response[responseKeys[i]];
-                }
-                finalData.ResponseAt = this.formatDate(createdAt);
-                rows.push(finalData)
-            })
-            this.setState({
-                rows: rows,
-                columns: columns,
-            })
-        })
     }
 
     toCSV = () => {

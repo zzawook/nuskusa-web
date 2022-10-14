@@ -1,11 +1,9 @@
-import { authService, dbService } from '../utils/firebaseFunctions';
 import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import React from 'react';
 import BoardPage from '../routes/Board';
 import Home from '../routes/Home';
 import Post from '../routes/Post';
 import SignIn from '../routes/SignIn';
-import SignUp from '../routes/SignUp';
 import SignUpSelect from '../routes/SignUp/SignUpSelect';
 import SignUpFreshmen from '../routes/SignUp/SignUpFreshmen'
 import SignUpEnrolled from '../routes/SignUp/SignUpEnrolled'
@@ -13,7 +11,6 @@ import SignUpGraduated from '../routes/SignUp/SignUpGraduated'
 import SignUpOther from '../routes/SignUp/SignUpOther'
 import Terms from '../routes/SignUp/Terms'
 import Profile from '../routes/Profile';
-import Verification from '../routes/Verification';
 import SelectAnnouncementType from '../routes/Admin/SelectAnnouncementType'
 import AddAnnouncement from '../routes/Admin/AddAnnouncement'
 import AddEvent from '../routes/Admin/AddEvent'
@@ -215,7 +212,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                 <Route exact path='/profile' render={() => <Profile
                   userData={this.state.userData}
                 />} />
-                <Route exact path='/verification' render={() => <Verification userData={this.state.userData} />} />
                 <Route exact path='/signin' render={(routerProps) => <SignIn
                   match={routerProps.match}
                   history={routerProps.history}
@@ -229,10 +225,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
                   location={routerProps.location}
                 />} />
                 <Route exact path='/signup/terms' render={(routerProps) => <Terms
-                  history={routerProps.history}
-                  location={routerProps.location}
-                />} />
-                <Route exact path='/signup' render={(routerProps) => <SignUp
                   history={routerProps.history}
                   location={routerProps.location}
                 />} />

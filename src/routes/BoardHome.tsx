@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import ContactUs from '../components/ContactUs';
 import Navbar from '../components/Navbar';
 import BoardThumbnail from '../components/BoardHome/BoardThumbnail';
-import { dbService } from '../utils/firebaseFunctions';
 import { DisplayLarge, Headline } from '../utils/ThemeText';
 import { Board } from '../types/Board';
 import { User } from '../types/User';
@@ -44,7 +43,6 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
 
         if (response.status == 200) {
             const boards = await response.json();
-            console.log(boards);
             const boardComponentArray = [];
 
             for (let i = 0; i < boards.length; i++) {
@@ -78,21 +76,6 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                 description: value
             })
         }
-    }
-
-    handleSubmit = (event: any) => {
-        event.preventDefault();
-        const { title, description } = this.state
-        const permissionsArray: any[] = [];
-        document.querySelectorAll('input[class=board-permissions]:checked')
-            .forEach((element: any) => {
-                permissionsArray.push(element.value);
-            });
-        dbService.collection('boards').doc(title).set({
-            title: title,
-            description: description,
-            permissions: permissionsArray
-        })
     }
 
     render = () => {
@@ -130,21 +113,6 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                     <ThumbnailContainer>
                         {this.state.boardComponentArray}
                     </ThumbnailContainer>
-                    {/* {this.props.userData.role === 'Admin' ?
-                        <form onSubmit={this.handleSubmit}>
-                            <input name='title' type='string' onChange={this.handleChange} />
-                            <input name='description' type='string' onChange={this.handleChange} /> <br />
-                            Who can view this board? <br />
-                            <input name='permissions' className='board-permissions' type='checkbox' value='User' />
-                            <input name='permissions' className='board-permissions' type='checkbox' value='Undergraduate' />
-                            <input name='permissions' className='board-permissions' type='checkbox' value='Graduate' />
-                            <input type='submit' />
-                        </form>
-                        :
-                        <div>
-
-                        </div>
-                    } */}
                 </TextContainer>
                 <ContactUs />
             </Container>

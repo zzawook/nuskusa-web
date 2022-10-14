@@ -2,11 +2,9 @@ import React from 'react';
 import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
 import { User } from '../../types/User';
-import { dbService } from '../../utils/firebaseFunctions';
 import SearchedProfile from '../../components/Admin/SearchedProfile';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { FaSearch } from 'react-icons/fa';
 
 const Wrapper = styled.div`
     display: flex;

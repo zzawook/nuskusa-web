@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import Navbar from '../../components/Admin/Navbar';
 import { User } from '../../types/User';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { dbService } from '../../utils/firebaseFunctions';
 import UserSlip from '../../components/Admin/UserSlip'
 
 const Wrapper = styled.div`

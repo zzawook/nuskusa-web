@@ -1,7 +1,6 @@
 import React from "react";
 import styled from 'styled-components';
 import Primary from '../Post/PrimaryComment';
-import { dbService } from '../../utils/firebaseFunctions'
 import { User } from "../../types/User";
 import firebase from 'firebase'
 

@@ -3,8 +3,6 @@ import styled from 'styled-components'
 import TextInput from "./TextInput"
 import Checkbox from './Checkbox'
 import { User } from '../../types/User';
-import firebase from 'firebase';
-import { dbService } from '../../utils/firebaseFunctions';
 import crypto from 'crypto-js'
 import AttachmentInput from './AttachmentInput';
 

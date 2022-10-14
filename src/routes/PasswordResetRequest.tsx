@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { authService, dbService } from '../utils/firebaseFunctions';
 import CSS from 'csstype';
 
 const height = window.innerHeight;
@@ -113,23 +112,24 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
 
     handleResetClick = async (event: any) => {
         event.preventDefault();
-        const userDocs = (await dbService.collection("users").where("email", "==", this.state.email).get()).docs
-        if (userDocs.length == 0) {
+        const url = process.env.REACT_APP_HOST + "/api/auth/findPassword/"
+        const body = {
+            name: this.state.name,
+            yearOfBirth: this.state.yearOfBirth,
+            email: this.state.email,
+        }
+        const response = await fetch(url)
+        if (response.status == 200) {
+            alert('비밀번호 재설정 메일을 보내드렸습니다. Password Reset Email has been sent.')
+        }
+        else if (response.status == 404) {
             alert('계정이 존재하지 않습니다. Account with given email does not exist.');
-            return;
-        } else {
-            userDocs.forEach(doc => {
-                let data = doc.data();
-                if (data.name === this.state.name && data.yearOfBirth === this.state.yearOfBirth) {
-                    authService.sendPasswordResetEmail(data.email)
-                        .then(function () {
-                            alert('비밀번호 재설정 메일을 보내드렸습니다. Password Reset Email has been sent.')
-                        })
-                }
-                else {
-                    alert("이메일과 입력하신 정보가 맞지 않습니다. The information you provided does not match that of account in our database.")
-                }
-            })
+        }
+        else if (response.status == 401) {
+            alert("이메일과 입력하신 정보가 맞지 않습니다. The information you provided does not match that of account in our database.")
+        }
+        else {
+            alert("비밀번호 재설정 요청을 알 수 없는 이유로 처리할 수 없습니다. 다시 시도해보거나 한인회에 연락해주세요.")
         }
     }
 

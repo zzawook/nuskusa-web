@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CSS from 'csstype';
-import { authService, dbService, storageService } from '../../utils/firebaseFunctions';
+import { authService, storageService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components'
 import { FlexColumn } from '../../components/utils/UsefulDiv';
 import crypto from "crypto-js"

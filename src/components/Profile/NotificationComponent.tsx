@@ -2,10 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Notification } from "../../types/Notification"
-import { authService, dbService } from '../../utils/firebaseFunctions'
 import { getTypeMessage } from '../../utils/NotificationParser'
-import BoardTag from "../Board/BoardTag"
-import firebase from 'firebase';
 
 const ContentDiv = styled.div`
     margin-right: 10%;
@@ -81,14 +78,17 @@ class NotificationComponent extends React.Component<NotificationComponentProps, 
         console.log(this.props.data)
     }
 
-    onDeleteClick = () => {
-        const userRef = dbService
-            .collection('users').doc(authService.currentUser?.uid)
-        userRef.update({
-            notificationArray: firebase.firestore.FieldValue.arrayRemove({
-                ...this.props.data,
-            }),
-        });
+    onDeleteClick = async () => {
+        const url = process.env.REACT_APP_HOST + "/api/profile/dismissAllNotification/" + this.props.data.id
+        const response = await fetch(url, {
+            method: "DELETE"
+        })
+        if (response.status == 200) {
+            return;
+        }
+        else {
+            console.log("Error while dismissing notification");
+        }
     }
 
     onLinkClick = async () => {

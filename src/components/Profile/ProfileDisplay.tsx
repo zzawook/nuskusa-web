@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { User } from '../../types/User'
 import { Notification } from '../../types/Notification'
-import { authService, dbService } from '../../utils/firebaseFunctions'
 import Avatar from './Avatar'
 import NotificationComponent from './NotificationComponent'
 import { AiOutlineClose } from 'react-icons/ai';

@@ -1,6 +1,5 @@
 import React from 'react';
 import CSS from 'csstype';
-import { dbService } from '../utils/firebaseFunctions';
 import styled from 'styled-components'
 import { FaWpforms } from "react-icons/fa";
 
@@ -202,7 +201,7 @@ class ContactUs extends React.Component {
         messageInput: "",
     }
 
-    handleFormSubmit = (event: any) => {
+    handleFormSubmit = async (event: any) => {
         event.preventDefault();
 
         const { nameInput, emailInput, messageInput } = this.state;
@@ -220,30 +219,27 @@ class ContactUs extends React.Component {
             return;
         }
 
-        //Create DateTime string to name the contact document
-        const date = new Date();
-        const day = date.getDate();
-        const month = date.getMonth();
-        const year = date.getFullYear();
-        const hour = date.getHours();
-        const minute = date.getMinutes();
-        const second = date.getSeconds();
-        const dateString = hour + ":" + minute + ":" + second + ", " + month + "." + day + "." + year;
-        const data = {
-            Datetime: Date.now(),
-            name: name,
+        const url = process.env.REACT_APP_HOST + "/api/contactus"
+        const body = {
             email: email,
-            message: message,
+            name: name,
+            message: message
         }
-        //Add to DB
-        const res = dbService.collection('contacts').doc(dateString).set(data);
-        alert("Thanks for contacting us. Your message has been successfully delivered. \n \n 메시지가 전달되었습니다. 감사합니다.")
+        const response = await fetch(url, {
+            body: JSON.stringify(body)
+        })
+        if (response.status == 200) {
+            alert("Thanks for contacting us. Your message has been successfully delivered. \n \n 메시지가 전달되었습니다. 감사합니다.")
+        }
+        else {
+            const text = await response.text()
+            alert("Message couldn't be delivered for the following error. \n\n 메세지가 전달되지 못했습니다. \n\n" + text)
+        }
         this.setState({
             nameInput: 'Name',
             emailInput: 'Email',
             messageInput: '',
         })
-
     }
     handleNameChange = (event: any) => {
         event.preventDefault();

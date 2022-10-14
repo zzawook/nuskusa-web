@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { authService, dbService } from '../utils/firebaseFunctions';
-import firebase from 'firebase';
+import { authService } from '../utils/firebaseFunctions';
 import styled from 'styled-components';
 import CSS from 'csstype';
 import { FlexColumn } from '../components/utils/UsefulDiv';
 import crypto from 'crypto-js'
-import { responsivePropType } from 'react-bootstrap/esm/createUtilityClasses';
 
 type UserProps = {
     history: any,

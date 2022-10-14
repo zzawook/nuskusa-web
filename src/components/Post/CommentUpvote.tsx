@@ -2,7 +2,6 @@ import firebase from 'firebase'
 import React from 'react'
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import styled from 'styled-components'
-import { authService, dbService } from '../../utils/firebaseFunctions'
 
 type UpvoteProps = {
     boardId: string,
