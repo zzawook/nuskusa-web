@@ -57,7 +57,7 @@ class AnnouncementList extends React.Component<PostState> {
     fetchAnnouncement = async () => {
         const rawData: Post[] = [];
         const list: any[] = [];
-        const url = process.env.REACT_APP_HOST + "/api/board/getAnnouncement"
+        const url = process.env.REACT_APP_HOST + "/api/board/getAnnouncements"
         const response = await fetch(url)
         if (response.status == 200) {
             const announcements = await response.json()
