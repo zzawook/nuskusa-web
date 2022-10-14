@@ -192,6 +192,7 @@ const Submit = styled.button`
     font-size: 22px;
     font-weight: 600;
     margin-left: 5vw;
+    margin-top: 10px;
 `
 
 class ContactUs extends React.Component {
@@ -226,6 +227,7 @@ class ContactUs extends React.Component {
             message: message
         }
         const response = await fetch(url, {
+            method: "POST",
             body: JSON.stringify(body)
         })
         if (response.status == 200) {
