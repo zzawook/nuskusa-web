@@ -118,7 +118,13 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
             yearOfBirth: this.state.yearOfBirth,
             email: this.state.email,
         }
-        const response = await fetch(url)
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
         if (response.status == 200) {
             alert('비밀번호 재설정 메일을 보내드렸습니다. Password Reset Email has been sent.')
         }
