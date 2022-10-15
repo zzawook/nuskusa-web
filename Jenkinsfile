@@ -19,7 +19,7 @@ pipeline {
 
         stage("Pull") {
             steps {
-                git branch: 'main', url: 'https://github.com/NUS-Korea-Society/nuskusa-infra-single/'
+                sh 'git clone ${InfraGitUrl}'
             }
         }
 
