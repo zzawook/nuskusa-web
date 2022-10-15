@@ -27,5 +27,5 @@ jobs:
     - name: Trigger Jenkins
       uses: fjogeleit/http-request-action@v1
       with:
-        url: 'https://nuskoreasociety.org:8000/job/nuskusa/build?token=nuskusa_cicd'
+        url: 'https://nuskoreasociety.org:8000/job/nuskusa/build?token=${{ secrets.JENKINS_TOKEN }}'
         method: 'GET'
