@@ -29,5 +29,5 @@ jobs:
       with:
         url: "http://nuskoreasociety.org:8000"
         user: "nuskusa-admin"
-        token: "nuskusac_cicd"
+        token: "${{ secrets.JENKINS_TOKEN }}"
         job: "nuskusa"
