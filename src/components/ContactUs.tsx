@@ -6,7 +6,7 @@ import { FaWpforms } from "react-icons/fa";
 const width = window.innerWidth;
 const height = window.innerHeight;
 
-const Container =  styled.div`
+const Container = styled.div`
     display: flex;
     order: 3;
     position: relative;
@@ -135,6 +135,7 @@ const NameInput = styled.input`
     border-top: none;
     border-left: none;
     border-right: none;
+    outline: none;
     color: rgba(11, 18, 28, 0.4);
 `
 
@@ -152,6 +153,7 @@ const EmailInput = styled.input`
     border-top: none;
     border-left: none;
     border-right: none;
+    outline: none;
     color: rgba(11, 18, 28, 0.4);
 `
 
@@ -175,6 +177,7 @@ const MessageInput = styled.input`
     font-size: 12px;
     margin-left: 5vw;
     margin-top: 10px;
+    outline: none;
 `
 
 const Submit = styled.button`
@@ -227,7 +230,7 @@ class ContactUs extends React.Component<ContactProps, ContactStates> {
         }
 
         this.props.setLoading()
-
+        
         const url = process.env.REACT_APP_HOST + "/api/contactus"
         const body = {
             email: email,
