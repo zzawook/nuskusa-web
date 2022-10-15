@@ -25,7 +25,7 @@ jobs:
     - run: docker login --username=nuskusa --password=${{ secrets.DOCKER_PASSWORD }}
     - run: docker push nuskusa/nuskusa:latest
     - name: trigger jenkins nuskusa job
-      uses: applyboy/jenkins-action@master
+      uses: appleboy/jenkins-action@master
       with:
         url: "http://nuskoreasociety.org:8000"
         user: "nuskusa-admin"
