@@ -24,8 +24,10 @@ jobs:
     - run: docker tag nuskusa:latest nuskusa/nuskusa:latest
     - run: docker login --username=nuskusa --password=${{ secrets.DOCKER_PASSWORD }}
     - run: docker push nuskusa/nuskusa:latest
-    - name: Trigger Jenkins
-      uses: fjogeleit/http-request-action@v1
+    - name: trigger jenkins nuskusa job
+      uses: appleboy/jenkins-action@master
       with:
-        url: 'https://nuskoreasociety.org:8000/job/nuskusa/build?token=${{ secrets.JENKINS_TOKEN }}'
-        method: 'GET'
+        url: "https://nuskoreasociety.org:8000"
+        user: "nuskusa-admin"
+        token: "${{ secrets.JENKINS_TOKEN }}"
+        job: "nuskusa"
