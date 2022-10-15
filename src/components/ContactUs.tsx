@@ -3,12 +3,6 @@ import CSS from 'csstype';
 import styled from 'styled-components'
 import { FaWpforms } from "react-icons/fa";
 
-type ContactStates = {
-    nameInput: string,
-    emailInput: string,
-    messageInput: string,
-}
-
 const width = window.innerWidth;
 const height = window.innerHeight;
 
@@ -22,6 +16,7 @@ const Container =  styled.div`
     font-family: var(--font-family-roboto);
     flex-direction: column;
     justify-content: center;
+    z-index: 10;
 `
 
 const ElementContainer = styled.div`
@@ -195,7 +190,18 @@ const Submit = styled.button`
     margin-top: 10px;
 `
 
-class ContactUs extends React.Component {
+type ContactProps = {
+    setLoading: Function,
+    unsetLoading: Function,
+}
+
+type ContactStates = {
+    nameInput: string,
+    emailInput: string,
+    messageInput: string,
+}
+
+class ContactUs extends React.Component<ContactProps, ContactStates> {
     state: ContactStates = {
         nameInput: 'Name',
         emailInput: 'Email',
@@ -212,13 +218,15 @@ class ContactUs extends React.Component {
 
         //Simple Validation
         if (name === 'Name' || "") {
-            alert("Please enter your name")
+            alert("이름을 입력해주세요")
             return;
         }
         if (email === 'Email' || !email.includes("@") || !email.includes(".")) {
-            alert("Please enter valid email address")
+            alert("유효한 이메일 주소를 입력해주세요")
             return;
         }
+
+        this.props.setLoading()
 
         const url = process.env.REACT_APP_HOST + "/api/contactus"
         const body = {
@@ -244,6 +252,8 @@ class ContactUs extends React.Component {
             nameInput: 'Name',
             emailInput: 'Email',
             messageInput: '',
+        }, () => {
+            this.props.unsetLoading()
         })
     }
     handleNameChange = (event: any) => {

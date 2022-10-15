@@ -15,11 +15,30 @@ type HomeProps = {
 }
 
 type HomeState = {
-
+    loading: boolean
 }
 
 const height = window.innerHeight;
 
+const LoadingBlocker = styled.div`
+    opacity: 0.5;
+    background-color: white;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 11;
+`
+const LoadingText = styled.span`
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+`
 /*
  * Main page that the users will visit
  */
@@ -27,8 +46,10 @@ class Home extends React.Component<HomeProps, HomeState> {
     constructor(props: HomeProps) {
         super(props);
         this.state = {
-
+            loading: false
         }
+        this.setLoading.bind(this);
+        this.unsetLoading.bind(this);
     }
 
     carouselStyle: CSS.Properties = {
@@ -42,6 +63,18 @@ class Home extends React.Component<HomeProps, HomeState> {
 
     componentDidMount = async () => {
         console.log(this.props)
+    }
+
+    setLoading = () => {
+        this.setState({
+            loading: true
+        })
+    }
+
+    unsetLoading = () => {
+        this.setState({
+            loading: false
+        })
     }
 
     render = () => {
@@ -121,6 +154,7 @@ class Home extends React.Component<HomeProps, HomeState> {
 
         return (
             <Wrapper>
+                
                 <Navbar userData={this.props.userData} />
                 <div style={this.carouselStyle}>
                     <Carousel
@@ -169,7 +203,8 @@ class Home extends React.Component<HomeProps, HomeState> {
                         <ActivityList title='취업활동 정보' content='인턴, 취업 관련 웨비나, 멘토 초청 강연' image={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fhome3.png?alt=media&token=3a7f0efb-dd6d-452d-91e0-3c08adca9c4e'} />
                     </ActivityWrapper>
                 </Activity>
-                <ContactUs />
+                <ContactUs setLoading={this.setLoading} unsetLoading={this.unsetLoading}/>
+                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
             </Wrapper>
         )
     }

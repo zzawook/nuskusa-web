@@ -145,6 +145,27 @@ const customStyle = {
         }
     }
 }
+
+const LoadingBlocker = styled.div`
+    opacity: 0.5;
+    background-color: white;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 11;
+`
+const LoadingText = styled.span`
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+`
+
 type SelectOption = {
     value: string,
     label: string
@@ -163,26 +184,34 @@ type BoardState = {
     searched: boolean,
     searchString: string,
     searchedPostArray: Post[],
+    loading: boolean
 }
 
 let prevBoardURL = ""
 
 class BoardPage extends React.Component<BoardProps, BoardState> {
-    state: BoardState = {
-        Board: {
-            title: "",
-            boardId: "",
-            description: "",
-            boardColor: "",
-            boardTextColor: "",
-        },
-        postArray: [],
-        postComponentArray: [],
-        postOrder: { value: 'lastModified', label: 'Latest' },
-        searched: false,
-        searchString: "",
-        searchedPostArray: [],
+    constructor(props: BoardProps) {
+        super(props)
+        this.state = {
+            Board: {
+                title: "",
+                boardId: "",
+                description: "",
+                boardColor: "",
+                boardTextColor: "",
+            },
+            postArray: [],
+            postComponentArray: [],
+            postOrder: { value: 'lastModified', label: 'Latest' },
+            searched: false,
+            searchString: "",
+            searchedPostArray: [],
+            loading: false
+        }
+        this.setLoading.bind(this);
+        this.unsetLoading.bind(this);
     }
+    
 
     componentDidMount = async () => {
         await this.fetchBoard();
@@ -314,9 +343,22 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
         })
     }
 
+    setLoading = () => {
+        this.setState({
+            loading: true
+        })
+    }
+
+    unsetLoading = () => {
+        this.setState({
+            loading: false
+        })
+    }
+
     render = () => {
         return (
             <Container>
+                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
                 <Navbar userData={this.props.userData} />
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
@@ -365,7 +407,7 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
                         <SearchButton onClick={this.handleSearchClick}>검색</SearchButton>
                     </SearchBoard>
                 </SearchContainer>
-                <ContactUs />
+                <ContactUs setLoading={this.setLoading} unsetLoading={this.unsetLoading} />
             </Container>
         )
     }

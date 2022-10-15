@@ -7,6 +7,26 @@ import { DisplayLarge, Headline } from '../utils/ThemeText';
 import { Board } from '../types/Board';
 import { User } from '../types/User';
 
+const LoadingBlocker = styled.div`
+    opacity: 0.5;
+    background-color: white;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 11;
+`
+const LoadingText = styled.span`
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+`
+
 type BoardHomeProps = {
     userData: User
 }
@@ -16,17 +36,25 @@ type BoardHomeState = {
     boardComponentArray: any[],
     title: string,
     description: string,
-    permissions: string[]
+    permissions: string[],
+    loading: boolean
 }
 
 class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
-    state: BoardHomeState = {
-        boardArray: [],
-        boardComponentArray: [],
-        title: '',
-        description: '',
-        permissions: []
+    constructor(props: BoardHomeProps) {
+        super(props)
+        this.state = {
+            boardArray: [],
+            boardComponentArray: [],
+            title: '',
+            description: '',
+            permissions: [],
+            loading: false
+        }
+        this.setLoading.bind(this);
+        this.unsetLoading.bind(this);
     }
+    
 
     componentDidMount = () => {
         if (localStorage.getItem("seeVerify") === null) {
@@ -78,6 +106,18 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
         }
     }
 
+    setLoading = () => {
+        this.setState({
+            loading: true
+        })
+    }
+
+    unsetLoading = () => {
+        this.setState({
+            loading: false
+        })
+    }
+
     render = () => {
         const Container = styled.div`
             display: flex;
@@ -102,6 +142,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
         `
         return (
             <Container>
+                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
                 <Navbar userData={this.props.userData} />
                 <TextContainer>
                     <DisplayLarge color='white' style={{ alignSelf: 'flex-start', marginLeft: '10px', marginBottom: '10px' }}>
@@ -114,7 +155,7 @@ class BoardHome extends React.Component<BoardHomeProps, BoardHomeState> {
                         {this.state.boardComponentArray}
                     </ThumbnailContainer>
                 </TextContainer>
-                <ContactUs />
+                <ContactUs setLoading={this.setLoading} unsetLoading={this.unsetLoading} />
             </Container>
         )
     }

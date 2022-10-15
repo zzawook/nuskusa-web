@@ -93,11 +93,31 @@ const Explanation = styled.span`
             color: #808080;
             z-index: 1;
         `
+const LoadingBlocker = styled.div`
+    opacity: 0.5;
+    background-color: black;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 11;
+`
+const LoadingText = styled.span`
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+`
 
 type PasswordResetRequestState = {
     email: string,
     name: string,
     yearOfBirth: string,
+    loading: boolean
 }
 
 class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState> {
@@ -107,11 +127,16 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
             email: "",
             name: "",
             yearOfBirth: "",
+            loading: false
         }
     }
 
     handleResetClick = async (event: any) => {
         event.preventDefault();
+        this.setState({
+            loading: true
+        })
+        
         const url = process.env.REACT_APP_HOST + "/api/auth/findPassword/"
         const body = {
             name: this.state.name,
@@ -126,15 +151,27 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
             }
         })
         if (response.status == 200) {
+            this.setState({
+                loading: false
+            })
             alert('비밀번호 재설정 메일을 보내드렸습니다. Password Reset Email has been sent.')
         }
         else if (response.status == 404) {
+            this.setState({
+                loading: false
+            })
             alert('계정이 존재하지 않습니다. Account with given email does not exist.');
         }
         else if (response.status == 401) {
+            this.setState({
+                loading: false
+            })
             alert("이메일과 입력하신 정보가 맞지 않습니다. The information you provided does not match that of account in our database.")
         }
         else {
+            this.setState({
+                loading: false
+            })
             alert("비밀번호 재설정 요청을 알 수 없는 이유로 처리할 수 없습니다. 다시 시도해보거나 한인회에 연락해주세요.")
         }
     }
@@ -187,6 +224,7 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
 
         return (
             <>
+                {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
                 <Container>
                     <Back onClick={this.handleBackClick}><img style={this.arrowStyle} src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f' />Back</Back>
                     <Title>Reset Password</Title>
