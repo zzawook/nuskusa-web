@@ -23,6 +23,16 @@ pipeline {
             }
         }
 
+        stage("Inject Credentials") {
+            steps {
+                dir("nuskusa-infra-single") {
+                    withCredentials([string(credentialsId: 'nuskusa-gmail-app-pw', variable: 'EMAIL_PASSWORD')]) {
+                        sh 'echo "EMAIL_PASSWORD=${EMAIL_PASSWORD}" > express/.env'
+                    }
+                }
+            }
+        }
+
         stage("Deploy") {
             steps {
                 dir("nuskusa-infra-single") {
