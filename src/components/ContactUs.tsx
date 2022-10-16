@@ -246,18 +246,23 @@ class ContactUs extends React.Component<ContactProps, ContactStates> {
         })
         if (response.status == 200) {
             alert("Thanks for contacting us. Your message has been successfully delivered. \n \n 메시지가 전달되었습니다. 감사합니다.")
+            this.setState({
+                nameInput: 'Name',
+                emailInput: 'Email',
+                messageInput: '',
+            })
+            this.props.unsetLoading()
         }
         else {
             const text = await response.text()
             alert("Message couldn't be delivered for the following error. \n\n 메세지가 전달되지 못했습니다. \n\n" + text)
-        }
-        this.setState({
-            nameInput: 'Name',
-            emailInput: 'Email',
-            messageInput: '',
-        }, () => {
+            this.setState({
+                nameInput: 'Name',
+                emailInput: 'Email',
+                messageInput: '',
+            })
             this.props.unsetLoading()
-        })
+        }
     }
     handleNameChange = (event: any) => {
         event.preventDefault();
