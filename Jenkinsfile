@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        FEGitUrl = "https://github.com/NUS-Korea-Society/nuskusa.git"
         InfraGitUrl = "https://github.com/NUS-Korea-Society/nuskusa-infra-single.git"
     }
 
@@ -23,16 +22,6 @@ pipeline {
             }
         }
 
-        stage("Inject Credentials") {
-            steps {
-                dir("nuskusa-infra-single") {
-                    withCredentials([string(credentialsId: 'nuskusa-gmail-app-pw', variable: 'EMAIL_PASSWORD')]) {
-                        sh 'echo "EMAIL_PASSWORD=${EMAIL_PASSWORD}" > express/.env'
-                    }
-                }
-            }
-        }
-
         stage("Deploy") {
             steps {
                 dir("nuskusa-infra-single") {
@@ -44,7 +33,7 @@ pipeline {
 
         stage('Finish') {
             steps{
-                sh 'sudo docker images -qf dangling=true | xargs -I{} sudo docker rmi -f {}'
+                sh 'sudo docker images -qf dangling=true | xargs -I{} sudo docker rmi {}'
             }
         }
     }
