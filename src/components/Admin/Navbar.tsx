@@ -199,7 +199,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                     </NavbarButtonContainer>
                 </NavbarContent>
                 {
-                    authService.currentUser ?
+                    this.props.userData.name ?
                         <>
                             <ProfileBadge userData={this.props.userData} />
                             {/* <SignOut>Sign Out</SignOut> */}

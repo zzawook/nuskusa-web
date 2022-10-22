@@ -57,7 +57,6 @@ class Home extends React.Component<HomeProps, HomeState> {
         top: `${(height * 0.1) + 50}px`,
         right: '15vw',
         width: '30vw',
-        //left: '20%',
         height: '30vw',
     }
 
@@ -154,7 +153,6 @@ class Home extends React.Component<HomeProps, HomeState> {
 
         return (
             <Wrapper>
-                
                 <Navbar userData={this.props.userData} />
                 <div style={this.carouselStyle}>
                     <Carousel

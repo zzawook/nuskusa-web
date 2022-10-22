@@ -25,7 +25,7 @@ const HomeBackground = styled.div`
     background: linear-gradient(to bottom, #0B121C 55%, #18202B 35%);
     order: 1;
     padding-left: 15vw;
-    padding-top: 5vh
+    padding-top: 5vh;
 `
 const MainBanner = styled.div`
     display: flex;
@@ -53,8 +53,6 @@ class Admin extends React.Component<AdminProps, AdminState> {
 
         }
     }
-
-
 
     render = () => {
 
