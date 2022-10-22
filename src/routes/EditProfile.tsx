@@ -585,7 +585,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                         </ImgAndName>
                         <Email>
                             <EmailText>이메일 / Email</EmailText>
-                            <EmailInput value={this.props.userData.email} onChange={handleEmailChange} disabled={!this.state.emailChange} ref={this.inputRef} />
+                            <EmailInput value={this.state.newEmail} onChange={handleEmailChange} disabled={!this.state.emailChange} ref={this.inputRef} />
                             {this.state.emailChange ? <EmailButton onClick={handleEmailChangeClick}><EmailButtonText>NUS Email로 변경하기</EmailButtonText></EmailButton> : <></>}
                         </Email>
                         <Major>
