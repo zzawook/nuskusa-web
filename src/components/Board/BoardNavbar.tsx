@@ -47,17 +47,13 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
     }
 
     fetchBoards = async () => {
-        const componentArray: any = []
         const boardData: any[] = []
         const url = process.env.REACT_APP_HOST + '/api/board/getBoards'
         const response = await fetch(url)
         if (response.status == 200) {
             const boards = await response.json()
-            for (let i = 0; i < boards.length; i++) {
-                boardData.push(boards[i])
-            }
             this.setState({
-                boardData: componentArray
+                boardData: boards
             })
         }
     }
@@ -104,8 +100,8 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
         this._isMounted = true;
         if (this._isMounted) {
             await this.fetchBoards()
-            this.generateComponent()
         }
+        this.generateComponent()
     }
 
     componentDidUpdate = () => {
