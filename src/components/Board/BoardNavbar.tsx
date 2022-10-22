@@ -91,9 +91,7 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
                 )
             }
         }
-        this.setState({
-            componentArray: componentArray,
-        })
+        return componentArray
     }
 
     componentDidMount = async () => {
@@ -101,7 +99,6 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
         if (this._isMounted) {
             await this.fetchBoards()
         }
-        this.generateComponent()
     }
 
     componentDidUpdate = () => {
@@ -113,9 +110,10 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
     }
 
     render = () => {
+        const components = this.generateComponent()
         return (
             <Wrapper>
-                {this.state.componentArray}
+                {components}
             </Wrapper>
         )
     }
