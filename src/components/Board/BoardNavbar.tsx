@@ -105,10 +105,11 @@ class BoardNavbar extends React.Component<BoardNavbarProps, BoardNavbarState> {
         if (this._isMounted) {
             this.fetchBoards()
         }
+        this.generateComponent()
     }
 
     componentDidUpdate = () => {
-        this.generateComponent()
+        
     }
 
     componentWillUnmount = () => {
