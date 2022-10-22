@@ -398,10 +398,8 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
 
         const handleEmailChange = (e: any) => {
             e.preventDefault()
-            const temp = this.state.userData
-            temp.email = e.target.value;
             this.setState({
-                userData: temp,
+                newEmail: e.target.value
             })
         }
 
