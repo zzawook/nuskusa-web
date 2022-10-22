@@ -7,22 +7,7 @@ import firebase from 'firebase';
 import Avatar from "../components/Profile/Avatar"
 import crypto from "crypto-js"
 
-type EditProfileProps = {
-    userData: User,
-    userId: string
-}
 
-type EditProfileState = {
-    userData: User,
-    profileChanged: boolean,
-    verificiationOpen: boolean,
-    currentPassword: string,
-    newPassword: string,
-    confirmNewPassword: string,
-    emailChange: boolean,
-    loading: boolean,
-    newEmail: string,
-}
 
 const Container = styled.div`
     height: 100%;
@@ -257,6 +242,23 @@ const LoadingText = styled.span`
     font-weight: 600;
     z-index: 99999;
 `
+type EditProfileProps = {
+    userData: User,
+    userId: string
+}
+
+type EditProfileState = {
+    userData: User,
+    profileChanged: boolean,
+    verificiationOpen: boolean,
+    currentPassword: string,
+    newPassword: string,
+    confirmNewPassword: string,
+    emailChange: boolean,
+    loading: boolean,
+    newEmail: string,
+}
+
 class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
 
     private inputRef: React.RefObject<HTMLInputElement>
@@ -303,19 +305,19 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
     }
 
     static getDerivedStateFromProps = (newProps: EditProfileProps, prevState: EditProfileState) => {
-        let canChangeEmail = false;
-        if (newProps.userData.role == "Freshmen" && newProps.userData.email.split("@")[1] != "u.nus.edu") {
-            canChangeEmail = true;
-        }
-        let newEmail = prevState.newEmail
-        if (prevState.newEmail === "" && newProps.userData.email) {
-            newEmail = newProps.userData.email
-        }
-        return {
-            userData: newProps.userData,
-            emailChange: canChangeEmail,
-            newEmail: newEmail,
-        }
+        // let canChangeEmail = false;
+        // if (newProps.userData.role == "Freshmen" && newProps.userData.email.split("@")[1] != "u.nus.edu") {
+        //     canChangeEmail = true;
+        // }
+        // let newEmail = prevState.newEmail
+        // if (prevState.newEmail === "" && newProps.userData.email) {
+        //     newEmail = newProps.userData.email
+        // }
+        // return {
+        //     userData: newProps.userData,
+        //     emailChange: canChangeEmail,
+        //     newEmail: newEmail,
+        // }
     }
 
     render = () => {
@@ -357,7 +359,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         }
 
         const handleEmailChangeClick = async (e: any) => {
-            if (this.state.userData.email.split("@")[1] != "u.nus.edu") {
+            if (this.state.newEmail.split("@")[1] != "u.nus.edu") {
                 window.alert("@u.nus.edu로 끝나는 NUS 이메일이 아닙니다. 다시 입력해주세요.")
                 return;
             }
@@ -391,6 +393,12 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                     loading: false,
                 })
                 window.alert("인증 이메일을 보내지 못했습니다.")
+            }
+            else if (response.status == 409) {
+                this.setState({
+                    loading: false
+                })
+                window.alert("변경을 신청하신 이메일로 계정이 이미 존재합니다.")
             }
             else {
                 this.setState({
