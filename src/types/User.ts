@@ -1,7 +1,7 @@
 export interface User {
     name: string,
     email: string,
-    role: string, // User, Registered, Offered, Current, Graduated, Admin
+    role: string, // User, Registered, Freshmen, Current, Graduated, Admin
     enrolledYear?: string | undefined,
     major?: string | undefined,
     faculty?: string | undefined,

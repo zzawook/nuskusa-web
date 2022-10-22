@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../../logo.png'
 import { User } from '../../types/User';
-import { authService } from '../../utils/firebaseFunctions';
 import ProfileBadge from './../Profile/ProfileBadge';
 
 type NavbarProps = {
@@ -179,9 +178,9 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                         {/* <NavbarButton onMouseEnter={() => this.setState({ aboutUsHover: true })} onMouseLeave={() => this.setState({ aboutUsHover: false })} onClick={() => window.location.href = "https://console.firebase.google.com/u/0/project/nus-kusa-website/overview"}>
                             <AboutUsText hover={this.state.aboutUsHover}><Link to='https://console.firebase.google.com/u/0/project/nus-kusa-website/overview' style={{ color: '#FFFFFF', textDecoration: 'none' }}>To Firebase Backend</Link></AboutUsText>
                         </NavbarButton> */}
-                        <NavbarButton onMouseEnter={() => this.setState({ boardHover: true })} onMouseLeave={() => this.setState({ boardHover: false })} onClick={() => window.location.href = authService.currentUser ? "#/boards" : "#/signin"}>
+                        <NavbarButton onMouseEnter={() => this.setState({ boardHover: true })} onMouseLeave={() => this.setState({ boardHover: false })} onClick={() => window.location.href = this.props.userData.name ? "#/boards" : "#/signin"}>
                             {
-                                authService.currentUser ?
+                                this.props.userData.name ?
                                     <BoardText hover={this.state.boardHover}><Link to='/boards' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
                                     :
                                     <BoardText hover={this.state.boardHover}><Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>

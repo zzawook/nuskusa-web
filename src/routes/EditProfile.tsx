@@ -128,7 +128,7 @@ const EmailButton = styled.div`
     justify-content: center;
     border: 1px solid white;
 `
-const EmailButonText = styled.span`
+const EmailButtonText = styled.span`
     text-align: center;
     line-height: 35px;
     font-size: 14px;
@@ -289,7 +289,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
 
     componentDidMount = () => {
         let canChangeEmail = false;
-        if (this.props.userData.role == "Offered" && this.props.userData.email?.split("@")[1] != "u.nus.edu") {
+        if (this.props.userData.role == "Freshmen" && this.props.userData.email?.split("@")[1] != "u.nus.edu") {
             canChangeEmail = true;
         }
         this.setState({
@@ -304,7 +304,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
 
     static getDerivedStateFromProps = (newProps: EditProfileProps, prevState: EditProfileState) => {
         let canChangeEmail = false;
-        if (newProps.userData.role == "Offered" && newProps.userData.email.split("@")[1] != "u.nus.edu") {
+        if (newProps.userData.role == "Freshmen" && newProps.userData.email.split("@")[1] != "u.nus.edu") {
             canChangeEmail = true;
         }
         return {
@@ -591,7 +591,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                         <Email>
                             <EmailText>이메일 / Email</EmailText>
                             <EmailInput value={this.props.userData.email} onChange={handleEmailChange} disabled={!this.state.emailChange} ref={this.inputRef} />
-                            {this.state.emailChange ? <EmailButton onClick={handleEmailChangeClick}><EmailButonText>NUS Email로 변경하기</EmailButonText></EmailButton> : <></>}
+                            {this.state.emailChange ? <EmailButton onClick={handleEmailChangeClick}><EmailButtonText>NUS Email로 변경하기</EmailButtonText></EmailButton> : <></>}
                         </Email>
                         <Major>
                             <MajorText>Major / 전공</MajorText>

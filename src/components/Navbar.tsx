@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../logo.png'
 import { User } from '../types/User';
-import { authService } from '../utils/firebaseFunctions';
 import ProfileBadge from './Profile/ProfileBadge';
 
 type NavbarProps = {
@@ -167,7 +166,7 @@ class Navbar extends React.Component<NavbarProps, NavBarState> {
                         </NavbarButton>
                         <NavbarButton onMouseEnter={() => this.setState({ boardHover: true })} onMouseLeave={() => this.setState({ boardHover: false })} onClick={() => window.location.href = this.props.userData.name ? "#/boards" : "#/signin"}>
                             {
-                                authService.currentUser ?
+                                this.props.userData.name ?
                                     <BoardText hover={this.state.boardHover}><Link to='/boards' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
                                     :
                                     <BoardText hover={this.state.boardHover}><Link to='/signin' style={{ color: '#FFFFFF', textDecoration: 'none' }}>Boards</Link></BoardText>
