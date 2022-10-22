@@ -307,10 +307,14 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         if (newProps.userData.role == "Freshmen" && newProps.userData.email.split("@")[1] != "u.nus.edu") {
             canChangeEmail = true;
         }
+        let newEmail = prevState.newEmail
+        if (prevState.newEmail === "" && newProps.userData.email) {
+            newEmail = newProps.userData.email
+        }
         return {
             userData: newProps.userData,
             emailChange: canChangeEmail,
-            newEmail: newProps.userData.email,
+            newEmail: newEmail,
         }
     }
 
