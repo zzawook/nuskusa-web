@@ -355,13 +355,6 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         const handleEmailChangeClick = async (e: any) => {
             if (this.state.userData.email.split("@")[1] != "u.nus.edu") {
                 window.alert("@u.nus.edu로 끝나는 NUS 이메일이 아닙니다. 다시 입력해주세요.")
-                let tempProfile = this.state.userData;
-                if (authService.currentUser?.email) {
-                    tempProfile.email = authService.currentUser?.email
-                }
-                this.setState({
-                    userData: tempProfile,
-                })
                 return;
             }
             this.setState({
@@ -404,9 +397,11 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
         }
 
         const handleEmailChange = (e: any) => {
-            e.preventDefault();
+            e.preventDefault()
+            const temp = this.state.userData
+            temp.email = e.target.value;
             this.setState({
-                newEmail: e.target.value,
+                userData: temp,
             })
         }
 
@@ -595,7 +590,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
                         </Email>
                         <Major>
                             <MajorText>Major / 전공</MajorText>
-                            <MajorInput value={this.props.userData.major === undefined ? 'N/A. Verify account to register major.' : this.props.userData.major} onChange={handleMajorInputChange} disabled={this.props.userData.role == 'Graduate' || this.props.userData.role == "Registered"}></MajorInput>
+                            <MajorInput value={this.props.userData.major === undefined ? 'N/A. Verify account to register major.' : this.props.userData.major} onChange={handleMajorInputChange} disabled={this.props.userData.role == 'Graduated'}></MajorInput>
                             <MajorButton onClick={handleMajorChangeSubmit}>Apply</MajorButton>
                         </Major>
                         <EnrolledYear>
