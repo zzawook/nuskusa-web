@@ -183,13 +183,13 @@ class Terms extends React.Component<TermsProps, TermsState> {
                         <Back onClick={this.handleBackClick}>
                             <img
                                 style={this.arrowStyle}
-                                src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'
+                                src='https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/whiteArrow.png'
                             />
                             <p>Back</p>
                         </Back>
                         <DescriptionContainer>
                             <img
-                                src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2F8.png?alt=media&token=21e952d4-00f1-4a92-b0d2-28868e45e64f'
+                                src='https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/signUpChar.png'
                                 style={this.imgStyle}
                             />
                             <Title>Sign Up to Join!</Title>
@@ -197,7 +197,7 @@ class Terms extends React.Component<TermsProps, TermsState> {
                         </DescriptionContainer>
                     </FlexColumn>
                     <Form onSubmit={this.handleSubmit}>
-                        <Term target="_blank" href="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/NUS%20KS%20Privacy%20Policy%20%2B%20Terms%20of%20Service-1.docx.pdf?alt=media&token=2df25a32-02d4-46be-a7e9-ab9b8fc9e8e9" rel="noopener noreferrer">이용약관 전문 보기</Term>
+                        <Term target="_blank" href="https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/NUS+KS+Privacy+Policy+%2B+Terms+of+Service-1.docx.pdf" rel="noopener noreferrer">이용약관 전문 보기</Term>
                         <InputContainer>
                             <InputInner>
                                 <Input

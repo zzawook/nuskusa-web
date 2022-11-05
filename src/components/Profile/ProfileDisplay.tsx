@@ -215,7 +215,7 @@ class ProfileDisplay extends React.Component<ProfileDisplayProps, ProfileDisplay
                                 <BottomBanner>
                                     <ProfileEdit onClick={handleEditProfile}>Edit Profile</ProfileEdit>
                                     <LogOut onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={handleLogout}>
-                                        <LogOutImage src={"https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FLogOut.png?alt=media&token=7223c08e-e1d5-47d2-9bfd-3f637a8798a5"} />
+                                        <LogOutImage src={"https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/LogOut.png"} />
                                         <LogOutText>Log Out</LogOutText>
                                     </LogOut>
                                     <EmptyDiv />

@@ -9,11 +9,8 @@ firebase.initializeApp({
     storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
     appId: process.env.REACT_APP_APP_ID,
-    // measurementId: process.env.REACT_APP_MEASUREMENT_ID
 })
 
 const authService = firebase.auth();
-const dbService = firebase.firestore();
-const storageService = firebase.storage();
 
-export { authService, dbService, storageService }
+export { authService }

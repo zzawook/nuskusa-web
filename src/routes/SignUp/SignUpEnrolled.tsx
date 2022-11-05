@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CSS from 'csstype';
-import { authService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components'
 import { FlexColumn } from '../../components/utils/UsefulDiv';
 import crypto from "crypto-js"
@@ -282,7 +281,6 @@ class SignUp extends React.Component<UserProps, UserState> {
             })
             if (response.status === 200) {
                 window.alert("프로필 생성이 완료되었습니다. 입력하신 NUS 이메일로 보내드린 메일의 링크를 클릭하셔서 이메일 인증을 완료해주세요! \n\n 이메일이 오지 않는다면 Junk 폴더를 확인해주세요!")
-                authService.signOut()
                 this.setState({
                     loading: false,
                 })
@@ -332,13 +330,13 @@ class SignUp extends React.Component<UserProps, UserState> {
                         <Back onClick={this.handleBackClick}>
                             <img
                                 style={this.arrowStyle}
-                                src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'
+                                src='https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/whiteArrow.png'
                             />
                             <p>Back</p>
                         </Back>
                         <DescriptionContainer>
                             <img
-                                src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2F8.png?alt=media&token=21e952d4-00f1-4a92-b0d2-28868e45e64f'
+                                src='https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/signUpChar.png'
                                 style={this.imgStyle}
                             />
                             <Title>Sign Up to Join!</Title>

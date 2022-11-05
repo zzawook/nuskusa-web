@@ -341,14 +341,14 @@ class ContactUs extends React.Component<ContactProps, ContactStates> {
                 <ElementContainer>
                     <ContactUsContainer>
                         <EmailBox>
-                            <img style={this.imgStyle} src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus1.png?alt=media&token=ff7ace54-f07b-4435-bf59-0ee845f147cf" />
+                            <img style={this.imgStyle} src="https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/contactus1.png" />
                             <FeatureBox>
                                 <FeatureTitle>Email</FeatureTitle>
                                 <FeatureExplanation>nuskusa@gmail.com</FeatureExplanation>
                             </FeatureBox>
                         </EmailBox>
                         <AddressBox>
-                            <img style={this.imgStyle} src="https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2Fcontactus2.png?alt=media&token=093e63b1-8970-42e5-91e9-2e1d24b6e17b" />
+                            <img style={this.imgStyle} src="https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/contactus2.png" />
                             <FeatureBox>
                                 <FeatureTitle>Address</FeatureTitle>
                                 <FeatureExplanation>21 Lower Kent Ridge Rd Singapore 119077</FeatureExplanation>

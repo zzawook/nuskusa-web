@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components'
-import { storageService } from '../../../utils/firebaseFunctions';
 
 const Wrapper = styled.div`
     width: 100%;
