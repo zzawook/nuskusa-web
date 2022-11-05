@@ -267,8 +267,8 @@ class SignUp extends React.Component<UserProps, UserState> {
                 userObject.verified = true;
                 userObject.role = 'Current'
                 if (this.state.fileSelected) {
-                    const ref = 'verifications/' + this.state.email + "(" + this.state.name + ")/" + this.state.fileSelected.name;
-                    const url = process.env.REACT_APP_HOST + "/api/uploadFile/" + ref
+                    const ref = this.state.email + "(" + this.state.name + ")_" + this.state.fileSelected.name;
+                    const url = process.env.REACT_APP_HOST + "/api/auth/uploadVerificationDocument/" + ref
                     const formData = new FormData()
                     formData.append('file', this.state.fileSelected)
                     const response = await fetch(url, {
@@ -308,8 +308,8 @@ class SignUp extends React.Component<UserProps, UserState> {
             }
             else {
                 if (this.state.fileSelected) {
-                    const ref = 'verifications/' + this.state.email + "(" + this.state.name + ")/" + this.state.fileSelected.name;
-                    const url = process.env.REACT_APP_HOST + "/api/uploadFile/" + ref
+                    const ref = this.state.email + "(" + this.state.name + ")_" + this.state.fileSelected.name;
+                    const url = process.env.REACT_APP_HOST + "/api/auth/uploadVerificationDocument/" + ref
                     const formData = new FormData()
                     formData.append('file', this.state.fileSelected)
                     const response = await fetch(url, {

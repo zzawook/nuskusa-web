@@ -71,12 +71,12 @@ class AttachmentInput extends React.Component<AttachmentInputProps, AttachmentIn
             }
             else {
                 this.props.setLoading();
-                let ref = "event/" + this.props.eventTitle.substring(0, 20) + "/" + this.props.userData.email + "/Q" + this.props.index
+                let ref = this.props.eventTitle.substring(0, 20) + "_" + this.props.userData.email + "_Q" + this.props.index
                 if (this.props.canApplyMultiple) {
                     const tempNowDate = new Date();
                     ref += crypto.MD5(tempNowDate.toString())
                 }
-                const url = process.env.REACT_APP_HOST + "/api/uploadFile/" + ref
+                const url = process.env.REACT_APP_HOST + "/api/event/uploadAttachment/" + ref
                 const formData = new FormData()
                 formData.append("file", file)
                 const response = await fetch(url, {

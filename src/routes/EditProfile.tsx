@@ -435,8 +435,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             else {
                 type = '.gif'
             }
-            const ref = 'users/' + this.props.userId + type
-            const url = process.env.REACT_APP_HOST + "/api/uploadFile/" + ref
+            const url = process.env.REACT_APP_HOST + "/api/profile/uploadProfileImage/" + this.props.userId + type
             const formData = new FormData()
             formData.append("file", file)
             const response = await fetch(url, {
