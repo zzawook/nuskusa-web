@@ -18,7 +18,7 @@ class Uploader {
       return new Promise(async (resolve, reject) => {
         const formData = new FormData()
         formData.append('file', file)
-        const url = process.env.REACT_APP_HOST + "/api/uploadFile/" + `images/${file.name}`
+        const url = process.env.REACT_APP_HOST + "/api/post/uploadPostAttachment/" + file.name
         const response = await fetch(url, {
           method: "POST",
           body: formData,
