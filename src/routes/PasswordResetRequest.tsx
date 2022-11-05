@@ -226,10 +226,10 @@ class PasswordResetRequest extends React.Component<{}, PasswordResetRequestState
             <>
                 {this.state.loading ? <LoadingBlocker><LoadingText>거의 다 됐어요! 조금만 기다려주세요 :)</LoadingText></LoadingBlocker> : <></>}
                 <Container>
-                    <Back onClick={this.handleBackClick}><img style={this.arrowStyle} src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f' />Back</Back>
+                    <Back onClick={this.handleBackClick}><img style={this.arrowStyle} src='https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/whiteArrow.png' />Back</Back>
                     <Title>Reset Password</Title>
                     <Explanation>이메일을 제출해주시면 비밀번호 변경 관련 이메일이 전송됩니다.</Explanation>
-                    <img src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2F8.png?alt=media&token=21e952d4-00f1-4a92-b0d2-28868e45e64f' style={this.imgStyle} />
+                    <img src='https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/signUpChar.png' style={this.imgStyle} />
                 </Container>
                 <Form onSubmit={this.handleResetClick}>
                     <Input

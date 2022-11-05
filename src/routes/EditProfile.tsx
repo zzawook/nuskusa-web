@@ -2,7 +2,6 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import { User } from '../types/User';
 import styled from 'styled-components';
-import { authService, storageService } from '../utils/firebaseFunctions'
 import firebase from 'firebase';
 import Avatar from "../components/Profile/Avatar"
 import crypto from "crypto-js"
@@ -415,7 +414,7 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             })
         }
 
-        const handleImageUpload = (e: any) => {
+        const handleImageUpload = async (e: any) => {
             e.preventDefault();
             this.setState({
                 loading: true,
@@ -436,47 +435,49 @@ class EditProfile extends React.Component<EditProfileProps, EditProfileState> {
             else {
                 type = '.gif'
             }
-
-            storageService.ref('users/' + this.props.userId + type).put(file).then(snapshot => {
-                snapshot.ref.getDownloadURL().then(async (profileImageUrl) => {
-                    const url = process.env.REACT_APP_HOST + "/api/profile/editProfile/" + this.state.userData.email;
-                    const response = await fetch(url, {
-                        method: "POST",
-                        body: JSON.stringify({
-                            profileImageUrl: profileImageUrl
-                        }),
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-
-                    if (response.status == 200) {
-                        profile.profileImageUrl = profileImageUrl
-                        this.setState({
-                            profileChanged: true,
-                            userData: profile,
-                            loading: false,
-                        })
-                        window.alert("프로필 사진을 성공적으로 바꿨습니다")
-                    }
-                    else {
-                        this.setState({
-                            loading: false,
-                        })
-                        window.alert('프로필 사진을 바꾸지 못했습니다')
-                    }
-                }).catch(err => {
-                    window.alert('프로필 사진을 바꾸지 못했습니다. ' + err.toString())
-                    this.setState({
-                        loading: false,
-                    })
-                });
-            }).catch(err => {
-                window.alert('프로필 사진을 바꾸지 못했습니다. ' + err.toString())
+            const ref = 'users/' + this.props.userId + type
+            const url = process.env.REACT_APP_HOST + "/api/uploadFile/" + ref
+            const formData = new FormData()
+            formData.append("file", file)
+            const response = await fetch(url, {
+                method: "POST",
+                body: formData
+            })
+            if (response.status != 200) {
                 this.setState({
                     loading: false,
                 })
+                window.alert('프로필 사진을 바꾸지 못했습니다')
+                return;
+            }
+
+            const json = await response.json()
+            const editProfileUrl = process.env.REACT_APP_HOST + "/api/profile/editProfile/" + this.state.userData.email;
+            const editProfileResponse = await fetch(editProfileUrl, {
+                method: "POST",
+                body: JSON.stringify({
+                    profileImageUrl: json.url
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             })
+
+            if (editProfileResponse.status == 200) {
+                profile.profileImageUrl = json.url
+                this.setState({
+                    profileChanged: true,
+                    userData: profile,
+                    loading: false,
+                })
+                window.alert("프로필 사진을 성공적으로 바꿨습니다")
+            }
+            else {
+                this.setState({
+                    loading: false,
+                })
+                window.alert('프로필 사진을 바꾸지 못했습니다')
+            }
         }
 
         const handleCurrentPasswordChange = (e: any) => {

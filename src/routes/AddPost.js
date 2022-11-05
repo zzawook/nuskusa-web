@@ -1,8 +1,5 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import {
-  storageService,
-} from "../utils/firebaseFunctions";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import firebase from "firebase";
@@ -18,48 +15,26 @@ class Uploader {
 
   upload() {
     return this.loader.file.then((file) => {
-      return new Promise((resolve, reject) => {
-        const storageRef = storageService.ref();
-        let uploadTask = storageRef.child(`images/${file.name}`).put(file);
-        uploadTask.on(
-          firebase.storage.TaskEvent.STATE_CHANGED,
-          function (snapshot) {
-            var progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-            switch (snapshot.state) {
-              case firebase.storage.TaskState.PAUSED:
-                console.log("Upload is paused");
-            }
-          },
-          function (error) {
-            switch (error.code) {
-              case "storage/unauthorized":
-                reject(" User doesn't have permission to access the object");
-                break;
-              case "storage/canceled":
-                reject("User canceled the upload");
-                break;
-              case "storage/unknown":
-                reject("Unknown error occurred, inspect error.serverResponse");
-                break;
-            }
-          },
-          function () {
-            console.log("Upload successful");
-            // Upload completed successfully, now we can get the download URL
-            uploadTask.snapshot.ref
-              .getDownloadURL()
-              .then(function (downloadURL) {
-                console.log("File available at", downloadURL);
-                resolve({
-                  urls: {
-                    default: downloadURL,
-                  },
-                });
-              });
-          }
-        );
+      return new Promise(async (resolve, reject) => {
+        const formData = new FormData()
+        formData.append('file', file)
+        const url = process.env.REACT_APP_HOST + "/api/uploadFile/" + `images/${file.name}`
+        const response = await fetch(url, {
+          method: "POST",
+          body: formData,
+        })
+
+        if (response.status == 200) {
+          const json = await response.json()
+          resolve({
+            urls: {
+              default: json.url,
+            },
+          });
+        }
+        else {
+          reject("An error has occurred");
+        }
       });
     });
   }
@@ -482,7 +457,7 @@ class AddPost extends React.Component {
           <Back onClick={() => window.history.back()}>
             <img
               src={
-                "https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f"
+                "https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/whiteArrow.png"
               }
               style={imageStyle}
             />

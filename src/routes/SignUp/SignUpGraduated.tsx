@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CSS from 'csstype';
-import { authService, storageService } from '../../utils/firebaseFunctions';
 import styled from 'styled-components'
 import { FlexColumn } from '../../components/utils/UsefulDiv';
 import crypto from "crypto-js"
@@ -276,32 +275,42 @@ class SignUp extends React.Component<UserProps, UserState> {
             }
             if (this.state.fileSelected) {
                 const ref = 'verifications/' + this.state.email + "(" + this.state.name + ")/" + this.state.fileSelected.name;
-                const uploadTask = storageService.ref(ref).put(this.state.fileSelected);
-                uploadTask.then(async () => {
-                    const verificationUrl = await storageService.ref(ref).getDownloadURL()
-                    userObject.verificationFileUrl = verificationUrl
-                    const url = process.env.REACT_APP_HOST + "/api/auth/signup"
-                    const response = await fetch(url, {
-                        method: "POST",
-                        body: JSON.stringify(userObject),
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                    })
-                    if (response.status == 200) {
-                        window.alert("프로필 생성이 완료되었습니다. 보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요.\n\n 이메일이 오지 않는다면 스팸함을 확인해주세요!")
-                        this.setState({
-                            loading: false,
-                        })
-                        this.props.history.push("/")
-                    }
-                    else {
-                        this.setState({
-                            loading: false,
-                        })
-                        window.alert("프로필 생성에 실패했습니다: " + response.body)
-                    }
+                const url = process.env.REACT_APP_HOST + "/api/uploadFile/" + ref
+                const formData = new FormData()
+                formData.append('file', this.state.fileSelected)
+                const response = await fetch(url, {
+                    method: "PUT",
+                    body: formData
                 })
+                if (response.status !== 200) {
+                    this.setState({
+                        loading: false,
+                    })
+                    window.alert("프로필 생성에 실패했습니다: " + response.body)
+                }
+                const json = await response.json()
+                userObject.verificationFileUrl = json.url
+                const signUpUrl = process.env.REACT_APP_HOST + "/api/auth/signup"
+                const signUpResponse = await fetch(signUpUrl, {
+                    method: "POST",
+                    body: JSON.stringify(userObject),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                if (signUpResponse.status == 200) {
+                    window.alert("프로필 생성이 완료되었습니다. \n\n보내드린 이메일의 링크를 눌러 본인 인증을 완료해 계정을 활성화시켜주세요! \n\n 이메일이 오지 않는다면 스팸함을 확인해주세요!")
+                    this.setState({
+                        loading: false,
+                    })
+                    this.props.history.push("/");
+                }
+                else {
+                    this.setState({
+                        loading: false,
+                    })
+                    window.alert("프로필 생성에 실패했습니다: " + signUpResponse.body)
+                }
             }
         }
     }
@@ -356,13 +365,13 @@ class SignUp extends React.Component<UserProps, UserState> {
                         <Back onClick={this.handleBackClick}>
                             <img
                                 style={this.arrowStyle}
-                                src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'
+                                src='https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/whiteArrow.png'
                             />
                             <p>Back</p>
                         </Back>
                         <DescriptionContainer>
                             <img
-                                src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2F8.png?alt=media&token=21e952d4-00f1-4a92-b0d2-28868e45e64f'
+                                src='https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/signUpChar.png'
                                 style={this.imgStyle}
                             />
                             <Title>Sign Up to Join!</Title>

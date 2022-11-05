@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
 import { User } from '../../types/User';
-import { storageService } from '../../utils/firebaseFunctions';
 import crypto from 'crypto-js';
 
 const margin = 20;
@@ -62,7 +61,7 @@ class AttachmentInput extends React.Component<AttachmentInputProps, AttachmentIn
         }
     }
 
-    handleFileInput = (event: any) => {
+    handleFileInput = async (event: any) => {
         event.preventDefault();
         const file = event.target.files[0]
         if (file) {
@@ -77,17 +76,24 @@ class AttachmentInput extends React.Component<AttachmentInputProps, AttachmentIn
                     const tempNowDate = new Date();
                     ref += crypto.MD5(tempNowDate.toString())
                 }
-                const uploadTask = storageService.ref(ref).put(file)
-                uploadTask.then(() => {
-                    storageService.ref(ref).getDownloadURL().then((url: string) => {
-                        this.props.handleChange(this.props.index, url);
-                        this.setState({
-                            file: file,
-                            fileUrl: url,
-                        }, () => {
-                            this.props.unsetLoading();
-                        })
-                    })
+                const url = process.env.REACT_APP_HOST + "/api/uploadFile/" + ref
+                const formData = new FormData()
+                formData.append("file", file)
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: formData,
+                })
+                let imageUrl = ""
+                if (response.status == 200) {
+                    const json = await response.json()
+                    imageUrl = json.url
+                }
+                this.props.handleChange(this.props.index, imageUrl);
+                this.setState({
+                    file: file,
+                    fileUrl: imageUrl,
+                }, () => {
+                    this.props.unsetLoading();
                 })
             }
         }

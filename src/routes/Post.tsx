@@ -307,7 +307,7 @@ class PostPage extends React.Component<PostProps, PostState> {
             <div>
                 <Navbar userData={this.props.userData} />
                 <Container>
-                    <Back onClick={handleBackClick}><img src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'} style={imageStyle} />Back</Back>
+                    <Back onClick={handleBackClick}><img src={'https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/whiteArrow.png'} style={imageStyle} />Back</Back>
                     <Header>
                         <ProfileImg src={this.state.Post.author.profileImageUrl} dimension={32} isOnNavbar={true} />
                         <TitleAndDate>

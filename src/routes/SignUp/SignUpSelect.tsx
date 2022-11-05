@@ -108,13 +108,13 @@ class SignUpSelect extends React.Component<UserProps, UserState> {
                         <Back onClick={this.handleBackClick}>
                             <img
                                 style={this.arrowStyle}
-                                src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FwhiteArrow.png?alt=media&token=efa6ec9b-d260-464e-bf3a-77a73193055f'
+                                src='https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/whiteArrow.png'
                             />
                             <p>Back</p>
                         </Back>
                         <DescriptionContainer>
                             <img
-                                src='https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2F8.png?alt=media&token=21e952d4-00f1-4a92-b0d2-28868e45e64f'
+                                src='https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/signUpChar.png'
                                 style={this.imgStyle}
                             />
                             <Title>Sign Up to Join!</Title>

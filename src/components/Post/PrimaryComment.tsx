@@ -320,7 +320,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
 
         return (
             <PrimaryComment>
-                <CommentArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FcommentArrow.png?alt=media&token=e484a87e-cff6-4111-b36c-e82cedbe2584'} />
+                <CommentArrow src={'https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/commentArrow.png'} />
                 <ProfileBox>
                     <ProfileImg src={this.props.data.author.profileImageUrl} dimension={32} isOnNavbar={true}/>
                     <CommentInfoContainer>
@@ -340,7 +340,7 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
                     <Cancel onClick={handleCancelClick}>Cancel</Cancel>
                     <Submit onClick={handleSubmitClick}>Post</Submit>
                 </Form> : <div />}
-                {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%204.png?alt=media&token=e83189ba-d386-4232-a473-1b1656d553b3'} /> : <SmallArrow src={'https://firebasestorage.googleapis.com/v0/b/nus-kusa-website.appspot.com/o/source%2FVector%203.png?alt=media&token=c39d0931-41d8-4ed1-bd6f-a5491da24e8a'} />}</SecondaryOpener> : <div />}
+                {this.state.secondary.length > 0 ? <SecondaryOpener onClick={handleSecondaryClick}>{this.state.secondaryOpen ? 'Hide replies' : 'View replies'}{!this.state.secondaryOpen ? <SmallArrow src={'https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/Vector+4.png'} /> : <SmallArrow src={'https://nuskusa-storage.s3.ap-southeast-1.amazonaws.com/source/Vector+3.png'} />}</SecondaryOpener> : <div />}
                 {this.state.secondary.length > 0 && this.state.secondaryOpen ? this.state.secondary.map((element, i) => <Secondary delete={handleCommentDelete} index={i} data={element} boardId={this.props.boardId} postId={this.props.postId} userData={this.props.userData} reset={this.props.reset}/>) : <div />}
 
             </PrimaryComment>
