@@ -28,7 +28,6 @@ class Upvote extends React.Component<UpvoteProps, UpvoteState> {
     }
 
     componentDidMount = () => {
-        console.log(this.props)
     }
 
     static getDerivedStateFromProps = (newProps: UpvoteProps, prevState: UpvoteState) => {

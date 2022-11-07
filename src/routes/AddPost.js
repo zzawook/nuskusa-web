@@ -167,7 +167,7 @@ class AddPost extends React.Component {
   componentDidMount = async () => {
     const boardProcessed = [];
     const boardRaw = [];
-    const url = process.env.REACT_APP_HOST + "/api/board/getBoards"
+    const url = process.env.REACT_APP_HOST + "/api/board/getEditableBoard"
     const response = await fetch(url, {
       method: "GET"
     })
@@ -179,7 +179,7 @@ class AddPost extends React.Component {
         let board = boards[i]
         boardProcessed.push({
           value: board.boardId,
-          label: board.title
+          label: board.title,
         })
         boardRaw.push(board);
       }

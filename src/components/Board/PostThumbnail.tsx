@@ -31,7 +31,6 @@ class PostThumbnail extends React.Component<PostThumbnailProps, PostThumbnailSta
     }
 
     componentDidMount() {
-        console.log(this.props.Post.content)
     }
 
     convertPost = (input: String) => {

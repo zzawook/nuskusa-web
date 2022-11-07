@@ -185,7 +185,6 @@ class SignIn extends React.Component<UserProps, UserObject> {
                     loading: false,
                 })
                 const userdata = await response.json();
-                console.log(userdata)
                 this.props.onSignIn(userdata);
                 this.props.history.push("/");
             }
@@ -262,7 +261,6 @@ class SignIn extends React.Component<UserProps, UserObject> {
                 failed: true,
                 loading: false,
             })
-            console.log(error)
         }
     }
 

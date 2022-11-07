@@ -61,7 +61,6 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     componentDidMount = async () => {
-        console.log(this.props)
     }
 
     setLoading = () => {

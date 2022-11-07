@@ -90,7 +90,6 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
       userData: actualData,
       isLoggedIn: true,
     },() => {
-      console.log(this.state)
     })
   }
 

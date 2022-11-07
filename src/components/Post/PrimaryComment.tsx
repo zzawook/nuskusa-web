@@ -187,7 +187,6 @@ class Primary extends React.Component<PrimaryProps, PrimaryState> {
 
     componentDidMount() {
         this.fetchComment();
-        console.log(this.props.data)
     }
 
     async fetchComment() {

@@ -131,7 +131,6 @@ class Comment extends React.Component<CommentProps, CommentState> {
                 commentObject.lastModified.setHours(commentObject.lastModified.getHours() - 8);
                 commentArray.push(commentObject)
             }
-            console.log(commentArray)
             this.setState({
                 commentArray: this.generateComponent(commentArray),
             })

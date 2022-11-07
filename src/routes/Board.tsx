@@ -178,13 +178,14 @@ type BoardProps = {
 
 type BoardState = {
     Board: Board,
+    permissions: any,
     postArray: PostSummary[],
     postComponentArray: any[],
     postOrder: SelectOption,
     searched: boolean,
     searchString: string,
     searchedPostArray: Post[],
-    loading: boolean
+    loading: boolean,
 }
 
 let prevBoardURL = ""
@@ -199,6 +200,11 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
                 description: "",
                 boardColor: "",
                 boardTextColor: "",
+            },
+            permissions: {
+                "EDIT": false,
+                "VIEW": false,
+                "COMMENT": false,
             },
             postArray: [],
             postComponentArray: [],
@@ -238,8 +244,9 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
         })
 
         if (response.status == 200) {
-            const board = await response.json();
-            console.log(board);
+            const data = await response.json();
+            const board = data.board;
+            const permissions = data.permissions
             const boardObject = {
                 title: board.title,
                 description: board.description,
@@ -248,7 +255,8 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
                 boardTextColor: board.boardTextColor,
             }
             this.setState({
-                Board: boardObject
+                Board: boardObject,
+                permissions: permissions,
             })
         }
     }
@@ -367,7 +375,7 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
                     <Headline color='#FFFFFF' style={{ marginLeft: '10px', marginRight: '10px', opacity: '0.5', overflow: 'clip', width: '40vw' }}>
                         {this.state.Board.description}
                     </Headline>
-                    {true ?
+                    {this.state.permissions.EDIT ?
                         <GoldenButton to={`/boards/${this.props.boardId}/new`} style={{ filter: 'none', marginLeft: '10px', marginBottom: '10px' }}>
                             <Headline color='white' style={{ textAlign: 'center' }}>
                                 + 게시글 올리기
