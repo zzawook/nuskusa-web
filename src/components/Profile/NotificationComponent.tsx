@@ -75,7 +75,6 @@ class NotificationComponent extends React.Component<NotificationComponentProps, 
         this.setState({
             typeMessage: typeMessage,
         });
-        console.log(this.props.data)
     }
 
     onDeleteClick = async () => {
@@ -87,7 +86,7 @@ class NotificationComponent extends React.Component<NotificationComponentProps, 
             return;
         }
         else {
-            console.log("Error while dismissing notification");
+            window.alert("Error while dismissing notification");
         }
     }
 
@@ -100,7 +99,7 @@ class NotificationComponent extends React.Component<NotificationComponentProps, 
             return;
         }
         else {
-            console.log("Error while dismissing notification");
+            window.alert("Error while dismissing notification");
         }
     }
 

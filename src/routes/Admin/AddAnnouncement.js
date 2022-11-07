@@ -185,7 +185,6 @@ class AddAnnouncement extends React.Component {
 
     if (response.status == 200) {
       const board = await response.json();
-      console.log(board)
       boardProcessed.push({
         value: board.boardId,
         label: board.title
@@ -327,7 +326,6 @@ class AddAnnouncement extends React.Component {
   };
 
   componentDidUpdate() {
-    console.log(this.state.selectedBoard);
   }
 
   render = () => {

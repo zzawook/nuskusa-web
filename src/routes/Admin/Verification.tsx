@@ -63,7 +63,6 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
         })
         if (response.status == 200) {
             const data = await response.json();
-            console.log(data)
             this.setState({
                 users: data,
             })
@@ -83,7 +82,6 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
     }
 
     componentDidUpdate() {
-        console.log(this.state.users)
     }
 
 
@@ -100,7 +98,6 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
                 <Wrapper>
                     <Navbar userData={this.props.userData} />
                     {this.state.users.map(request => {
-                        console.log(request)
                         return <UserSlip setLoading={this.setLoading} updateFunc={this.getVerificationData} verificationId={request.id} unsetLoading={this.unsetLoading} fileURL={request.fileUrl} email={request.user.email} role={request.user.role} name={request.user.name} gender={request.user.gender} major={request.user.major} kakaoTalkId={request.user.kakaoTalkId} />
                     })}
                 </Wrapper>

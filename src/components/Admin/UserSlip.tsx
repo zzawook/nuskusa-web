@@ -114,7 +114,6 @@ class AdminVerification extends React.Component<AdminVerificationProps, AdminVer
     }
 
     componentDidMount() {
-        console.log(this.props)
     }
 
     async handleAccept(event: any) {
