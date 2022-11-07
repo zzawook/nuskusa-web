@@ -245,8 +245,8 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
 
         if (response.status == 200) {
             const data = await response.json();
-            const board = data.board;
-            const permissions = data.permissions
+            const board = data.data;
+            const permissions = data.permissions;
             const boardObject = {
                 title: board.title,
                 description: board.description,
@@ -257,6 +257,8 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
             this.setState({
                 Board: boardObject,
                 permissions: permissions,
+            }, () => {
+                console.log(this.state)
             })
         }
     }
