@@ -177,37 +177,42 @@ class AddAnnouncement extends React.Component {
   async componentDidMount() {
     const boardProcessed = [];
     const boardRaw = [];
-    const url = process.env.REACT_APP_HOST + "/api/board/getBoard/announcement"
+    const url = process.env.REACT_APP_HOST + "/api/board/getEditableBoard"
 
     const response = await fetch(url, {
       method: "GET"
     })
 
     if (response.status == 200) {
-      const board = await response.json();
-      boardProcessed.push({
-        value: board.boardId,
-        label: board.title
-      })
-      boardRaw.push(board);
-      let backgroundColor = "#FFFFFF";
-      if (boardRaw.find((elem) => elem.boardId == this.props.boardId)) {
-        backgroundColor = boardRaw.find(
-          (elem) => elem.boardId == this.props.boardId
-        ).boardColor;
-      }
-      const stateCopy = this.state.state;
-      stateCopy.author = this.props.userData.name;
+      const boards = await response.json();
+      for (let i = 0; i < boards.length; i++) {
+        if (boards[i].boardId == "announcement") {
+          boardProcessed.push({
+            value: boards[i].boardId,
+            label: boards[i].title
+          })
+          boardRaw.push(boards[i]);
+          let backgroundColor = "#FFFFFF";
+          if (boardRaw.find((elem) => elem.boardId == this.props.boardId)) {
+            backgroundColor = boardRaw.find(
+              (elem) => elem.boardId == this.props.boardId
+            ).boardColor;
+          }
+          const stateCopy = this.state.state;
+          stateCopy.author = this.props.userData.name;
 
-      this.setState((prevState) => {
-        return {
-          state: stateCopy,
-          boardDataProcessed: boardProcessed,
-          boardData: boardRaw,
-          selectedBoard: this.props.boardId,
-          bc: backgroundColor,
-        };
-      });
+          this.setState((prevState) => {
+            return {
+              state: stateCopy,
+              boardDataProcessed: boardProcessed,
+              boardData: boardRaw,
+              selectedBoard: this.props.boardId,
+              bc: backgroundColor,
+            };
+          });
+          break;
+        }
+      }
     }
   }
 

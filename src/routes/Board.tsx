@@ -257,8 +257,6 @@ class BoardPage extends React.Component<BoardProps, BoardState> {
             this.setState({
                 Board: boardObject,
                 permissions: permissions,
-            }, () => {
-                console.log(this.state)
             })
         }
     }
